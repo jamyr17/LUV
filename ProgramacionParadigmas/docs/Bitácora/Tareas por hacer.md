@@ -1,12 +1,12 @@
 - [x] Formato correcto
-- [ ] Index
+- [x] Index
 - [x] Corrección en la conexión a base de datos
-- [ ] Validación de no permitir un nuevo registro que sea igual a otro ya ingresado
+- [x] Validación de no permitir un nuevo registro que sea igual a otro ya ingresado
 - [ ] CRUD de tbuniversidadcampus
 - [ ] CRUD de tborientacionsexual
 - [ ] CRUD de tbgenero
 - [ ] CRUD de tbareaconocimiento
 - [ ] Sesiones de Administrador y Usuario
-- [ ] Solicitudes para agregar registrados de parte de usuarios a administradores
+- [ ] Solicitudes para agregar registros de parte de usuarios a administradores
 - [ ] Documento con ideas de criterios para el matching de perfiles
 - [ ] Mensajes de confirmación, advertencia y error

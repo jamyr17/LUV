@@ -17,20 +17,21 @@ class UniversidadData extends Data
         $nextId = 1;
 
         if ($row = mysqli_fetch_row($contId)) {
-            $nextId = trim($row[0]) + 1;
+            $nextId = ($row['tbuniversidadid'] !== null) ? (int)$row['tbuniversidadid'] + 1 : 1;
         }
 
-        $nombre = $universidad->getTbUniversidadNombre();
-        echo "$nombre";
+        $nombre = mysqli_real_escape_string($conn, $universidad->getTbUniversidadNombre());
+        $estado = 1;
 
         $queryInsert = "INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) 
-        VALUES ('$nextId', '$nombre', 1)";
+                        VALUES ($nextId, '$nombre', $estado)";
 
         $result = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
 
         return $result;
     }
+
 
     public function updateTbUniversidad($universidad)
     {
@@ -88,6 +89,45 @@ class UniversidadData extends Data
         }
 
         return $universidades;
+    }
+
+    public function getAllDeletedTbUniversidad()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT * FROM tbuniversidad;";
+        $result = mysqli_query($conn, $querySelect);
+        mysqli_close($conn);
+
+        $universidades = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $universidadActual = new Universidad($row['tbuniversidadid'], $row['tbuniversidadnombre'], $row['tbuniversidadestado']);
+            array_push($universidades, $universidadActual);
+        }
+
+        return $universidades;
+    }
+
+    public function exist($nombre)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT COUNT(*) as count FROM tbuniversidad WHERE tbuniversidadnombre = ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $nombre);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
     }
     
 }

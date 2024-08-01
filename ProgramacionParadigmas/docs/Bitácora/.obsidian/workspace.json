@@ -4,23 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "0a4b0795cc054d90",
+        "id": "4e8114f8893df1e9",
         "type": "tabs",
         "children": [
           {
-            "id": "f5b3d9d0003c6ca4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "30-07-2024 revisión 1.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "66ee4b632adbf175",
+            "id": "0c18f6e963ef6bf5",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -31,8 +19,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -159,7 +146,7 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "66ee4b632adbf175",
+  "active": "0c18f6e963ef6bf5",
   "lastOpenFiles": [
     "30-07-2024 revisión 1.md",
     "Tareas por hacer.md",

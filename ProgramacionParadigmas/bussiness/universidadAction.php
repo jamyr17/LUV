@@ -11,16 +11,26 @@ if (isset($_POST['update'])) {
         
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
-                $universidad = new Universidad($idUniversidad, $nombre, true);
+                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $universidadBusiness = new UniversidadBusiness();
 
-                $result = $universidadBusiness->updateTbUniversidad($universidad);
+                $resultExist = $universidadBusiness->exist($nombre);
 
-                if ($result == 1) {
-                    header("location: ../view/universidadView.php?success=updated");
+                if ($resultExist == 1) {
+                    header("location: ../view/universidadView.php?error=exist");
                 } else {
-                    header("location: ../view/universidadView.php?error=dbError");
+                    $universidad = new Universidad($idUniversidad, $nombre, 1);
+
+                    $result = $universidadBusiness->updateTbUniversidad($universidad);
+
+                    if ($result == 1) {
+                        header("location: ../view/universidadView.php?success=updated");
+                    } else {
+                        header("location: ../view/universidadView.php?error=dbError");
+                    }
+
                 }
+                
             } else {
                 header("location: ../view/universidadView.php?error=numberFormat");
             }
@@ -54,19 +64,28 @@ if (isset($_POST['update'])) {
             
         $nombre = $_POST['nombre'];
 
-        if (strlen($nombre)   > 0) {
+        if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
-                $universidad = new Universidad(0, $nombre, true);
-
+                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $universidadBusiness = new UniversidadBusiness();
 
-                $result = $universidadBusiness->insertTbUniversidad($universidad);
+                $resultExist = $universidadBusiness->exist($nombre);
 
-                if ($result == 1) {
-                    header("location: ../view/universidadView.php?success=inserted");
+                if ($resultExist == 1) {
+                    header("location: ../view/universidadView.php?error=exist");
                 } else {
-                    header("location: ../view/universidadView.php?error=dbError");
+                    $universidad = new Universidad(0, $nombre, 1);
+    
+                    $result = $universidadBusiness->insertTbUniversidad($universidad);
+    
+                    if ($result == 1) {
+                        header("location: ../view/universidadView.php?success=inserted");
+                    } else {
+                        header("location: ../view/universidadView.php?error=dbError");
+                    }
+
                 }
+                
             } else {
                 header("location: ../view/universidadView.php?error=numberFormat");
             }

@@ -5,6 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUV</title>
+  <script>
+    function deleteConfirmation(){
+      var response = confirm("¿Desea eliminar esta universidad?")
+      if(response==true){
+        return true
+      }else{
+        return false
+      }
+    }
+
+    function updateConfirmation(){
+      var response = confirm("¿Desea actualizar el nombre de esta universidad?")
+      if(response==true){
+        return true
+      }else{
+        return false
+      }
+    }
+
+  </script>
 
 </head>
 
@@ -72,8 +92,8 @@
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '" class="form-control" /></td>';
               echo '<td>';
-              echo '<button type="submit" class="btn btn-warning me-2" name="update" id="update">Actualizar</button>';
-              echo '<button type="submit" class="btn btn-danger" name="delete" id="delete">Eliminar</button>';
+              echo '<button type="submit" class="btn btn-warning me-2" name="update" id="update" onclick="return updateConfirmation()" >Actualizar</button>';
+              echo '<button type="submit" class="btn btn-danger" name="delete" id="delete" onclick="return deleteConfirmation()" >Eliminar</button>';
               echo '</td>';
               echo '</form>';
               echo '</tr>';

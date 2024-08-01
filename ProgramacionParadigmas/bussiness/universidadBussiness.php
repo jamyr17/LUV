@@ -25,5 +25,14 @@ class UniversidadBusiness {
     public function getAllTbUniversidad() {
         return $this->universidadData->getAllTbUniversidad();
     }
+
+    public function getAllDeletedTbUniversidad() {
+        return $this->universidadData->getAllDeletedTbUniversidad();
+    }
+
+    public function exist($nombre) {
+        return $this->universidadData->exist($nombre);
+    }
+
 }
 ?>

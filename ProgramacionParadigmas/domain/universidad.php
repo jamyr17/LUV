@@ -5,7 +5,6 @@ class Universidad {
     private $tbUniversidadNombre;
     private $tbUniversidadEstado;
 
-
     public function __construct($tbUniversidadId, $tbUniversidadNombre, $tbUniversidadEstado) {
         $this->tbUniversidadId = $tbUniversidadId;
         $this->tbUniversidadNombre = $tbUniversidadNombre;
