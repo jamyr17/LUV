@@ -7,13 +7,6 @@ class Data {
     public $db;
 
     public function __construct() {
-        $this->server = "127.0.0.1"; 
-        $this->user = "root";        
-        $this->password = "";        
-        $this->db = "bdluv";           
-    }
-
-    public function Data() {
         $hostName = gethostname();
         
         switch ($hostName) {
