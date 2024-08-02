@@ -11,27 +11,31 @@ class UniversidadData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        //query para siguiente id
-        $queryGetLastId = "SELECT MAX(tbuniversidadid) AS tbuniversidadid  FROM tbuniversidad";
-        $contId = mysqli_query($conn, $queryGetLastId);
-        $nextId = 1;
+        // Consulta para obtener el ID máximo
+        $queryGetLastId = "SELECT MAX(tbuniversidadid) AS max_id FROM tbuniversidad";
+        $result = mysqli_query($conn, $queryGetLastId);
 
-        if ($row = mysqli_fetch_row($contId)) {
-            $nextId = ($row['tbuniversidadid'] !== null) ? (int)$row['tbuniversidadid'] + 1 : 1;
+        if ($row = mysqli_fetch_assoc($result)) {
+            // Obtén el ID máximo o establece 0 si la tabla está vacía
+            $maxId = $row['max_id'];
+            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            // Si no se obtiene resultado, asegúrate de manejar el error adecuadamente
+            $nextId = 1;
         }
 
         $nombre = mysqli_real_escape_string($conn, $universidad->getTbUniversidadNombre());
         $estado = 1;
 
-        $queryInsert = "INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) 
+        // Consulta para insertar un nuevo registro
+        $queryInsert = "INSERT INTO tbuniversidad (tbuniversidadid, tbuniversidadnombre, tbuniversidadestado) 
                         VALUES ($nextId, '$nombre', $estado)";
 
-        $result = mysqli_query($conn, $queryInsert);
+        $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
 
-        return $result;
+        return $resultInsert;
     }
-
 
     public function updateTbUniversidad($universidad)
     {

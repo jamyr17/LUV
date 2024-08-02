@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "30-07-2024 revisión 1.md",
+                "file": "Tareas por hacer.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "30-07-2024 revisión 1.md",
+                "file": "Tareas por hacer.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "30-07-2024 revisión 1.md",
+                "file": "Tareas por hacer.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "30-07-2024 revisión 1.md"
+                "file": "Tareas por hacer.md"
               }
             }
           }
@@ -148,8 +148,8 @@
   },
   "active": "9232d8cc9bb87b3f",
   "lastOpenFiles": [
-    "Tareas por hacer.md",
     "30-07-2024 revisión 1.md",
+    "Tareas por hacer.md",
     "Bitácora General.md",
     "Bienvenido.md"
   ]
