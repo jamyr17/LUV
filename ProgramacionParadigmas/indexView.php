@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="cruds">
+    <div id="cruds1">
         <h3>Index</h3>  
         <table id="tabla">
             <th>CRUD</th>
