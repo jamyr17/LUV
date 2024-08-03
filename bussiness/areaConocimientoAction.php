@@ -2,11 +2,11 @@
 
 include './areaConocimientoBussiness.php';
 
-if (isset($_POST['update']) && isset($_POST['descripcion'])) {
+if (isset($_POST['update'])) {
 
-    if (isset($_POST['nombre'])) {
+    if (isset($_POST['nombre']) && isset($_POST['descripcion'])) {
             
-        $idAreaConocimiento= $_POST['idAreaConocimiento'];
+        $idAreaConocimiento = $_POST['idAreaConocimiento'];
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
         
@@ -15,9 +15,9 @@ if (isset($_POST['update']) && isset($_POST['descripcion'])) {
 
                 $areaConocimientoBusiness = new AreaConocimientoBussiness();
 
-                $resultExist = $areaConocimientoBusiness->exist($nombre);
+                $resultExist = $areaConocimientoBusiness->nameExists($nombre, $idAreaConocimiento);
 
-                if ($resultExist == 1) {
+                if ($resultExist) {
                     header("location: ../view/areaConocimientoView.php?error=exist");
                 } else {
                     $areaConocimiento = new AreaConocimiento($idAreaConocimiento, $nombre, $descripcion, 1);
@@ -41,7 +41,7 @@ if (isset($_POST['update']) && isset($_POST['descripcion'])) {
     } else {
         header("location: ../view/areaConocimientoView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+}else if (isset($_POST['delete'])) {
 
     if (isset($_POST['idAreaConocimiento'])) {
 

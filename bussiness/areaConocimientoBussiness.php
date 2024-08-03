@@ -34,5 +34,9 @@ class AreaConocimientoBussiness {
         return $this->areaConocimientoData->exist($nombre);
     }
 
+    public function nameExists($nombre, $idAreaConocimiento){
+        return $this->areaConocimientoData->nameExists($nombre);
+    }
+
 }
 ?>
