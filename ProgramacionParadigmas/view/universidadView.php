@@ -53,7 +53,10 @@
             };
         }
 
-        echo "<script>showMessage('$mensaje')</script>";
+        if(isset($mensaje)){
+          echo "<script>showMessage('$mensaje')</script>";
+        }
+        
       ?>
 
     </section>
