@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUV</title>
   <script>
-    function deleteConfirmation(){
-      var response = confirm("¿Desea eliminar esta universidad?")
+    function actionConfirmation(mensaje){
+      var response = confirm(mensaje)
       if(response==true){
         return true
       }else{
@@ -15,13 +15,8 @@
       }
     }
 
-    function updateConfirmation(){
-      var response = confirm("¿Desea actualizar el nombre de esta universidad?")
-      if(response==true){
-        return true
-      }else{
-        return false
-      }
+    function showMessage(mensaje){
+      alert(mensaje);
     }
 
   </script>
@@ -37,6 +32,32 @@
   </header>
 
   <div class="container mt-3">
+    <section id="alerts">
+      <?php
+
+        if (isset($_GET['error'])) {
+          $mensaje = "Ocurrió un error debido a ";
+          $mensaje .= match(true){
+            $_GET['error']=="emptyField" => "campo(s) vacío(s).",
+            $_GET['error']=="numberFormat" => "ingreso de valores númericos.",
+            $_GET['error']=="dbError" => "un problema al procesar la transacción.",
+            $_GET['error']=="exist" => "que dicha universidad ya existe.",
+            default => "un problema inesperado.",
+          };
+        } else if (isset($_GET['success'])) {
+            $mensaje = match(true){
+              $_GET['success']=="inserted" => "Universidad creada correctamente.",
+              $_GET['success']=="updated" => "Universidad actualizada correctamente.",
+              $_GET['success']=="deleted" => "Universidad eliminada correctamente.",
+              default => "Transacción realizada.",
+            };
+        }
+
+        echo "<script>showMessage('$mensaje')</script>";
+      ?>
+
+    </section>
+
     <section id="form">
       <div class="containter">
 
@@ -83,6 +104,8 @@
           include '../bussiness/universidadBussiness.php';
           $universidadBusiness = new UniversidadBusiness();
           $universidades = $universidadBusiness->getAllTbUniversidad();
+          $mensajeActualizar = "¿Desea actualizar esta universidad?";
+          $mensajeEliminar = "¿Desea eliminar esta universidad?";
 
           if ($universidades != null) {
             foreach ($universidades as $universidad) {
@@ -92,8 +115,8 @@
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '" class="form-control" /></td>';
               echo '<td>';
-              echo '<button type="submit" class="btn btn-warning me-2" name="update" id="update" onclick="return updateConfirmation()" >Actualizar</button>';
-              echo '<button type="submit" class="btn btn-danger" name="delete" id="delete" onclick="return deleteConfirmation()" >Eliminar</button>';
+              echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
+              echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
               echo '</td>';
               echo '</form>';
               echo '</tr>';
