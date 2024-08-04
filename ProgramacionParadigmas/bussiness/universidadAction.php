@@ -38,6 +38,7 @@ if (isset($_POST['update'])) {
             header("location: ../view/universidadView.php?error=emptyField");
         }
     } else {
+        
         header("location: ../view/universidadView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
