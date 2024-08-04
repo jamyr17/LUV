@@ -16,7 +16,7 @@
             <tr>
                 <td>
                     <a href="view/universidadView.php">Universidades</a>
-                    <a href="view/areaConocimientoView.php">Àreas de conocimiento</a>
+                    <a href="view/areaConocimientoView.php">Áreas de conocimiento</a>
                 </td>
             </tr>
         </table>
