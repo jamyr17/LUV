@@ -4,7 +4,7 @@
 - [x] Validación de no permitir un nuevo registro que sea igual a otro ya ingresado
 - [ ] CRUD de tbuniversidadcampus (JEYCOB)
 - [ ] CRUD de tborientacionsexual (GERALD)
-- [ ] CRUD de tbgenero (JAMEL)
+- [x] CRUD de tbgenero (JAMEL)
 - [ ] CRUD de tbareaconocimiento (KEVIN)
 - [ ] Sesiones de Administrador y Usuario (JAMYR)
 - [ ] Solicitudes para agregar registros de parte de usuarios a administradores (JAMEL Y GERALD)

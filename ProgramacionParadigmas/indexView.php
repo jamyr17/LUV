@@ -16,6 +16,7 @@
             <tr>
                 <td>
                     <a href="view/universidadView.php">Universidades</a>
+                    <a href="view/generoView.php">Generos</a>
                 </td>
             </tr>
         </table>
