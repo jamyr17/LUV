@@ -15,7 +15,10 @@
             <th>CRUD</th>
             <tr>
                 <td>
-                    <a href="view/universidadView.php">Universidades</a>
+                    <a href="view/universidadView.php">Universidades</a>&nbsp&nbsp;
+                </td>
+                <td>
+                    <a href="view/campusView.php">Campus</a>
                 </td>
             </tr>
         </table>
