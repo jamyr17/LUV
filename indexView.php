@@ -15,7 +15,15 @@
             <th>CRUD</th>
             <tr>
                 <td>
+<<<<<<< HEAD:indexView.php
                     <a href="view/universidadView.php">Universidades</a>
+                    <a href="view/areaConocimientoView.php">Áreas de conocimiento</a>
+=======
+                    <a href="view/universidadView.php">Universidades</a>&nbsp&nbsp;
+                </td>
+                <td>
+                    <a href="view/campusView.php">Campus</a>
+>>>>>>> b3becc0c07bd1a6f17d18593cecf4497cfd305f3:ProgramacionParadigmas/indexView.php
                 </td>
             </tr>
         </table>
