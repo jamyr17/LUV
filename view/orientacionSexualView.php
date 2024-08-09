@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LUV</title>
+  <title>Orientacion Sexual</title>
   <script>
-    function deleteConfirmation(){
-      var response = confirm("¿Desea eliminar esta orientación sexual?")
+    function actionConfirmation(mensaje){
+      var response = confirm(mensaje)
       if(response==true){
         return true
       }else{
@@ -15,15 +15,9 @@
       }
     }
 
-    function updateConfirmation(){
-      var response = confirm("¿Desea actualizar la información de esta orientación sexual?")
-      if(response==true){
-        return true
-      }else{
-        return false
-      }
+    function showMessage(mensaje){
+      alert(mensaje);
     }
-
   </script>
 
 </head>
@@ -37,6 +31,31 @@
   </header>
 
   <div class="container mt-3">
+  <section id="alerts">
+      <?php
+        if (isset($_GET['error'])) {
+          $mensaje = "Ocurrió un error debido a ";
+          $mensaje .= match(true){
+            $_GET['error']=="emptyField" => "campo(s) vacío(s).",
+            $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
+            $_GET['error']=="dbError" => "un problema al procesar la transacción.",
+            $_GET['error']=="exist" => "dicha orientación sexual ya existe.",
+            default => "un problema inesperado.",
+          };
+        } else if (isset($_GET['success'])) {
+            $mensaje = match(true){
+              $_GET['success']=="inserted" => "Orientación sexual creada correctamente.",
+              $_GET['success']=="updated" => "Orientación sexual actualizada correctamente.",
+              $_GET['success']=="deleted" => "Orientación sexual eliminada correctamente.",
+              default => "Transacción realizada.",
+            };
+        }
+
+        if(isset($mensaje)){
+          echo "<script>showMessage('$mensaje')</script>";
+        }
+      ?>
+    </section>
     <section id="form">
       <div class="containter">
 
@@ -88,6 +107,8 @@
           include '../bussiness/orientacionSexualBussiness.php';
           $orientacionSexualBusiness = new OrientacionSexualBusiness();
           $orientacionesSexuales = $orientacionSexualBusiness->getAllTbOrientacionSexual();
+          $mensajeActualizar = "¿Desea actualizar esta orientación sexual?";
+          $mensajeEliminar = "¿Desea eliminar esta orientación sexual?";
 
           if ($orientacionesSexuales != null) {
             foreach ($orientacionesSexuales as $orientacionSexual) {
@@ -98,8 +119,8 @@
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '" class="form-control" /></td>';
               echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualDescripcion()) . '" class="form-control" /></td>';
               echo '<td>';
-              echo '<button type="submit" class="btn btn-warning me-2" name="update" id="update" onclick="return updateConfirmation()" >Actualizar</button>';
-              echo '<button type="submit" class="btn btn-danger" name="delete" id="delete" onclick="return deleteConfirmation()" >Eliminar</button>';
+              echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+              echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
               echo '</td>';
               echo '</form>';
               echo '</tr>';
