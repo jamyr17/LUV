@@ -10,10 +10,7 @@ if (isset($_POST['update'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
-        
-        echo $nombre;
-        echo $direccion;
-        exit;
+    
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
