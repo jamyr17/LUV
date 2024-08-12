@@ -27,28 +27,6 @@ $campusBusiness = new CampusBusiness();
         function showMessage(mensaje) {
             alert(mensaje);
         }
-
-        function cargarCampus(idUniversidad) {
-            var conexion;
-
-            if (idUniversidad == "") {
-                document.getElementById("txtHint").innerHTML();
-                return;
-            }
-
-            if (window.XMLHttpRequest) {
-                conexion = new XMLHttpRequest();
-            }
-
-            conexion.onreadystatechange = function() {
-                if (conexion.readyState == 4 && conexion.status == 200) {
-                    document.getElementById('tbcampus').innerHTML = conexion.responseText;
-                }
-            }
-
-            conexion.open("GET", "../bussiness/campusAction.php?idU=" + idUniversidad, true);
-            conexion.send();
-        }
     </script>
     <style>
         html,
@@ -73,6 +51,7 @@ $campusBusiness = new CampusBusiness();
     </header>
 
     <div class="container mt-3">
+
         <section id="alerts">
             <?php
 
@@ -156,8 +135,8 @@ $campusBusiness = new CampusBusiness();
                 <h3>Campus registrados</h3>
             </div>
 
-            <label for="idU">Universidad:</label>
-            <select id="cargarCampus" name="cargarCampus" onclick="cargarCampus(this.value)">
+            <!-- <label for="idUniversidad">Universidad:</label>
+            <select id="idU" name="idU">
                 <?php
 
                 if ($universidades != null) {
@@ -169,8 +148,8 @@ $campusBusiness = new CampusBusiness();
                 }
                 ?>
             </select><br>
-
-            <table id="tbcampus" class="table mt-3">
+            -->
+            <table class="table mt-3">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -180,14 +159,37 @@ $campusBusiness = new CampusBusiness();
                     </tr>
                 </thead>
                 <tbody>
-                <form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">
-                </form>
+
+                    <?php
+                    $campus = $campusBusiness->getAllTbCampus(); // Que reciba el id de la universidad
+                    $mensajeActualizar = "¿Desea actualizar este campus?";
+                    $mensajeEliminar = "¿Desea eliminar este campus?";
+                    if ($campus != null) {
+                        foreach ($campus as $camp) {
+                            echo '<tr>';
+                            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php">';
+                            echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($camp->getTbCampusId()) . '">';
+                            echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($camp->getTbCampusUniversidadId()) . '">';
+                            echo '<td>' . htmlspecialchars($camp->getTbCampusId()) . '</td>';
+                            echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($camp->getTbCampusNombre()) . '" class="form-control" /></td>';
+                            echo '<td><input type="text" name="direccion" id="direccion" value="' . htmlspecialchars($camp->getTbCampusDireccion()) . '" class="form-control" /></td>';
+                            echo '<td>';
+                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
+                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                            echo '</td>';
+                            echo '</form>';
+                            echo '</tr>';
+                        }
+                    }
+
+                    ?>
                 </tbody>
             </table>
         </section>
     </div>
     <script>
         const searchInput = document.querySelector('input[name="direccion"]');
+
 
         document.addEventListener('DOMContentLoaded', function() {
             var autocomplete = new google.maps.places.Autocomplete(searchInput, {
