@@ -112,7 +112,7 @@ class CampusData extends Data
 
         while ($row = mysqli_fetch_array($result)) {
             echo '<tr>';
-            //echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">';
+            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">';
             echo '<input type="hidden" name="idCampus" value="' . $row['tbuniversidadcampusid'] . '">';
             echo '<input type="hidden" name="idUniversidad" value="' . $row['tbuniversidadid'] . '">';
             echo '<td>' . $row['tbuniversidadcampusid'] . '</td>';
@@ -122,7 +122,7 @@ class CampusData extends Data
             echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
             echo "<button type='submit' class='btn btn-danger' id='delete' name='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
             echo '</td>';
-            //echo '</form>';
+            echo '</form>';
             echo '</tr>';
         }
     }
