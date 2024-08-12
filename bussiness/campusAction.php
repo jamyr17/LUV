@@ -5,12 +5,15 @@ include './campusBussiness.php';
 if (isset($_POST['update'])) {
 
     if (isset($_POST['nombre']) && isset($_POST['direccion'])) {
-            
+        
         $idCampus = $_POST['idCampus'];
         $idUniversidad = $_POST['idUniversidad'];
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
         
+        echo $nombre;
+        echo $direccion;
+        exit;
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
@@ -99,4 +102,8 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/campusView.php?error=error");
     }
-}
+} else if(isset($_GET['idU'])) { 
+    $idU = $_GET['idU'];
+    $campusBusiness = new CampusBusiness();
+    $campusBusiness->getAllTbCampusByUniversidad($idU);
+} 

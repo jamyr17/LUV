@@ -26,8 +26,8 @@ class CampusBusiness {
         return $this->campusData->getAllTbCampus();
     }
 
-    public function getAllTbCampusByUniversidad($idUniversidad) {
-        return $this->campusData->getAllTbCampusByUniversidad($idUniversidad);
+    public function getAllTbCampusByUniversidad($idU) {
+        return $this->campusData->getAllTbCampusByUniversidad($idU);
     }
 
     public function getAllDeletedTbCampus() {
