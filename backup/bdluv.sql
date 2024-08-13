@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 09-08-2024 a las 22:34:58
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Aug 13, 2024 at 04:49 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bdluv`
+-- Database: `bdluv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbareaconocimiento`
+-- Table structure for table `tbareaconocimiento`
 --
 
 CREATE TABLE `tbareaconocimiento` (
@@ -35,7 +35,7 @@ CREATE TABLE `tbareaconocimiento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tbareaconocimiento`
+-- Dumping data for table `tbareaconocimiento`
 --
 
 INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonombre`, `tbareaconocimientodescripcion`, `tbareaconocimientoestado`) VALUES
@@ -48,7 +48,7 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbcampus`
+-- Table structure for table `tbcampus`
 --
 
 CREATE TABLE `tbcampus` (
@@ -60,18 +60,19 @@ CREATE TABLE `tbcampus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tbcampus`
+-- Dumping data for table `tbcampus`
 --
 
 INSERT INTO `tbcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`) VALUES
-(1, 2, 'Rodrigo Facio Brenes', 'San José 300 mts este', 1),
+(1, 2, 'Rodrigo Facio Brenes', 'Universidad de Costa Rica Rodrigo Facio, San José Province, San Pedro, Costa Rica', 1),
 (2, 2, 'Campus Sarapiquí', 'Universidad Nacional de Costa Rica UNA- Sede Región Huetar Norte, Campus Sarapiquí, Heredia Province, La Victoria, Costa Rica', 1),
-(3, 5, 'Campus Nicoya', 'Universidad Nacional de Costa Rica Campus Nicoya, 150, Guanacaste Province, Nicoya, Costa Rica', 1);
+(3, 5, 'Campus Nicoya', 'Universidad Nacional de Costa Rica Campus Nicoya, 150, Guanacaste Province, Nicoya, Costa Rica', 1),
+(4, 3, 'Campus Central', 'Tecnológico de Costa Rica, km Sur de la Basílica de los Ángeles, Calle 15, Cartago Province, Cartago, Dulce Nombre, Costa Rica', 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbgenero`
+-- Table structure for table `tbgenero`
 --
 
 CREATE TABLE `tbgenero` (
@@ -82,7 +83,7 @@ CREATE TABLE `tbgenero` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tbgenero`
+-- Dumping data for table `tbgenero`
 --
 
 INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `tbgeneroestado`) VALUES
@@ -100,7 +101,7 @@ INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tborientacionsexual`
+-- Table structure for table `tborientacionsexual`
 --
 
 CREATE TABLE `tborientacionsexual` (
@@ -111,7 +112,7 @@ CREATE TABLE `tborientacionsexual` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tborientacionsexual`
+-- Dumping data for table `tborientacionsexual`
 --
 
 INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexualnombre`, `tborientacionsexualdescripcion`, `tborientacionsexualestado`) VALUES
@@ -135,7 +136,7 @@ INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexual
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbuniversidad`
+-- Table structure for table `tbuniversidad`
 --
 
 CREATE TABLE `tbuniversidad` (
@@ -145,13 +146,13 @@ CREATE TABLE `tbuniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `tbuniversidad`
+-- Dumping data for table `tbuniversidad`
 --
 
 INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) VALUES
-(1, 'Universidad Nacional', 0),
+(1, 'Universidad Nacional de Costa Rica', 1),
 (2, 'Universidad de Costa Rica', 1),
-(3, 'Tecnológico de Costa Rica', 0),
+(3, 'Tecnológico de Costa Rica', 1),
 (4, 'Universidad Técnica Nacional', 1);
 COMMIT;
 
