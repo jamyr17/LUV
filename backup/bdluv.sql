@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 04:49 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 15-08-2024 a las 22:58:14
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bdluv`
+-- Base de datos: `bdluv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbareaconocimiento`
+-- Estructura de tabla para la tabla `tbareaconocimiento`
 --
 
 CREATE TABLE `tbareaconocimiento` (
@@ -35,7 +35,7 @@ CREATE TABLE `tbareaconocimiento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbareaconocimiento`
+-- Volcado de datos para la tabla `tbareaconocimiento`
 --
 
 INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonombre`, `tbareaconocimientodescripcion`, `tbareaconocimientoestado`) VALUES
@@ -48,7 +48,7 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbcampus`
+-- Estructura de tabla para la tabla `tbcampus`
 --
 
 CREATE TABLE `tbcampus` (
@@ -60,7 +60,7 @@ CREATE TABLE `tbcampus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbcampus`
+-- Volcado de datos para la tabla `tbcampus`
 --
 
 INSERT INTO `tbcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`) VALUES
@@ -72,7 +72,33 @@ INSERT INTO `tbcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversid
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbgenero`
+-- Estructura de tabla para la tabla `tbcampusregion`
+--
+
+CREATE TABLE `tbcampusregion` (
+  `tbcampusregionid` int(11) NOT NULL,
+  `tbcampusregionnombre` varchar(300) NOT NULL,
+  `tbcampusregiondescripcion` varchar(300) NOT NULL,
+  `tbcampusregionestado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbcampusregion`
+--
+
+INSERT INTO `tbcampusregion` (`tbcampusregionid`, `tbcampusregionnombre`, `tbcampusregiondescripcion`, `tbcampusregionestado`) VALUES
+(1, 'Caribe', 'El Caribe Sur de Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
+(2, 'San José y Valle Central', 'Un clima agradable y primaveral. Colinas salpicadas de cultivos de colores. Todas las comodidades de la vida moderna en la ciudad no es de extrañar que la mayoría de los costarricenses vivan en la capital de San José, en el Valle Central.', 1),
+(3, 'Península de Osa', 'Este es el lugar más salvaje de Costa Rica, una de las zonas más remotas y místicas del país que ha permanecido intacta. Vuelan las guacamayas escarlatas. Los monos se balancean. El jaguar y el tapir dejan huellas en el suelo del bosque.', 1),
+(4, 'Pacífico Central', 'De fácil acceso desde San José. Kilómetros de amplias playas. Vibrantes selvas tropicales llenas de fauna. Por eso, el Pacífico Central es una de las regiones más visitadas de Costa Rica.', 1),
+(5, 'Guanacaste', 'Con un clima asoleado y seco durante casi todo el año y 400 millas de costa con una variedad de playas vírgenes de arena negra, coralina y dorada, Guanacaste es una de las regiones favoritas de los visitantes internacionales.', 1),
+(6, 'Norte', 'Abarca esencialmente las llanuras de Guatuso, San Carlos y Sarapiquí, fronterizas con Nicaragua, así como las estribaciones de la vertiente oriental de la Cordillera Volcánica de Guanacaste y la norte de la Cordillera Vólcanica Central.', 1),
+(7, 'Península de Nicoya', 'La península de Nicoya es una península de Costa Rica, la más grande del país, bañada por el océano Pacífico, limitada por el golfo de Papagayo al norte y el Golfo de Nicoya al este y al sur. Tiene una superficie de 5130 km² siendo por lo tanto una de las más grandes de América Central y sólo es sup', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbgenero`
 --
 
 CREATE TABLE `tbgenero` (
@@ -83,7 +109,7 @@ CREATE TABLE `tbgenero` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbgenero`
+-- Volcado de datos para la tabla `tbgenero`
 --
 
 INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `tbgeneroestado`) VALUES
@@ -101,7 +127,7 @@ INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tborientacionsexual`
+-- Estructura de tabla para la tabla `tborientacionsexual`
 --
 
 CREATE TABLE `tborientacionsexual` (
@@ -112,7 +138,7 @@ CREATE TABLE `tborientacionsexual` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tborientacionsexual`
+-- Volcado de datos para la tabla `tborientacionsexual`
 --
 
 INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexualnombre`, `tborientacionsexualdescripcion`, `tborientacionsexualestado`) VALUES
@@ -136,7 +162,7 @@ INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexual
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidad`
+-- Estructura de tabla para la tabla `tbuniversidad`
 --
 
 CREATE TABLE `tbuniversidad` (
@@ -146,7 +172,7 @@ CREATE TABLE `tbuniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbuniversidad`
+-- Volcado de datos para la tabla `tbuniversidad`
 --
 
 INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) VALUES
