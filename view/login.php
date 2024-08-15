@@ -18,9 +18,8 @@
     <section id="alerts">
         <?php
             if (isset($_GET['error'])) {
-                $mensaje = "Ocurrió un error debido a ";
-                $mensaje .= match(true){
-                    $_GET['error']=="accessDenied" => "que no cuenta con permisos. Por favor, inicie sesión e inténtelo de nuevo.",
+                $mensaje = match(true){
+                    $_GET['error']=="accessDenied" => "Por favor, inicie sesión e inténtelo de nuevo.",
                     default => "un problema inesperado.",
                   };
             }

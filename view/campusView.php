@@ -1,4 +1,10 @@
 <?php
+session_start();
+    
+if($_SESSION["tipoUsuario"]=="Usuario" || empty($_SESSION["tipoUsuario"])){
+    header("location: view/login.php?error=accessDenied");
+}
+
 include '../bussiness/universidadBussiness.php';
 $universidadBusiness = new UniversidadBusiness();
 include '../bussiness/campusBussiness.php';

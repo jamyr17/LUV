@@ -1,6 +1,6 @@
 - [ ] Correcciones tbcampus (JEYCOB)
 - [ ] Agregar registros en tborientacion y tbgenero (GERALD Y JAMEL)
-- [ ] Implementar funcionalidad de sesiones (JAMYR)
+- [X] Implementar funcionalidad de sesiones (JAMYR)
 - [ ] Implementar funcionalidad de solicitudes (GERALD)
 - [ ] Implementar funcionalidad de envío de correos en solicitudes (KEVIN Y JAMEL)
 - [ ] Botón para devolverse al index (GERALD)
