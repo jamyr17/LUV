@@ -17,6 +17,7 @@
                 <td>
                     <a href="view/universidadView.php">Universidades</a>
                     <a href="view/campusView.php">Campus</a>
+                    <a href="view/campusRegionView.php">Regiones</a>
                     <a href="view/areaConocimientoView.php">Área de Conocimiento</a>
                     <a href="view/orientacionSexualView.php">Orientación Sexual</a>
                     <a href="view/generoView.php">Género</a>
