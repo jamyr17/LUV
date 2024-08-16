@@ -34,5 +34,8 @@ class UniversidadBusiness {
         return $this->universidadData->exist($nombre);
     }
 
+    public function insertRequestTbUniversidad($universidad) {
+        return $this->universidadData->insertRequestTbUniversidad($universidad);
+    }
+
 }
-?>

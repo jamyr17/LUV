@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    
+    if($_SESSION["tipoUsuario"]=="Usuario" || empty($_SESSION["tipoUsuario"])){
+        header("location: view/login.php?error=accessDenied");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,17 +19,36 @@
 <body>
     <div id="cruds">
         <h3>LUV</h3>  
+        <h3>Index</h3>  
         <table id="tabla">
             <th>CRUD</th>
             <tr>
                 <td>
                     <a href="view/universidadView.php">Universidades</a>
-                    <a href="view/campusView.php">Campus</a>
-                    <a href="view/areaConocimientoView.php">Área de Conocimiento</a>
-                    <a href="view/orientacionSexualView.php">Orientación Sexual</a>
-                    <a href="view/generoView.php">Género</a>
                 </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/campusView.php">Campus</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/areaConocimientoView.php">Área de Conocimiento</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/orientacionSexualView.php">Orientación Sexual</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/generoView.php">Género</a>
+                </td> 
             </tr>
         </table>
     </div>
 </body>
+
+</html>
