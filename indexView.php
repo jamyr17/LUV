@@ -47,6 +47,11 @@
                     <a href="view/generoView.php">Género</a>
                 </td> 
             </tr>
+            <tr>
+                <td>
+                    <a href="view/campusColectivoView.php">Campus Colectivo</a>
+                </td> 
+            </tr>
         </table>
     </div>
 </body>

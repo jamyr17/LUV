@@ -66,7 +66,7 @@
     </section>
     <section id="form">
       <div class="containter">
-
+      <button onclick="window.location.href='../indexView.php';">Volver</button>
         <div class="text-center mb-4">
             <h3>Agregar una nueva orientación sexual</h3>
             <p class="text-muted">Complete el formulario para añadir una nueva orientación sexual</p>

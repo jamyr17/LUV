@@ -63,6 +63,8 @@ $campusBusiness = new CampusBusiness();
     <div class="container mt-3">
         <section id="form">
             <div class="containter">
+                
+            <button onclick="window.location.href='../indexView.php';">Volver</button>
 
                 <div class="text-center mb-4">
                     <h3>Agregar un nuevo campus</h3>

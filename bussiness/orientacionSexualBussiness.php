@@ -33,6 +33,10 @@ class OrientacionSexualBusiness {
     public function exist($nombre) {
         return $this->orientacionSexualData->exist($nombre);
     }
+    public function insertRequestTbOrientacionSexual($orientacionSexual) {
+        return $this->orientacionSexualData->insertRequestTbOrientacionSexual($orientacionSexual);
+    }
+
 
 }
 ?>
