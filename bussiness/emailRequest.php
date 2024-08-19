@@ -6,26 +6,22 @@ use PHPMailer\PHPMailer\Exception;
 require '../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Aquí puedes procesar la solicitud de la universidad (insertar en base de datos, etc.)
-    // $nombreUniversidad = $_POST['request-universidadNombre'];
-
     // Código para enviar el correo
     $mail = new PHPMailer(true);
 
     try {
-        // Configuración del servidor SMTP
-        $mail->SMTPDebug = 0;  // Cambiar a 0 para desactivar la depuración
+        $mail->SMTPDebug = 0; 
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'luvprojectuna@gmail.com';
-        $mail->Password = 'zesm bwge ddye oaoq';  // Considera usar variables de entorno para esta información
+        $mail->Password = 'zesm bwge ddye oaoq';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
         // Remitente y destinatarios
         $mail->setFrom('luvprojectuna@gmail.com', 'Your Name');
-        $mail->addAddress('luvprojectuna@gmail.com');  // Cambia este correo si es necesario
+        $mail->addAddress('luvprojectuna@gmail.com'); 
 
         // Contenido del correo
         $mail->isHTML(true);
@@ -55,4 +51,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo json_encode(['message' => 'Acceso no permitido.']);
 }
-?>

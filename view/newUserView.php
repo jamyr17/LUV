@@ -35,32 +35,8 @@
         .then(text => {
             try {
             var data = JSON.parse(text); // Intentar analizar como JSON
-
-            if(data === 1){
-
-                //Email
-                fetch('../bussiness/emailRequest.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text()) 
-                .then(text => {
-                    try {
-                    var data = JSON.parse(text); 
-
-
-                    showMessage(data.message);
-                    } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                    showMessage('Error al procesar la respuesta del servidor.');
-                    }
-                })
-                //
-
-            }
-
-
             showMessage(data.message);
+            
             } catch (error) {
             console.error('Error parsing JSON:', error);
             showMessage('Error al procesar la respuesta del servidor.');
