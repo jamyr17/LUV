@@ -39,6 +39,7 @@
             
             } catch (error) {
             console.error('Error parsing JSON:', error);
+            console.error('Text:', text);
             showMessage('Error al procesar la respuesta del servidor.');
             }
         })

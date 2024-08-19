@@ -26,10 +26,11 @@ class CampusData extends Data
         $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
         $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
         $estado = 1;
+        $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
 
         // Consulta para insertar un nuevo registro
-        $queryInsert = "INSERT INTO tbcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampusestado) 
-                        VALUES ($nextId, '$universidadId', '$nombre','$direccion', $estado)";
+        $queryInsert = "INSERT INTO tbcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampusestado, tbuniversidadcampusregionid) 
+                        VALUES ($nextId, '$universidadId', '$nombre','$direccion', $estado, $regionId)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
@@ -89,7 +90,7 @@ class CampusData extends Data
 
         $campus = [];
         while ($row = mysqli_fetch_array($result)) {
-            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampusestado']);
+            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusregionid']);
             array_push($campus, $campusActual);
         }
 
