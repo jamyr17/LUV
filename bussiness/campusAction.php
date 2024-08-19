@@ -4,14 +4,16 @@ include './campusBussiness.php';
 
 if (isset($_POST['update'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
         
         $idCampus = $_POST['idCampus'];
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
-    
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];
+
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
@@ -22,7 +24,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, 1);
+                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1);
 
                     $result = $campusBusiness->updateTbCampus($campus);
 
@@ -63,12 +65,14 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
 
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];
 
         if (strlen($nombre) > 0 && strlen($direccion > 0)) {
             if (!is_numeric($nombre)) {
@@ -80,7 +84,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, 1);
+                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1);
     
                     $result = $campusBusiness->insertTbCampus($campus);
     

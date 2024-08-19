@@ -6,14 +6,18 @@ class Campus {
     private $tbCampusRegionId;
     private $tbCampusNombre;
     private $tbCampusDireccion;
+    private $tbCampusLatitud;
+    private $tbCampusLongitud;
     private $tbCampusEstado;
 
-    public function __construct($tbCampusId, $tbCampusUniversidadId, $tbCampusRegionId,$tbCampusNombre, $tbCampusDireccion, $tbCampusEstado) {
+    public function __construct($tbCampusId, $tbCampusUniversidadId, $tbCampusRegionId,$tbCampusNombre, $tbCampusDireccion, $tbCampusLatitud, $tbCampusLongitud, $tbCampusEstado) {
         $this->tbCampusId = $tbCampusId;
         $this->tbCampusUniversidadId = $tbCampusUniversidadId;
         $this->tbCampusRegionId = $tbCampusRegionId;
         $this->tbCampusNombre = $tbCampusNombre;
         $this->tbCampusDireccion = $tbCampusDireccion;
+        $this->tbCampusLatitud = $tbCampusLatitud;
+        $this->tbCampusLongitud = $tbCampusLongitud;
         $this->tbCampusEstado = $tbCampusEstado;
     }
 
@@ -55,6 +59,22 @@ class Campus {
 
     public function setTbCampusDireccion($tbCampusDireccion) {
         $this->tbCampusDireccion = $tbCampusDireccion;
+    }
+
+    public function getTbCampusLatitud() {
+        return $this->tbCampusLatitud;
+    }
+
+    public function setTbCampusLatitud($tbCampusLatitud) {
+        $this->tbCampusLatitud = $tbCampusLatitud;
+    }
+
+    public function getTbCampusLongitud() {
+        return $this->tbCampusLongitud;
+    }
+
+    public function setTbCampusLongitud($tbCampusLongitud) {
+        $this->tbCampusLongitud = $tbCampusLongitud;
     }
 
     public function getTbCampusEstado() {
