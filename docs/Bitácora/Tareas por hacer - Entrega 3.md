@@ -1,0 +1,14 @@
+
+- [ ] Correcciones tbcampus (JEYCOB)
+- [x] Agregar registros en tborientacion y tbgenero (GERALD Y JAMEL)
+- [X] Implementar funcionalidad de sesiones (JAMYR)
+- [x] Implementar funcionalidad de solicitudes (GERALD)
+- [x] Implementar funcionalidad de envío de correos en solicitudes (KEVIN Y JAMEL)
+- [X] Botón para devolverse al index (GERALD)
+- [x] CRUD tbcampusregion (JAMEL)
+- [x] CRUD tbcampusespecializacion (JAMYR)
+- [x] CRUD tbcampuscolectivo (GERALD)
+- [ ] CRUD tbimagen (JEYCOB, JAMYR Y KEVIN)
+- [ ] Implementar en CRUD tbcampus: 
+	- [ ] Selección tbcampusregion. (GERALD Y KEVIN)
+	- [ ] Selección tbcampuscolectivo. (JAMYR)
