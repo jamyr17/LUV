@@ -26,7 +26,7 @@
         var requestForm = document.getElementById(formId);
         var formData = new FormData(requestForm);
 
-        fetch('../bussiness/requests.php', {
+        fetch('../bussiness/emailRequest.php', {
             method: 'POST',
             body: formData
         })
@@ -93,10 +93,9 @@
             <div id="request-universidad" style="display:none;">
                 <form id="request-universidad-form" onsubmit="submitRequest(event, 'request-universidad-form')" style="width: 50vw; min-width:300px;">
                     <input type="text" name="request-universidadNombre" placeholder="Especifique otra universidad"> 
-                    <button type="submit" class="btn btn-success" name="request-universidad-btn" id="request-universidad-btn">Solicitar</button>
+                    <button type="submit"  class="btn btn-success" name="request-universidad-btn" id="request-universidad-btn">Solicitar</button>
                 </form>
             </div>
-
         </div>
     </section>
 </body>
