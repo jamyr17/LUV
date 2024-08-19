@@ -24,11 +24,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-<<<<<<< HEAD
-                    $campus = new Campus($idCampus, $idUniversidad, $nombre, $direccion, $latitud, $longitud, 1);
-=======
-                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, 1);
->>>>>>> 9189827d68541c3fd16267407bb2cc042458f095
+                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1);
 
                     $result = $campusBusiness->updateTbCampus($campus);
 
@@ -88,11 +84,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-<<<<<<< HEAD
-                    $campus = new Campus(0, $idUniversidad, $nombre, $direccion, $latitud, $longitud, 1);
-=======
-                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, 1);
->>>>>>> 9189827d68541c3fd16267407bb2cc042458f095
+                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1);
     
                     $result = $campusBusiness->insertTbCampus($campus);
     
