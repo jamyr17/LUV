@@ -20,7 +20,6 @@
       alert(mensaje);
     }
 
-    
     function submitRequest(event, formId) {
         event.preventDefault(); // Evita el envío del formulario
 
@@ -36,7 +35,7 @@
             try {
             var data = JSON.parse(text); // Intentar analizar como JSON
             showMessage(data.message);
-            
+
             } catch (error) {
             console.error('Error parsing JSON:', error);
             console.error('Text:', text);
