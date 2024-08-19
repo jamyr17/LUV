@@ -20,28 +20,53 @@
       alert(mensaje);
     }
 
+    
     function submitRequest(event, formId) {
         event.preventDefault(); // Evita el envío del formulario
 
         var requestForm = document.getElementById(formId);
         var formData = new FormData(requestForm);
 
-        fetch('../bussiness/emailRequest.php', {
+        fetch('../bussiness/requests.php', {
             method: 'POST',
             body: formData
         })
         .then(response => response.text()) // Leer la respuesta como texto
         .then(text => {
             try {
-                var data = JSON.parse(text); // Intentar analizar como JSON
-                showMessage(data.message);
+            var data = JSON.parse(text); // Intentar analizar como JSON
+
+            if(data === 1){
+
+                //Email
+                fetch('../bussiness/emailRequest.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text()) 
+                .then(text => {
+                    try {
+                    var data = JSON.parse(text); 
+
+
+                    showMessage(data.message);
+                    } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    showMessage('Error al procesar la respuesta del servidor.');
+                    }
+                })
+                //
+
+            }
+
+
+            showMessage(data.message);
             } catch (error) {
-                console.error('Error parsing JSON:', error);
-                showMessage('Error al procesar la respuesta del servidor.');
+            console.error('Error parsing JSON:', error);
+            showMessage('Error al procesar la respuesta del servidor.');
             }
         })
         .catch(error => console.error('Error:', error));
-
     }
 
     function updateHiddenFields() {
