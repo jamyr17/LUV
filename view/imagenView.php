@@ -1,153 +1,88 @@
-<?php
-
-
-include '../bussiness/universidadBussiness.php';
-$universidadBusiness = new UniversidadBusiness();
-include '../bussiness/campusBussiness.php';
-$campusBusiness = new CampusBusiness();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUV</title>
+    <script>
+        async function updateOptions() {
+            const type = document.getElementById("idOptions").value;
+            const select = document.getElementById("dynamic-select");
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>LUV</title>
-        <script>
-            function showField() {
-                var selectedOption = document.getElementById("idOptions").value;
-                var fields = document.querySelectorAll('.field');
+            select.innerHTML = '';
 
-                fields.forEach(function(field) {
-                    field.style.display = 'none';
+            if (!type) return;
+
+            try {
+                const response = await fetch(`../data/getData.php?type=${encodeURIComponent(type)}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.name;
+                    select.add(option);
                 });
-                if (selectedOption === "Universidad") {
-                    document.getElementById("universidad-field").style.display = "block";
-                } else if (selectedOption === "Área conocimiento") {
-                    document.getElementById("areaconocimiento-field").style.display = "block";
-                } else if (selectedOption === "Género") {
-                    document.getElementById("genero-field").style.display = "block";
-                } else if (selectedOption === "Orientación sexual") {
-                    document.getElementById("orientacionsexual-field").style.display = "block";
-                } else if (selectedOption === "Campus") {
-                    document.getElementById("campus-field").style.display = "block";
-                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        </script>
-    </head>
+        }
 
-    <body>
+        function updateFileName() {
+            const select = document.getElementById("dynamic-select");
+            const hiddenNameField = document.getElementById("dynamic-select-name");
+            hiddenNameField.value = select.options[select.selectedIndex].text;
+        }
 
-        <header>
-            <nav class="navbar bg-body-tertiary">
-            </nav>
-        </header>
+        function updateHiddenIdOptions() {
+            const hiddenIdOptionsField = document.getElementById("idOptionsHidden");
+            hiddenIdOptionsField.value = document.getElementById("idOptions").value;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar bg-body-tertiary"></nav>
+    </header>
 
-        <div class="container mt-3">
+    <div class="container mt-3">
+        <section id="alerts"></section>
+        <section id="form">
+            <div class="container">
+                <div class="container d-flex justify-content-center">
+                    <label for="idOptions">Opciones:</label>
+                    <select id="idOptions" name="idOptions" onchange="updateOptions(); updateHiddenIdOptions();">
+                        <option value="">Seleccione una opción</option>
+                        <option value="1">Universidad</option>
+                        <option value="2">Área Conocimiento</option>
+                        <option value="3">Género</option>
+                        <option value="4">Orientación sexual</option>
+                        <option value="5">Campus</option>
+                    </select>
+                </div>
 
-            <section id="alerts"></section>
-
-            <section id="form">
-                <div class="container">
-                    <div class="container d-flex justify-content-center">
-                        <label for="idOptions">Opciones:</label>
-                        <select id="idOptions" name="idOptions" onchange="showField()">
-                            <option value="Área conocimiento">Área conocimiento</option>
-                            <option value="Género">Género</option>
-                            <option value="Universidad">Universidad</option>
-                            <option value="Orientación sexual">Orientación sexual</option>
-                            <option value="Campus">Campus</option>
+                <form method="post" action="../bussiness/imagenAction.php" enctype="multipart/form-data" style="width: 50vw; min-width:300px;">
+                    <input type="hidden" name="idOptionsHidden" id="idOptionsHidden">
+                    <input type="hidden" name="dynamic-select-name" id="dynamic-select-name">
+                    <div>
+                        <label for="dynamic-select">Seleccione:</label>
+                        <select id="dynamic-select" name="dynamic-select" onchange="updateFileName()">
                         </select>
                     </div>
 
-                    <div id="universidad-field" class="field" style="display: none;">
-                        <form method="post" action="../bussiness/universidadAction.php" style="width: 50vw; min-width:300px;">
-                            <?php
-                            $universidades = $universidadBusiness->getAllTbUniversidad();
-                            echo '<label for="universidad">Seleccione su universidad: </label>';
-                            echo '<select name="universidad" id="universidad">';
-                            foreach ($universidades as $universidad) {
-                                echo '<option value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '"> ' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '</option>';
-                            }
-                            echo '</select>';
-                            ?>
-                        </form>
+                    <div class="mt-3">
+                        <label for="imageUpload">Subir imagen:</label>
+                        <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
                     </div>
 
-                    <div id="areaconocimiento-field" class="field" style="display: none;">
-                        <form method="post" action="../bussiness/areaConocimientoAction.php" style="width: 50vw; min-width:300px;">
-                            <?php
-                            include '../bussiness/areaConocimientoBussiness.php';
-                            $areaConocimientodBusiness = new AreaConocimientoBussiness();
-                            $areasConocimiento = $areaConocimientodBusiness->getAllTbAreaConocimiento();
-
-                            echo '<label for="areaconocimiento">Seleccione su área de conocimiento: </label>';
-                            echo '<select name="areaconocimiento" id="areaconocimiento">';
-                            foreach ($areasConocimiento as $areaconocimiento) {
-                                echo '<option value="' . htmlspecialchars($areaconocimiento->getTbAreaConocimientoId()) . '"> ' . htmlspecialchars($areaconocimiento->getTbAreaConocimientoNombre()) . '</option>';
-                            }
-                            echo '</select>';
-                            ?>
-                        </form>
+                    <div class="mt-3">
+                        <button type="submit">Enviar</button>
                     </div>
-
-                    <div id="genero-field" class="field" style="display: none;">
-                        <form method="post" action="../bussiness/generoAction.php" style="width: 50vw; min-width:300px;">
-                            <?php
-                            include '../bussiness/generoBusiness.php';
-                            $generoBusiness = new GeneroBusiness();
-                            $generos = $generoBusiness->getAllTbGenero();
-
-                            echo '<label for="genero">Seleccione su género: </label>';
-                            echo '<select name="genero" id="genero">';
-                            foreach ($generos as $genero) {
-                                echo '<option value="' . htmlspecialchars($genero->getTbGeneroId()) . '"> ' . htmlspecialchars($genero->getTbGeneroNombre()) . '</option>';
-                            }
-                            echo '</select>';
-                            ?>
-                        </form>
-                    </div>
-
-                    <div id="orientacionsexual-field" class="field" style="display: none;">
-                        <form method="post" action="../bussiness/orientacionSexualAction.php" style="width: 50vw; min-width:300px;">
-                            <?php
-                            include '../bussiness/orientacionSexualBussiness.php';
-                            $orientacionSexualBusiness = new OrientacionSexualBusiness();
-                            $orientacionesSexuales = $orientacionSexualBusiness->getAllTbOrientacionSexual();
-
-                            echo '<label for="orientacionsexual">Seleccione su orientación sexual: </label>';
-                            echo '<select name="orientacionsexual" id="orientacionsexual">';
-                            foreach ($orientacionesSexuales as $orientacionSexual) {
-                                echo '<option value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '"> ' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '</option>';
-                            }
-                            echo '</select>';
-                            ?>
-                        </form>
-                    </div>
-
-                    <div id="campus-field" class="field" style="display: none;">
-                        <form method="post" action="../bussiness/campusAction.php" style="width: 50vw; min-width:300px;">
-                            <?php
-                            include '../bussiness/campusBusiness.php';
-                            $campusBusiness = new CampusRegionBusiness();
-                            $campus = $campus->getAllTbCampus();
-
-                            echo '<label for="campusRegion">Seleccione su campus por región: </label>';
-                            echo '<select name="campusRegion" id="campusRegion">';
-                            foreach ($campus as $campus) {
-                                echo '<option value="' . htmlspecialchars($campus->getTbCampusRegionId()) . '"> ' . htmlspecialchars($campus->getTbCampusRegionNombre()) . '</option>';
-                            }
-                            echo '</select>';
-                            ?>
-                        </form>
-                    </div>
-
-
-                </div>
-            </section>
-        </div>
-
-    </body>
-
+                </form>
+            </div>
+        </section>
+    </div>
+</body>
 </html>

@@ -132,7 +132,6 @@ function sendEmail(){
         }
         // Enviar el correo
         $mail->send();
-        echo json_encode(['message' => 'Correo enviado exitosamente.']);
     } catch (Exception $e) {
         echo json_encode(['message' => "El correo no pudo enviarse. Mailer Error: {$mail->ErrorInfo}"]);
     }
