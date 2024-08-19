@@ -96,23 +96,35 @@ class CampusData extends Data
         return $campus;
     }
 
-    public function getAllTbCampusByUniversidad($idUniversidad)
+    public function getAllTbCampusByUniversidad($idU)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampus WHERE tbuniversidadcampusestado = 1 AND tbuniversidadid = '$idUniversidad';";
+        $querySelect = "SELECT * FROM tbcampus WHERE tbuniversidadcampusestado = 1 AND tbuniversidadid =" . $idU . ";";
 
-        $result = mysqli_query($conn, $querySelect);    
+        $result = mysqli_query($conn, $querySelect);
+
         mysqli_close($conn);
 
-        $campus = [];
-        while ($row = mysqli_fetch_array($result)) {
-            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampusestado']);
-            array_push($campus, $campusActual);
-        }
+        $mensajeActualizar = "¿Desea actualizar este campus?";
+        $mensajeEliminar = "¿Desea eliminar este campus?";
 
-        return $campus;
+        while ($row = mysqli_fetch_array($result)) {
+            echo '<tr>';
+            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">';
+            echo '<input type="hidden" name="idCampus" value="' . $row['tbuniversidadcampusid'] . '">';
+            echo '<input type="hidden" name="idUniversidad" value="' . $row['tbuniversidadid'] . '">';
+            echo '<td>' . $row['tbuniversidadcampusid'] . '</td>';
+            echo '<td><input type="text" name="nombre" value="' . htmlspecialchars($row['tbuniversidadcampusnombre']) . '" class="form-control" /></td>';
+            echo '<td><input type="text" name="direccion" value="' . htmlspecialchars($row['tbuniversidadcampusdireccion']) . '" class="form-control" /></td>';
+            echo '<td>';
+            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
+            echo "<button type='submit' class='btn btn-danger' id='delete' name='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+            echo '</td>';
+            echo '</form>';
+            echo '</tr>';
+        }
     }
 
     public function getAllDeletedTbCampus()
@@ -139,19 +151,18 @@ class CampusData extends Data
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbcampus WHERE tbuniversidadcampusnombre = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
-    
 }

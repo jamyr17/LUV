@@ -30,10 +30,6 @@
             <tr>
                 <td>
                     <a href="view/campusView.php">Campus</a>
-                </td> 
-            </tr>
-            <tr>
-                <td>
                     <a href="view/areaConocimientoView.php">Área de Conocimiento</a>
                 </td> 
             </tr>

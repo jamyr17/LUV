@@ -133,5 +133,37 @@ class GeneroData extends Data
         
         return $count > 0;
     }
+
+    public function insertRequestTbGenero($genero)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener el ID máximo
+        $queryGetLastId = "SELECT MAX(tbsolicitudgeneroid) AS max_id FROM tbsolicitudgenero";
+        $result = mysqli_query($conn, $queryGetLastId);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            // Obtén el ID máximo o establece 0 si la tabla está vacía
+            $maxId = $row['max_id'];
+            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            // Si no se obtiene resultado, asegúrate de manejar el error adecuadamente
+            $nextId = 1;
+        }
+
+        $nombre = mysqli_real_escape_string($conn, $genero->getTbGeneroNombre());
+        $estado = 0;
+
+        // Consulta para insertar un nuevo registro
+        $queryInsert = "INSERT INTO tbsolicitudgenero (tbsolicitudgeneroid, tbsolicitudgeneronombre, tbsolicitudgeneroestado) 
+                        VALUES ($nextId, '$nombre', $estado)";
+
+        $resultInsert = mysqli_query($conn, $queryInsert);
+        mysqli_close($conn);
+
+        return $resultInsert;
+    }
+
 }
-?>
+

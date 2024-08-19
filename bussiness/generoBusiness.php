@@ -37,5 +37,9 @@ class GeneroBusiness {
     public function exist($nombre) {
         return $this->generoData->exist($nombre);
     }
+
+    public function insertRequestTbGenero($genero){
+        return $this->generoData->insertRequestTbGenero($genero);
+    }
+
 }
-?>

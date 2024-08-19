@@ -2,5 +2,3 @@
 En la clase [[30-07-2024 revisión 1]] se presentó el CRUD de Universidad ante el profesor recibiendo correcciones y anotaciones sobre lo siguiente por hacer.
 =======
 En la clase [[30-07-2024 revisión 1]] se presentó el CRUD de Universidad ante el profesor recibiendo correcciones y anotaciones sobre lo siguiente por hacer.
-En la clase [[13-08-2024 revisión 2 ]]se presentó el segundo avance de CRUD de campus, orientación sexual, género y área de conocimiento, además de agregados como las sesiones. 
->>>>>>> Stashed changes

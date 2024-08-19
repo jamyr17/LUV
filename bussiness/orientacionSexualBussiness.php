@@ -37,6 +37,5 @@ class OrientacionSexualBusiness {
         return $this->orientacionSexualData->insertRequestTbOrientacionSexual($orientacionSexual);
     }
 
-
 }
 ?>
