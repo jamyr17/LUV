@@ -126,6 +126,8 @@ $campusBusiness = new CampusBusiness();
                             <div class="col">
                                 <label for="direccion" class="form-label">Dirección: </label>
                                 <input type="text" id="direccion" name="direccion" placeholder="Ingresa el nombre de una sede..." />
+                                <input type="hidden" id="latitud" name="latitud"/>
+                                <input type="hidden" id="longitud" name="longitud"/>
                             </div>
                         </div>
 
@@ -198,7 +200,6 @@ $campusBusiness = new CampusBusiness();
     <script>
         const searchInput = document.querySelector('input[name="direccion"]');
 
-
         document.addEventListener('DOMContentLoaded', function() {
             var autocomplete = new google.maps.places.Autocomplete(searchInput, {
                 contentRestrictions: {
@@ -207,6 +208,9 @@ $campusBusiness = new CampusBusiness();
             });
             autocomplete.addListener('place_changed', function() {
                 var near_place = autocomplete.getPlace();
+                var latLng = near_place.geometry.location;
+                document.getElementById("latitud").value = latLng.lat();
+                document.getElementById("longitud").value = latLng.lng();
                 console.log(near_place);
             });
         });
