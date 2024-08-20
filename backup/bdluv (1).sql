@@ -66,7 +66,7 @@ CREATE TABLE `tbuniversidadcampus` (
 -- Dumping data for table `tbcampus`
 --
 
-INSERT INTO `tbcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`) VALUES
+INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`) VALUES
 (1, 2, 'Rodrigo Facio Brenes', 'Ciudad Universitaria Rodrigo Facio Brenes, San José, San Pedro', 1, '9.937342272538146', '-84.05085337640361', 1),
 (2, 2, 'Campus Sarapiquí', 'Universidad Nacional de Costa Rica UNA- Sede Región Huetar Norte, Campus Sarapiquí, Heredia Province, La Victoria, Costa Rica', 1, '10.319245019295725', '-83.92277926290747', 2),
 (3, 5, 'Campus Nicoya', 'Universidad Nacional de Costa Rica Campus Nicoya, 150, Guanacaste Province, Nicoya, Costa Rica', 1, '10.134830180782343', '-85.44663775890535', 3);
