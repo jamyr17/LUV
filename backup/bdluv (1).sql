@@ -51,7 +51,7 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 -- Table structure for table `tbcampus`
 --
 
-CREATE TABLE `tbcampus` (
+CREATE TABLE `tbuniversidadcampus` (
   `tbuniversidadcampusid` int(11) NOT NULL,
   `tbuniversidadid` int(11) NOT NULL,
   `tbuniversidadcampusnombre` varchar(191) NOT NULL,

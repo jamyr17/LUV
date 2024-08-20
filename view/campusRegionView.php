@@ -1,3 +1,11 @@
+<?php
+  session_start();
+      
+  if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
+      header("location: ./login.php?error=accessDenied");
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

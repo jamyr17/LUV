@@ -2,7 +2,7 @@
 session_start();
     
 if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: view/login.php?error=accessDenied");
+    header("location: ./login.php?error=accessDenied");
 }
 
 include '../bussiness/universidadBussiness.php';
