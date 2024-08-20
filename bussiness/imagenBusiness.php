@@ -22,24 +22,11 @@ class ImagenBusiness {
         return $this->imagenData->deleteTbimagen($idimagen);
     }
 
-    public function deleteForeverTbimagen($idimagen) {
-        return $this->imagenData->deleteForeverTbimagen($idimagen);
-    }
-
     public function getAllTbimagen() {
         return $this->imagenData->getAllTbimagen();
-    }
-
-    public function getAllDeletedTbimagen() {
-        return $this->imagenData->getAllDeletedTbimagen();
     }
 
     public function exist($nombre) {
         return $this->imagenData->exist($nombre);
     }
-
-    public function insertRequestTbimagen($imagen){
-        return $this->imagenData->insertRequestTbimagen($imagen);
-    }
-
 }

@@ -14,6 +14,7 @@ $generoBusiness = new GeneroBusiness();
 $orientacionSexualBusiness = new OrientacionSexualBusiness();
 $imagenBusiness = new ImagenBusiness();
 
+if(isset($_POST['create'])) {
 // Obtener tipo y valor del combo box
 $type = $_POST['idOptionsHidden'] ?? '';
 $selectedId = $_POST['dynamic-select'] ?? '';
@@ -61,11 +62,35 @@ if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_
     if (move_uploaded_file($fileTmpPath, $destination)) {
         $imagen = new Imagen(0, $type, 0, $newFileName, $directory, 1);
         $result = $imagenBusiness->insertTbimagen($imagen);
-        echo 'Archivo subido exitosamente.';
+
+        if ($result == 1) {
+            header("location: ../view/imagenView.php?success=inserted");
+        } else {
+            header("location: ../view/imagenView.php?error=dbError");
+        }
     } else {
         echo 'Error al mover el archivo.';
     }
 } else {
     echo 'No se ha subido ningún archivo o ha ocurrido un error.';
+}
+
+} else if (isset($_POST['delete'])) {
+    if (isset($_POST['id'])) {
+
+        $id = $_POST['id'];
+
+        $imagenBusiness = new ImagenBusiness();
+        $result = $imagenBusiness->deleteTbimagen($id);
+
+        if ($result == 1) {
+            header("location: ../view/imagenView.php?success=deleted");
+        } else {
+            header("location: ../view/imagenView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/imagenView.php?error=error");
+    }
+
 }
 ?>
