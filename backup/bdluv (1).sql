@@ -213,11 +213,11 @@ INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexual
 -- Table structure for table `tbsolicitudcampusuniversidad`
 --
 
-CREATE TABLE `tbsolicitudcampusuniversidad` (
-  `tbsolicitudcampusuniversidadid` int(11) NOT NULL,
-  `tbsolicitudcampusuniversidadnombre` varchar(63) NOT NULL,
+CREATE TABLE `tbsolicituduniversidadcampus` (
+  `tbsolicituduniversidadcampusid` int(11) NOT NULL,
+  `tbsolicituduniversidadcampusnombre` varchar(63) NOT NULL,
   `tbsolicituduniversidadid` int(11) NOT NULL,
-  `tbsolicitudcampusuniversidadestado` tinyint(1) NOT NULL
+  `tbsolicituduniversidadcampusestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
