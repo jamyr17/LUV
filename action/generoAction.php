@@ -1,6 +1,6 @@
 <?php
 
-include './generoBusiness.php';
+include '../bussiness/generoBusiness.php';
 
 if (isset($_POST['update'])) {
 

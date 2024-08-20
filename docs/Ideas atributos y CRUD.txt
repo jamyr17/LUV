@@ -1,0 +1,15 @@
+universidadcampus
+	universidadcampusid
+	universidadid (FK)
+	universidadcampusnombre
+               campusuniversidadubicacionlatitud
+               campusuniversidadubicacionlongitud 
+               campusuniversidadubicaciondescripcion
+	universidadcampusestado	
++cantidadestudiantes
+
+CRUD sugerencia
+CRUD idioma
+CRUD de interés
+CRUD zodiaco
+CRUD mascota

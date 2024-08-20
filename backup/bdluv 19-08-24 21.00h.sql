@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 19, 2024 at 11:04 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 20-08-2024 a las 06:23:18
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bdluv`
+-- Base de datos: `bdluv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbareaconocimiento`
+-- Estructura de tabla para la tabla `tbareaconocimiento`
 --
 
 CREATE TABLE `tbareaconocimiento` (
@@ -35,7 +35,7 @@ CREATE TABLE `tbareaconocimiento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbareaconocimiento`
+-- Volcado de datos para la tabla `tbareaconocimiento`
 --
 
 INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonombre`, `tbareaconocimientodescripcion`, `tbareaconocimientoestado`) VALUES
@@ -48,33 +48,30 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbcampus`
+-- Estructura de tabla para la tabla `tbcampuscolectivo`
 --
 
-CREATE TABLE `tbuniversidadcampus` (
-  `tbuniversidadcampusid` int(11) NOT NULL,
-  `tbuniversidadid` int(11) NOT NULL,
-  `tbuniversidadcampusnombre` varchar(191) NOT NULL,
-  `tbuniversidadcampusdireccion` varchar(191) NOT NULL,
-  `tbuniversidadcampusestado` tinyint(1) NOT NULL,
-  `tbuniversidadcampuslatitud` varchar(30) DEFAULT NULL,
-  `tbuniversidadcampuslongitud` varchar(30) DEFAULT NULL,
-  `tbuniversidadcampusregionid` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `tbcampuscolectivo` (
+  `tbcampuscolectivoid` int(11) NOT NULL,
+  `tbcampuscolectivonombre` varchar(633) NOT NULL,
+  `tbcampuscolectivodescripcion` varchar(255) NOT NULL,
+  `tbcampuscolectivoestado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbcampus`
+-- Volcado de datos para la tabla `tbcampuscolectivo`
 --
 
-INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`) VALUES
-(1, 2, 'Rodrigo Facio Brenes', 'Ciudad Universitaria Rodrigo Facio Brenes, San José, San Pedro', 1, '9.937342272538146', '-84.05085337640361', 1),
-(2, 2, 'Campus Sarapiquí', 'Universidad Nacional de Costa Rica UNA- Sede Región Huetar Norte, Campus Sarapiquí, Heredia Province, La Victoria, Costa Rica', 1, '10.319245019295725', '-83.92277926290747', 2),
-(3, 5, 'Campus Nicoya', 'Universidad Nacional de Costa Rica Campus Nicoya, 150, Guanacaste Province, Nicoya, Costa Rica', 1, '10.134830180782343', '-85.44663775890535', 3);
+INSERT INTO `tbcampuscolectivo` (`tbcampuscolectivoid`, `tbcampuscolectivonombre`, `tbcampuscolectivodescripcion`, `tbcampuscolectivoestado`) VALUES
+(1, 'Volleyball', 'Equipo Representativo de Volleyball', 1),
+(2, 'Fútbol', 'Equipo Representativo de Fútbol', 1),
+(3, 'Danza', 'Equipo Representativo de Baile', 1),
+(4, 'Ping pong', 'Comunidad estudiantil grande interesada en el ping pong', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbcampusespecializacion`
+-- Estructura de tabla para la tabla `tbcampusespecializacion`
 --
 
 CREATE TABLE `tbcampusespecializacion` (
@@ -85,16 +82,25 @@ CREATE TABLE `tbcampusespecializacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbcampusespecializacion`
+-- Volcado de datos para la tabla `tbcampusespecializacion`
 --
 
 INSERT INTO `tbcampusespecializacion` (`tbcampusespecializacionid`, `tbcampusespecializacionnombre`, `tbcampusespecializaciondescripcion`, `tbcampusespecializacionestado`) VALUES
-(1, 'claro claro', 'si pa', 1);
+(1, 'Agricultura y Ciencias Agropecuarias', 'Especialización en técnicas agrícolas avanzadas, manejo de cultivos, ganadería, y sostenibilidad en la agricultura.', 1),
+(2, 'Ciencias Sociales', 'Enfoque en el estudio de la sociedad y el comportamiento humano, abarcando psicología, sociología, y antropología.', 1),
+(3, 'Ciencias Políticas', 'Especialización en el análisis de sistemas políticos, relaciones internacionales, teoría política, y políticas públicas.', 1),
+(4, 'Economía', 'Estudio de principios económicos, análisis de mercados, teoría económica, y políticas económicas para el desarrollo sostenible.', 1),
+(5, 'Ingeniería Ambiental', 'Foco en la protección del medio ambiente, manejo de recursos naturales, y desarrollo de tecnologías para la sostenibilidad.', 1),
+(6, 'Medicina y Ciencias de la Salud', 'Especialización en prácticas médicas, investigación en salud, manejo de enfermedades y promoción de la salud pública.', 1),
+(7, 'Arquitectura y Urbanismo', 'Estudio del diseño de edificios y espacios urbanos, planificación territorial, y desarrollo de proyectos arquitectónicos sostenibles.', 1),
+(8, 'Derecho', 'Enfoque en el estudio de leyes, ética legal, y procedimientos judiciales, incluyendo áreas como derecho civil, penal y comercial.', 1),
+(9, 'Historia y Arqueología', 'Estudio de eventos históricos, análisis de civilizaciones antiguas, y técnicas arqueológicas para entender el pasado humano.', 1),
+(10, 'Literatura y Lenguas', 'Exploración de diversas literaturas y lenguas, análisis literario, y estudios de traducción y lingüística aplicada.', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbcampusregion`
+-- Estructura de tabla para la tabla `tbcampusregion`
 --
 
 CREATE TABLE `tbcampusregion` (
@@ -105,7 +111,7 @@ CREATE TABLE `tbcampusregion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbcampusregion`
+-- Volcado de datos para la tabla `tbcampusregion`
 --
 
 INSERT INTO `tbcampusregion` (`tbcampusregionid`, `tbcampusregionnombre`, `tbcampusregiondescripcion`, `tbcampusregionestado`) VALUES
@@ -120,7 +126,7 @@ INSERT INTO `tbcampusregion` (`tbcampusregionid`, `tbcampusregionnombre`, `tbcam
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbgenero`
+-- Estructura de tabla para la tabla `tbgenero`
 --
 
 CREATE TABLE `tbgenero` (
@@ -131,7 +137,7 @@ CREATE TABLE `tbgenero` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbgenero`
+-- Volcado de datos para la tabla `tbgenero`
 --
 
 INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `tbgeneroestado`) VALUES
@@ -144,13 +150,12 @@ INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `
 (7, 'Genero queer', 'Un término general que algunas personas usan para describir una identidad de género que no se ajusta a las normas convencionales de género. Es un término flexible y puede tener diferentes significados para diferentes personas.', 1),
 (8, 'Demigénero', 'Incluye identidades como demi-hombre o demi-mujer, donde la persona se identifica parcialmente con un género (masculino o femenino) pero no completamente.', 1),
 (9, 'Intergénero', 'Se refiere a personas que tienen una identidad de género que está entre las categorías de masculino y femenino, o es una combinación de ambos.', 1),
-(10, 'Dos espíritus', 'Un término utilizado por algunas culturas indígenas en Norteamérica para describir a una persona que encarna tanto el espíritu masculino como el femenino. Es un término culturalmente específico y tiene significados únicos en diferentes comunidades indígen', 1),
-(11, 'ya', 'ya', 1);
+(10, 'Dos espíritus', 'Un término utilizado por algunas culturas indígenas en Norteamérica para describir a una persona que encarna tanto el espíritu masculino como el femenino. Es un término culturalmente específico y tiene significados únicos en diferentes comunidades indígen', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbimagen`
+-- Estructura de tabla para la tabla `tbimagen`
 --
 
 CREATE TABLE `tbimagen` (
@@ -163,19 +168,18 @@ CREATE TABLE `tbimagen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbimagen`
+-- Volcado de datos para la tabla `tbimagen`
 --
 
 INSERT INTO `tbimagen` (`tbimagenid`, `tbimagencrudid`, `tbimagenregistroid`, `tbimagendirectorio`, `tbimagennombre`, `tbimagenestado`) VALUES
-(1, 0, 3, '0', '../resources/img/genero/', 1),
-(2, 3, 0, 'no-binario', '../resources/img/genero/', 1),
-(3, 3, 0, '../resources/img/genero/', 'no-binario', 1),
-(4, 3, 0, '../resources/img/genero/', 'no-binario.png', 1);
+(1, 1, 0, '../resources/img/universidad/', 'universidad-nacional-de-costa-rica.png', 1),
+(2, 5, 0, '../resources/img/campus/', '.jpeg', 0),
+(3, 5, 0, '../resources/img/campus/', 'campus-sarapiquí.jpeg', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tborientacionsexual`
+-- Estructura de tabla para la tabla `tborientacionsexual`
 --
 
 CREATE TABLE `tborientacionsexual` (
@@ -186,7 +190,7 @@ CREATE TABLE `tborientacionsexual` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tborientacionsexual`
+-- Volcado de datos para la tabla `tborientacionsexual`
 --
 
 INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexualnombre`, `tborientacionsexualdescripcion`, `tborientacionsexualestado`) VALUES
@@ -210,20 +214,7 @@ INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexual
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicitudcampusuniversidad`
---
-
-CREATE TABLE `tbsolicituduniversidadcampus` (
-  `tbsolicituduniversidadcampusid` int(11) NOT NULL,
-  `tbsolicituduniversidadcampusnombre` varchar(63) NOT NULL,
-  `tbsolicituduniversidadid` int(11) NOT NULL,
-  `tbsolicituduniversidadcampusestado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbsolicitudgenero`
+-- Estructura de tabla para la tabla `tbsolicitudgenero`
 --
 
 CREATE TABLE `tbsolicitudgenero` (
@@ -232,17 +223,10 @@ CREATE TABLE `tbsolicitudgenero` (
   `tbsolicitudgeneroestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `tbsolicitudgenero`
---
-
-INSERT INTO `tbsolicitudgenero` (`tbsolicitudgeneroid`, `tbsolicitudgeneronombre`, `tbsolicitudgeneroestado`) VALUES
-(1, 'kiul', 1);
-
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicitudorientacionsexual`
+-- Estructura de tabla para la tabla `tbsolicitudorientacionsexual`
 --
 
 CREATE TABLE `tbsolicitudorientacionsexual` (
@@ -252,7 +236,7 @@ CREATE TABLE `tbsolicitudorientacionsexual` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbsolicitudorientacionsexual`
+-- Volcado de datos para la tabla `tbsolicitudorientacionsexual`
 --
 
 INSERT INTO `tbsolicitudorientacionsexual` (`tbsolicitudorientacionsexualid`, `tbsolicitudorientacionsexualnombre`, `tbsolicitudorientacionsexualestado`) VALUES
@@ -263,7 +247,7 @@ INSERT INTO `tbsolicitudorientacionsexual` (`tbsolicitudorientacionsexualid`, `t
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicituduniversidad`
+-- Estructura de tabla para la tabla `tbsolicituduniversidad`
 --
 
 CREATE TABLE `tbsolicituduniversidad` (
@@ -273,17 +257,36 @@ CREATE TABLE `tbsolicituduniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbsolicituduniversidad`
+-- Volcado de datos para la tabla `tbsolicituduniversidad`
 --
 
 INSERT INTO `tbsolicituduniversidad` (`tbsolicituduniversidadid`, `tbsolicituduniversidadnombre`, `tbsolicituduniversidadestado`) VALUES
-(1, 'solo eso no', 0),
-(2, 'ife', 0);
+(1, 'Universidad Fidélitas', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbtipousuario`
+-- Estructura de tabla para la tabla `tbsolicituduniversidadcampus`
+--
+
+CREATE TABLE `tbsolicituduniversidadcampus` (
+  `tbsolicituduniversidadcampusid` int(11) NOT NULL,
+  `tbsolicituduniversidadcampusnombre` varchar(63) NOT NULL,
+  `tbsolicituduniversidadid` int(11) NOT NULL,
+  `tbsolicituduniversidadcampusestado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbsolicituduniversidadcampus`
+--
+
+INSERT INTO `tbsolicituduniversidadcampus` (`tbsolicituduniversidadcampusid`, `tbsolicituduniversidadcampusnombre`, `tbsolicituduniversidadid`, `tbsolicituduniversidadcampusestado`) VALUES
+(1, '2', 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbtipousuario`
 --
 
 CREATE TABLE `tbtipousuario` (
@@ -293,7 +296,7 @@ CREATE TABLE `tbtipousuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbtipousuario`
+-- Volcado de datos para la tabla `tbtipousuario`
 --
 
 INSERT INTO `tbtipousuario` (`tbtipousuarioid`, `tbtipousuarionombre`, `tbtipousuarioestado`) VALUES
@@ -303,7 +306,7 @@ INSERT INTO `tbtipousuario` (`tbtipousuarioid`, `tbtipousuarionombre`, `tbtipous
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidad`
+-- Estructura de tabla para la tabla `tbuniversidad`
 --
 
 CREATE TABLE `tbuniversidad` (
@@ -313,20 +316,71 @@ CREATE TABLE `tbuniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbuniversidad`
+-- Volcado de datos para la tabla `tbuniversidad`
 --
 
 INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) VALUES
-(1, 'Universidad Nacional', 0),
+(1, 'Universidad Nacional de Costa Rica', 1),
 (2, 'Universidad de Costa Rica', 1),
-(3, 'Tecnológico de Costa Rica', 0),
-(4, 'Universidad Técnica Nacional', 1),
-(5, 'Probanding', 0);
+(3, 'Tecnológico de Costa Rica', 1),
+(4, 'Universidad Técnica Nacional de Costa Rica', 1),
+(5, 'Universidad Nacional de Educación A Distancia', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbusuario`
+-- Estructura de tabla para la tabla `tbuniversidadcampus`
+--
+
+CREATE TABLE `tbuniversidadcampus` (
+  `tbuniversidadcampusid` int(11) NOT NULL,
+  `tbuniversidadid` int(11) NOT NULL,
+  `tbuniversidadcampusnombre` varchar(191) NOT NULL,
+  `tbuniversidadcampusdireccion` varchar(191) NOT NULL,
+  `tbuniversidadcampusestado` tinyint(1) NOT NULL,
+  `tbuniversidadcampuslatitud` varchar(30) DEFAULT NULL,
+  `tbuniversidadcampuslongitud` varchar(30) DEFAULT NULL,
+  `tbuniversidadcampusregionid` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbuniversidadcampus`
+--
+
+INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`) VALUES
+(1, 1, 'Campus Sarapiquí', 'La Victoria', 1, '', '', 6),
+(2, 2, 'Rodrigo Facio', 'Montes de Oca', 1, '', '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbuniversidadcampuscolectivo`
+--
+
+CREATE TABLE `tbuniversidadcampuscolectivo` (
+  `tbuniversidadcampuscolectivoid` int(11) NOT NULL,
+  `tbuniversidadcampusid` int(11) NOT NULL,
+  `tbcolectivoid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbuniversidadcampuscolectivo`
+--
+
+INSERT INTO `tbuniversidadcampuscolectivo` (`tbuniversidadcampuscolectivoid`, `tbuniversidadcampusid`, `tbcolectivoid`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 2, 1),
+(6, 2, 2),
+(7, 2, 3),
+(8, 2, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbusuario`
 --
 
 CREATE TABLE `tbusuario` (
@@ -338,7 +392,7 @@ CREATE TABLE `tbusuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbusuario`
+-- Volcado de datos para la tabla `tbusuario`
 --
 
 INSERT INTO `tbusuario` (`tbusuarioid`, `tbusuarionombre`, `tbusuariocontrasena`, `tbusuarioestado`, `tbtipousuarioid`) VALUES

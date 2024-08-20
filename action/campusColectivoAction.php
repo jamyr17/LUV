@@ -1,6 +1,6 @@
 <?php
 
-include './campusColectivoBussiness.php';
+include '../bussiness/campusColectivoBussiness.php';
 
 if (isset($_POST['update'])) {
 

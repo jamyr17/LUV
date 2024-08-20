@@ -75,7 +75,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/generoAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/generoAction.php" style="width: 50vw; min-width:300px;">
                 <input type="hidden" name="genero" value="<?php echo htmlspecialchars($idGenero); ?>">
 
                 <div class="row">
@@ -125,7 +125,7 @@
           if ($generos != null) {
             foreach ($generos as $genero) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/generoAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/generoAction.php">';
               echo '<input type="hidden" name="idGenero" value="' . htmlspecialchars($genero->getTbGeneroId()) . '">';
               echo '<td>' . htmlspecialchars($genero->getTbGeneroId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($genero->getTbGeneroNombre()) . '" class="form-control" /></td>';

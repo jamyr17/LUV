@@ -74,7 +74,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/campusColectivoAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/campusColectivoAction.php" style="width: 50vw; min-width:300px;">
                 <input type="hidden" name="idCampusColectivo" value="<?php echo htmlspecialchars($tbCampusColectivoId); ?>">
 
                 <div class="row">
@@ -122,7 +122,7 @@
           if ($campusColectivos != null) {
             foreach ($campusColectivos as $campusColectivo) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusColectivoAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/campusColectivoAction.php">';
               echo '<input type="hidden" name="idCampusColectivo" value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '">';
               echo '<td>' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoNombre()) . '" class="form-control" /></td>';

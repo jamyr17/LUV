@@ -70,7 +70,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-          <form method="post" action="../bussiness/areaConocimientoAction.php" style="width: 50vw; min-width:300px;">
+          <form method="post" action="../action/areaConocimientoAction.php" style="width: 50vw; min-width:300px;">
             <input type="hidden" name="areaConocimiento" value="<?php echo htmlspecialchars($idAreaConocimiento ?? ''); ?>">
 
             <div class="row mb-3">
@@ -121,7 +121,7 @@
           if ($areasConocimiento != null) {
             foreach ($areasConocimiento as $areaConocimiento) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/areaConocimientoAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/areaConocimientoAction.php">';
               echo '<input type="hidden" name="idAreaConocimiento" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '">';
               echo '<td>' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '" class="form-control" /></td>';

@@ -78,7 +78,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/universidadAction.php" style="width: 50vvw; min-width:300px;">
+            <form method="post" action="../action/universidadAction.php" style="width: 50vvw; min-width:300px;">
                 <input type="hidden" name="universidad" value="<?php echo htmlspecialchars($idUniversidad); ?>">
 
                 <div class="row">
@@ -121,7 +121,7 @@
           if ($universidades != null) {
             foreach ($universidades as $universidad) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/universidadAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadAction.php">';
               echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '">';
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '" class="form-control" /></td>';

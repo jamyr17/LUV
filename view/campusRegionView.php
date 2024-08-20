@@ -63,13 +63,14 @@
     <section id="form">
       <div class="container">
 
+        <button onclick="window.location.href='../indexView.php';">Volver</button>
         <div class="text-center mb-4">
             <h3>Agregar una nueva región</h3>
             <p class="text-muted">Complete el formulario para añadir una nueva región</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/campusRegionAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/campusRegionAction.php" style="width: 50vw; min-width:300px;">
                 <input type="hidden" name="campusRegion" value="<?php echo htmlspecialchars($idCampusRegion); ?>">
 
                 <div class="row">
@@ -119,7 +120,7 @@
           if ($campusRegions != null) {
             foreach ($campusRegions as $campusRegion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusRegionAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/campusRegionAction.php">';
               echo '<input type="hidden" name="idCampusRegion" value="' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '">';
               echo '<td>' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbCampusRegionNombre()) . '" class="form-control" /></td>';

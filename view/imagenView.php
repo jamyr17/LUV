@@ -100,6 +100,12 @@ $imagenBusiness = new ImagenBusiness();
 
         <section id="form">
             <div class="container">
+                <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <div class="text-center mb-4">
+                    <h3>Agregar una nueva imagen</h3>
+                    <p class="text-muted">Complete el formulario para añadir una nueva imagen</p>
+                </div>
+
                 <div class="container d-flex justify-content-center">
                     <label for="idOptions">Opciones:</label>
                     <select id="idOptions" name="idOptions" onchange="updateOptions(); updateHiddenIdOptions();">
@@ -112,7 +118,7 @@ $imagenBusiness = new ImagenBusiness();
                     </select>
                 </div>
 
-                <form method="post" action="../bussiness/imagenAction.php" enctype="multipart/form-data" style="width: 50vw; min-width:300px;">
+                <form method="post" action="../action/imagenAction.php" enctype="multipart/form-data" style="width: 50vw; min-width:300px;">
                     <input type="hidden" name="idOptionsHidden" id="idOptionsHidden">
                     <input type="hidden" name="dynamic-select-name" id="dynamic-select-name">
                     <div>
@@ -147,7 +153,7 @@ $imagenBusiness = new ImagenBusiness();
                         if ($imagen != null) {
                             foreach ($imagen as $imag) {
                                 echo '<tr>';
-                                echo '<form method="post" enctype="multipart/form-data" action="../bussiness/imagenAction.php">';
+                                echo '<form method="post" enctype="multipart/form-data" action="../action/imagenAction.php">';
                                 echo '<input type="hidden" name="id" value="' . htmlspecialchars($imag->getTbImagenId()) . '">';
                                 echo '<td>' . htmlspecialchars($imag->getTbImagenId()) . '</td>';
                                 echo '<td><input type="text" name="dynamic-select-name" id="dynamic-select-name" value="' . htmlspecialchars($imag->gettbImagenNombre()) . '" class="form-control" /></td>';

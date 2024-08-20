@@ -7,7 +7,7 @@
 - [x] CRUD de tbgenero (JAMEL)
 - [x] CRUD de tbareaconocimiento (KEVIN)
 - [x] Sesiones de Administrador y Usuario (JAMYR)
-- [ ] Solicitudes para agregar registros de parte de usuarios a administradores (JAMEL Y GERALD)
+- [x] Solicitudes para agregar registros de parte de usuarios a administradores (JAMEL Y GERALD)
 	- A los usuarios se les va a desplegar un combo box para seleccionar orientación sexual o género con una opción de "Otro" en la que, si es seleccionada, le permite ingresar el nombre y descripción. Además, si el usuario ingresa una solicitud, se debe hacer 1 de las siguientes 2 cosas:
 		- Se envía un correo electrónico al Administrador con los datos de la nueva solicitud y al usuario solo se le muestra un mensaje de confirmación.
 		- Se va a crear 1 tabla en base de datos de tbsoliticitudesorientacionsexual (por ejemplo), a la cual le van a estar entrando los registros enviados por usuarios. Cada entidad debe tener un tbsoliticitudesorientacionsexualestado que indica si fue aceptada o no. Al usuario también se le mostraría un mensaje de confirmación.

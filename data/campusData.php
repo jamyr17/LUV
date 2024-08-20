@@ -35,6 +35,26 @@ class CampusData extends Data
                         VALUES ($nextId, '$universidadId', '$nombre','$direccion', '$latitud', '$longitud', $estado, $regionId)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
+
+        // Consulta para obtener el ID máximo
+        $queryGetLastIdAux = "SELECT MAX(tbuniversidadcampuscolectivoid) AS max_id FROM tbuniversidadcampuscolectivo";
+        $resultAux = mysqli_query($conn, $queryGetLastIdAux);
+
+        if ($row = mysqli_fetch_assoc($resultAux)) {
+            $maxId = $row['max_id'];
+            $nextIdAux = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextIdAux = 1;
+        }
+        
+        $colectivos = $campus->getColectivos();
+        foreach ($colectivos as $colectivoId) {
+            $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
+            $query = "INSERT INTO tbuniversidadcampuscolectivo (tbuniversidadcampuscolectivoid, tbuniversidadcampusid, tbcolectivoid) VALUES ($nextIdAux, $nextId, $colectivoIdEscaped)";
+            $resultInsert = mysqli_query($conn, $query);
+            $nextIdAux++;
+        }
+
         mysqli_close($conn);
 
         return $resultInsert;
