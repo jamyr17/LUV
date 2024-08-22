@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 En la clase [[30-07-2024 revisión 1]] se presentó el CRUD de Universidad ante el profesor recibiendo correcciones y anotaciones sobre lo siguiente por hacer.
-=======
-En la clase [[30-07-2024 revisión 1]] se presentó el CRUD de Universidad ante el profesor recibiendo correcciones y anotaciones sobre lo siguiente por hacer.
+En la clase [[30-07-2024 revisión 2]] se presentó el segundo avance y hubo correcciones.
+En la clase [[20-08-2024 revisión 3]] se presentó el tercer avance en donde no hubo observaciones, sólo ideas de cómo continuar para la siguiente semana que es el avance 1.
