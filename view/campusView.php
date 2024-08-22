@@ -9,11 +9,13 @@ include '../bussiness/universidadBussiness.php';
 include '../bussiness/campusBussiness.php';
 include '../bussiness/campusRegionBusiness.php';
 include '../bussiness/campusColectivoBussiness.php';
+include '../bussiness/campusEspecializacionBussiness.php';
 
 $universidadBusiness = new UniversidadBusiness();
 $campusBusiness = new CampusBusiness();
 $campusRegionBusiness = new CampusRegionBusiness();
 $campusColectivoBusiness = new CampusColectivoBussiness();
+$campusEspecializacionBusiness =  new CampusEspecializacionBussiness();
 ?>
 
 <!DOCTYPE html>
@@ -133,6 +135,18 @@ $campusColectivoBusiness = new CampusColectivoBussiness();
                             if ($campusColectivos != null) {
                                 foreach ($campusColectivos as $campusColectivo) {
                                     echo '<option value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '">' . htmlspecialchars($campusColectivo->getTbCampusColectivoNombre()) . '</option>';
+                                }
+                            }
+                            ?>
+                        </select><br>
+
+                        <label for="idEspecializacion">Seleccione su especialización: </label>
+                        <select name="idEspecializacion[]" id="idEspecializacion" multiple>
+                            <?php
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbCampusEspecializacion();
+                            if ($campusEspecializaciones != null) {
+                                foreach ($campusEspecializaciones as $campusEspecializacion) {
+                                    echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbCampusEspecializacionId()) . '">' . htmlspecialchars($campusEspecializacion->getTbCampusEspecializacionNombre()) . '</option>';
                                 }
                             }
                             ?>
