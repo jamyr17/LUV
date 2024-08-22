@@ -1,9 +1,9 @@
 <?php
-    session_start();
-    
-    if($_SESSION["tipoUsuario"]=="Usuario" || empty($_SESSION["tipoUsuario"])){
-        header("location: view/login.php?error=accessDenied");
-    }
+  session_start();
+      
+  if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
+      header("location: ./login.php?error=accessDenied");
+  }
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/orientacionSexualAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/orientacionSexualAction.php" style="width: 50vw; min-width:300px;">
                 <input type="hidden" name="idOrientacionSexual" value="<?php echo htmlspecialchars($tbOrientacionSexualId); ?>">
 
                 <div class="row">
@@ -121,7 +121,7 @@
           if ($orientacionesSexuales != null) {
             foreach ($orientacionesSexuales as $orientacionSexual) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/orientacionSexualAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/orientacionSexualAction.php">';
               echo '<input type="hidden" name="idOrientacionSexual" value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '">';
               echo '<td>' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '" class="form-control" /></td>';

@@ -12,7 +12,7 @@ class CampusData extends Data
         $conn->set_charset('utf8');
 
         // Consulta para obtener el ID máximo
-        $queryGetLastId = "SELECT MAX(tbuniversidadcampusid) AS max_id FROM tbcampus";
+        $queryGetLastId = "SELECT MAX(tbuniversidadcampusid) AS max_id FROM tbuniversidadcampus";
         $result = mysqli_query($conn, $queryGetLastId);
 
         if ($row = mysqli_fetch_assoc($result)) {
@@ -31,10 +31,30 @@ class CampusData extends Data
         $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
 
         // Consulta para insertar un nuevo registro
-        $queryInsert = "INSERT INTO tbcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampuslatitud, tbuniversidadcampuslongitud, tbuniversidadcampusestado, tbuniversidadcampusregionid) 
+        $queryInsert = "INSERT INTO tbuniversidadcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampuslatitud, tbuniversidadcampuslongitud, tbuniversidadcampusestado, tbuniversidadcampusregionid) 
                         VALUES ($nextId, '$universidadId', '$nombre','$direccion', '$latitud', '$longitud', $estado, $regionId)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
+
+        // Consulta para obtener el ID máximo
+        $queryGetLastIdAux = "SELECT MAX(tbuniversidadcampuscolectivoid) AS max_id FROM tbuniversidadcampuscolectivo";
+        $resultAux = mysqli_query($conn, $queryGetLastIdAux);
+
+        if ($row = mysqli_fetch_assoc($resultAux)) {
+            $maxId = $row['max_id'];
+            $nextIdAux = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextIdAux = 1;
+        }
+        
+        $colectivos = $campus->getColectivos();
+        foreach ($colectivos as $colectivoId) {
+            $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
+            $query = "INSERT INTO tbuniversidadcampuscolectivo (tbuniversidadcampuscolectivoid, tbuniversidadcampusid, tbcolectivoid) VALUES ($nextIdAux, $nextId, $colectivoIdEscaped)";
+            $resultInsert = mysqli_query($conn, $query);
+            $nextIdAux++;
+        }
+
         mysqli_close($conn);
 
         return $resultInsert;
@@ -51,7 +71,7 @@ class CampusData extends Data
         $latitud = $campus->getTbCampusLatitud();
         $longitud = $campus->getTbCampusLongitud();
 
-        $queryUpdate = "UPDATE tbcampus SET tbuniversidadcampusnombre='$nombre', tbuniversidadcampusdireccion='$direccion', tbuniversidadcampuslatitud='$latitud', tbuniversidadcampuslongitud='$longitud' WHERE tbuniversidadcampusid=$id;";
+        $queryUpdate = "UPDATE tbuniversidadcampus SET tbuniversidadcampusnombre='$nombre', tbuniversidadcampusdireccion='$direccion', tbuniversidadcampuslatitud='$latitud', tbuniversidadcampuslongitud='$longitud' WHERE tbuniversidadcampusid=$id;";
 
         $result = mysqli_query($conn, $queryUpdate);
         mysqli_close($conn);
@@ -64,7 +84,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "UPDATE tbcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadcampusid=$campusId;";
+        $queryDelete = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadcampusid=$campusId;";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
@@ -76,7 +96,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "DELETE FROM tbcampus WHERE tbuniversidadcampusid=" . $campusId . ";";
+        $queryDelete = "DELETE FROM tbuniversidadcampus WHERE tbuniversidadcampusid=" . $campusId . ";";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
@@ -88,7 +108,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampus WHERE tbuniversidadcampusestado = 1;";
+        $querySelect = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 1;";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
 
@@ -106,7 +126,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampus WHERE tbuniversidadcampusestado = 1 AND tbuniversidadid =" . $idU . ";";
+        $querySelect = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 1 AND tbuniversidadid =" . $idU . ";";
 
         $result = mysqli_query($conn, $querySelect);
 
@@ -137,7 +157,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampus;";
+        $querySelect = "SELECT * FROM tbuniversidadcampus;";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
 
@@ -155,7 +175,7 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $query = "SELECT COUNT(*) as count FROM tbcampus WHERE tbuniversidadcampusnombre = ?";
+        $query = "SELECT COUNT(*) as count FROM tbuniversidadcampus WHERE tbuniversidadcampusnombre = ?";
 
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
@@ -170,4 +190,34 @@ class CampusData extends Data
 
         return $count > 0;
     }
+
+    public function insertRequestTbCampus($campus)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener el ID máximo
+        $queryGetLastId = "SELECT MAX(tbsolicituduniversidadcampusid) AS max_id FROM tbsolicituduniversidadcampus";
+        $result = mysqli_query($conn, $queryGetLastId);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            $maxId = $row['max_id'];
+            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextId = 1;
+        }
+
+        $universidadId = mysqli_real_escape_string($conn, $campus->getTbCampusUniversidadId());
+        $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+
+        // Consulta para insertar un nuevo registro
+        $queryInsert = "INSERT INTO tbsolicituduniversidadcampus (tbsolicituduniversidadcampusid, tbsolicituduniversidadcampusnombre, tbsolicituduniversidadid, tbsolicituduniversidadcampusestado)
+                        VALUES ($nextId, '$nombre','$universidadId', '0')";
+
+        $resultInsert = mysqli_query($conn, $queryInsert);
+        mysqli_close($conn);
+
+        return $resultInsert;
+    }
+
 }

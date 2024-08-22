@@ -1,6 +1,6 @@
 <?php
 
-include './campusBussiness.php';
+include '../bussiness/campusBussiness.php';
 
 if (isset($_POST['update'])) {
 
@@ -73,6 +73,7 @@ if (isset($_POST['update'])) {
         $direccion = $_POST['direccion'];
         $latitud = $_POST['latitud'];
         $longitud = $_POST['longitud'];
+        $colectivos = isset($_POST['colectivos']) ? $_POST['colectivos'] : [];
 
         if (strlen($nombre) > 0 && strlen($direccion > 0)) {
             if (!is_numeric($nombre)) {
@@ -84,8 +85,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1);
-    
+                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $colectivos);
                     $result = $campusBusiness->insertTbCampus($campus);
     
                     if ($result == 1) {

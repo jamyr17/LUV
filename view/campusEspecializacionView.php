@@ -67,13 +67,14 @@
     <section id="form">
       <div class="container">
 
+        <button onclick="window.location.href='../indexView.php';">Volver</button>
         <div class="text-center mb-4">
             <h3>Agregar una nueva especialización de campus</h3>
             <p class="text-muted">Complete el formulario para añadir una nueva especialización de campus</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../bussiness/campusEspecializacionAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/campusEspecializacionAction.php" style="width: 50vw; min-width:300px;">
                 <input type="hidden" name="campusEspecializacion" value="<?php echo htmlspecialchars($idCampusEspecializacion); ?>">
 
                 <div class="row">
@@ -123,7 +124,7 @@
           if ($especializaciones != null) {
             foreach ($especializaciones as $especializacion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusEspecializacionAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/campusEspecializacionAction.php">';
               echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbCampusEspecializacionId()) . '">';
               echo '<td>' . htmlspecialchars($especializacion->getTbCampusEspecializacionId()) . '</td>';
               echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbCampusEspecializacionNombre()) . '" class="form-control" /></td>';

@@ -18,18 +18,21 @@
 
 <body>
     <div id="cruds">
-        <h3>LUV</h3>  
         <h3>Index</h3>  
         <table id="tabla">
             <th>CRUD</th>
             <tr>
                 <td>
-                    <a href="view/universidadView.php">Universidades</a>
+                    <a href="view/universidadView.php">Universidad</a>
                 </td>
             </tr>
             <tr>
                 <td>
                     <a href="view/campusView.php">Campus</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
                     <a href="view/areaConocimientoView.php">Área de Conocimiento</a>
                 </td> 
             </tr>
@@ -46,6 +49,21 @@
             <tr>
                 <td>
                     <a href="view/campusColectivoView.php">Campus Colectivo</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/campusRegionView.php">Campus Región</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/campusEspecializacionView.php">Campus Especialización</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/imagenView.php">Imagen</a>
                 </td> 
             </tr>
         </table>

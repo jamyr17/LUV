@@ -34,7 +34,7 @@
         <div>
             <h3>Inicie sesión en LUV</h3>
 
-            <form method="post" action="../bussiness/usuarioAction.php">
+            <form method="post" action="../action/usuarioAction.php">
                 <input required type="text" name="nombreUsuario" id="nombreUsuario" placeholder="Ingrese su nombre de usuario" />
                 <input required type="password" name="contrasena" id="contrasena" placeholder="Ingrese su contraseña" />
 

@@ -9,8 +9,9 @@ class Campus {
     private $tbCampusLatitud;
     private $tbCampusLongitud;
     private $tbCampusEstado;
+    private $colectivos; 
 
-    public function __construct($tbCampusId, $tbCampusUniversidadId, $tbCampusRegionId,$tbCampusNombre, $tbCampusDireccion, $tbCampusLatitud, $tbCampusLongitud, $tbCampusEstado) {
+    public function __construct($tbCampusId, $tbCampusUniversidadId, $tbCampusRegionId, $tbCampusNombre, $tbCampusDireccion, $tbCampusLatitud, $tbCampusLongitud, $tbCampusEstado, $colectivos = []) {
         $this->tbCampusId = $tbCampusId;
         $this->tbCampusUniversidadId = $tbCampusUniversidadId;
         $this->tbCampusRegionId = $tbCampusRegionId;
@@ -19,6 +20,7 @@ class Campus {
         $this->tbCampusLatitud = $tbCampusLatitud;
         $this->tbCampusLongitud = $tbCampusLongitud;
         $this->tbCampusEstado = $tbCampusEstado;
+        $this->colectivos = $colectivos;
     }
 
     public function getTbCampusId() {
@@ -84,5 +86,13 @@ class Campus {
     public function setTbCampusEstado($tbCampusEstado) {
         $this->tbCampusEstado = $tbCampusEstado;
     }
-}
 
+    public function getColectivos() {
+        return $this->colectivos;
+    }
+
+    public function setColectivos($colectivos) {
+        $this->colectivos = $colectivos;
+    }
+
+}

@@ -1,12 +1,13 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 include '../bussiness/universidadBussiness.php';
 include '../bussiness/orientacionSexualBussiness.php';
 include '../bussiness/generoBusiness.php';
 include '../bussiness/campusBussiness.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json');
 
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($resultExist == 1) {
                     $response['message'] = 'El campus solicitado ya existe.';
                 } else {
-                    $insertResult = $campusBusiness->insertRequestTbCampus(new Campus(0, $idUniversidad, $nombre, 2, 1));
+                    $insertResult = $campusBusiness->insertRequestTbCampus(new Campus(0, $idUniversidad, 0, $nombre, 2, 1, '', '', ''));
                     $response['message'] = ($insertResult == 1) ? 'Campus solicitado correctamente.' : 'Error al procesar la transacción.';
                     sendEmail();
                 }

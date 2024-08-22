@@ -26,7 +26,7 @@
         var requestForm = document.getElementById(formId);
         var formData = new FormData(requestForm);
 
-        fetch('../bussiness/requests.php', {
+        fetch('../action/requestAction.php', {
             method: 'POST',
             body: formData
         })
@@ -125,8 +125,9 @@
     </section>
 
     <section id="form">
+        <button onclick="window.location.href='../indexView.php';">Volver</button>
         <div>                                       <!--cambiar envio de form-->
-            <form method="post" action="../bussiness/universidadAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/universidadAction.php" style="width: 50vw; min-width:300px;">
                 <?php
                     include '../bussiness/universidadBussiness.php';
                     include '../bussiness/orientacionSexualBussiness.php';

@@ -2,16 +2,18 @@
 session_start();
     
 if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: view/login.php?error=accessDenied");
+    header("location: ./login.php?error=accessDenied");
 }
 
 include '../bussiness/universidadBussiness.php';
 include '../bussiness/campusBussiness.php';
 include '../bussiness/campusRegionBusiness.php';
+include '../bussiness/campusColectivoBussiness.php';
 
 $universidadBusiness = new UniversidadBusiness();
 $campusBusiness = new CampusBusiness();
 $campusRegionBusiness = new CampusRegionBusiness();
+$campusColectivoBusiness = new CampusColectivoBussiness();
 ?>
 
 <!DOCTYPE html>
@@ -32,26 +34,7 @@ $campusRegionBusiness = new CampusRegionBusiness();
             alert(mensaje);
         }
 
-        function showOtherField(selectId, divId) {
-            var selectElement = document.getElementById(selectId);
-            var selectedValue = selectElement.value;
-            var otherFieldDiv = document.getElementById(divId);
-
-            otherFieldDiv.style.display = (selectedValue === '0') ? 'block' : 'none';
-        }
     </script>
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        #direccion {
-            width: 70%;
-        }
-    </style>
 </head>
 
 <body>
@@ -98,7 +81,7 @@ $campusRegionBusiness = new CampusRegionBusiness();
                 </div>
 
                 <div class="container d-flex justify-content-center">
-                    <form method="post" action="../bussiness/campusAction.php" style="width: 50vw; min-width:300px;">
+                    <form method="post" action="../action/campusAction.php" style="width: 50vw; min-width:300px;">
                         <input type="hidden" name="campus" value="<?php echo htmlspecialchars($idCampus); ?>">
 
                         <label for="idUniversidad">Universidad:</label>
@@ -132,7 +115,7 @@ $campusRegionBusiness = new CampusRegionBusiness();
                         </div>
 
                         <label for="idRegion">Seleccione su región: </label>
-                        <select name="idRegion" id="idRegion" onchange="showOtherField('region', 'request-region')">
+                        <select name="idRegion" id="idRegion">
                             <?php
                             $campusRegiones = $campusRegionBusiness->getAllTbCampusRegion();
                             if ($campusRegiones != null) {
@@ -143,6 +126,17 @@ $campusRegionBusiness = new CampusRegionBusiness();
                             ?>
                         </select><br>
 
+                        <label for="colectivos">Seleccione los colectivos: </label>
+                        <select name="colectivos[]" id="colectivos" multiple>
+                            <?php
+                            $campusColectivos = $campusColectivoBusiness->getAllTbCampusColectivo();
+                            if ($campusColectivos != null) {
+                                foreach ($campusColectivos as $campusColectivo) {
+                                    echo '<option value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '">' . htmlspecialchars($campusColectivo->getTbCampusColectivoNombre()) . '</option>';
+                                }
+                            }
+                            ?>
+                        </select><br>
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
                         </div>
@@ -173,7 +167,7 @@ $campusRegionBusiness = new CampusRegionBusiness();
                     if ($campus != null) {
                         foreach ($campus as $camp) {
                             echo '<tr>';
-                            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php">';
+                            echo '<form method="post" enctype="multipart/form-data" action="../action/campusAction.php">';
                             echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($camp->getTbCampusId()) . '">';
                             echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($camp->getTbCampusUniversidadId()) . '">';
                             echo '<td>' . htmlspecialchars($camp->getTbCampusId()) . '</td>';
