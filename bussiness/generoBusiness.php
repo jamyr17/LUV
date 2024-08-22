@@ -42,4 +42,8 @@ class GeneroBusiness {
         return $this->generoData->insertRequestTbGenero($genero);
     }
 
+    public function nameExist($nombre, $idGenero) {
+        return $this->generoData->nameExists($nombre);
+    }
+
 }

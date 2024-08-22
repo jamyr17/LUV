@@ -141,7 +141,6 @@ class AreaConocimientoData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
     
-        // Modificar la consulta SQL para excluir el registro con el mismo id
         $query = "SELECT COUNT(*) as count FROM tbareaconocimiento WHERE tbareaconocimientonombre = ? AND tbareaconocimientoid != ?";
         
         $stmt = mysqli_prepare($conn, $query);

@@ -34,5 +34,9 @@ class CampusColectivoBussiness {
         return $this->campusColectivoData->exist($nombre);
     }
 
+    public function nameExist($nombre, $idCampusColectivo) {
+        return $this->campusColectivoData->nameExists($nombre);
+    }
+
 }
 ?>

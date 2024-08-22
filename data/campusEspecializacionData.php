@@ -133,4 +133,28 @@ class CampusEspecializacionData extends Data
         
         return $count > 0;
     }
+
+    
+
+    public function nameExists($nombre, $excludeId = null)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT COUNT(*) as count FROM tbcampusespecializacion WHERE tbcampusespecializacionnombre = ? AND tbcampusespecializacionid != ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'si', $nombre, $idCampusEspecializacion);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
+    }
+
 }
