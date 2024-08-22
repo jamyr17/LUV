@@ -1,5 +1,5 @@
 - [ ] Realizar la relación de tbuniversidadcampus con tbcampusespecializacion. (JAMEL)
-- [ ] Mejorar relación de tbuniversidadcampus con tbcampuscolectivo. (JAMYR)
+- [x] Mejorar relación de tbuniversidadcampus con tbcampuscolectivo. (JAMYR)
 - [ ] Cambio de los nombres tbcampusespecializacion, tbcampusregion y tbcampuscolectivo a tbuniversidadcampusespecializacion, tbuniversidadcampusregion y tbuniversidadcampuscolectivo. (GERALD)
 - [ ] Permitir que se puedan editar la región, especialización o colectivos de un campus. (GERALD)
 - [ ] Permitir que al editar registros con mas de 1 campo se puedan editar sin estar obligados a cambiar el nombre, es decir, cambiar validación de exist. (KEVIN)
