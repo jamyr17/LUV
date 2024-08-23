@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<?php
+include "../action/sessionAction.php";
+
+include '../bussiness/criterioBusiness.php';
+
+$criterioBusiness = new CriterioBusiness();
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,10 +21,16 @@
                 <div class="criterion">
                     <label for="criterion1">Criterio:</label>
                     <select name="criterion[]" id="criterion1">
-                        <option value="personalidad">Personalidad</option>
-                        <option value="gusto_musical">Gusto Musical</option>
-                        <option value="vestimenta">Vestimenta</option>
-                        <!-- Agrega más opciones según sea necesario -->
+                        <?php
+                        $criterios = $criterioBusiness->getAllTbCriterio();
+                        if ($criterios != null) {
+                            foreach ($criterios as $criterio) {
+                                $id = htmlspecialchars($criterio->getTbCriterioId());
+                                $nombre = htmlspecialchars($criterio->getTbCriterioNombre());
+                                echo '<option value="' . $id . '">' . $nombre . '</option>';
+                            }
+                        }
+                        ?>
                     </select>
 
                     <label for="value1">Valor deseado:</label>
