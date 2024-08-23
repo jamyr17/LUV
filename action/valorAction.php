@@ -1,12 +1,13 @@
 <?php
 
-include '../bussiness/valorBusiness.php'; // Incluye el archivo de negocios correspondiente
+include_once '../bussiness/valorBusiness.php'; // Incluye el archivo de negocios correspondiente
 
 if (isset($_POST['update'])) {
 
-    if (isset($_POST['idValor']) && isset($_POST['nombre'])) {
+    if (isset($_POST['idCriterio']) && isset($_POST['nombre']) && isset($_POST['idValor'])) {
 
-        $idValor = $_POST['idValor'];
+        $idValor = isset($_POST['idValor']);
+        $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
 
         if (strlen($nombre) > 0) {
@@ -18,7 +19,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("Location: ../view/valorView.php?error=exist");
                 } else {
-                    $valor = new Valor($idValor, $nombre, 1); // Estado 1 = Activo
+                    $valor = new Valor($idValor, $nombre, $idCriterio, 1); // Estado 1 = Activo
                     $result = $valorBusiness->updateTbValor($valor);
 
                     if ($result == 1) {
@@ -55,8 +56,9 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre'])) {
+    if (isset($_POST['nombre']) && isset($_POST['idCriterio'])) {
 
+        $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
 
         if (strlen($nombre) > 0) {
@@ -68,7 +70,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("Location: ../view/valorView.php?error=exist");
                 } else {
-                    $valor = new Valor(0, $nombre, 1); // Estado 1 = Activo
+                    $valor = new Valor(0, $nombre, $idCriterio, 1); // Estado 1 = Activo
                     $result = $valorBusiness->insertTbValor($valor);
 
                     if ($result == 1) {
@@ -89,7 +91,7 @@ if (isset($_POST['update'])) {
 } else if(isset($_GET['idCriterio'])) {
     $idCriterio = $_GET['idCriterio'];
     $valorBusiness = new ValorBusiness();
-    $valorBusiness->getAllTbValoresByCriterio($idCriterio);
+    //$valorBusiness->getAllTbValorByCriterio($idCriterio);
 } else {
     header("Location: ../view/valorView.php?error=error");
 }

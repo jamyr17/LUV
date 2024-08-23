@@ -74,19 +74,12 @@ $criterioBusiness = new CriterioBusiness();
                     <p class="text-muted">Complete el formulario para añadir un nuevo valor</p>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre del valor" />
-                    </div>
-                </div>
-
                 <div class="container d-flex justify-content-center">
                     <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
                         <input type="hidden" name="valor" value="<?php echo htmlspecialchars($idValor); ?>">
 
-                        <label for="criterioId">Criterio:</label>
-                        <select name="criterioId" id="criterioId">
+                        <label for="idCriterio">Criterio:</label>
+                        <select name="idCriterio" id="idCriterio">
                             <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
                             if ($criterios != null) {
@@ -96,6 +89,8 @@ $criterioBusiness = new CriterioBusiness();
                             }
                             ?>
                         </select><br>
+
+                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre">
 
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
@@ -115,7 +110,6 @@ $criterioBusiness = new CriterioBusiness();
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Criterio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -130,12 +124,12 @@ $criterioBusiness = new CriterioBusiness();
                             echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
                             echo '<td><form method="post" action="../action/valorAction.php">';
                             echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+                            echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($valor->getTbCriterioId()) . '">';
                             echo '<input type="text" name="nombre" value="' . htmlspecialchars($valor->getTbValorNombre()) . '" class="form-control" />';
-                            echo '</td>';
-                            echo '<td>' . htmlspecialchars($valor->getTbCriterioId()) . '</td>';
                             echo '<td>';
                             echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
                             echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                            echo '</td>';
                             echo '</form>';
                             echo '</td>';
                             echo '</tr>';

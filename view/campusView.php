@@ -102,7 +102,7 @@ $campusEspecializacionBusiness =  new CampusEspecializacionBussiness();
                         <div class="row">
                             <div class="col">
                                 <label for="nombre" class="form-label">Nombre: </label>
-                                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="campus Omar Dengo" />
+                                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Campus Omar Dengo" />
                             </div>
                         </div>
 
