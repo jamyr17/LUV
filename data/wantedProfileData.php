@@ -28,4 +28,26 @@ class WantedProfileData extends Data{
         return $resultInsert;
     }
 
+    public function getAllTbPerfiles() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT * FROM tbperfilusuariopersonal WHERE tbperfilusuariopersonalestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        $profiles = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $profile = [
+                'id' => $row['tbperfilusuariopersonalid'],
+                'criterio' => $row['tbperfilusuariopersonalcriterio'],
+                'valor' => $row['tbperfilusuariopersonalvalor'],
+                'estado' => $row['tbperfilusuariodeseadoestado']
+            ];
+            array_push($profiles, $profile);
+        }
+
+        mysqli_close($conn);
+        return $profiles;
+    }
+
 }

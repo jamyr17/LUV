@@ -14,4 +14,8 @@ class WantedProfileBussiness{
         return $this->wantedProfileData->insertTbPerfilDeseado($criterio, $valor, $porcentaje);
     }
 
+    public function getAllTbPerfiles() {
+        return $this->wantedProfileData->getAllTbAreaConocimiento();
+    }
+
 }
