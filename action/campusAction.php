@@ -87,7 +87,7 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-                    $campus = new Campus(0, $idUniversidad, $idRegion, $idEspecializacion, $nombre, $direccion, $latitud, $longitud, 1, $colectivos);
+                    $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $idEspecializacion, $colectivos);
                     $result = $campusBusiness->insertTbCampus($campus);
     
                     if ($result == 1) {

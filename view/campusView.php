@@ -141,7 +141,7 @@ $campusEspecializacionBusiness =  new CampusEspecializacionBussiness();
                         </select><br>
 
                         <label for="idEspecializacion">Seleccione su especialización: </label>
-                        <select name="idEspecializacion[]" id="idEspecializacion" multiple>
+                        <select name="idEspecializacion" id="idEspecializacion">
                             <?php
                             $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbCampusEspecializacion();
                             if ($campusEspecializaciones != null) {
