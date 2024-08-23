@@ -83,17 +83,15 @@ $criterioBusiness = new CriterioBusiness();
 
                 <div class="container d-flex justify-content-center">
                     <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
-                        <input type="hidden" name="valor" value="<?php echo htmlspecialchars($idValor ?? ''); ?>">
+                        <input type="hidden" name="valor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="criterioId">Criterio:</label>
-                        <select id="criterioId" name="criterioId">
+                        <select name="criterioId" id="criterioId">
                             <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
                             if ($criterios != null) {
-                                foreach ($criterios as $criterio) {
-                                    $id = htmlspecialchars($criterio->getTbCriterioId());
-                                    $nombre = htmlspecialchars($criterio->getTbCriterioNombre());
-                                    echo '<option value="' . $id . '">' . $nombre . '</option>';
+                                foreach ($criterios as $criterio) {  
+                                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '">' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
                                 }
                             }
                             ?>
