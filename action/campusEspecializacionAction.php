@@ -15,7 +15,7 @@ if (isset($_POST['update'])) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusEspecializacionBusiness = new CampusEspecializacionBussiness();
 
-                $resultExist = $campusEspecializacionBusiness->exist($nombre);
+                $resultExist = $campusEspecializacionBusiness->nameExist($nombre,$idCampusEspecializacion);
 
                 if ($resultExist == 1) {
                     header("location: ../view/campusEspecializacionView.php?error=exist");

@@ -14,7 +14,7 @@ if (isset($_POST['update'])) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
                 $campusRegionBusiness = new CampusRegionBusiness();
 
-                $resultExist = $campusRegionBusiness->exist($nombre);
+                $resultExist = $campusRegionBusiness->nameExist($nombre, $idCampusRegion);
 
                 if ($resultExist == 1) {
                     header("location: ../view/campusRegionView.php?error=exist");

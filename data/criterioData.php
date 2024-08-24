@@ -1,18 +1,18 @@
 <?php
 
 include_once 'data.php';
-include '../domain/genero.php';
+include '../domain/criterio.php';
 
-class GeneroData extends Data
+class CriterioData extends Data
 {
 
-    public function insertTbGenero($genero)
+    public function insertTbCriterio($criterio)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         // Consulta para obtener el ID máximo
-        $queryGetLastId = "SELECT MAX(tbgeneroid) AS max_id FROM tbgenero";
+        $queryGetLastId = "SELECT MAX(tbcriterioid) AS max_id FROM tbcriterio";
         $result = mysqli_query($conn, $queryGetLastId);
 
         if ($row = mysqli_fetch_assoc($result)) {
@@ -24,13 +24,12 @@ class GeneroData extends Data
             $nextId = 1;
         }
 
-        $nombre = mysqli_real_escape_string($conn, $genero->getTbGeneroNombre());
-        $descripcion = mysqli_real_escape_string($conn, $genero->getTbGeneroDescripcion());
+        $nombre = mysqli_real_escape_string($conn, $criterio->getTbCriterioNombre());
         $estado = 1;
 
         // Consulta para insertar un nuevo registro
-        $queryInsert = "INSERT INTO tbgenero (tbgeneroid, tbgeneronombre, tbgenerodescripcion, tbgeneroestado) 
-                        VALUES ($nextId, '$nombre', '$descripcion', $estado)";
+        $queryInsert = "INSERT INTO tbcriterio (tbcriterioid, tbcriterionombre, tbcriterioestado) 
+                        VALUES ($nextId, '$nombre', $estado)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
@@ -38,79 +37,80 @@ class GeneroData extends Data
         return $resultInsert;
     }
 
-    public function updateTbGenero($genero)
+    public function updateTbCriterio($criterio)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
+        
+        $id = intval($criterio->getTbCriterioId()); // Asegúrate de que $id sea un entero
+        $nombre = mysqli_real_escape_string($conn, $criterio->getTbCriterioNombre());
+        $estado = intval($criterio->getTbCriterioEstado()); // Asegúrate de que $estado sea un entero
+        
+            $queryUpdate = "UPDATE tbcriterio SET tbcriterionombre='$nombre', tbcriterioestado=$estado WHERE tbcriterioid=$id;";
+            $result = mysqli_query($conn, $queryUpdate);
 
-        $id = intval($genero->getTbGeneroId()); // Asegúrate de que $id sea un entero
-        $nombre = mysqli_real_escape_string($conn, $genero->getTbGeneroNombre());
-        $descripcion = mysqli_real_escape_string($conn, $genero->getTbGeneroDescripcion());
-
-        $queryUpdate = "UPDATE tbgenero SET tbgeneronombre='$nombre', tbgenerodescripcion='$descripcion' WHERE tbgeneroid=$id;";
-
-        $result = mysqli_query($conn, $queryUpdate);
         mysqli_close($conn);
-
+    
         return $result;
     }
+    
 
-    public function deleteTbGenero($generoId)
+    public function deleteTbCriterio($criterioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "UPDATE tbgenero SET tbgeneroestado = '0' WHERE tbgeneroid=$generoId;";
+        $queryDelete = "UPDATE tbcriterio SET tbcriterioestado = '0' WHERE tbcriterioid=$criterioId;";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
         return $result;
     }
 
-    public function deleteForeverTbGenero($generoId)
+    public function deleteForeverTbCriterio($criterioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "DELETE FROM tbgenero WHERE tbgeneroid=$generoId;";
+        $queryDelete = "DELETE FROM tbcriterio WHERE tbcriterioid=$criterioId;";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
         return $result;
     }
 
-    public function getAllTbGenero()
+    public function getAllTbCriterio()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbgenero WHERE tbgeneroestado = 1;";
+        $querySelect = "SELECT * FROM tbcriterio WHERE tbcriterioestado = 1;";
         $result = mysqli_query($conn, $querySelect);
-        $generos = [];
+        $criterios = [];
         while ($row = mysqli_fetch_array($result)) {
-            $generoActual = new Genero($row['tbgeneroid'], $row['tbgeneronombre'], $row['tbgenerodescripcion'], $row['tbgeneroestado']);
-            array_push($generos, $generoActual);
+            $criterioActual = new Criterio($row['tbcriterioid'], $row['tbcriterionombre'], $row['tbcriterioestado']);
+            array_push($criterios, $criterioActual);
         }
         mysqli_close($conn);
 
-        return $generos;
+        return $criterios;
     }
 
-    public function getAllDeletedTbGenero()
+    public function getAllDeletedTbCriterio()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbgenero WHERE tbgeneroestado = 0;";
+        $querySelect = "SELECT * FROM tbcriterio WHERE tbcriterioestado = 0;";
         $result = mysqli_query($conn, $querySelect);
-        $generos = [];
+        $criterios = [];
         while ($row = mysqli_fetch_array($result)) {
-            $generoActual = new Genero($row['tbgeneroid'], $row['tbgeneronombre'], $row['tbgenerodescripcion'], $row['tbgeneroestado']);
-            array_push($generos, $generoActual);
+            $criterioActual = new Criterio($row['tbcriterioid'], $row['tbcriterionombre'], $row['tbcriterioestado']);
+            array_push($criterios, $criterioActual);
         }
         mysqli_close($conn);
 
-        return $generos;
+        return $criterios;
     }
 
     public function exist($nombre)
@@ -118,7 +118,7 @@ class GeneroData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $query = "SELECT COUNT(*) as count FROM tbgenero WHERE tbgeneronombre = ?";
+        $query = "SELECT COUNT(*) as count FROM tbcriterio WHERE tbcriterionombre = ?";
         
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
@@ -134,13 +134,13 @@ class GeneroData extends Data
         return $count > 0;
     }
 
-    public function insertRequestTbGenero($genero)
+    public function insertRequestTbCriterio($criterio)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         // Consulta para obtener el ID máximo
-        $queryGetLastId = "SELECT MAX(tbsolicitudgeneroid) AS max_id FROM tbsolicitudgenero";
+        $queryGetLastId = "SELECT MAX(tbsolicitudcriterioid) AS max_id FROM tbsolicitudcriterio";
         $result = mysqli_query($conn, $queryGetLastId);
 
         if ($row = mysqli_fetch_assoc($result)) {
@@ -152,11 +152,11 @@ class GeneroData extends Data
             $nextId = 1;
         }
 
-        $nombre = mysqli_real_escape_string($conn, $genero->getTbGeneroNombre());
+        $nombre = mysqli_real_escape_string($conn, $criterio->getTbCriterioNombre());
         $estado = 0;
 
         // Consulta para insertar un nuevo registro
-        $queryInsert = "INSERT INTO tbsolicitudgenero (tbsolicitudgeneroid, tbsolicitudgeneronombre, tbsolicitudgeneroestado) 
+        $queryInsert = "INSERT INTO tbsolicitudcriterio (tbsolicitudcriterioid, tbsolicitudcriterionombre, tbsolicitudcriterioestado) 
                         VALUES ($nextId, '$nombre', $estado)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
@@ -164,29 +164,4 @@ class GeneroData extends Data
 
         return $resultInsert;
     }
-
-    
-
-    public function nameExists($nombre, $excludeId = null)
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
-
-        $query = "SELECT COUNT(*) as count FROM tbgenero WHERE tbgeneronombre = ? AND tbgeneroid != ?";
-        
-        $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, 'si', $nombre, $idGenero);
-        
-        mysqli_stmt_execute($stmt);
-        
-        mysqli_stmt_bind_result($stmt, $count);
-        mysqli_stmt_fetch($stmt);
-        
-        mysqli_stmt_close($stmt);
-        mysqli_close($conn);
-        
-        return $count > 0;
-    }
-
 }
-

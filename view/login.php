@@ -20,7 +20,14 @@
             if (isset($_GET['error'])) {
                 $mensaje = match(true){
                     $_GET['error']=="accessDenied" => "Por favor, inicie sesión e inténtelo de nuevo.",
-                    default => "un problema inesperado.",
+                    default => "Ocurrió un problema inesperado.",
+                  };
+            }
+
+            if (isset($_GET['success'])) {
+                $mensaje = match(true){
+                    $_GET['success']=="logout" => "Ha cerrado su sesión exitosamente.",
+                    default => "Transacción realizada correctamente.",
                   };
             }
 

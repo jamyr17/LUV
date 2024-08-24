@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: ./login.php?error=accessDenied");
-}
-
+include "../action/sessionAction.php";
 include '../bussiness/imagenBusiness.php';
 
 $imagenBusiness = new ImagenBusiness();
@@ -122,6 +117,10 @@ $imagenBusiness = new ImagenBusiness();
         <section id="form">
             <div class="container">
                 <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <form method="post" action="../action/sessionAction.php">
+                    <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+                </form>
+
                 <div class="text-center mb-4">
                     <h3>Agregar una nueva imagen</h3>
                     <p class="text-muted">Complete el formulario para añadir una nueva imagen</p>

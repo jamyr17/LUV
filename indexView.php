@@ -66,6 +66,16 @@
                     <a href="view/imagenView.php">Imagen</a>
                 </td> 
             </tr>
+            <tr>
+                <td>
+                    <a href="view/criterioView.php">Criterio</a>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <a href="view/valorView.php">Valor</a>
+                </td> 
+            </tr>
         </table>
     </div>
 </body>
