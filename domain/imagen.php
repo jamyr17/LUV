@@ -17,51 +17,51 @@ class Imagen {
         $this->tbImagenEstado = $tbImagenEstado;
     }
 
-    public function gettbImagenId() {
+    public function getTbImagenId() {
         return $this->tbImagenId;
     }
 
-    public function gettbImagenCrudId() {
+    public function getTbImagenCrudId() {
         return $this->tbImagenCrudId;
     }
 
-    public function gettbImagenRegistroId() {
+    public function getTbImagenRegistroId() {
         return $this->tbImagenRegistroId;
     }
 
-    public function gettbImagenNombre() {
+    public function getTbImagenNombre() {
         return $this->tbImagenNombre;
     }
 
-    public function gettbImagenDirectorio() {
+    public function getTbImagenDirectorio() {
         return $this->tbImagenDirectorio;
     }
 
-    public function gettbImagenEstado() {
+    public function getTbImagenEstado() {
         return $this->tbImagenEstado;
     }
     
-    public function settbImagenId($tbImagenId) {
+    public function setTbImagenId($tbImagenId) {
         $this->tbImagenId = $tbImagenId;
     }
 
-    public function settbImagenCrudId($tbImagenCrudId) {
+    public function setTbImagenCrudId($tbImagenCrudId) {
         $this->tbImagenCrudId = $tbImagenCrudId;
     }
 
-    public function settbImagenRegistroId($tbImagenRegistroId) {
+    public function setTbImagenRegistroId($tbImagenRegistroId) {
         $this->tbImagenRegistroId = $tbImagenRegistroId;
     }
 
-    public function settbImagenNombre($tbImagenNombre) {
+    public function setTbImagenNombre($tbImagenNombre) {
         $this->tbImagenNombre = $tbImagenNombre;
     }
 
-    public function settbImagenDirectorio($tbImagenDirectorio) {
+    public function setTbImagenDirectorio($tbImagenDirectorio) {
         $this->tbImagenDirectorio = $tbImagenDirectorio;
     }
 
-    public function settbImagenEstado($tbImagenEstado) {
+    public function setTbImagenEstado($tbImagenEstado) {
         $this->tbImagenEstado = $tbImagenEstado;
     }
 

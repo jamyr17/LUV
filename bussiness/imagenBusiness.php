@@ -22,8 +22,8 @@ class ImagenBusiness {
         return $this->imagenData->deleteTbimagen($idimagen);
     }
 
-    public function getAllTbimagen() {
-        return $this->imagenData->getAllTbimagen();
+    public function getAllTbImagen() {
+        return $this->imagenData->getAllTbImagen();
     }
 
     public function exist($nombre) {

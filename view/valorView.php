@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: ./login.php?error=accessDenied");
-    exit(); // Asegúrate de detener la ejecución del script después de redirigir
-}
-
+include "../action/sessionAction.php";
 include '../bussiness/valorBusiness.php';
 include '../bussiness/criterioBusiness.php';
 
@@ -68,6 +62,9 @@ $criterioBusiness = new CriterioBusiness();
         <section id="form">
             <div class="container">
                 <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <form method="post" action="../action/sessionAction.php">
+                    <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+                </form>
 
                 <div class="text-center mb-4">
                     <h3>Agregar un nuevo valor</h3>
