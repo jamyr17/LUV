@@ -60,7 +60,7 @@ if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_
     $destination = $directory . $newFileName;
 
     if (move_uploaded_file($fileTmpPath, $destination)) {
-        $imagen = new Imagen(0, $type, 0, $newFileName, $directory, 1);
+        $imagen = new Imagen(0, $type, $selectedId, $newFileName, $directory, 1);
         $result = $imagenBusiness->insertTbimagen($imagen);
 
         if ($result == 1) {
@@ -92,5 +92,68 @@ if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_
         header("location: ../view/imagenView.php?error=error");
     }
 
+} else if (isset($_POST['update'])) {
+    if (isset($_POST['id']) && isset($_POST['idOptionsHiddenUpdate']) && isset($_POST['dynamic-select-update']) && isset($_POST['dynamic-select-name-update']) && isset($_FILES['imageUpload_'])) {
+
+        $id = $_POST['id'];
+        $type = $_POST['idOptionsHiddenUpdate'] ?? ''; // Crud ID
+        $selectedId = $_POST['dynamic-select-update'] ?? ''; // Registro ID
+        
+        // Definir directorio base
+        $baseDir = '../resources/img/';
+
+        // Determinar subdirectorio
+        switch ($type) {
+            case '1':
+                $directory = $baseDir . 'universidad/';
+                break;
+            case '2':
+                $directory = $baseDir . 'areaConocimiento/';
+                break;
+            case '3':
+                $directory = $baseDir . 'genero/';
+                break;
+            case '4':
+                $directory = $baseDir . 'orientacionSexual/';
+                break;
+            case '5':
+                $directory = $baseDir . 'campus/';
+                break;
+            default:
+                die('Tipo no válido');
+        }
+
+        // Crear el directorio si no existe
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        // Procesar la imagen subida
+        if (isset($_FILES['imageUpload_']) && $_FILES['imageUpload_']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['imageUpload_']['tmp_name'];
+            $fileExtension = pathinfo($_FILES['imageUpload_']['name'], PATHINFO_EXTENSION);
+
+            // Obtener el nombre del archivo del combo box
+            $itemName = $_POST['dynamic-select-name-update'] ?? ''; // Campo para el nombre del registro
+            $itemName = strtolower(str_replace(' ', '-', $itemName));
+            $newFileName = $itemName . '.' . $fileExtension;
+            $destination = $directory . $newFileName;
+
+            if (move_uploaded_file($fileTmpPath, $destination)) {
+                $imagen = new Imagen(0, $type, $selectedId, $newFileName, $directory, 1);
+                $result = $imagenBusiness->updateTbimagen($imagen);
+
+                if ($result == 1) {
+                    header("location: ../view/imagenView.php?success=updated");
+                } else {
+                    header("location: ../view/imagenView.php?error=dbError");
+                }
+            } else {
+                echo 'Error al mover el archivo.';
+            }
+        } else {
+            echo 'No se ha subido ningún archivo o ha ocurrido un error.';
+        }
+    }
 }
 ?>
