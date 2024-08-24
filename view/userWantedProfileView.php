@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <?php
-include "../action/sessionAction.php";
-
-include '../bussiness/criterioBusiness.php';
-
-$criterioBusiness = new CriterioBusiness();
+    include "../action/sessionAction.php";
 ?>
 <html lang="en">
 <head>
@@ -13,6 +9,28 @@ $criterioBusiness = new CriterioBusiness();
     <title>LUV Perfil Deseado</title>
 </head>
 <body>
+    <section id="alerts">
+        <?php
+            if (isset($_GET['error'])) {
+            $mensaje = "Ocurrió un error debido a ";
+            $mensaje .= match(true){
+                $_GET['error']=="percentageIncomplete" => "debe distribuir un 100% entre los criterios.",
+                $_GET['error']=="formIncomplete" => "problemas en el procesamiento de su respuesta.",
+                default => "un problema inesperado.",
+            };
+            } else if (isset($_GET['success'])) {
+                $mensaje = match(true){
+                $_GET['success']=="inserted" => "Se ha guardado el modelo de persona que buscas.",
+                default => "Transacción realizada.",
+                };
+            }
+
+            if(isset($mensaje)){
+            echo "<script>alert('$mensaje')</script>";
+            }
+        ?>
+    </section>
+
     <div id="container">
         <h3>Modela lo que estás buscando</h3>
 
@@ -20,21 +38,14 @@ $criterioBusiness = new CriterioBusiness();
             <div id="criteriaSection">
                 <div class="criterion">
                     <label for="criterion1">Criterio:</label>
-                    <select name="criterion[]" id="criterion1">
-                        <?php
-                        $criterios = $criterioBusiness->getAllTbCriterio();
-                        if ($criterios != null) {
-                            foreach ($criterios as $criterio) {
-                                $id = htmlspecialchars($criterio->getTbCriterioId());
-                                $nombre = htmlspecialchars($criterio->getTbCriterioNombre());
-                                echo '<option value="' . $id . '">' . $nombre . '</option>';
-                            }
-                        }
-                        ?>
+                    <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
+                        
                     </select>
 
-                    <label for="value1">Valor deseado:</label>
-                    <input type="text" id="value1" name="value[]">
+                    <label for="value1">Prefiero:</label>
+                    <select name="value[]" id="value1">
+                        
+                    </select>
 
                     <label for="percent1">Porcentaje:</label>
                     <input type="number" id="percent1" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
