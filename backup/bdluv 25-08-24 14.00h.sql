@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-08-2024 a las 21:41:51
+-- Tiempo de generación: 25-08-2024 a las 22:19:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -263,49 +263,6 @@ CREATE TABLE `tbperfilusuariodeseado` (
   `tbperfilusuariodeseadoestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `tbperfilusuariodeseado`
---
-
-INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbperfilusuariodeseadoestado`) VALUES
-(1, 'Gustos Musicales', 'Rock', '25', 1),
-(2, 'Introversión/Extroversión', 'Extrovertido', '20', 1),
-(3, 'Intereses Académicos', 'Ciencias', '30', 1),
-(4, 'Deportes Favoritos', 'Baloncesto', '15', 1),
-(5, 'Actividades Extracurriculares', 'Voluntariado', '10', 1),
-(6, 'Preferencias de Estudio', 'Nocturno', '20', 1),
-(7, 'Tipos de Comida Favorita', 'Mexicana', '15', 1),
-(8, 'Hobbies', 'Fotografía', '25', 1),
-(9, 'Estilo de Vida', 'Activo', '30', 1),
-(10, 'Películas Favoritas', 'Ciencia Ficción', '20', 1),
-(11, 'Libros Favoritos', 'Fantasía', '15', 1),
-(12, 'Series de TV Favoritas', 'Drama', '25', 1),
-(13, 'Religión', 'Católica', '10', 1),
-(14, 'Orientación Política', 'Progresista', '20', 1),
-(15, 'Frecuencia de Viajes', 'Frecuente', '15', 1),
-(16, 'Relación con la Tecnología', 'Avanzado', '25', 1),
-(17, 'Mascotas', 'Perro', '10', 1),
-(18, 'Voluntariado', 'Ocasional', '10', 1),
-(19, 'Vida Nocturna', 'Activa', '20', 1),
-(20, 'Uso de Redes Sociales', 'Intenso', '30', 1),
-(21, 'Personalidad', 'Introvertido', '40', 1),
-(22, 'Gusto Musical', 'Rock', '30', 1),
-(23, 'Vestimenta', 'Casual', '30', 1),
-(24, 'Personalidad', 'Extrovertido', '50', 1),
-(25, 'Gusto Musical', 'Pop', '25', 1),
-(26, 'Vestimenta', 'Formal', '25', 1),
-(27, 'Personalidad', 'Ambivertido', '60', 1),
-(28, 'Gusto Musical', 'Jazz', '20', 1),
-(29, 'Vestimenta', 'Deportivo', '20', 1),
-(30, '1,personalidad,personalidad', 'Rock,Introvertido,', '50,50,', 1),
-(31, '1,personalidad', 'Rock,Introvertido', '50,50', 1),
-(32, '4,personalidad', 'Basquetball,Introvertido', '50,50', 1),
-(33, '1', '1', '100', 1),
-(34, '1,2', '1,3', '80,20', 1),
-(35, '1', '1', '100', 1),
-(36, '1', '1', '100', 1),
-(37, '1', '1', '100', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -318,16 +275,6 @@ CREATE TABLE `tbperfilusuariopersonal` (
   `tbperfilusuariopersonalvalor` varchar(1024) NOT NULL,
   `tbperfilusuariopersonalestado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tbperfilusuariopersonal`
---
-
-INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbperfilusuariopersonalestado`) VALUES
-(1, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 1),
-(2, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Pop,Extrovertido,Humanidades,Baloncesto,Música,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 1),
-(3, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles,No hay valores disponibles', 1),
-(4, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 1);
 
 -- --------------------------------------------------------
 
@@ -352,15 +299,6 @@ CREATE TABLE `tbsolicitudorientacionsexual` (
   `tbsolicitudorientacionsexualnombre` varchar(63) NOT NULL,
   `tbsolicitudorientacionsexualestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tbsolicitudorientacionsexual`
---
-
-INSERT INTO `tbsolicitudorientacionsexual` (`tbsolicitudorientacionsexualid`, `tbsolicitudorientacionsexualnombre`, `tbsolicitudorientacionsexualestado`) VALUES
-(1, 'solo eso?', 0),
-(2, 'aca', 0),
-(3, 'aca', 0);
 
 -- --------------------------------------------------------
 
