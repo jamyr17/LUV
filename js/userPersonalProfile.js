@@ -1,126 +1,125 @@
-class PerfilPersonal {
-    constructor() {
-        this.criterios = [];
-        this.valores = [];
-        this.loadInitialCriteriaData();
-        this.loadInitialValuesData();
+let criterios = [];
+let valores = [];
+
+// Función para cargar criterios y valores una sola vez
+function loadInitialCriteriaData() {
+    fetch('../data/getData.php?type=6')
+        .then(response => response.json())
+        .then(data => {
+            criterios = data;
+            populateCriteriaSection(); // Cargar todos los criterios en la sección de criterios
+        })
+        .catch(error => console.error('Error al cargar datos iniciales:', error));
+}
+
+function loadInitialValuesData() {
+    fetch('../data/getData.php?type=7')
+        .then(response => response.json())
+        .then(data => {
+            valores = data;
+            criterios.forEach((criterio, index) => {
+                const select = document.getElementById(`value${index + 1}`);
+                loadValues(select, index + 1);
+            });
+        })
+        .catch(error => console.error('Error al cargar datos iniciales:', error));
+}
+
+// Función para cargar todos los criterios en la vista
+function populateCriteriaSection() {
+    const criteriaSection = document.getElementById('criteriaSection');
+
+    criterios.forEach((criterio, index) => {
+        const criterionIndex = index + 1;
+        const criterionDiv = document.createElement('div');
+        criterionDiv.className = 'criterion';
+        criterionDiv.innerHTML = `
+            <label for="value${criterionIndex}">${criterio.name}:</label>
+            <select name="value[]" id="value${criterionIndex}" onchange="toggleOtherField(this, ${criterionIndex})">
+                <!-- Las opciones de valores se cargarán dinámicamente -->
+            </select>
+            <input type="text" id="otherField${criterionIndex}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+        `;
+        criteriaSection.appendChild(criterionDiv);
+    });
+}
+
+function loadValues(select, index) {
+    const criterionId = criterios[index - 1].id;
+
+    const valueSelect = document.getElementById(`value${index}`);
+    if (!valueSelect) {
+        console.error(`Elemento select de valores no encontrado para el índice ${index}`);
+        return;
     }
 
-    // Función para cargar criterios y valores una sola vez
-    loadInitialCriteriaData() {
-        fetch('../data/getData.php?type=6')
-            .then(response => response.json())
-            .then(data => {
-                this.criterios = data;
-                // Cargar todos los criterios en el formulario
-                this.populateAllCriteria();
-            })
-            .catch(error => console.error('Error al cargar datos iniciales:', error));
+    valueSelect.innerHTML = '';  // Limpiar opciones actuales
+
+    const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
+
+    if (filteredValues.length === 0) {
+        const option = document.createElement('option');
+        option.textContent = 'No hay valores disponibles';
+        valueSelect.appendChild(option);
+        return;
     }
 
-    loadInitialValuesData() {
-        fetch('../data/getData.php?type=7')
-            .then(response => response.json())
-            .then(data => {
-                this.valores = data;
-                // Cargar valores para el primer criterio
-                const firstCriterioId = this.criterios.length > 0 ? this.criterios[0].id : null;
-                if (firstCriterioId) {
-                    this.loadValues(firstCriterioId, 1);
-                }
-            })
-            .catch(error => console.error('Error al cargar datos iniciales:', error));
-    }
+    filteredValues.forEach(valor => {
+        const option = document.createElement('option');
+        option.value = valor.id;
+        option.textContent = valor.name;
+        option.setAttribute('data-nombre', valor.name);  // Agregar atributo data-nombre
+        valueSelect.appendChild(option);
+    });
 
-    // Función para popular todos los criterios
-    populateAllCriteria() {
-        const criteriaSection = document.getElementById('criteriaSection');
+    const otherOption = document.createElement('option');
+    otherOption.value = 'other';
+    otherOption.textContent = 'Otro';
+    valueSelect.appendChild(otherOption);
+}
 
-        this.criterios.forEach((criterio, index) => {
-            const criterionIndex = index + 1;
-            const criterionDiv = document.createElement('div');
-            criterionDiv.className = 'criterion';
-            criterionDiv.innerHTML = `
-                <label for="criterion${criterionIndex}">Criterio: </label>
-                <label id="criterion${criterionIndex}" class="criterio-label" data-criterio-id="${criterio.id}">${criterio.name}</label>
-
-                <label for="value${criterionIndex}"> Prefiero:</label>
-                <select name="value[]" id="value${criterionIndex}" required>
-                    <!-- Las opciones de valores se cargarán dinámicamente -->
-                </select>
-            `;
-            criteriaSection.appendChild(criterionDiv);
-
-            // Cargar valores para el criterio actual
-            this.loadValues(criterio.id, criterionIndex);
-        });
-    }
-
-    // Función para cargar los valores correspondientes a un criterio seleccionado
-    loadValues(criterionId, index) {
-        const valueSelect = document.getElementById(`value${index}`);
-        if (!valueSelect) {
-            console.error(`Elemento select de valores no encontrado para el índice ${index}`);
-            return;
-        }
-
-        valueSelect.innerHTML = '';  // Limpiar opciones actuales
-
-        const filteredValues = this.valores.filter(valor => valor.idCriterio == criterionId);
-
-        if (filteredValues.length === 0) {
-            const option = document.createElement('option');
-            option.textContent = 'No hay valores disponibles';
-            valueSelect.appendChild(option);
-            return;
-        }
-
-        filteredValues.forEach(valor => {
-            const option = document.createElement('option');
-            option.value = valor.name;  // Usamos el nombre en lugar del ID
-            option.textContent = valor.name;
-            valueSelect.appendChild(option);
-        });
-    }
-
-    // Función para validar el formulario antes de enviarlo
-    submitForm() {
-        const criteriaLabels = document.querySelectorAll('.criterio-label');
-        const values = document.querySelectorAll('select[name="value[]"]');
-
-        let criteriaString = '';
-        let valuesString = '';
-        let valid = true;
-
-        criteriaLabels.forEach((label, i) => {
-            const criterionName = label.textContent;
-            const valueSelect = values[i];
-            const selectedValue = valueSelect.value;
-
-            if (!selectedValue) {
-                valid = false;
-            }
-
-            criteriaString += criterionName;
-            valuesString += selectedValue;
-
-            if (i < criteriaLabels.length - 1) {
-                criteriaString += ',';
-                valuesString += ',';
-            }
-        });
-
-        if (!valid) {
-            alert('Por favor, seleccione un valor para cada criterio.');
-            return false;
-        }
-
-        document.getElementById('criteriaString').value = criteriaString;
-        document.getElementById('valuesString').value = valuesString;
-
-        return true;
+function toggleOtherField(select, index) {
+    const otherField = document.getElementById(`otherField${index}`);
+    if (select.value === 'other') {
+        otherField.style.display = 'block';
+    } else {
+        otherField.style.display = 'none';
+        otherField.value = '';
     }
 }
 
-// Instancia de la clase que será usada en todo el documento
-const perfilPersonal = new PerfilPersonal();
+function submitForm() {
+    const criteria = criterios.map(c => c.name);
+    const values = document.querySelectorAll('select[name="value[]"]');
+    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
+
+    let criteriaString = criteria.join(',');
+    let valuesString = '';
+
+    for (let i = 0; i < values.length; i++) {
+        if (values[i].value === 'other' && otherValues[i].value) {
+            valuesString += otherValues[i].value;
+        } else {
+            const selectedValue = values[i].selectedOptions[0];
+            const valueName = selectedValue.getAttribute('data-nombre');
+            valuesString += valueName;
+        }
+ 
+        if (i < values.length - 1) {
+            valuesString += ',';
+        }
+    }
+
+    console.log('Criteria String:', criteriaString);
+    console.log('Values String:', valuesString);
+
+    document.getElementById('criteriaString').value = criteriaString;
+    document.getElementById('valuesString').value = valuesString;
+
+    return true;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadInitialCriteriaData();
+    loadInitialValuesData();
+});
