@@ -43,7 +43,11 @@
                     </select>
 
                     <label for="value1">Prefiero:</label>
-                    <select name="value[]" id="value1">
+                    <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
+                        <!-- Las opciones de valores se cargarán dinámicamente -->
+                    </select>
+                    <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+
                         
                     </select>
 

@@ -16,10 +16,11 @@ function addCriterion() {
         </select>
 
         <label for="value${criteriaCount}">Prefiero:</label>
-        <select name="value[]" id="value${criteriaCount}">
+        <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})">
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
-        
+        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+
         <label for="percent${criteriaCount}">Porcentaje:</label>
         <input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
     `;
@@ -28,7 +29,7 @@ function addCriterion() {
     // Cargar criterios para el nuevo select
     populateCriteria(`criterion${criteriaCount}`);
     
-    // Cargar valores para el nuevo criterio (debe ser llamada después de agregar el nuevo elemento)
+    // Cargar valores para el nuevo criterio 
     const select = document.getElementById(`criterion${criteriaCount}`);
     loadValues(select, criteriaCount);
 }
@@ -69,14 +70,14 @@ function loadInitialValuesData() {
         .catch(error => console.error('Error al cargar datos iniciales:', error));
 }
 
-// Función para popular el select de criterios con datos cargados
+// Función para cargar el select de criterios con datos
 function populateCriteria(selectId) {
     const select = document.getElementById(selectId);
     if (!select) {
         console.error(`No se encontró el select con ID ${selectId}`);
         return;
     }
-    
+
     select.innerHTML = '';  // Limpiar opciones actuales
     if (criterios.length === 0) {
         console.warn('No hay criterios disponibles para cargar.');
@@ -87,6 +88,7 @@ function populateCriteria(selectId) {
         const option = document.createElement('option');
         option.value = criterio.id;
         option.textContent = criterio.name;
+        option.setAttribute('data-nombre', criterio.name); // Agregar atributo data-nombre
         select.appendChild(option);
     });
 }
@@ -102,6 +104,7 @@ function loadValues(select, index) {
 
     valueSelect.innerHTML = '';  // Limpiar opciones actuales
 
+    // Filtrar valores basados en el criterio seleccionado
     const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
 
     if (filteredValues.length === 0) {
@@ -115,15 +118,33 @@ function loadValues(select, index) {
         const option = document.createElement('option');
         option.value = valor.id;
         option.textContent = valor.name;
+        option.setAttribute('data-nombre', valor.name);  // Agregar atributo data-nombre
         valueSelect.appendChild(option);
     });
+
+    // Añadir la opción "Otro" al final
+    const otherOption = document.createElement('option');
+    otherOption.value = 'other';
+    otherOption.textContent = 'Otro';
+    valueSelect.appendChild(otherOption);
+}
+
+// Para que el usuario pueda agregar un valor personalizado
+function toggleOtherField(select, index) {
+    const otherField = document.getElementById(`otherField${index}`);
+    if (select.value === 'other') {
+        otherField.style.display = 'block';
+    } else {
+        otherField.style.display = 'none';
+        otherField.value = ''; // Limpiar el campo de texto si se oculta
+    }
 }
 
 // Función para validar el formulario antes de enviarlo
 function submitForm() {
     const totalPercentage = parseFloat(document.getElementById('totalPercentageInp').value);
 
-    if (Math.abs(totalPercentage - 100) > 0.01) {  // Permite una pequeña tolerancia
+    if (Math.abs(totalPercentage - 100) > 0.01) {
         alert('El porcentaje total debe ser 100%.');
         return false;
     }
@@ -131,14 +152,27 @@ function submitForm() {
     const criteria = document.querySelectorAll('select[name="criterion[]"]');
     const values = document.querySelectorAll('select[name="value[]"]');
     const percentages = document.querySelectorAll('input[name="percentage[]"]');
+    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
 
     let criteriaString = '';
     let valuesString = '';
     let percentagesString = '';
 
     for (let i = 0; i < criteria.length; i++) {
-        criteriaString += criteria[i].value;
-        valuesString += values[i].value;
+        // Usar el atributo data-nombre para el nombre del criterio
+        const selectedCriterion = criteria[i].selectedOptions[0];
+        const criterionName = selectedCriterion.getAttribute('data-nombre');
+        criteriaString += criterionName;
+
+        // Usar el atributo data-nombre para el nombre del valor, o el valor del campo de texto si "Otro" está seleccionado
+        if (values[i].value === 'other' && otherValues[i].value) {
+            valuesString += otherValues[i].value;
+        } else {
+            const selectedValue = values[i].selectedOptions[0];
+            const valueName = selectedValue.getAttribute('data-nombre');
+            valuesString += valueName;
+        }
+
         percentagesString += percentages[i].value;
 
         if (i < criteria.length - 1) {
