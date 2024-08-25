@@ -65,19 +65,6 @@
             <button type="submit" name="registrar">Enviar</button>
             <button type="submit" name="filtrado">Filtrar Perfiles</button>
             
-            <!-- Sección para mostrar los resultados filtrados -->
-            <div id="filteredProfiles" method="post" action="../action/wantedProfileAction.php" onsubmit="return submitForm()">
-                <h3>Perfiles Filtrados:</h3>
-                <?php
-                if (!empty($perfilesFiltrados)) {
-                    foreach ($perfilesFiltrados as $perfil) {
-                        echo "<p>Criterio: " . htmlspecialchars($perfil['criterio']) . " - Valor: " . htmlspecialchars($perfil['valor']) . "</p>";
-                    }
-                } elseif (isset($_POST["filtrado"])) {
-                    echo "<p>No se encontraron perfiles deseados que coincidan con los criterios de filtrado.</p>";
-                }
-                ?>
-            </div>
             
         </form>
     </div>

@@ -147,6 +147,10 @@ function submitForm() {
             percentagesString += ',';
         }
     }
+    console.log('Criteria String:', criteriaString);
+    console.log('Values String:', valuesString);
+    console.log('Percentages String:', percentagesString);
+
 
     document.getElementById('criteriaString').value = criteriaString;
     document.getElementById('valuesString').value = valuesString;
@@ -159,4 +163,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadInitialCriteriaData();
     loadInitialValuesData();
 });
-

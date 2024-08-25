@@ -14,6 +14,11 @@ if(isset($_POST["registrar"])){
         $valor = $_POST["valuesString"];
         $porcentaje = $_POST["percentagesString"];
 
+
+    console.log('Criteria String:', $criterio);
+    console.log('Values String:', $valor);
+    console.log('Percentages String:', $porcentaje);
+
         $wantedProfileBusiness->insertTbPerfilDeseado($criterio,$valor,$porcentaje);
         header("location: ../view/userWantedProfileView.php?success=inserted");
     }
@@ -27,16 +32,19 @@ if(isset($_POST["registrar"])){
         if (isset($_POST["criteriaString"]) && isset($_POST["valuesString"])) {
             $criterio = $_POST["criteriaString"];
             $valor = $_POST["valuesString"];
-
             $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
-
+            
+            echo "Criterio: " . $criterio . " Valor: " . $valor . "<br>";
+            
             $perfilesFiltrados = [];
     
             if ($allPerfiles) {
-
                 foreach ($allPerfiles as $perfil) {
-                    if ($perfil['criterio'] == $criterio && $perfil['valor'] == $valor) {
-                        $perfilesFiltrados[] = $perfil;
+                    echo "CriterioPer: " . $perfil['criterio'] . " ValorPer: " . $perfil['valor'] . "<br>";
+                    if ($perfil['criterio'] == $criterio) {
+                        if ($perfil['valor'] == $valor) {
+                            $perfilesFiltrados[] = $perfil;
+                        }
                     }
                 }
     
@@ -54,4 +62,4 @@ if(isset($_POST["registrar"])){
             echo "Debe proporcionar un criterio y un valor para realizar el filtrado.";
         }
     }
-   
+    ?>
