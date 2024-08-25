@@ -332,13 +332,6 @@ CREATE TABLE `tbsolicituduniversidadcampus` (
   `tbsolicituduniversidadcampusestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Volcado de datos para la tabla `tbsolicituduniversidadcampus`
---
-
-INSERT INTO `tbsolicituduniversidadcampus` (`tbsolicituduniversidadcampusid`, `tbsolicituduniversidadcampusnombre`, `tbsolicituduniversidadid`, `tbsolicituduniversidadcampusestado`) VALUES
-(1, '2', 1, 0);
-
 -- --------------------------------------------------------
 
 --

@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "668786fd356695ee",
+        "id": "8711371a757199d8",
         "type": "tabs",
         "children": [
           {
-            "id": "9232d8cc9bb87b3f",
+            "id": "ea6822e07802f8ef",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md"
-              }
+              "state": {}
             }
           }
         ]
@@ -146,10 +138,10 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "9232d8cc9bb87b3f",
+  "active": "ea6822e07802f8ef",
   "lastOpenFiles": [
-    "Tareas por hacer - Entrega 3.md",
     "Tareas por hacer - Entrega 4 (Avance 1).md",
+    "Tareas por hacer - Entrega 3.md",
     "20-08-2024 revisión 3.md",
     "13-08-2024 revisión 2.md",
     "30-07-2024 revisión 1.md",
