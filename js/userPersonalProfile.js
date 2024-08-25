@@ -1,4 +1,4 @@
-class PerfilModelador {
+class PerfilPersonal {
     constructor() {
         this.criterios = [];
         this.valores = [];
@@ -123,4 +123,4 @@ class PerfilModelador {
 }
 
 // Instancia de la clase que será usada en todo el documento
-const perfilModelador = new PerfilModelador();
+const perfilPersonal = new PerfilPersonal();

@@ -14,11 +14,6 @@ if(isset($_POST["registrar"])){
         $valor = $_POST["valuesString"];
         $porcentaje = $_POST["percentagesString"];
 
-
-    console.log('Criteria String:', $criterio);
-    console.log('Values String:', $valor);
-    console.log('Percentages String:', $porcentaje);
-
         $wantedProfileBusiness->insertTbPerfilDeseado($criterio,$valor,$porcentaje);
         header("location: ../view/userWantedProfileView.php?success=inserted");
     }
