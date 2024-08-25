@@ -14,7 +14,7 @@ if (isset($_POST['update'])) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
                 $generoBusiness = new GeneroBusiness();
 
-                $resultExist = $generoBusiness->exist($nombre);
+                $resultExist = $generoBusiness->nameExist($nombre, $idGenero);
 
                 if ($resultExist == 1) {
                     header("location: ../view/generoView.php?error=exist");

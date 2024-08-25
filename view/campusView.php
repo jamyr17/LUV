@@ -1,9 +1,5 @@
 <?php
-session_start();
-    
-if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: ./login.php?error=accessDenied");
-}
+include "../action/sessionAction.php";
 
 include '../bussiness/universidadBussiness.php';
 include '../bussiness/campusBussiness.php';
@@ -76,6 +72,9 @@ $campusEspecializacionBusiness =  new CampusEspecializacionBussiness();
         <section id="form">
             <div class="container">
                 <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <form method="post" action="../action/sessionAction.php">
+                    <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+                </form>
 
                 <div class="text-center mb-4">
                     <h3>Agregar un nuevo campus</h3>
@@ -103,7 +102,7 @@ $campusEspecializacionBusiness =  new CampusEspecializacionBussiness();
                         <div class="row">
                             <div class="col">
                                 <label for="nombre" class="form-label">Nombre: </label>
-                                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="campus Omar Dengo" />
+                                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Campus Omar Dengo" />
                             </div>
                         </div>
 

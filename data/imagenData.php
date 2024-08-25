@@ -60,7 +60,7 @@ class ImagenData extends Data
         return $result;
     }
 
-    public function getAllTbimagen()
+    public function getAllTbImagen()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');

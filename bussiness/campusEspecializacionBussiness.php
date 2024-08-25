@@ -34,4 +34,8 @@ class CampusEspecializacionBussiness{
         return $this->campusEspecializacionData->exist($nombre);
     }
 
+    public function nameExist($nombre, $idCampusEspecializacion) {
+        return $this->campusEspecializacionData->nameExists($nombre);
+    }
+
 }

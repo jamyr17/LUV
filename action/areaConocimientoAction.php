@@ -15,7 +15,7 @@ if (isset($_POST['update'])) {
 
                 $areaConocimientoBusiness = new AreaConocimientoBussiness();
 
-                $resultExist = $areaConocimientoBusiness->nameExists($nombre, $idAreaConocimiento);
+                $resultExist = $areaConocimientoBusiness->nameExist($nombre, $idAreaConocimiento);
 
                 if ($resultExist) {
                     header("location: ../view/areaConocimientoView.php?error=exist");

@@ -37,5 +37,10 @@ class CampusRegionBusiness {
     public function exist($nombre) {
         return $this->campusRegionData->exist($nombre);
     }
+
+    public function nameExist($nombre, $idCampusRegion) {
+        return $this->campusRegionData->nameExists($nombre);
+    }
+
 }
 ?>

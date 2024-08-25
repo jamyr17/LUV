@@ -4,6 +4,8 @@ include '../bussiness/campusBussiness.php';
 include '../bussiness/areaConocimientoBussiness.php';
 include '../bussiness/generoBusiness.php';
 include '../bussiness/orientacionSexualBussiness.php';
+include '../bussiness/criterioBusiness.php';
+include '../bussiness/valorBusiness.php';
 
 header('Content-Type: application/json');
 
@@ -12,6 +14,8 @@ $campusBusiness = new CampusBusiness();
 $areaConocimientoBusiness = new AreaConocimientoBussiness();
 $generoBusiness = new GeneroBusiness();
 $orientacionSexualBusiness = new OrientacionSexualBusiness();
+$criterioBusiness = new CriterioBusiness();
+$valorBusiness = new ValorBusiness();
 
 $type = $_GET['type'];
 $data = [];
@@ -59,6 +63,25 @@ switch ($type) {
             $data[] = [
                 'id' => $item->getTbCampusId(),
                 'name' => $item->getTbCampusNombre()
+            ];
+        }
+        break;
+    case "6":
+        $result = $criterioBusiness->getAllTbCriterio();
+        foreach ($result as $item) {
+            $data[] = [
+                'id' => $item->getTbCriterioId(),
+                'name' => $item->getTbCriterioNombre()
+            ];
+        }
+        break;
+    case "7":
+        $result = $valorBusiness->getAllTbValor();
+        foreach ($result as $item) {
+            $data[] = [
+                'id' => $item->getTbValorId(),
+                'name' => $item->getTbValorNombre(),
+                'idCriterio' => $item->getTbCriterioId()
             ];
         }
         break;

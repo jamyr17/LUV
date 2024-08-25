@@ -1,9 +1,5 @@
 <?php
-  session_start();
-      
-  if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-      header("location: ./login.php?error=accessDenied");
-  }
+  include "../action/sessionAction.php";
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +60,10 @@
       <div class="container">
 
         <button onclick="window.location.href='../indexView.php';">Volver</button>
+        <form method="post" action="../action/sessionAction.php">
+          <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+        </form>
+
         <div class="text-center mb-4">
             <h3>Agregar una nueva región</h3>
             <p class="text-muted">Complete el formulario para añadir una nueva región</p>

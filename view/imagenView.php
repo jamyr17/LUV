@@ -1,10 +1,5 @@
 <?php
-session_start();
-
-if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
-    header("location: ./login.php?error=accessDenied");
-}
-
+include "../action/sessionAction.php";
 include '../bussiness/imagenBusiness.php';
 
 $imagenBusiness = new ImagenBusiness();
@@ -17,18 +12,8 @@ $imagenBusiness = new ImagenBusiness();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUV</title>
     <script>
-        function actionConfirmation(mensaje) {
-            return confirm(mensaje);
-        }
-
-        function showMessage(mensaje) {
-            alert(mensaje);
-        }
-
-        async function updateOptions() {
-            const type = document.getElementById("idOptions").value;
-            const select = document.getElementById("dynamic-select");
-
+        async function updateOptions(type, selectId, selectedValue) {
+            const select = document.getElementById(selectId);
             select.innerHTML = '';
 
             if (!type) return;
@@ -45,21 +30,55 @@ $imagenBusiness = new ImagenBusiness();
                     option.text = item.name;
                     select.add(option);
                 });
+
+                // Seleccionar la opción correcta
+                if (selectedValue) {
+                    select.value = selectedValue;
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-        function updateFileName() {
-            const select = document.getElementById("dynamic-select");
-            const hiddenNameField = document.getElementById("dynamic-select-name");
+        async function updateAllDynamicSelects() {
+            const selects = document.querySelectorAll('select[id^="idOptionsUpdate"]');
+            selects.forEach(async (select) => {
+                const type = select.value;
+                const dynamicSelectId = select.getAttribute('data-dynamic-select-id');
+                const selectedDynamicValue = select.getAttribute('data-selected-dynamic-value');
+                await updateOptions(type, dynamicSelectId, selectedDynamicValue);
+            });
+        }
+
+        function updateFileName(selectId, nameFieldId) {
+            const select = document.getElementById(selectId);
+            const hiddenNameField = document.getElementById(nameFieldId);
             hiddenNameField.value = select.options[select.selectedIndex].text;
         }
 
         function updateHiddenIdOptions() {
-            const hiddenIdOptionsField = document.getElementById("idOptionsHidden");
-            hiddenIdOptionsField.value = document.getElementById("idOptions").value;
+            const select = document.getElementById('idOptions');
+            const idOptions = document.getElementById('idOptionsHidden');
+            idOptions.value = select.value;
         }
+
+        function updateHiddenIdOptionsU(select) {
+            const idOptions = document.getElementById('idOptionsHiddenUpdate');
+            console.log(select.value);
+            idOptions.value = select.value;
+        }
+
+        function actionConfirmation(mensaje) {
+            return confirm(mensaje);
+        }
+
+        function showMessage(mensaje) {
+            alert(mensaje);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateAllDynamicSelects();
+        });
     </script>
 </head>
 
@@ -69,7 +88,6 @@ $imagenBusiness = new ImagenBusiness();
     </header>
 
     <div class="container mt-3">
-
         <section id="alerts">
             <?php
             if (isset($_GET['error'])) {
@@ -96,11 +114,13 @@ $imagenBusiness = new ImagenBusiness();
             ?>
         </section>
 
-
-
         <section id="form">
             <div class="container">
                 <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <form method="post" action="../action/sessionAction.php">
+                    <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+                </form>
+
                 <div class="text-center mb-4">
                     <h3>Agregar una nueva imagen</h3>
                     <p class="text-muted">Complete el formulario para añadir una nueva imagen</p>
@@ -108,7 +128,7 @@ $imagenBusiness = new ImagenBusiness();
 
                 <div class="container d-flex justify-content-center">
                     <label for="idOptions">Opciones:</label>
-                    <select id="idOptions" name="idOptions" onchange="updateOptions(); updateHiddenIdOptions();">
+                    <select id="idOptions" name="idOptions" onchange="updateOptions(this.value, 'dynamic-select', ''); updateHiddenIdOptions();">
                         <option value="">Seleccione una opción</option>
                         <option value="1">Universidad</option>
                         <option value="2">Área Conocimiento</option>
@@ -123,7 +143,7 @@ $imagenBusiness = new ImagenBusiness();
                     <input type="hidden" name="dynamic-select-name" id="dynamic-select-name">
                     <div>
                         <label for="dynamic-select">Seleccione:</label>
-                        <select id="dynamic-select" name="dynamic-select" onchange="updateFileName()">
+                        <select id="dynamic-select" name="dynamic-select" onchange="updateFileName('dynamic-select', 'dynamic-select-name')">
                         </select>
                     </div>
 
@@ -142,22 +162,46 @@ $imagenBusiness = new ImagenBusiness();
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
+                            <th>Opciones</th>
+                            <th>Registro</th>
+                            <th>Archivo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $imagen = $imagenBusiness->getAllTbimagen();
+                        $imagen = $imagenBusiness->getAllTbImagen();
                         $mensajeActualizar = "¿Desea actualizar esta imagen?";
                         $mensajeEliminar = "¿Desea eliminar esta imagen?";
                         if ($imagen != null) {
                             foreach ($imagen as $imag) {
+
+                                $selectedOption = htmlspecialchars($imag->getTbImagenCrudId());
+                                $selectedDynamic = htmlspecialchars($imag->getTbImagenRegistroId());
+
                                 echo '<tr>';
                                 echo '<form method="post" enctype="multipart/form-data" action="../action/imagenAction.php">';
                                 echo '<input type="hidden" name="id" value="' . htmlspecialchars($imag->getTbImagenId()) . '">';
                                 echo '<td>' . htmlspecialchars($imag->getTbImagenId()) . '</td>';
-                                echo '<td><input type="text" name="dynamic-select-name" id="dynamic-select-name" value="' . htmlspecialchars($imag->gettbImagenNombre()) . '" class="form-control" /></td>';
-                                echo '<td><input type="file" id="imageUpload" name="imageUpload" accept="image/*" value="' . htmlspecialchars($imag->gettbImagenDirectorio()) . '" class="form-control" /></td>';
+                                echo '<td><input type="text" name="nombreArchivo" id="nombreArchivo" value="' . htmlspecialchars($imag->getTbImagenNombre()) . '" class="form-control" /></td>';
+                                echo '<td>
+                                    <select id="idOptionsUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '" name="idOptionsUpdate" data-dynamic-select-id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" data-selected-dynamic-value="' . htmlspecialchars($selectedDynamic) . '" onchange="updateOptions(this.value, this.getAttribute(\'data-dynamic-select-id\'), this.getAttribute(\'data-selected-dynamic-value\')); updateHiddenIdOptionsU(this);">
+                                        <option value="1"' . ($selectedOption == '1' ? ' selected' : '') . '>Universidad</option>
+                                        <option value="2"' . ($selectedOption == '2' ? ' selected' : '') . '>Área Conocimiento</option>
+                                        <option value="3"' . ($selectedOption == '3' ? ' selected' : '') . '>Género</option>
+                                        <option value="4"' . ($selectedOption == '4' ? ' selected' : '') . '>Orientación sexual</option>
+                                        <option value="5"' . ($selectedOption == '5' ? ' selected' : '') . '>Campus</option>
+                                    </select>
+                                </td>';
+                                echo '<td>
+                                    <input type="hidden" name="idOptionsHiddenUpdate" id="idOptionsHiddenUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '">
+                                    <input type="hidden" name="dynamic-select-name-update" id="dynamic-select-name-update_' . htmlspecialchars($imag->getTbImagenId()) . '">
+                                    <select id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" name="dynamic-select" onchange="updateFileName(this.id, this.getAttribute(\'data-name-field-id\'))">
+                                        
+                                    </select>
+                                    <input type="hidden" id="selectedDynamicValueUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '" value="' . htmlspecialchars($selectedDynamic) . '" />
+                                </td>';
+                                echo '<td><input type="file" id="imageUpload_" name="imageUpload_" accept="image/*" value="' . htmlspecialchars($imag->gettbImagenDirectorio()) . '" class="form-control" /></td>';
                                 echo '<td>';
                                 echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
                                 echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
