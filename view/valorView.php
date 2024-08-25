@@ -82,8 +82,8 @@ $criterioBusiness = new CriterioBusiness();
                 </div>
 
                 <div class="container d-flex justify-content-center">
-                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
-                        <input type="hidden" name="valor" value="<?php echo htmlspecialchars($idValor); ?>">
+                <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
+                    <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="criterioId">Criterio:</label>
                         <select name="criterioId" id="criterioId">
@@ -115,7 +115,6 @@ $criterioBusiness = new CriterioBusiness();
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Criterio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -132,7 +131,7 @@ $criterioBusiness = new CriterioBusiness();
                             echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
                             echo '<input type="text" name="nombre" value="' . htmlspecialchars($valor->getTbValorNombre()) . '" class="form-control" />';
                             echo '</td>';
-                            echo '<td>' . htmlspecialchars($valor->getTbCriterioId()) . '</td>';
+                            //echo '<td>' . htmlspecialchars($valor->getTbCriterioId()) . '</td>';
                             echo '<td>';
                             echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
                             echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";

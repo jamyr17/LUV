@@ -27,7 +27,8 @@ class ValorData extends Data
 
         // Consulta para insertar un nuevo registro
         $queryInsert = "INSERT INTO tbvalor (tbvalorid, tbvalornombre, tbcriterioid, tbvalorestado) 
-                        VALUES ($nextId, '$nombre', '$criterioId', '$estado')";
+                VALUES ($nextId, '$nombre', '$criterioId', '$estado')";
+
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);

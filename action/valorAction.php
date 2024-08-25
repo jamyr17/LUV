@@ -55,9 +55,9 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre'])) {
-
+    if (isset($_POST['nombre']) && isset($_POST['criterioId'])) {
         $nombre = $_POST['nombre'];
+        $criterioId = $_POST['criterioId'];    
 
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
