@@ -41,7 +41,7 @@ class WantedProfileData extends Data{
                 'id' => $row['tbperfilusuariopersonalid'],
                 'criterio' => $row['tbperfilusuariopersonalcriterio'],
                 'valor' => $row['tbperfilusuariopersonalvalor'],
-                'estado' => $row['tbperfilusuariodeseadoestado']
+                'estado' => $row['tbperfilusuariopersonalestado']
             ];
             array_push($profiles, $profile);
         }

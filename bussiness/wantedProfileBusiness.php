@@ -15,7 +15,7 @@ class WantedProfileBussiness{
     }
 
     public function getAllTbPerfiles() {
-        return $this->wantedProfileData->getAllTbAreaConocimiento();
+        return $this->wantedProfileData->getAllTbPerfiles();
     }
 
 }

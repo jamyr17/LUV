@@ -20,12 +20,13 @@ if(isset($_POST["registrar"])){
     else{
         header("location: ../view/userWantedProfileView.php?error=formIncomplete");
     }
-    
+     
+}
 
     if (isset($_POST["filtrado"])) {
-        if (isset($_POST["criterio"]) && isset($_POST["valor"])) {
-            $criterio = $_POST["criterio"];
-            $valor = $_POST["valor"];
+        if (isset($_POST["criteriaString"]) && isset($_POST["valuesString"])) {
+            $criterio = $_POST["criteriaString"];
+            $valor = $_POST["valuesString"];
 
             $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
 
@@ -34,14 +35,14 @@ if(isset($_POST["registrar"])){
             if ($allPerfiles) {
 
                 foreach ($allPerfiles as $perfil) {
-                    if ($perfil['tbperfilusuariopersonalcriterio'] == $criterio && $perfil['ttbperfilusuariopersonalvalor'] == $valor) {
+                    if ($perfil['criterio'] == $criterio && $perfil['valor'] == $valor) {
                         $perfilesFiltrados[] = $perfil;
                     }
                 }
     
                 if (!empty($perfilesFiltrados)) {
                     foreach ($perfilesFiltrados as $perfil) {
-                        echo "Criterio: " . $perfil['tbperfilusuariopersonalcriterio'] . " Valor: " . $perfil['tbperfilusuariopersonalvalor'] . "<br>";
+                        echo "Criterio: " . $perfil['criterio'] . " Valor: " . $perfil['valor'] . "<br>";
                     }
                 } else {
                     echo "No se encontraron perfiles deseados que coincidan con los criterios de filtrado.";
@@ -53,5 +54,4 @@ if(isset($_POST["registrar"])){
             echo "Debe proporcionar un criterio y un valor para realizar el filtrado.";
         }
     }
-    
-}
+   
