@@ -46,6 +46,8 @@
         <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
         <h3>Modela tu perfil</h3>
 
+        <div id="loading" style="display:none;">Cargando...</div>
+
         <form id="criteriaForm" method="post" action="../action/personalProfileAction.php" onsubmit="return perfilPersonal.submitForm()">
             <div id="criteriaSection">
                 <!-- Los criterios y valores se cargarán aquí -->
