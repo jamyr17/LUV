@@ -19,7 +19,7 @@
                 };
             } else if (isset($_GET['success'])) {
                 $mensaje = match(true){
-                    $_GET['success']=="inserted" => "Se ha guardado el modelo de persona que buscas.",
+                    $_GET['success']=="inserted" => "Se ha guardado el perfil personal.",
                     default => "Transacción realizada.",
                 };
             }
@@ -45,6 +45,6 @@
         </form>
     </div>
 
-    <script src="../js/PerfilModelador.js"></script>
+    <script src="../js/userPersonalProfile.js"></script>
 </body>
 </html>

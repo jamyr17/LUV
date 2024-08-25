@@ -10,7 +10,9 @@
 </head>
 <body>
     <section id="alerts">
+
         <?php
+
             if (isset($_GET['error'])) {
             $mensaje = "Ocurrió un error debido a ";
             $mensaje .= match(true){
@@ -18,6 +20,7 @@
                 $_GET['error']=="formIncomplete" => "problemas en el procesamiento de su respuesta.",
                 default => "un problema inesperado.",
             };
+
             } else if (isset($_GET['success'])) {
                 $mensaje = match(true){
                 $_GET['success']=="inserted" => "Se ha guardado el modelo de persona que buscas.",
@@ -29,6 +32,7 @@
             echo "<script>alert('$mensaje')</script>";
             }
         ?>
+
     </section>
 
     <div id="container">
@@ -53,6 +57,7 @@
             </div>
 
             <button type="button" onclick="addCriterion()">Agregar criterio</button>
+            
             <p id="totalPercentageDisplay">Porcentaje total: 0%</p>
             
             <!-- Campos ocultos para guardar los strings formateados -->
@@ -60,11 +65,9 @@
             <input type="hidden" id="criteriaString" name="criteriaString">
             <input type="hidden" id="valuesString" name="valuesString">
             <input type="hidden" id="percentagesString" name="percentagesString">
-            
 
             <button type="submit" name="registrar">Enviar</button>
             <button type="submit" name="filtrado">Filtrar Perfiles</button>
-            
             
         </form>
     </div>
