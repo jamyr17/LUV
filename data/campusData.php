@@ -74,13 +74,16 @@ public function updateTbCampus($campus)
 
     $id = intval($campus->getTbCampusUniversidadId()); 
     $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+    $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
+    $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
     $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
     $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
     $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
-
     $queryUpdate = "UPDATE tbuniversidadcampus SET 
                         tbuniversidadcampusnombre='$nombre', 
                         tbuniversidadcampusdireccion='$direccion',
+                        tbuniversidadcampuslatitud='$latitud',
+                        tbuniversidadcampuslongitud='$longitud',            
                         tbuniversidadcampusregionid=$regionId,
                         tbuniversidadcampusespecializacionid=$especializacionId
                     WHERE tbuniversidadcampusid=$id;";

@@ -184,6 +184,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                             echo '<td>' . htmlspecialchars($camp->getTbCampusId()) . '</td>';
                             echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($camp->getTbCampusNombre()) . '" class="form-control" /></td>';
                             echo '<td><input type="text" name="direccion" id="direccion" value="' . htmlspecialchars($camp->getTbCampusDireccion()) . '" class="form-control" /></td>';
+                            
 
                             // Región select box
                             echo '<td>';
@@ -212,6 +213,8 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                             echo '<button type="submit" name="update" onclick="return actionConfirmation(\'' . $mensajeActualizar . '\')" class="btn btn-primary">Actualizar</button>';
                             echo ' <button type="submit" name="delete" onclick="return actionConfirmation(\'' . $mensajeEliminar . '\')" class="btn btn-danger">Eliminar</button>';
                             echo '</td>';
+                            echo '<td><input type="hidden" name="latitud" id="latitud" value="' . htmlspecialchars($camp->getTbCampusLatitud()) . '" class="form-control" /></td>';
+                            echo '<td><input type="hidden" name="longitud" id="longitud" value="' . htmlspecialchars($camp->getTbCampusLongitud()) . '" class="form-control" /></td>';
 
                             echo '</form>';
                             echo '</tr>';
