@@ -5,6 +5,7 @@ include '../bussiness/campusBussiness.php';
 if (isset($_POST['update'])) {
 
     if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
         
         $idCampus = $_POST['idCampus'];
         $idUniversidad = $_POST['idUniversidad'];
@@ -14,9 +15,12 @@ if (isset($_POST['update'])) {
         $direccion = $_POST['direccion'];
         $latitud = $_POST['latitud'];
         $longitud = $_POST['longitud'];
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];
 
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
+                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusBusiness = new CampusBusiness();
 
@@ -34,7 +38,14 @@ if (isset($_POST['update'])) {
                         header("location: ../view/campusView.php?error=dbError");
                     }
 
+                    if ($result == 1) {
+                        header("location: ../view/campusView.php?success=updated");
+                    } else {
+                        header("location: ../view/campusView.php?error=dbError");
+                    }
+
                 }
+                
                 
             } else {
                 header("location: ../view/campusView.php?error=numberFormat");
@@ -50,7 +61,8 @@ if (isset($_POST['update'])) {
     if (isset($_POST['idCampus'])) {
 
         $idCampus = $_POST['idCampus'];
-        
+        echo "$idCampus";
+
         $campusBusiness = new CampusBusiness();
         $result = $campusBusiness->deleteTbCampus($idCampus);
 
@@ -64,7 +76,7 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud']) && isset($_POST['idUniversidad']) && isset($_POST['idRegion']) && isset($_POST['idEspecializacion'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
 
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
@@ -75,9 +87,9 @@ if (isset($_POST['update'])) {
         $longitud = $_POST['longitud'];
         $colectivos = isset($_POST['colectivos']) ? $_POST['colectivos'] : [];
 
-        if (strlen($nombre) > 0 && strlen($direccion) > 0) {
+        if (strlen($nombre) > 0 && strlen($direccion > 0)) {
             if (!is_numeric($nombre)) {
-                // Verificar que no exista un registro con el mismo nombre
+                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusBusiness = new CampusBusiness();
 
                 $resultExist = $campusBusiness->exist($nombre);
@@ -93,7 +105,9 @@ if (isset($_POST['update'])) {
                     } else {
                         header("location: ../view/campusView.php?error=dbError");
                     }
+
                 }
+                
             } else {
                 header("location: ../view/campusView.php?error=numberFormat");
             }
@@ -103,9 +117,8 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/campusView.php?error=error");
     }
-} else if (isset($_GET['idU'])) { 
+} else if(isset($_GET['idU'])) { 
     $idU = $_GET['idU'];
     $campusBusiness = new CampusBusiness();
     $campusBusiness->getAllTbCampusByUniversidad($idU);
 } 
-?>
