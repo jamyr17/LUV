@@ -74,8 +74,8 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/campusEspecializacionAction.php" style="width: 50vw; min-width:300px;">
-                <input type="hidden" name="campusEspecializacion" value="<?php echo htmlspecialchars($idCampusEspecializacion); ?>">
+            <form method="post" action="../action/universidadCampusEspecializacionAction.php" style="width: 50vw; min-width:300px;">
+                <input type="hidden" name="universidadCampusEspecializacion" value="<?php echo htmlspecialchars($idCampusEspecializacion); ?>">
 
                 <div class="row">
                     <div class="col">
@@ -115,20 +115,20 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/campusEspecializacionBussiness.php';
-          $campusEspecializacionBussiness = new CampusEspecializacionBussiness();
-          $especializaciones = $campusEspecializacionBussiness->getAllTbCampusEspecializacion();
+          include '../Bussiness/universidadCampusEspecializacionBussiness.php';
+          $universidadCampusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
+          $especializaciones = $universidadCampusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
           $mensajeActualizar = "¿Desea actualizar esta especialización?";
           $mensajeEliminar = "¿Desea eliminar esta especialización?";
 
           if ($especializaciones != null) {
             foreach ($especializaciones as $especializacion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/campusEspecializacionAction.php">';
-              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbCampusEspecializacionId()) . '">';
-              echo '<td>' . htmlspecialchars($especializacion->getTbCampusEspecializacionId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbCampusEspecializacionNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($especializacion->getTbCampusEspecializacionDescripcion()) . '" class="form-control" /></td>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php">';
+              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
+              echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
+              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionNombre()) . '" class="form-control" /></td>';
+              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionDescripcion()) . '" class="form-control" /></td>';
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";

@@ -8,18 +8,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Campus Colectivo</title>
+  <title>Regiones de Campus</title>
   <script>
-    function actionConfirmation(mensaje){
-      var response = confirm(mensaje)
-      if(response==true){
-        return true
-      }else{
-        return false
-      }
+    function actionConfirmation(mensaje) {
+      return confirm(mensaje);
     }
 
-    function showMessage(mensaje){
+    function showMessage(mensaje) {
       alert(mensaje);
     }
   </script>
@@ -30,12 +25,12 @@
 
   <header>
     <nav class="navbar bg-body-tertiary">
-      
+      <!-- Navegación -->
     </nav>
   </header>
 
   <div class="container mt-3">
-  <section id="alerts">
+    <section id="alerts">
       <?php
         if (isset($_GET['error'])) {
           $mensaje = "Ocurrió un error debido a ";
@@ -43,51 +38,56 @@
             $_GET['error']=="emptyField" => "campo(s) vacío(s).",
             $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "dicho campus colectivo ya existe.",
+            $_GET['error']=="exist" => "que dicha región ya existe.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
             $mensaje = match(true){
-              $_GET['success']=="inserted" => "Campus colectivo creado correctamente.",
-              $_GET['success']=="updated" => "Campus colectivo actualizado correctamente.",
-              $_GET['success']=="deleted" => "Campus colectivo eliminado correctamente.",
+              $_GET['success']=="inserted" => "Región creada correctamente.",
+              $_GET['success']=="updated" => "Región actualizada correctamente.",
+              $_GET['success']=="deleted" => "Región eliminada correctamente.",
               default => "Transacción realizada.",
             };
         }
 
-        if(isset($mensaje)){
+        if (isset($mensaje)) {
           echo "<script>showMessage('$mensaje')</script>";
         }
       ?>
     </section>
+
     <section id="form">
       <div class="container">
+
         <button onclick="window.location.href='../indexView.php';">Volver</button>
-        <form method="post" action="../action/sessionAdmininAction.php">
+        <form method="post" action="../action/sessionAdminAction.php">
           <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
         </form>
 
         <div class="text-center mb-4">
-            <h3>Agregar un nuevo campus colectivo</h3>
-            <p class="text-muted">Complete el formulario para añadir un nuevo campus colectivo</p>
+            <h3>Agregar una nueva región</h3>
+            <p class="text-muted">Complete el formulario para añadir una nueva región</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/campusColectivoAction.php" style="width: 50vw; min-width:300px;">
-                <input type="hidden" name="idCampusColectivo" value="<?php echo htmlspecialchars($tbCampusColectivoId); ?>">
+            <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;">
+                <input type="hidden" name="idUniversidadCampusRegion" value="0">
 
                 <div class="row">
                     <div class="col">
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Campus Colectivo" />
-                    </div>
-                    <div class="col">
-                        <label for="descripcion" class="form-label">Descripción: </label>
-                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción del campus colectivo" />
+                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de la región" />
                     </div>
                 </div>
-    
-                <div class="mt-3">
+                
+                <div class="row">
+                    <div class="col">
+                        <label for="descripcion" class="form-label">Descripción: </label>
+                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción de la región" />
+                    </div>
+                </div>
+                
+                <div>
                     <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
                 </div>
             </form>
@@ -96,10 +96,9 @@
     </section>
 
     <section id="table">
-
-    <div class="text-center mb-4">
-      <h3>Campus colectivos registrados</h3>
-    </div>
+      <div class="text-center mb-4">
+        <h3>Regiones registradas</h3>
+      </div>
 
       <table class="table mt-3">
         <thead>
@@ -112,20 +111,20 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/campusColectivoBussiness.php';
-          $campusColectivoBussiness = new CampusColectivoBussiness();
-          $campusColectivos = $campusColectivoBussiness->getAllTbCampusColectivo();
-          $mensajeActualizar = "¿Desea actualizar este campus colectivo?";
-          $mensajeEliminar = "¿Desea eliminar este campus colectivo?";
+          include '../bussiness/universidadCampusRegionBussiness.php';
+          $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+          $campusRegions = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
+          $mensajeActualizar = "¿Desea actualizar esta región?";
+          $mensajeEliminar = "¿Desea eliminar esta región?";
 
-          if ($campusColectivos != null) {
-            foreach ($campusColectivos as $campusColectivo) {
+          if ($campusRegions != null) {
+            foreach ($campusRegions as $campusRegion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/campusColectivoAction.php">';
-              echo '<input type="hidden" name="idCampusColectivo" value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '">';
-              echo '<td>' . htmlspecialchars($campusColectivo->getTbCampusColectivoId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusColectivo->getTbCampusColectivoDescripcion()) . '" class="form-control" /></td>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php">';
+              echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '">';
+              echo '<td>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '</td>';
+              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '" class="form-control" /></td>';
+              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionDescripcion()) . '" class="form-control" /></td>';
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -135,13 +134,12 @@
             }
           }
           ?>
-          
         </tbody>
       </table>
     </section>
   </div>
 
-  </body>
+</body>
 
 <footer>
 </footer>

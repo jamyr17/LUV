@@ -36,17 +36,17 @@
             <th>Aspectos de Campus</th>
             <tr>
                 <td>
-                    <a href="view/campusColectivoView.php">Campus Colectivo</a>
+                    <a href="view/universidadCampusColectivoView.php">Campus Colectivo</a>
                 </td> 
             </tr>
             <tr>
                 <td>
-                    <a href="view/campusRegionView.php">Campus Región</a>
+                    <a href="view/universidadCampusRegionView.php">Campus Región</a>
                 </td> 
             </tr>
             <tr>
                 <td>
-                    <a href="view/campusEspecializacionView.php">Campus Especialización</a>
+                    <a href="view/universidadCampusEspecializacionView.php">Campus Especialización</a>
                 </td> 
             </tr>
             <tr>
