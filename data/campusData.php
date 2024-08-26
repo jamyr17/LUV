@@ -67,25 +67,35 @@ class CampusData extends Data
 
     return $resultInsert;
 }
+public function updateTbCampus($campus)
+{
+    $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+    $conn->set_charset('utf8');
 
-    public function updateTbCampus($campus)
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
+    $id = intval($campus->getTbCampusUniversidadId()); 
+    $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+    $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
+    $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
+    $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
 
-        $id = intval($campus->getTbCampusUniversidadId()); // Asegúrate de que $id sea un entero
-        $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
-        $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
-        $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
-        $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
+    $queryUpdate = "UPDATE tbuniversidadcampus SET 
+                        tbuniversidadcampusnombre='$nombre', 
+                        tbuniversidadcampusdireccion='$direccion',
+                        tbuniversidadcampusregionid=$regionId,
+                        tbuniversidadcampusespecializacionid=$especializacionId
+                    WHERE tbuniversidadcampusid=$id;";
 
-        $queryUpdate = "UPDATE tbuniversidadcampus SET tbuniversidadcampusnombre='$nombre', tbuniversidadcampusdireccion='$direccion',tbuniversidadcampusregionid='$regionId',tbuniversidadcampusespecializacionid='$especializacionId' WHERE tbuniversidadcampusid=$id;";
+    $result = mysqli_query($conn, $queryUpdate);
 
-        $result = mysqli_query($conn, $queryUpdate);
-        mysqli_close($conn);
-
-        return $result;
+    if (!$result) {
+        // Imprime el error SQL si la consulta falla
+        echo "Error: " . mysqli_error($conn);
     }
+
+    mysqli_close($conn);
+
+    return $result;
+}
 
     public function deleteTbCampus($campusId)
     {
