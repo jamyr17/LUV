@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 08:55:39
+-- Tiempo de generación: 26-08-2024 a las 22:38:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -44,58 +44,6 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 (3, 'Biología', 'Ciencia que estudia a los seres vivos y sus procesos vitales.', 1),
 (4, 'Ingeniería Informática', 'Disciplina que se encarga del diseño y desarrollo de sistemas y aplicaciones informáticas.', 1),
 (5, 'Psicología', 'Ciencia que estudia el comportamiento y los procesos mentales de los individuos.', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbcampuscolectivo`
---
-
-CREATE TABLE `tbcampuscolectivo` (
-  `tbcampuscolectivoid` int(11) NOT NULL,
-  `tbcampuscolectivonombre` varchar(633) NOT NULL,
-  `tbcampuscolectivodescripcion` varchar(255) NOT NULL,
-  `tbcampuscolectivoestado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tbcampuscolectivo`
---
-
-INSERT INTO `tbcampuscolectivo` (`tbcampuscolectivoid`, `tbcampuscolectivonombre`, `tbcampuscolectivodescripcion`, `tbcampuscolectivoestado`) VALUES
-(1, 'Volleyball', 'de Volleyball', 1),
-(2, 'Fútbol', 'Equipo de Fútbol', 1),
-(3, 'Danza', 'Equipo Representativo de Baile', 1),
-(4, 'Ping pong', 'Comunidad estudiantil grande interesada en el ping pong', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbcampusespecializacion`
---
-
-CREATE TABLE `tbcampusespecializacion` (
-  `tbcampusespecializacionid` int(11) NOT NULL,
-  `tbcampusespecializacionnombre` varchar(63) NOT NULL,
-  `tbcampusespecializaciondescripcion` varchar(255) NOT NULL,
-  `tbcampusespecializacionestado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tbcampusespecializacion`
---
-
-INSERT INTO `tbcampusespecializacion` (`tbcampusespecializacionid`, `tbcampusespecializacionnombre`, `tbcampusespecializaciondescripcion`, `tbcampusespecializacionestado`) VALUES
-(1, 'Agricultura y Ciencias Agropecuarias', 'en agrícolas avanzadas, manejo de cultivos, ganadería, y sostenibilidad en la agricultura.', 1),
-(2, 'Ciencias Sociales', 'Enfoque en el estudio de la sociedad y el comportamiento humano, abarcando psicología, sociología, y antropología.', 1),
-(3, 'Ciencias Políticas', 'Especialización en el análisis de sistemas políticos, relaciones internacionales, teoría política, y políticas públicas.', 1),
-(4, 'Economía', 'Estudio de principios económicos, análisis de mercados, teoría económica, y políticas económicas para el desarrollo sostenible.', 1),
-(5, 'Ingeniería Ambiental', 'Foco en la protección del medio ambiente, manejo de recursos naturales, y desarrollo de tecnologías para la sostenibilidad.', 1),
-(6, 'Medicina y Ciencias de la Salud', 'Especialización en prácticas médicas, investigación en salud, manejo de enfermedades y promoción de la salud pública.', 1),
-(7, 'Arquitectura y Urbanismo', 'Estudio del diseño de edificios y espacios urbanos, planificación territorial, y desarrollo de proyectos arquitectónicos sostenibles.', 1),
-(8, 'Derecho', 'Enfoque en el estudio de leyes, ética legal, y procedimientos judiciales, incluyendo áreas como derecho civil, penal y comercial.', 1),
-(9, 'Historia y Arqueología', 'Estudio de eventos históricos, análisis de civilizaciones antiguas, y técnicas arqueológicas para entender el pasado humano.', 1),
-(10, 'Literatura y Lenguas', 'Exploración de diversas literaturas y lenguas, análisis literario, y estudios de traducción y lingüística aplicada.', 1);
 
 -- --------------------------------------------------------
 
@@ -461,7 +409,11 @@ CREATE TABLE `tbuniversidadcampus` (
 
 INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`, `tbuniversidadcampusespecializacionid`) VALUES
 (1, 1, 'Campus Sarapiquí', 'La Victoria', 1, '', '', 6, 0),
-(2, 2, 'Rodrigo Facio', 'Montes de Oca', 1, '', '', 2, 0);
+(2, 2, 'Rodrigo Facio', 'Montes de Oca', 1, '', '', 2, 0),
+(3, 1, 'Furiosa', 'jaja', 1, '', '', 1, 1),
+(4, 1, 'a', 'San José', 0, '', '', 1, 1),
+(5, 1, 'b', 'Chepe', 0, '', '', 1, 1),
+(6, 1, 'v', 'v', 1, '', '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -471,15 +423,93 @@ INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `
 
 CREATE TABLE `tbuniversidadcampuscolectivo` (
   `tbuniversidadcampuscolectivoid` int(11) NOT NULL,
-  `tbuniversidadcampusid` int(11) NOT NULL,
-  `tbcolectivoid` int(11) NOT NULL
+  `tbuniversidadcampuscolectivonombre` varchar(633) NOT NULL,
+  `tbuniversidadcampuscolectivodescripcion` varchar(255) NOT NULL,
+  `tbuniversidadcampuscolectivoestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `tbuniversidadcampuscolectivo`
 --
 
-INSERT INTO `tbuniversidadcampuscolectivo` (`tbuniversidadcampuscolectivoid`, `tbuniversidadcampusid`, `tbcolectivoid`) VALUES
+INSERT INTO `tbuniversidadcampuscolectivo` (`tbuniversidadcampuscolectivoid`, `tbuniversidadcampuscolectivonombre`, `tbuniversidadcampuscolectivodescripcion`, `tbuniversidadcampuscolectivoestado`) VALUES
+(1, 'Volleyball', 'de Volleyball', 1),
+(2, 'Fútbol', 'Equipo de Fútbol', 1),
+(3, 'Danza', 'Equipo Representativo de Baile', 1),
+(4, 'Ping pong', 'Comunidad estudiantil grande interesada en el ping pong', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbuniversidadcampusespecializacion`
+--
+
+CREATE TABLE `tbuniversidadcampusespecializacion` (
+  `tbuniversidadcampusespecializacionid` int(11) NOT NULL,
+  `tbuniversidadcampusespecializacionnombre` varchar(63) NOT NULL,
+  `tbuniversidadcampusespecializaciondescripcion` varchar(255) NOT NULL,
+  `tbuniversidadcampusespecializacionestado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbuniversidadcampusespecializacion`
+--
+
+INSERT INTO `tbuniversidadcampusespecializacion` (`tbuniversidadcampusespecializacionid`, `tbuniversidadcampusespecializacionnombre`, `tbuniversidadcampusespecializaciondescripcion`, `tbuniversidadcampusespecializacionestado`) VALUES
+(1, 'Agricultura y Ciencias Agropecuarias', 'en agrícolas avanzadas, manejo de cultivos, ganadería, y sostenibilidad en la agricultura.', 1),
+(2, 'Ciencias Sociales', 'Enfoque en el estudio de la sociedad y el comportamiento humano, abarcando psicología, sociología, y antropología.', 1),
+(3, 'Ciencias Políticas', 'Especialización en el análisis de sistemas políticos, relaciones internacionales, teoría política, y políticas públicas.', 1),
+(4, 'Economía', 'Estudio de principios económicos, análisis de mercados, teoría económica, y políticas económicas para el desarrollo sostenible.', 1),
+(5, 'Ingeniería Ambiental', 'Foco en la protección del medio ambiente, manejo de recursos naturales, y desarrollo de tecnologías para la sostenibilidad.', 1),
+(6, 'Medicina y Ciencias de la Salud', 'Especialización en prácticas médicas, investigación en salud, manejo de enfermedades y promoción de la salud pública.', 1),
+(7, 'Arquitectura y Urbanismo', 'Estudio del diseño de edificios y espacios urbanos, planificación territorial, y desarrollo de proyectos arquitectónicos sostenibles.', 1),
+(8, 'Derecho', 'Enfoque en el estudio de leyes, ética legal, y procedimientos judiciales, incluyendo áreas como derecho civil, penal y comercial.', 1),
+(9, 'Historia y Arqueología', 'Estudio de eventos históricos, análisis de civilizaciones antiguas, y técnicas arqueológicas para entender el pasado humano.', 1),
+(10, 'Literatura y Lenguas', 'Exploración de diversas literaturas y lenguas, análisis literario, y estudios de traducción y lingüística aplicada.', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbuniversidadcampusregion`
+--
+
+CREATE TABLE `tbuniversidadcampusregion` (
+  `tbuniversidadcampusregionid` int(11) NOT NULL,
+  `tbuniversidadcampusregionnombre` varchar(300) NOT NULL,
+  `tbuniversidadcampusregiondescripcion` varchar(300) NOT NULL,
+  `tbuniversidadcampusregionestado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbuniversidadcampusregion`
+--
+
+INSERT INTO `tbuniversidadcampusregion` (`tbuniversidadcampusregionid`, `tbuniversidadcampusregionnombre`, `tbuniversidadcampusregiondescripcion`, `tbuniversidadcampusregionestado`) VALUES
+(1, 'Caribe', 'r de Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
+(2, 'San José y Valle Central', 'Un clima agradable y primaveral. Colinas salpicadas de cultivos de colores. Todas las comodidades de la vida moderna en la ciudad no es de extrañar que la mayoría de los costarricenses vivan en la capital de San José, en el Valle Central.', 1),
+(3, 'Península de Osa', 'Este es el lugar más salvaje de Costa Rica, una de las zonas más remotas y místicas del país que ha permanecido intacta. Vuelan las guacamayas escarlatas. Los monos se balancean. El jaguar y el tapir dejan huellas en el suelo del bosque.', 1),
+(4, 'Pacífico Central', 'De fácil acceso desde San José. Kilómetros de amplias playas. Vibrantes selvas tropicales llenas de fauna. Por eso, el Pacífico Central es una de las regiones más visitadas de Costa Rica.', 1),
+(5, 'Guanacaste', 'Con un clima asoleado y seco durante casi todo el año y 400 millas de costa con una variedad de playas vírgenes de arena negra, coralina y dorada, Guanacaste es una de las regiones favoritas de los visitantes internacionales.', 1),
+(6, 'Norte', 'Abarca esencialmente las llanuras de Guatuso, San Carlos y Sarapiquí, fronterizas con Nicaragua, así como las estribaciones de la vertiente oriental de la Cordillera Volcánica de Guanacaste y la norte de la Cordillera Vólcanica Central.', 1),
+(7, 'Península de Nicoya', 'La península de Nicoya es una península de Costa Rica, la más grande del país, bañada por el océano Pacífico, limitada por el golfo de Papagayo al norte y el Golfo de Nicoya al este y al sur. Tiene una superficie de 5130 km² siendo por lo tanto una de las más grandes de América Central y sólo es sup', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbuniversidadcampusuniversidadcolectivo`
+--
+
+CREATE TABLE `tbuniversidadcampusuniversidadcolectivo` (
+  `tbuniversidadcampusuniversidadcolectivoid` int(11) NOT NULL,
+  `tbuniversidadcampusid` int(11) NOT NULL,
+  `tbuniversidadcolectivoid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbuniversidadcampusuniversidadcolectivo`
+--
+
+INSERT INTO `tbuniversidadcampusuniversidadcolectivo` (`tbuniversidadcampusuniversidadcolectivoid`, `tbuniversidadcampusid`, `tbuniversidadcolectivoid`) VALUES
 (1, 1, 1),
 (2, 1, 2),
 (3, 1, 3),
