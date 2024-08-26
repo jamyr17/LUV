@@ -8,13 +8,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Regiones de Campus</title>
+  <title>Especializaciones de Campus</title>
   <script>
-    function actionConfirmation(mensaje) {
-      return confirm(mensaje);
+    function actionConfirmation(mensaje){
+      var response = confirm(mensaje)
+      if(response==true){
+        return true
+      }else{
+        return false
+      }
     }
 
-    function showMessage(mensaje) {
+    function showMessage(mensaje){
       alert(mensaje);
     }
   </script>
@@ -25,7 +30,6 @@
 
   <header>
     <nav class="navbar bg-body-tertiary">
-      <!-- Navegación -->
     </nav>
   </header>
 
@@ -38,19 +42,19 @@
             $_GET['error']=="emptyField" => "campo(s) vacío(s).",
             $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "que dicha región ya existe.",
+            $_GET['error']=="exist" => "que dicha especialización de campus ya existe.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
             $mensaje = match(true){
-              $_GET['success']=="inserted" => "Región creada correctamente.",
-              $_GET['success']=="updated" => "Región actualizada correctamente.",
-              $_GET['success']=="deleted" => "Región eliminada correctamente.",
+              $_GET['success']=="inserted" => "Especialización de campus creada correctamente.",
+              $_GET['success']=="updated" => "Especialización de campus actualizada correctamente.",
+              $_GET['success']=="deleted" => "Especialización de campus eliminada correctamente.",
               default => "Transacción realizada.",
             };
         }
 
-        if (isset($mensaje)) {
+        if(isset($mensaje)){
           echo "<script>showMessage('$mensaje')</script>";
         }
       ?>
@@ -65,25 +69,25 @@
         </form>
 
         <div class="text-center mb-4">
-            <h3>Agregar una nueva región</h3>
-            <p class="text-muted">Complete el formulario para añadir una nueva región</p>
+            <h3>Agregar una nueva especialización de campus</h3>
+            <p class="text-muted">Complete el formulario para añadir una nueva especialización de campus</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/campusRegionAction.php" style="width: 50vw; min-width:300px;">
-                <input type="hidden" name="campusRegion" value="<?php echo htmlspecialchars($idCampusRegion); ?>">
+            <form method="post" action="../action/universidadCampusEspecializacionAction.php" style="width: 50vw; min-width:300px;">
+                <input type="hidden" name="universidadCampusEspecializacion" value="<?php echo htmlspecialchars($idCampusEspecializacion); ?>">
 
                 <div class="row">
                     <div class="col">
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de la región" />
+                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de la especialización" />
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col">
                         <label for="descripcion" class="form-label">Descripción: </label>
-                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción de la región" />
+                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción de la especialización" />
                     </div>
                 </div>
                 
@@ -97,7 +101,7 @@
 
     <section id="table">
       <div class="text-center mb-4">
-        <h3>Regiones registradas</h3>
+        <h3>Especializaciones registradas</h3>
       </div>
 
       <table class="table mt-3">
@@ -111,20 +115,20 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/campusRegionBusiness.php';
-          $campusRegionBusiness = new CampusRegionBusiness();
-          $campusRegions = $campusRegionBusiness->getAllTbCampusRegion();
-          $mensajeActualizar = "¿Desea actualizar esta región?";
-          $mensajeEliminar = "¿Desea eliminar esta región?";
+          include '../Bussiness/universidadCampusEspecializacionBussiness.php';
+          $universidadCampusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
+          $especializaciones = $universidadCampusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+          $mensajeActualizar = "¿Desea actualizar esta especialización?";
+          $mensajeEliminar = "¿Desea eliminar esta especialización?";
 
-          if ($campusRegions != null) {
-            foreach ($campusRegions as $campusRegion) {
+          if ($especializaciones != null) {
+            foreach ($especializaciones as $especializacion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/campusRegionAction.php">';
-              echo '<input type="hidden" name="idCampusRegion" value="' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '">';
-              echo '<td>' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbCampusRegionNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusRegion->getTbCampusRegionDescripcion()) . '" class="form-control" /></td>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php">';
+              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
+              echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
+              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionNombre()) . '" class="form-control" /></td>';
+              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionDescripcion()) . '" class="form-control" /></td>';
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";

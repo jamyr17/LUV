@@ -58,7 +58,7 @@ class CampusData extends Data
             throw new Exception('Cada elemento de getColectivos debe ser una cadena o un número.');
         }
         $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
-        $query = "INSERT INTO tbuniversidadcampuscolectivo (tbuniversidadcampuscolectivoid, tbuniversidadcampusid, tbcolectivoid) VALUES ($nextIdAux, $nextId, '$colectivoIdEscaped')";
+        $query = "INSERT INTO tbuniversidadcampusuniversidadcolectivo (tbuniversidadcampusuniversidadcolectivoid, tbuniversidadcampusid, tbuniversidadcolectivoid) VALUES ($nextIdAux, $nextId, '$colectivoIdEscaped')";
         $resultInsert = mysqli_query($conn, $query);
         $nextIdAux++;
     }
@@ -73,13 +73,13 @@ class CampusData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $id = intval($campus->getTbCampusId()); // Asegúrate de que $id sea un entero
-        $nombre = $campus->getTbCampusNombre();
-        $direccion = $campus->getTbCampusDireccion();
-        $latitud = $campus->getTbCampusLatitud();
-        $longitud = $campus->getTbCampusLongitud();
+        $id = intval($campus->getTbCampusUniversidadId()); // Asegúrate de que $id sea un entero
+        $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+        $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
+        $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
+        $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
 
-        $queryUpdate = "UPDATE tbuniversidadcampus SET tbuniversidadcampusnombre='$nombre', tbuniversidadcampusdireccion='$direccion', tbuniversidadcampuslatitud='$latitud', tbuniversidadcampuslongitud='$longitud' WHERE tbuniversidadcampusid=$id;";
+        $queryUpdate = "UPDATE tbuniversidadcampus SET tbuniversidadcampusnombre='$nombre', tbuniversidadcampusdireccion='$direccion',tbuniversidadcampusregionid='$regionId',tbuniversidadcampusespecializacionid='$especializacionId' WHERE tbuniversidadcampusid=$id;";
 
         $result = mysqli_query($conn, $queryUpdate);
         mysqli_close($conn);
@@ -241,4 +241,5 @@ class CampusData extends Data
         return $resultInsert;
     }
 
-}
+} 
+
