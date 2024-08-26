@@ -10,8 +10,8 @@ class PersonalProfileBusiness{
         $this->personalProfileData = new PersonalProfileData();
     }
 
-    public function insertTbPerfilPersonal($criterio, $valor){
-        return $this->personalProfileData->insertTbPerfilPersonal($criterio, $valor);
+    public function insertTbPerfilPersonal($criterio, $valor, $usuarioId){
+        return $this->personalProfileData->insertTbPerfilPersonal($criterio, $valor, $usuarioId);
     }
 
 
