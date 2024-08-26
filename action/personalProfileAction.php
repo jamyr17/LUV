@@ -12,8 +12,13 @@ if(isset($_POST["registrar"])){
         $valor = $_POST["valuesString"];
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        
+        if($personalProfileBusiness->profileExists($usuarioId)){
+            $personalProfileBusiness->updateTbPerfilPersonal($criterio,$valor, $usuarioId); 
+        }else{
+            $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId); 
+        }
 
-        $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId);
         header("location: ../view/userPersonalProfileView.php?success=inserted");
     }
     else{

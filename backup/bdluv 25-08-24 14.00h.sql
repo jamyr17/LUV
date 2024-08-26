@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 02:27:05
+-- Tiempo de generación: 26-08-2024 a las 06:26:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -260,6 +260,7 @@ CREATE TABLE `tbperfilusuariodeseado` (
   `tbperfilusuariodeseadocriterio` varchar(1024) NOT NULL,
   `tbperfilusuariodeseadovalor` varchar(1024) NOT NULL,
   `tbperfilusuariodeseadoporcentaje` varchar(1024) NOT NULL,
+  `tbusuarioid` int(11) NOT NULL,
   `tbperfilusuariodeseadoestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -267,12 +268,12 @@ CREATE TABLE `tbperfilusuariodeseado` (
 -- Volcado de datos para la tabla `tbperfilusuariodeseado`
 --
 
-INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbperfilusuariodeseadoestado`) VALUES
-(1, '1', '1', '', 1),
-(2, 'Gustos Musicales', 'Rock', '', 1),
-(3, '', '', '', 1),
-(4, 'Gustos Musicales', 'Rock', '', 1),
-(5, 'Gustos Musicales', 'Rock', '100', 1);
+INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbusuarioid`, `tbperfilusuariodeseadoestado`) VALUES
+(1, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Pop,Introvertido,Ingeniería,Tenis,Activo', '20,20,20,20,20', 1, 1),
+(2, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Jazz,Extrovertido,Ciencias Sociales,Fútbol,Relajado', '15,25,30,15,15', 2, 1),
+(3, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Electrónica,Introvertido,Ciencias,Esgrima,Urbano', '25,25,20,10,20', 3, 1),
+(4, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Rock,Extrovertido,Artes,Baloncesto,Minimalista', '30,20,20,10,20', 4, 1),
+(5, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Clásica,Introvertido,Humanidades,Natación,Activo', '20,30,20,20,10', 5, 1);
 
 -- --------------------------------------------------------
 
@@ -293,17 +294,13 @@ CREATE TABLE `tbperfilusuariopersonal` (
 --
 
 INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbusuarioid`, `tbperfilusuariopersonalestado`) VALUES
-(1, '', '', 0, 1),
-(2, '', '', 0, 1),
-(3, '', '', 0, 1),
-(4, '', '', 0, 1),
-(5, '', '', 0, 1),
-(6, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 0, 1),
-(7, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Clasica,Queleimporta,Ejempl,Basket,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 0, 1),
-(8, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 0, 1),
-(9, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Pop,Extrovertido,Humanidades,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 0, 1),
-(10, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Otro,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 0, 1),
-(11, '', '', 0, 1);
+(1, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 1, 1),
+(2, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Pop,Extrovertido,Humanidades,Baloncesto,Música,Noche,Mexicana,Videojuegos,Tranquilo,Drama,No ficción,Ciencia ficción,Cristianismo,Liberal,Ocasional,Tecnófobo,Gatos,Ecología,Bares tranquilos,Instagram', 2, 1),
+(3, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Pop,Extrovertido,Ingeniería,Tenis,Fotografía,Noche,Mexicana,Cinefila,Urbano,Drama,Aventura,Comedia,Ateo,Liberal,Rara vez,Desconectado,Gatos,Campaña,Fiesta,Instagram', 3, 1),
+(4, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Jazz,Introvertido,Ciencias Sociales,Baloncesto,Dibujo,Noche,Italiana,Viajar,Minimalista,Comedia,Ciencia ficción,Drama,Agnóstico,Liberal,Frecuente,Moderado,Perros,Caridad,Bar,Facebook', 4, 1),
+(5, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Electrónica,Extrovertido,Ciencias,Fútbol,Escritura,Noche,China,Cocina,Urbano,Aventura,Ficción,Thriller,Cristianismo,Conservador,Rara vez,Tecnófilo,Peces,ONGs,Discotecas,TikTok', 5, 1),
+(6, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Artes,Tenis,Fotografía,Noche,Italiana,Lectura,Activo,Comedia,Historia,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Bar,Instagram', 6, 1),
+(7, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Clásica,Introvertido,Humanidades,Natación,Danza,Mañana,Mexicana,Pintura,Relajado,Drama,Novela,Documentales,Budismo,Neutro,Rara vez,Desconectado,Gatos,Caridad,Café,Twitter', 7, 1);
 
 -- --------------------------------------------------------
 
@@ -482,13 +479,13 @@ CREATE TABLE `tbusuario` (
 
 INSERT INTO `tbusuario` (`tbusuarioid`, `tbusuarionombre`, `tbusuariocontrasena`, `tbusuarioestado`, `tbtipousuarioid`) VALUES
 (1, 'jamyrg', '123', 1, 1),
-(1, 'jeycobbg', '123', 1, 1),
+(2, 'jeycobbg', '123', 1, 1),
 (3, 'profe', '123', 1, 1),
 (4, 'gerald', '123', 1, 1),
 (5, 'kevin', '123', 1, 1),
 (6, 'jamel', '123', 1, 1),
-(7, 'pruebaUsuario', '123', 1, 2),
-(7, 'pruebaUsuario', '123', 1, 2);
+(7, 'pruebaUsuario1', '123', 1, 1),
+(8, 'pruebaUsuario2', '123', 1, 2);
 
 -- --------------------------------------------------------
 

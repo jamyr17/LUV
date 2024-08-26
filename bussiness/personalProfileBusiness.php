@@ -14,5 +14,12 @@ class PersonalProfileBusiness{
         return $this->personalProfileData->insertTbPerfilPersonal($criterio, $valor, $usuarioId);
     }
 
+    public function profileExists($usuarioId){
+        return $this->personalProfileData->profileExists($usuarioId);
+    }
+
+    public function updateTbPerfilPersonal($criterio, $valor, $usuarioId){
+        return $this->personalProfileData->updateTbPerfilPersonal($criterio, $valor, $usuarioId);
+    }
 
 }

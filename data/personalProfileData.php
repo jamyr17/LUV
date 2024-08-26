@@ -28,4 +28,31 @@ class PersonalProfileData extends Data{
         return $resultInsert;
     }
 
+    public function profileExists($usuarioId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT tbperfilusuariopersonalid FROM tbperfilusuariopersonal WHERE tbusuarioid = '$usuarioId' AND tbperfilusuariopersonalestado = 1 LIMIT 1;";
+        $result = mysqli_query($conn, $query);
+
+        $exists = mysqli_num_rows($result) > 0;
+
+        mysqli_close($conn);
+        return $exists;
+    }
+
+    public function updateTbPerfilPersonal($criterio, $valor, $usuarioId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $queryUpdate = "UPDATE tbperfilusuariopersonal 
+                        SET tbperfilusuariopersonalcriterio = '$criterio', tbperfilusuariopersonalvalor = '$valor'
+                        WHERE tbusuarioid = '$usuarioId' AND tbperfilusuariopersonalestado = 1";
+
+        $resultUpdate = mysqli_query($conn, $queryUpdate);
+        mysqli_close($conn);
+
+        return $resultUpdate;
+    }
+
 }

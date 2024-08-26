@@ -2,6 +2,9 @@
 
 include_once "../bussiness/wantedProfileBusiness.php";
 $wantedProfileBusiness = new WantedProfileBussiness();
+include_once "../bussiness/usuarioBusiness.php";
+$usuarioBusiness = new UsuarioBusiness();
+
 
 //Nuevo registro de perfil deseado
 if(isset($_POST["search"])){
@@ -15,7 +18,15 @@ if(isset($_POST["search"])){
         $criterioParam = $_POST["criteriaString"];
         $valorParam = $_POST["valuesString"];
         $porcentajeParam = $_POST["percentagesString"];
-        $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam,$valorParam,$porcentajeParam); 
+        
+        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+        if($wantedProfileBusiness->profileExists($usuarioId)){
+            $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam,$valorParam,$porcentajeParam, $usuarioId); 
+        }else{
+            $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam,$valorParam,$porcentajeParam, $usuarioId); 
+        }
+
 
         // filtrar perfiles segun lo que desea el usuario: 
         $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
