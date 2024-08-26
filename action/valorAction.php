@@ -60,6 +60,7 @@ if (isset($_POST['update'])) {
 
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
+        $criterioId = $_POST['criterioId'];    
 
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {

@@ -13,7 +13,7 @@ class Valor {
         $this->tbCriterioId = $tbCriterioId;
         $this->tbValorEstado = $tbValorEstado;
     }
-
+    
     public function getTbValorId() {
         return $this->tbValorId;
     }

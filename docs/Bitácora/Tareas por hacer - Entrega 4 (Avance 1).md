@@ -1,13 +1,19 @@
-- [ ] Realizar la relación de tbuniversidadcampus con tbcampusespecializacion. (JAMEL)
+- [x] Realizar la relación de tbuniversidadcampus con tbcampusespecializacion. (JAMEL)
 - [x] Mejorar relación de tbuniversidadcampus con tbcampuscolectivo. (JAMYR)
 - [ ] Cambio de los nombres tbcampusespecializacion, tbcampusregion y tbcampuscolectivo a tbuniversidadcampusespecializacion, tbuniversidadcampusregion y tbuniversidadcampuscolectivo. (GERALD)
 - [ ] Permitir que se puedan editar la región, especialización o colectivos de un campus. (GERALD)
-- [ ] Permitir que al editar registros con mas de 1 campo se puedan editar sin estar obligados a cambiar el nombre, es decir, cambiar validación de exist. (KEVIN)
+- [x] Permitir que al editar registros con mas de 1 campo se puedan editar sin estar obligados a cambiar el nombre, es decir, cambiar validación de exist. (KEVIN)
 - [ ] Terminar CRUD de imagen. (JEYCOB)
-- [ ] CRUD tbcriterio. (JAMEL)
-- [ ] CRUD tbvalor. (JAMEL)
-- [ ] Ingresar datos a los nuevos CRUD. (JAMEL)
-- [ ] Vista para Usuario que permita moldear su perfil contestando preguntas segun tbcriterio y tbvalor e ingresar sus respuestas en tbperfilusuariopersonal. (JEYCOB)
-- [ ] Vista para Usuario que permita escoger el tipo de perfil que busca, distribuyendo un porcentaje del 100% entre los criterios (y sus valores) que desee e ingresar sus respuestas en tbperfilusuariobusqueda. (JAMYR)
-- [ ] Lógica que procese las respuesta del perfil deseado para generar ponderados con los demás perfiles. (JAMYR y KEVIN)
-- [ ] Mostar listado de los perfiles según valor de ponderación de forma descendiente. (KEVIN)
+- [x] CRUD tbcriterio. (JAMEL)
+- [x] CRUD tbvalor. (JAMEL)
+- [x] Ingresar datos a los nuevos CRUD. (JAMEL)
+- [x] Vista para Usuario que permita moldear su perfil contestando preguntas segun tbcriterio y tbvalor e ingresar sus respuestas en tbperfilusuariopersonal. (JEYCOB)
+- [x] Vista para Usuario que permita escoger el tipo de perfil que busca, distribuyendo un porcentaje del 100% entre los criterios (y sus valores) que desee e ingresar sus respuestas en tbperfilusuariodeseado. (JAMYR)
+- [x] Lógica que procese las respuesta del perfil deseado para generar ponderados con los demás perfiles. (JAMYR y KEVIN)
+- [x] Mostar listado de los perfiles según valor de ponderación de forma descendiente. (KEVIN)
+- [ ] Validar existencia al crear nuevo usuario.
+- [ ] Arreglar bug al entrar a modelar usuario deseado.
+- [ ] Mostrar en qué coinciden los perfiles filtrados.
+- [ ] Limpiar BD.
+- [ ] Revisar funciones generales.
+- [ ] Probar en LINUX.

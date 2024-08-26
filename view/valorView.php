@@ -72,8 +72,8 @@ $criterioBusiness = new CriterioBusiness();
                 </div>
 
                 <div class="container d-flex justify-content-center">
-                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
-                        <input type="hidden" name="valor" value="<?php echo htmlspecialchars($idValor); ?>">
+                <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
+                    <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="idCriterio">Criterio:</label>
                         <select name="idCriterio" id="idCriterio">

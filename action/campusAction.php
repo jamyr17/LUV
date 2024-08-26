@@ -15,6 +15,8 @@ if (isset($_POST['update'])) {
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
 
+        
+
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
                 $campusBusiness = new CampusBusiness();
