@@ -11,18 +11,20 @@ session_start();
 </head>
 
 <body>
-    
+    <button onclick="window.location.href='../view/userWantedProfileView.php';">Volver</button>
+
     <?php
     // Verificar si hay perfiles filtrados en la sesión
-    if (isset($_SESSION['perfilesMatcheados'])) {
+    if (isset($_SESSION['perfilesMatcheados']) && !empty(isset($_SESSION['perfilesMatcheados']))) {
         $perfilesFiltrados = $_SESSION['perfilesMatcheados'];
 
         echo "<h3>Estas personas cumplen con lo que estás buscando</h3>";
         echo "<ul>";
         foreach ($perfilesFiltrados as $perfil) {
             echo "<li>";
-            echo "Criterios: " . htmlspecialchars($perfil['criterio']) . "<br>";
-            echo "Valores: " . htmlspecialchars($perfil['valor']) . "<br>";
+            echo "Nombre: " . htmlspecialchars($perfil['primerNombre']) . "<br>";
+            echo "Apellido: " . htmlspecialchars($perfil['primerApellido']) . "<br>";
+            echo "Nombre de usuario: " . htmlspecialchars($perfil['nombreUsuario']) . "<br>";
             echo "Ponderado: " . htmlspecialchars($perfil['ponderado']) . "%<br>";
             echo "</li>";
         }

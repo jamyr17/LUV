@@ -7,7 +7,13 @@
 - [x] CRUD tbcriterio. (JAMEL)
 - [x] CRUD tbvalor. (JAMEL)
 - [x] Ingresar datos a los nuevos CRUD. (JAMEL)
-- [ ] Vista para Usuario que permita moldear su perfil contestando preguntas segun tbcriterio y tbvalor e ingresar sus respuestas en tbperfilusuariopersonal. (JEYCOB)
+- [x] Vista para Usuario que permita moldear su perfil contestando preguntas segun tbcriterio y tbvalor e ingresar sus respuestas en tbperfilusuariopersonal. (JEYCOB)
 - [x] Vista para Usuario que permita escoger el tipo de perfil que busca, distribuyendo un porcentaje del 100% entre los criterios (y sus valores) que desee e ingresar sus respuestas en tbperfilusuariodeseado. (JAMYR)
-- [ ] Lógica que procese las respuesta del perfil deseado para generar ponderados con los demás perfiles. (JAMYR y KEVIN)
-- [ ] Mostar listado de los perfiles según valor de ponderación de forma descendiente. (KEVIN)
+- [x] Lógica que procese las respuesta del perfil deseado para generar ponderados con los demás perfiles. (JAMYR y KEVIN)
+- [x] Mostar listado de los perfiles según valor de ponderación de forma descendiente. (KEVIN)
+- [ ] Validar existencia al crear nuevo usuario.
+- [ ] Arreglar bug al entrar a modelar usuario deseado.
+- [ ] Mostrar en qué coinciden los perfiles filtrados.
+- [ ] Limpiar BD.
+- [ ] Revisar funciones generales.
+- [ ] Probar en LINUX.

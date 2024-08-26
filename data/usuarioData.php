@@ -5,6 +5,47 @@ session_start();
 
 class UsuarioData extends Data{
 
+    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener el ID máximo de tbpersona
+        $queryGetLastId = "SELECT MAX(tbpersonaid) AS max_id FROM tbpersona";
+        $resultPersonaId = mysqli_query($conn, $queryGetLastId);
+
+        if ($row = mysqli_fetch_assoc($resultPersonaId)) {
+            $maxId = $row['max_id'];
+            $nextPersonaId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextPersonaId = 1;
+        }
+
+        // Consulta para insertar un nuevo registro en tbpersona
+        $queryInsert = "INSERT INTO tbpersona (tbpersonaid, tbpersonacedula, tbpersonaprimernombre, tbpersonaprimerapellido, tbpersonaestado) 
+                        VALUES ($nextPersonaId, '$cedula', '$primerNombre', '$primerApellido', 1)";
+        $resultInsert = mysqli_query($conn, $queryInsert);
+
+         // Consulta para obtener el ID máximo de tbusuario
+        $queryGetLastId = "SELECT MAX(tbusuarioid) AS max_id FROM tbusuario";
+        $resultUsuarioId = mysqli_query($conn, $queryGetLastId);
+ 
+        if ($row = mysqli_fetch_assoc($resultUsuarioId)) {
+             $maxId = $row['max_id'];
+             $nexUsuariotId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+             $nexUsuariotId = 1;
+        }
+
+        // Consulta para insertar un nuevo registro en tbusuario
+        $queryInsert = "INSERT INTO tbusuario (tbusuarioid, tbpersonaid, tbusuarionombre, tbusuariocontrasena, tbusuarioestado, tbtipousuarioid) 
+                        VALUES ($nexUsuariotId, $nextPersonaId, '$nombreUsuario', '$contrasena', 1, 2)";
+
+        $resultInsert = mysqli_query($conn, $queryInsert);
+        mysqli_close($conn);
+
+        return $resultInsert;
+    }
+
     public function validation($nombreUsuario, $contrasena){
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');

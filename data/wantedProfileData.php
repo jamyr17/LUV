@@ -31,25 +31,48 @@ class WantedProfileData extends Data{
     public function getAllTbPerfiles() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-
-        $querySelect = "SELECT * FROM tbperfilusuariopersonal WHERE tbperfilusuariopersonalestado = 1;";
+    
+        // Modifica la consulta para hacer un JOIN con las tablas necesarias
+        $querySelect = "
+            SELECT 
+                p.tbperfilusuariopersonalid AS id,
+                p.tbperfilusuariopersonalcriterio AS criterio,
+                p.tbperfilusuariopersonalvalor AS valor,
+                p.tbusuarioid AS usuarioId,
+                p.tbperfilusuariopersonalestado AS estado,
+                u.tbusuarionombre AS nombreUsuario,
+                per.tbpersonaprimernombre AS primerNombre,
+                per.tbpersonaprimerapellido AS primerApellido
+            FROM 
+                tbperfilusuariopersonal p
+            JOIN 
+                tbusuario u ON p.tbusuarioid = u.tbusuarioid
+            JOIN 
+                tbpersona per ON u.tbpersonaid = per.tbpersonaid
+            WHERE 
+                p.tbperfilusuariopersonalestado = 1;
+        ";
+    
         $result = mysqli_query($conn, $querySelect);
-
+    
         $profiles = [];
-        while ($row = mysqli_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             $profile = [
-                'id' => $row['tbperfilusuariopersonalid'],
-                'criterio' => $row['tbperfilusuariopersonalcriterio'],
-                'valor' => $row['tbperfilusuariopersonalvalor'],
-                'usuarioId' => $row['tbusuarioid'],
-                'estado' => $row['tbperfilusuariopersonalestado']
+                'id' => $row['id'],
+                'criterio' => $row['criterio'],
+                'valor' => $row['valor'],
+                'usuarioId' => $row['usuarioId'],
+                'estado' => $row['estado'],
+                'nombreUsuario' => $row['nombreUsuario'],
+                'primerNombre' => $row['primerNombre'],
+                'primerApellido' => $row['primerApellido']
             ];
             array_push($profiles, $profile);
         }
-
+    
         mysqli_close($conn);
         return $profiles;
-    }
+    }    
 
     public function profileExists($usuarioId) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);

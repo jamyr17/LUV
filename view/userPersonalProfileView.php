@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<?php
-    include "../action/sessionAction.php";
-?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">

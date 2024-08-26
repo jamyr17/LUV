@@ -10,6 +10,10 @@ class UsuarioBusiness{
         $this->usuarioData = new UsuarioData();
     }
 
+    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena){
+        return $this->usuarioData->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena);
+    }
+
     public function loginValidation($nombreUsuario, $contrasena){
         return $this->usuarioData->validation($nombreUsuario, $contrasena);
     }
