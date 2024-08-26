@@ -35,7 +35,7 @@ if(isset($_POST["search"])){
         if(empty($allPerfiles)){
             header("location: ../view/userWantedProfileView.php?error=noProfiles");
         }else{
-            $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam);
+            $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
 
             // guardar los perfiles filtrados en sesión
             session_start(); 
@@ -51,30 +51,34 @@ if(isset($_POST["search"])){
 }
 
 // Definir función para filtrar y ordenar perfiles
-function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam) {
+function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId) {
     $criterioDividido = explode(',', $criterioParam);
     $valorDividido = explode(',', $valorParam);
     $porcentajeDividido = explode(',', $porcentajeParam);
 
     foreach ($allPerfiles as $indicePerfil => $perfil) {
         // Inicializa 'ponderado' si no existe
-        if (!isset($allPerfiles[$indicePerfil]['ponderado'])) {
-            $allPerfiles[$indicePerfil]['ponderado'] = 0;
-        }
+        if($perfil['usuarioId'] !== $usuarioId){
 
-        $criteriosPerfil = explode(',', $perfil['criterio']);
-        
-        foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
-            foreach ($criteriosPerfil as $indiceCriterioPerfil => $criterioPerfil) {
-                // Comparar los criterios
-                if ($criterioDeseado === $criterioPerfil) {
-                    $valorCriterio = explode(',', $perfil['valor'])[$indiceCriterioPerfil]; 
+            if (!isset($allPerfiles[$indicePerfil]['ponderado'])) {
+                $allPerfiles[$indicePerfil]['ponderado'] = 0;
+            }
 
-                    if ($valorCriterio == $valorDividido[$indiceCriterioDeseado]) {
-                        $allPerfiles[$indicePerfil]['ponderado'] += $porcentajeDividido[$indiceCriterioDeseado];
+            $criteriosPerfil = explode(',', $perfil['criterio']);
+            
+            foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
+                foreach ($criteriosPerfil as $indiceCriterioPerfil => $criterioPerfil) {
+                    // Comparar los criterios
+                    if ($criterioDeseado === $criterioPerfil) {
+                        $valorCriterio = explode(',', $perfil['valor'])[$indiceCriterioPerfil]; 
+
+                        if ($valorCriterio == $valorDividido[$indiceCriterioDeseado]) {
+                            $allPerfiles[$indicePerfil]['ponderado'] += $porcentajeDividido[$indiceCriterioDeseado];
+                        }
                     }
                 }
             }
+
         }
     }
 
