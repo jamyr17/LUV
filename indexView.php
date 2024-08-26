@@ -13,6 +13,12 @@
 </head>
 
 <body>
+    <div>
+        <form method="post" action="action/sessionAdminAction.php">
+            <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
+        </form>
+    </div>
+
     <div id="cruds">
         <h3>Index</h3>  
         <table id="tabla">
