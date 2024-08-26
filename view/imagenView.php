@@ -16,6 +16,11 @@ $imagenBusiness = new ImagenBusiness();
             const select = document.getElementById(selectId);
             select.innerHTML = '';
 
+            const option = document.createElement('option');
+            option.value = "";
+            option.text = "Seleccione una opción";
+            select.add(option);
+
             if (!type) return;
 
             try {
@@ -50,22 +55,28 @@ $imagenBusiness = new ImagenBusiness();
             });
         }
 
-        function updateFileName(selectId, nameFieldId) {
-            const select = document.getElementById(selectId);
-            const hiddenNameField = document.getElementById(nameFieldId);
-            hiddenNameField.value = select.options[select.selectedIndex].text;
-        }
-
         function updateHiddenIdOptions() {
             const select = document.getElementById('idOptions');
             const idOptions = document.getElementById('idOptionsHidden');
             idOptions.value = select.value;
         }
 
-        function updateHiddenIdOptionsU(select) {
-            const idOptions = document.getElementById('idOptionsHiddenUpdate');
-            console.log(select.value);
-            idOptions.value = select.value;
+        function updateFileName(selectId, nameFieldId) {
+            const select = document.getElementById(selectId);
+            const hiddenNameField = document.getElementById(nameFieldId);
+            hiddenNameField.value = select.options[select.selectedIndex].text;
+        }
+
+        function updateFileNameU(selectId, nameFieldId) {
+            const select = document.getElementById(selectId);
+            const hiddenNameField = document.getElementById(nameFieldId);
+            hiddenNameField.value = select.value;
+        }
+
+        function updateHiddenIdOptionsU(selectId, nameFieldId) {
+            const select = document.getElementById(selectId);
+            const idOptionsHidden = document.getElementById(nameFieldId);
+            idOptionsHidden.value = select.value;
         }
 
         function actionConfirmation(mensaje) {
@@ -185,7 +196,17 @@ $imagenBusiness = new ImagenBusiness();
                                 echo '<td>' . htmlspecialchars($imag->getTbImagenId()) . '</td>';
                                 echo '<td><input type="text" name="nombreArchivo" id="nombreArchivo" value="' . htmlspecialchars($imag->getTbImagenNombre()) . '" class="form-control" /></td>';
                                 echo '<td>
-                                    <select id="idOptionsUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '" name="idOptionsUpdate" data-dynamic-select-id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" data-selected-dynamic-value="' . htmlspecialchars($selectedDynamic) . '" onchange="updateOptions(this.value, this.getAttribute(\'data-dynamic-select-id\'), this.getAttribute(\'data-selected-dynamic-value\')); updateHiddenIdOptionsU(this);">
+                                    <select 
+                                     id="idOptionsUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '"
+                                     name="idOptionsUpdate" 
+
+                                     data-dynamic-select-id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" 
+                                     data-selected-dynamic-value="' . htmlspecialchars($selectedDynamic) . '" 
+                                     data-dynamic-hidden-input="idOptionsHidden_' . htmlspecialchars($imag->getTbImagenId()) . '"
+                                     data-dynamic-hidden-directorio="dynamic-directorio-update_' . htmlspecialchars($imag->getTbImagenId()) . '""
+                                    onchange="updateOptions(this.value, this.getAttribute(\'data-dynamic-select-id\'), this.getAttribute(\'data-selected-dynamic-value\'));
+                                    updateHiddenIdOptionsU(this.id, this.getAttribute(\'data-dynamic-hidden-input\'));">
+
                                         <option value="1"' . ($selectedOption == '1' ? ' selected' : '') . '>Universidad</option>
                                         <option value="2"' . ($selectedOption == '2' ? ' selected' : '') . '>Área Conocimiento</option>
                                         <option value="3"' . ($selectedOption == '3' ? ' selected' : '') . '>Género</option>
@@ -194,14 +215,21 @@ $imagenBusiness = new ImagenBusiness();
                                     </select>
                                 </td>';
                                 echo '<td>
-                                    <input type="hidden" name="idOptionsHiddenUpdate" id="idOptionsHiddenUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '">
-                                    <input type="hidden" name="dynamic-select-name-update" id="dynamic-select-name-update_' . htmlspecialchars($imag->getTbImagenId()) . '">
-                                    <select id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" name="dynamic-select" onchange="updateFileName(this.id, this.getAttribute(\'data-name-field-id\'))">
-                                        
-                                    </select>
+                                    <input type="hidden" name="idOptionsHidden" id="idOptionsHidden_' . htmlspecialchars($imag->getTbImagenId()) . '">
+                                    <input type="hidden" name="idRegistroHidden" id="dynamic-select-name-update_' . htmlspecialchars($imag->getTbImagenId()) . '">
+                                    <input type="hidden" name="directorioActualHidden" id="dynamic-directorio-update_' . htmlspecialchars($imag->getTbImagenId()) . '" value="' . htmlspecialchars($imag->getTbImagenDirectorio()) . '">
                                     <input type="hidden" id="selectedDynamicValueUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '" value="' . htmlspecialchars($selectedDynamic) . '" />
+                                    <input type="hidden" name="dynamic-select-name-update" id="dynamic-select-name-update">
+
+                                    <select 
+                                     id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" 
+                                     name="dynamic-select" 
+                                     data-dynamic-select-name="dynamic-select-name-update_' . htmlspecialchars($imag->getTbImagenId()) . '"
+                                    onchange="updateFileNameU(this.id, this.getAttribute(\'data-dynamic-select-name\'));
+                                    updateFileName(this.id, \'dynamic-select-name-update\')">
+                                    </select>
                                 </td>';
-                                echo '<td><input type="file" id="imageUpload_" name="imageUpload_" accept="image/*" value="' . htmlspecialchars($imag->gettbImagenDirectorio()) . '" class="form-control" /></td>';
+                                echo '<td><input type="file" id="imageUpload_" name="imageUpload_" accept="image/*" class="form-control" /></td>';
                                 echo '<td>';
                                 echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
                                 echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
