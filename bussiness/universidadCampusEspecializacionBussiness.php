@@ -2,7 +2,7 @@
 
 include '../data/universidadCampusEspecializacionData.php';
 
-class universidadCampusEspecializacionBussiness{
+class UniversidadCampusEspecializacionBussiness{
 
     private $universidadCampusEspecializacionData;
 
