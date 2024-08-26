@@ -20,7 +20,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Management</title>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAShWeubkR1_4C7NOevWTEwZsM14px3H74&libraries=places&callback=initMap">
+    <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
     <script>
         function actionConfirmation(mensaje) {
             return confirm(mensaje);
@@ -105,7 +105,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <div class="row">
                             <div class="col">
                                 <label for="direccion" class="form-label">Dirección: </label>
-                                <input type="text" id="direccion" name="direccion" placeholder="Ingresa el nombre de una sede..." />
+                                <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingresa el nombre de una sede..." />
                                 <input type="hidden" id="latitud" name="latitud"/>
                                 <input type="hidden" id="longitud" name="longitud"/>
                             </div>
@@ -187,7 +187,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
 
                             // Región select box
                             echo '<td>';
-                            echo '<select name="region" class="form-control">';
+                            echo '<select name="idRegion" class="form-control">';
                             $campusRegiones = $campusRegionBussiness->getAllTbUniversidadCampusRegion();
                             foreach ($campusRegiones as $campusRegion) {
                                 $selected = ($campusRegion->getTbUniversidadCampusRegionId() == $camp->getTbCampusRegionId()) ? 'selected' : '';
@@ -198,7 +198,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
 
                             // Especialización select box
                             echo '<td>';
-                            echo '<select name="especializacion" class="form-control">';
+                            echo '<select name="idEspecializacion" class="form-control">';
                             $campusEspecializaciones = $campusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
                             foreach ($campusEspecializaciones as $campusEspecializacion) {
                                 $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $camp->getTbCampusEspecializacionId()) ? 'selected' : '';
