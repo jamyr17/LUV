@@ -1,4 +1,9 @@
+<?php
+  include "../action/sessionUserAction.php";
+?>
+
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,8 +15,6 @@
     <h3>Bienvenid@</h3>
     <div>  
         <?php
-            session_start();
-
             if(isset($_SESSION['nombreUsuario'])){
                 $nombreUsuario = $_SESSION['nombreUsuario'];
 
@@ -21,7 +24,7 @@
     </div>
 
     <div>
-        <form method="post" action="../action/sessionAction.php">
+        <form method="post" action="../action/sessionUserAction.php">
             <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
         </form>
     </div>

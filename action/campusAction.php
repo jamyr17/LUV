@@ -4,48 +4,39 @@ include '../bussiness/campusBussiness.php';
 
 if (isset($_POST['update'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['longitud']) && isset($_POST['latitud']) && isset($_POST['idRegion']) && isset($_POST['idEspecializacion']) && isset($_POST['idCampus']) && isset($_POST['idUniversidad'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
         
         $idCampus = $_POST['idCampus'];
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
         $idEspecializacion = $_POST['idEspecializacion'];
-        $longitud = $_POST['longitud'];
-        $latitud = $_POST['latitud'];
         $nombre = $_POST['nombre'];
         $direccion = $_POST['direccion'];
-
-        
+        $latitud = $_POST['latitud'];
+        $longitud = $_POST['longitud'];
 
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
+                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusBusiness = new CampusBusiness();
 
-                // Verificar que no exista un registro con el mismo nombre
                 $resultExist = $campusBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
                     header("location: ../view/campusView.php?error=exist");
                 } else {
-                    // Obtener el campus existente para no modificar los colectivos
-                    $existingCampus = $campusBusiness->getTbCampusById($idCampus);
+                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $idEspecializacion, $nombre, $direccion, $latitud, $longitud, 1);
 
-                    if ($existingCampus) {
-                        $colectivos = $existingCampus->getColectivos(); // Mantener los colectivos existentes
+                    $result = $campusBusiness->updateTbCampus($campus);
 
-                        $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, $existingCampus->getTbCampusEstado(), $idEspecializacion, $colectivos);
-
-                        $result = $campusBusiness->updateTbCampus($campus);
-
-                        if ($result == 1) {
-                            header("location: ../view/campusView.php?success=updated");
-                        } else {
-                            header("location: ../view/campusView.php?error=dbError");
-                        }
+                    if ($result == 1) {
+                        header("location: ../view/campusView.php?success=updated");
                     } else {
-                        header("location: ../view/campusView.php?error=notFound");
+                        header("location: ../view/campusView.php?error=dbError");
                     }
+
                 }
+                
             } else {
                 header("location: ../view/campusView.php?error=numberFormat");
             }
@@ -55,7 +46,7 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/campusView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+}else if (isset($_POST['delete'])) {
 
     if (isset($_POST['idCampus'])) {
 

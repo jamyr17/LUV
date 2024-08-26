@@ -1,3 +1,7 @@
+<?php
+  include "../action/sessionUserAction.php";
+?>
+
 <!DOCTYPE html>
 
 <html lang="en">
