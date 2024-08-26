@@ -1,6 +1,6 @@
 - [x] Realizar la relación de tbuniversidadcampus con tbcampusespecializacion. (JAMEL)
 - [x] Mejorar relación de tbuniversidadcampus con tbcampuscolectivo. (JAMYR)
-- [ ] Cambio de los nombres tbcampusespecializacion, tbcampusregion y tbcampuscolectivo a tbuniversidadcampusespecializacion, tbuniversidadcampusregion y tbuniversidadcampuscolectivo. (GERALD)
+- [x] Cambio de los nombres tbcampusespecializacion, tbcampusregion y tbcampuscolectivo a tbuniversidadcampusespecializacion, tbuniversidadcampusregion y tbuniversidadcampuscolectivo. (GERALD)
 - [ ] Permitir que se puedan editar la región, especialización o colectivos de un campus. (GERALD)
 - [x] Permitir que al editar registros con mas de 1 campo se puedan editar sin estar obligados a cambiar el nombre, es decir, cambiar validación de exist. (KEVIN)
 - [ ] Terminar CRUD de imagen. (JEYCOB)
@@ -14,7 +14,7 @@
 - [x] Manejo correcto de sesiones. 
 - [ ] Validar existencia al crear nuevo usuario.
 - [ ] Arreglar bug al entrar a modelar usuario deseado.
-- [ ] Mostrar en qué coinciden los perfiles filtrados.
-- [x] Limpiar BD.
+- [x] Mostrar en qué coinciden los perfiles filtrados.
+- [ ] Limpiar BD.
 - [ ] Revisar funciones generales.
 - [ ] Probar en LINUX.
