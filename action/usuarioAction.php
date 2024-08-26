@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/usuarioBussiness.php';
+include '../bussiness/usuarioBusiness.php';
 
 session_start();
 
@@ -9,9 +9,9 @@ if (isset($_POST['login'])){
         $nombreUsuario = $_POST['nombreUsuario'];
         $contrasena = $_POST['contrasena'];
 
-        $usuarioBussiness = new UsuarioBussiness();
+        $usuarioBusiness = new UsuarioBusiness();
 
-        $result = $usuarioBussiness->loginValidation($nombreUsuario, $contrasena);
+        $result = $usuarioBusiness->loginValidation($nombreUsuario, $contrasena);
         $_SESSION['nombreUsuario'] = $nombreUsuario;
 
         if($result['tbtipousuarioid']==1){ //Administrador   

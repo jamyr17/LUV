@@ -1,7 +1,9 @@
 <?php
 
 include_once "../bussiness/personalProfileBusiness.php";
+include_once "../bussiness/usuarioBusiness.php";
 $personalProfileBusiness = new PersonalProfileBusiness();
+$usuarioBusiness = new UsuarioBusiness();
 
 if(isset($_POST["registrar"])){
     if(isset($_POST["criteriaString"]) && isset($_POST["valuesString"])){ //todos los datos
@@ -9,7 +11,9 @@ if(isset($_POST["registrar"])){
         $criterio = $_POST["criteriaString"];
         $valor = $_POST["valuesString"];
 
-        $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor);
+        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+        $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId);
         header("location: ../view/userPersonalProfileView.php?success=inserted");
     }
     else{

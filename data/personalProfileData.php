@@ -4,7 +4,7 @@ include_once 'data.php';
 
 class PersonalProfileData extends Data{
 
-    public function insertTbPerfilPersonal($criterio, $valor)
+    public function insertTbPerfilPersonal($criterio, $valor, $usuarioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
@@ -19,8 +19,8 @@ class PersonalProfileData extends Data{
             $nextId = 1;
         }
 
-        $queryInsert = "INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor,  tbperfilusuariopersonalestado) 
-                        VALUES ($nextId, '$criterio', '$valor', 1)";
+        $queryInsert = "INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor, tbusuarioid, tbperfilusuariopersonalestado) 
+                        VALUES ($nextId, '$criterio', '$valor','$usuarioId', 1)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
