@@ -45,7 +45,7 @@ class ImagenData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $id = intval($imagen->getTbImagenId()); 
+        $id = intval($imagen->getTbImagenId());
         $nombre = mysqli_real_escape_string($conn, $imagen->gettbimagenNombre());
         $crudId = mysqli_real_escape_string($conn, $imagen->gettbimagenCrudId());
         $registroId = mysqli_real_escape_string($conn, $imagen->gettbimagenRegistroId());
@@ -70,7 +70,7 @@ class ImagenData extends Data
         mysqli_close($conn);
 
         $imagen = [];
-        while ($row = mysqli_fetch_array($result)) { 
+        while ($row = mysqli_fetch_array($result)) {
             $imagenActual = new Imagen($row['tbimagenid'], $row['tbimagencrudid'], $row['tbimagenregistroid'], $row['tbimagennombre'], $row['tbimagendirectorio'], $row['tbimagenestado']);
             array_push($imagen, $imagenActual);
         }
@@ -111,4 +111,32 @@ class ImagenData extends Data
         return $count > 0;
     }
 
+    public function getTbImagenById($id)
+    {
+        $conn = new mysqli($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $stmt = $conn->prepare("SELECT * FROM tbimagen WHERE tbimagenid = ?");
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $imagen = new Imagen(
+                $row['tbimagenid'],
+                $row['tbimagencrudid'],
+                $row['tbimagenregistroid'],
+                $row['tbimagennombre'],
+                $row['tbimagendirectorio'],
+                $row['tbimagenestado']
+            );
+        } else {
+            $imagen = null; // O maneja el caso en que no se encuentra la imagen
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $imagen;
+    }
 }
