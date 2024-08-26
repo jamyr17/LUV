@@ -25,7 +25,8 @@
             echo "Nombre: " . htmlspecialchars($perfil['primerNombre']) . "<br>";
             echo "Apellido: " . htmlspecialchars($perfil['primerApellido']) . "<br>";
             echo "Nombre de usuario: " . htmlspecialchars($perfil['nombreUsuario']) . "<br>";
-            echo "Ponderado: " . htmlspecialchars($perfil['ponderado']) . "%<br>";
+            echo "Coincidencias: " . htmlspecialchars($perfil['coincidencias']) . "<br>";
+            echo "Afinidiad general = " . htmlspecialchars($perfil['ponderado']) . "%<br>";
             echo "</li>";
         }
         echo "</ul>";

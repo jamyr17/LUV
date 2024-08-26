@@ -60,8 +60,9 @@ function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajePa
         // Inicializa 'ponderado' si no existe
         if($perfil['usuarioId'] !== $usuarioId){
 
-            if (!isset($allPerfiles[$indicePerfil]['ponderado'])) {
+            if (!isset($allPerfiles[$indicePerfil]['ponderado']) && !isset($allPerfiles[$indicePerfil]['coincidencias'])) {
                 $allPerfiles[$indicePerfil]['ponderado'] = 0;
+                $allPerfiles[$indicePerfil]['coincidencias'] = '';
             }
 
             $criteriosPerfil = explode(',', $perfil['criterio']);
@@ -74,6 +75,7 @@ function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajePa
 
                         if ($valorCriterio == $valorDividido[$indiceCriterioDeseado]) {
                             $allPerfiles[$indicePerfil]['ponderado'] += $porcentajeDividido[$indiceCriterioDeseado];
+                            $allPerfiles[$indicePerfil]['coincidencias'] .= $criterioDeseado . ' (' . $valorCriterio  .')  [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
                         }
                     }
                 }

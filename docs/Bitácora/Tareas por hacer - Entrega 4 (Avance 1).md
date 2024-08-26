@@ -15,6 +15,6 @@
 - [ ] Validar existencia al crear nuevo usuario.
 - [ ] Arreglar bug al entrar a modelar usuario deseado.
 - [ ] Mostrar en qué coinciden los perfiles filtrados.
-- [ ] Limpiar BD.
+- [x] Limpiar BD.
 - [ ] Revisar funciones generales.
 - [ ] Probar en LINUX.
