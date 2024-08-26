@@ -36,6 +36,7 @@
     </section>
 
     <div id="container">
+    <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
         <h3>Modela lo que estás buscando</h3>
 
         <form id="criteriaForm" method="post" action="../action/wantedProfileAction.php" onsubmit="return submitForm()">

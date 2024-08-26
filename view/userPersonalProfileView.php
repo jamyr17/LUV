@@ -22,16 +22,31 @@
                     $_GET['success']=="inserted" => "Se ha guardado el perfil personal.",
                     default => "Transacción realizada.",
                 };
+
+                echo "<script>
+                    alert('$mensaje');
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var continuarBtn = document.createElement('button');
+                        continuarBtn.innerHTML = 'Continuar';
+                        continuarBtn.onclick = function() {
+                            window.location.href = '../view/userWantedProfileView.php';
+                        };
+                        document.body.appendChild(continuarBtn);
+                    });
+                </script>";
             }
 
-            if(isset($mensaje)){
+            if(isset($mensaje) && !isset($_GET['success'])) {
                 echo "<script>alert('$mensaje')</script>";
             }
         ?>
     </section>
 
     <div id="container">
+        <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
         <h3>Modela tu perfil</h3>
+
+        <div id="loading" style="display:none;">Cargando...</div>
 
         <form id="criteriaForm" method="post" action="../action/personalProfileAction.php" onsubmit="return perfilPersonal.submitForm()">
             <div id="criteriaSection">
