@@ -1,5 +1,5 @@
 <?php
-  include "../action/sessionAdmAction.php";
+  include "../action/sessionAdminAction.php";
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +68,7 @@
     <section id="form">
       <div class="containter">
         <button onclick="window.location.href='../indexView.php';">Volver</button>
-        <form method="post" action="../action/sessionAdmAction.php">
+        <form method="post" action="../action/sessionAdminAction.php">
           <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
         </form>
 
