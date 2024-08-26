@@ -2,6 +2,21 @@ let criteriaCount = 1;
 let criterios = [];
 let valores = [];
 
+// Función para hacer fetch con reintento
+async function fetchDataWithRetry(url, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error en la respuesta');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(`Error en el intento ${i + 1}: ${error.message}`);
+            if (i === retries - 1) throw error;
+        }
+    }
+}
+
 // Función para agregar un nuevo conjunto de criterios, valores y porcentajes
 function addCriterion() {
     criteriaCount++;
@@ -11,12 +26,12 @@ function addCriterion() {
     newCriterion.className = 'criterion';
     newCriterion.innerHTML = `
         <label for="criterion${criteriaCount}">Criterio:</label>
-        <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})">
+        <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
 
         <label for="value${criteriaCount}">Prefiero:</label>
-        <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})">
+        <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
         <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
@@ -29,7 +44,7 @@ function addCriterion() {
     // Cargar criterios para el nuevo select
     populateCriteria(`criterion${criteriaCount}`);
     
-    // Cargar valores para el nuevo criterio 
+    // Cargar valores para el nuevo criterio
     const select = document.getElementById(`criterion${criteriaCount}`);
     loadValues(select, criteriaCount);
 }
@@ -47,27 +62,31 @@ function updateTotalPercentage() {
 }
 
 // Función para cargar criterios y valores una sola vez
-function loadInitialCriteriaData() {
-    fetch('../data/getData.php?type=6')
-        .then(response => response.json())
-        .then(data => {
-            criterios = data;
-            
-        })
-        .catch(error => console.error('Error al cargar datos iniciales:', error));
+async function loadInitialCriteriaData() {
+    try {
+        criterios = await fetchDataWithRetry('../data/getData.php?type=6');
+        if (criterios.length > 0) {
+            populateCriteria('criterion1');
+        } else {
+            console.warn('No se recibieron criterios.');
+        }
+    } catch (error) {
+        console.error('Error al cargar datos iniciales de criterios:', error);
+    }
 }
 
-function loadInitialValuesData() {
-    fetch('../data/getData.php?type=7')
-        .then(response => response.json())
-        .then(data => {
-            valores = data;
-
+async function loadInitialValuesData() {
+    try {
+        valores = await fetchDataWithRetry('../data/getData.php?type=7');
+        if (valores.length > 0) {
             const select = document.getElementById('criterion1');
-            populateCriteria('criterion1'); // Cargar criterios en el primer select
             loadValues(select, 1); // Cargar valores para el primer criterio
-        })
-        .catch(error => console.error('Error al cargar datos iniciales:', error));
+        } else {
+            console.warn('No se recibieron valores.');
+        }
+    } catch (error) {
+        console.error('Error al cargar datos iniciales de valores:', error);
+    }
 }
 
 // Función para cargar el select de criterios con datos
@@ -79,8 +98,12 @@ function populateCriteria(selectId) {
     }
 
     select.innerHTML = '';  // Limpiar opciones actuales
+
     if (criterios.length === 0) {
         console.warn('No hay criterios disponibles para cargar.');
+        const option = document.createElement('option');
+        option.textContent = 'No hay criterios disponibles';
+        select.appendChild(option);
         return;
     }
 
@@ -91,8 +114,11 @@ function populateCriteria(selectId) {
         option.setAttribute('data-nombre', criterio.name); // Agregar atributo data-nombre
         select.appendChild(option);
     });
+
+    select.disabled = false; // Habilitar el select después de cargar los criterios
 }
 
+// Función para cargar los valores basados en el criterio seleccionado
 function loadValues(select, index) {
     const criterionId = select.value;
 
@@ -127,6 +153,8 @@ function loadValues(select, index) {
     otherOption.value = 'other';
     otherOption.textContent = 'Otro';
     valueSelect.appendChild(otherOption);
+
+    valueSelect.disabled = false; // Habilitar el select de valores después de cargar los valores
 }
 
 // Para que el usuario pueda agregar un valor personalizado
@@ -181,10 +209,10 @@ function submitForm() {
             percentagesString += ',';
         }
     }
+
     console.log('Criteria String:', criteriaString);
     console.log('Values String:', valuesString);
     console.log('Percentages String:', percentagesString);
-
 
     document.getElementById('criteriaString').value = criteriaString;
     document.getElementById('valuesString').value = valuesString;
@@ -193,7 +221,11 @@ function submitForm() {
     return true;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadInitialCriteriaData();
-    loadInitialValuesData();
+// Esperar a que tanto los criterios como los valores estén cargados antes de permitir la interacción
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadInitialCriteriaData();
+    await loadInitialValuesData();
+
+    // Habilitar el primer select para que el usuario pueda empezar a seleccionar criterios y valores
+    document.getElementById('criterion1').disabled = false;
 });
