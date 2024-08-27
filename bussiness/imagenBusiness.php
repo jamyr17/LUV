@@ -57,7 +57,7 @@ class ImagenBusiness {
                     $directory = $baseDir . 'campus/';
                     break;
                 default:
-                    die('Tipo no válido');
+                    header("Location: ../view/imagenView.php?error=emptyField");
             }
         }
         if (!file_exists($directory)) {
@@ -113,5 +113,9 @@ class ImagenBusiness {
                 exit;
             }
         }
+    }
+
+    public function deleteFromServer() {
+        
     }
 }
