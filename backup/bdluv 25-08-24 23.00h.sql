@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 22:38:38
+-- Tiempo de generación: 27-08-2024 a las 04:08:40
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -63,7 +63,7 @@ CREATE TABLE `tbcampusregion` (
 --
 
 INSERT INTO `tbcampusregion` (`tbcampusregionid`, `tbcampusregionnombre`, `tbcampusregiondescripcion`, `tbcampusregionestado`) VALUES
-(1, 'Caribe', 'r de Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
+(1, 'Caribe', 'En Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
 (2, 'San José y Valle Central', 'Un clima agradable y primaveral. Colinas salpicadas de cultivos de colores. Todas las comodidades de la vida moderna en la ciudad no es de extrañar que la mayoría de los costarricenses vivan en la capital de San José, en el Valle Central.', 1),
 (3, 'Península de Osa', 'Este es el lugar más salvaje de Costa Rica, una de las zonas más remotas y místicas del país que ha permanecido intacta. Vuelan las guacamayas escarlatas. Los monos se balancean. El jaguar y el tapir dejan huellas en el suelo del bosque.', 1),
 (4, 'Pacífico Central', 'De fácil acceso desde San José. Kilómetros de amplias playas. Vibrantes selvas tropicales llenas de fauna. Por eso, el Pacífico Central es una de las regiones más visitadas de Costa Rica.', 1),
@@ -83,10 +83,6 @@ CREATE TABLE `tbcriterio` (
   `tbcriterioestado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `tbcriterio`
---
-
 INSERT INTO `tbcriterio` (`tbcriterioid`, `tbcriterionombre`, `tbcriterioestado`) VALUES
 (1, 'Gustos Musicales', 1),
 (2, 'Introversión/Extroversión', 1),
@@ -97,9 +93,9 @@ INSERT INTO `tbcriterio` (`tbcriterioid`, `tbcriterionombre`, `tbcriterioestado`
 (7, 'Tipos de Comida Favorita', 1),
 (8, 'Hobbies', 1),
 (9, 'Estilo de Vida', 1),
-(10, 'Películas Favoritas', 1),
-(11, 'Libros Favoritos', 1),
-(12, 'Series de TV Favoritas', 1),
+(10, 'Géneros de Películas Favoritos', 1),
+(11, 'Géneros de Libros Favoritos', 1),
+(12, 'Géneros de Series de TV Favoritas', 1),
 (13, 'Religión', 1),
 (14, 'Orientación Política', 1),
 (15, 'Frecuencia de Viajes', 1),
@@ -107,7 +103,10 @@ INSERT INTO `tbcriterio` (`tbcriterioid`, `tbcriterionombre`, `tbcriterioestado`
 (17, 'Mascotas', 1),
 (18, 'Voluntariado', 1),
 (19, 'Vida Nocturna', 1),
-(20, 'Uso de Redes Sociales', 1);
+(20, 'Uso de Redes Sociales', 1),
+(21, 'Preferencias de Clima', 1),
+(22, 'Tipo de Lectura', 1);
+
 
 -- --------------------------------------------------------
 
@@ -158,9 +157,10 @@ CREATE TABLE `tbimagen` (
 --
 
 INSERT INTO `tbimagen` (`tbimagenid`, `tbimagencrudid`, `tbimagenregistroid`, `tbimagendirectorio`, `tbimagennombre`, `tbimagenestado`) VALUES
-(1, 1, 0, '../resources/img/universidad/', 'universidad-nacional-de-costa-rica.png', 1),
-(2, 5, 0, '../resources/img/campus/', '.jpeg', 0),
-(3, 5, 0, '../resources/img/campus/', 'campus-sarapiquí.jpeg', 1);
+(1, 2, 4, '../resources/img/areaConocimiento/', 'ingeniería-informática.jfif', 1),
+(2, 1, 1, '../resources/img/universidad/', 'universidad-nacional-de-costa-rica.png', 1),
+(3, 3, 4, '../resources/img/genero/', 'género-fluido.jfif', 1),
+(4, 4, 8, '../resources/img/orientacionSexual/', 'sapiosexual.webp', 1);
 
 -- --------------------------------------------------------
 
@@ -254,7 +254,9 @@ INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbperfilusu
 (5, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Rock,Introvertido,Ciencias,Fútbol,Pintura,Mañana,Italiana,Lectura,Activo,Comedia,Ficción,Suspenso,Cristianismo,Conservador,Frecuente,Tecnófilo,Perros,ONGs,Discotecas,Facebook', 5, 1),
 (6, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Reggae,Extrovertido,Ingeniería,Baloncesto,Escalada,Tarde,Francesa,Dibujo,Deportivo,Thriller,Fantasía,Documentales,Islam,Conservador,Rara vez,Tecnófilo,Aves,No,Bar,WhatsApp', 6, 1),
 (7, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Electrónica,Introvertido,Matemáticas,Running,Club de Lectura,Noche,Japonesa,Videojuegos,Tranquilo,Acción,Ciencia ficción,Suspenso,Ateo,Liberal,Frecuente,Desconectado,Ninguna,No,Ninguna,Reddit', 7, 1),
-(8, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Salsa,Extrovertido,Psicología,Fútbol,Baile,Mañana,Mexicana,Cocina,Activo,Romance,Biografía,Comedia,Católico,Moderado,Eventual,Tecnófilo,Gatos,Sí,Bar,Instagram', 8, 1);
+(8, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Salsa,Extrovertido,Psicología,Fútbol,Baile,Mañana,Mexicana,Cocina,Activo,Romance,Biografía,Comedia,Católico,Moderado,Eventual,Tecnófilo,Gatos,Sí,Bar,Instagram', 8, 1),
+(9, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Hip-hop,Extrovertido,Economía,Ciclismo,Voluntariado,Tarde,Tailandesa,Fotografía,Activo,Acción,Biografía,Aventura,Budismo,Moderado,Ocasional,Tecnófilo,Perros,Sí,Festival,Facebook', 9, 1),
+(10, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Actividades Extracurriculares,Preferencias de Estudio,Tipos de Comida Favorita,Hobbies,Estilo de Vida,Películas Favoritas,Libros Favoritos,Series de TV Favoritas,Religión,Orientación Política,Frecuencia de Viajes,Relación con la Tecnología,Mascotas,Voluntariado,Vida Nocturna,Uso de Redes Sociales', 'Blues,Introvertido,Historia,Golf,Fotografía,Mañana,India,Escritura,Tranquilo,Drama,Fantasía,Horror,Judío,Conservador,Eventual,Conectado,Ninguna,No,Cine,LinkedIn', 10, 1);
 
 -- --------------------------------------------------------
 
@@ -409,11 +411,7 @@ CREATE TABLE `tbuniversidadcampus` (
 
 INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`, `tbuniversidadcampusespecializacionid`) VALUES
 (1, 1, 'Campus Sarapiquí', 'La Victoria', 1, '', '', 6, 0),
-(2, 2, 'Rodrigo Facio', 'Montes de Oca', 1, '', '', 2, 0),
-(3, 1, 'Furiosa', 'jaja', 1, '', '', 1, 1),
-(4, 1, 'a', 'San José', 0, '', '', 1, 1),
-(5, 1, 'b', 'Chepe', 0, '', '', 1, 1),
-(6, 1, 'v', 'v', 1, '', '', 1, 1);
+(2, 2, 'Rodrigo Facio', 'Montes de Oca', 1, '', '', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -456,7 +454,7 @@ CREATE TABLE `tbuniversidadcampusespecializacion` (
 --
 
 INSERT INTO `tbuniversidadcampusespecializacion` (`tbuniversidadcampusespecializacionid`, `tbuniversidadcampusespecializacionnombre`, `tbuniversidadcampusespecializaciondescripcion`, `tbuniversidadcampusespecializacionestado`) VALUES
-(1, 'Agricultura y Ciencias Agropecuarias', 'en agrícolas avanzadas, manejo de cultivos, ganadería, y sostenibilidad en la agricultura.', 1),
+(1, 'Agricultura y Ciencias Agropecuarias', 'Enfoque en el estudio de agrícolas avanzadas, manejo de cultivos, ganadería, y sostenibilidad en la agricultura.', 1),
 (2, 'Ciencias Sociales', 'Enfoque en el estudio de la sociedad y el comportamiento humano, abarcando psicología, sociología, y antropología.', 1),
 (3, 'Ciencias Políticas', 'Especialización en el análisis de sistemas políticos, relaciones internacionales, teoría política, y políticas públicas.', 1),
 (4, 'Economía', 'Estudio de principios económicos, análisis de mercados, teoría económica, y políticas económicas para el desarrollo sostenible.', 1),
@@ -485,7 +483,7 @@ CREATE TABLE `tbuniversidadcampusregion` (
 --
 
 INSERT INTO `tbuniversidadcampusregion` (`tbuniversidadcampusregionid`, `tbuniversidadcampusregionnombre`, `tbuniversidadcampusregiondescripcion`, `tbuniversidadcampusregionestado`) VALUES
-(1, 'Caribe', 'r de Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
+(1, 'Caribe', 'En Costa Rica es uno de los lugares preferidos de los visitantes debido a su encanto cultural, playas de arena blanca, aguas turquesas, exuberante vegetación, abundante vida silvestre y su proximidad al Parque Nacional Cahuita y a la Reserva Nacional de Vida Silvestre Gandoca Manzanill', 1),
 (2, 'San José y Valle Central', 'Un clima agradable y primaveral. Colinas salpicadas de cultivos de colores. Todas las comodidades de la vida moderna en la ciudad no es de extrañar que la mayoría de los costarricenses vivan en la capital de San José, en el Valle Central.', 1),
 (3, 'Península de Osa', 'Este es el lugar más salvaje de Costa Rica, una de las zonas más remotas y místicas del país que ha permanecido intacta. Vuelan las guacamayas escarlatas. Los monos se balancean. El jaguar y el tapir dejan huellas en el suelo del bosque.', 1),
 (4, 'Pacífico Central', 'De fácil acceso desde San José. Kilómetros de amplias playas. Vibrantes selvas tropicales llenas de fauna. Por eso, el Pacífico Central es una de las regiones más visitadas de Costa Rica.', 1),
@@ -573,44 +571,50 @@ CREATE TABLE `tbvalor` (
 INSERT INTO `tbvalor` (`tbvalorid`, `tbvalornombre`, `tbcriterioid`, `tbvalorestado`) VALUES
 (1, 'Rock', 1, 1),
 (2, 'Pop', 1, 1),
-(3, 'Introvertido', 2, 1),
-(4, 'Extrovertido', 2, 1),
-(5, 'Ciencias', 3, 1),
-(6, 'Humanidades', 3, 1),
-(7, 'Fútbol', 4, 1),
-(8, 'Baloncesto', 4, 1),
-(9, 'Pintura', 5, 1),
-(10, 'Música', 5, 1),
-(11, 'Mañana', 6, 1),
-(12, 'Noche', 6, 1),
-(13, 'Italiana', 7, 1),
-(14, 'Mexicana', 7, 1),
-(15, 'Lectura', 8, 1),
-(16, 'Videojuegos', 8, 1),
-(17, 'Activo', 9, 1),
-(18, 'Tranquilo', 9, 1),
-(19, 'Comedia', 10, 1),
-(20, 'Drama', 10, 1),
-(21, 'Ficción', 11, 1),
-(22, 'No ficción', 11, 1),
-(23, 'Suspenso', 12, 1),
-(24, 'Ciencia ficción', 12, 1),
-(25, 'Cristianismo', 13, 1),
-(26, 'Ateísmo', 13, 1),
-(27, 'Conservador', 14, 1),
-(28, 'Liberal', 14, 1),
-(29, 'Frecuente', 15, 1),
-(30, 'Ocasional', 15, 1),
-(31, 'Tecnófilo', 16, 1),
-(32, 'Tecnófobo', 16, 1),
-(33, 'Perros', 17, 1),
-(34, 'Gatos', 17, 1),
-(35, 'ONGs', 18, 1),
-(36, 'Ecología', 18, 1),
-(37, 'Discotecas', 19, 1),
-(38, 'Bares tranquilos', 19, 1),
-(39, 'Facebook', 20, 1),
-(40, 'Instagram', 20, 1);
+(3, 'Clásica', 1, 1),
+(4, 'Jazz', 1, 1),
+(5, 'Introvertido', 2, 1),
+(6, 'Extrovertido', 2, 1),
+(7, 'Ciencias', 3, 1),
+(8, 'Humanidades', 3, 1),
+(9, 'Fútbol', 4, 1),
+(10, 'Baloncesto', 4, 1),
+(11, 'Pintura', 5, 1),
+(12, 'Música', 5, 1),
+(13, 'Mañana', 6, 1),
+(14, 'Noche', 6, 1),
+(15, 'Italiana', 7, 1),
+(16, 'Mexicana', 7, 1),
+(17, 'Lectura', 8, 1),
+(18, 'Videojuegos', 8, 1),
+(19, 'Activo', 9, 1),
+(20, 'Tranquilo', 9, 1),
+(21, 'Comedia', 10, 1),
+(22, 'Drama', 10, 1),
+(23, 'Ficción', 11, 1),
+(24, 'No ficción', 11, 1),
+(25, 'Suspenso', 12, 1),
+(26, 'Ciencia ficción', 12, 1),
+(27, 'Cristianismo', 13, 1),
+(28, 'Ateísmo', 13, 1),
+(29, 'Conservador', 14, 1),
+(30, 'Liberal', 14, 1),
+(31, 'Frecuente', 15, 1),
+(32, 'Ocasional', 15, 1),
+(33, 'Tecnófilo', 16, 1),
+(34, 'Tecnófobo', 16, 1),
+(35, 'Perros', 17, 1),
+(36, 'Gatos', 17, 1),
+(37, 'ONGs', 18, 1),
+(38, 'Ecología', 18, 1),
+(39, 'Discotecas', 19, 1),
+(40, 'Bares tranquilos', 19, 1),
+(41, 'Facebook', 20, 1),
+(42, 'Instagram', 20, 1),
+(43, 'Frío', 21, 1),
+(44, 'Cálido', 21, 1),
+(45, 'Novela', 22, 1),
+(46, 'Poesía', 22, 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

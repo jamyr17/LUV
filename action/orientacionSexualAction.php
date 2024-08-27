@@ -15,7 +15,7 @@ if (isset($_POST['update'])) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $orientacionSexualBusiness = new OrientacionSexualBusiness();
 
-                $resultExist = $orientacionSexualBusiness->exist($nombre);
+                $resultExist = $orientacionSexualBusiness->nameExist($nombre, $idOrientacionSexual);
 
                 if ($resultExist == 1) {
                     header("location: ../view/orientacionSexualView.php?error=exist");

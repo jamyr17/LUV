@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/universidadcampusregion.php';
+include '../domain/universidadCampusRegion.php';
 
 class UniversidadCampusRegionData extends Data
 {
