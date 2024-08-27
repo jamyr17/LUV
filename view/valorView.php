@@ -1,5 +1,5 @@
 <?php
-include "../action/sessionAction.php";
+include "../action/sessionAdminAction.php";
 include '../bussiness/valorBusiness.php';
 include '../bussiness/criterioBusiness.php';
 
@@ -62,7 +62,7 @@ $criterioBusiness = new CriterioBusiness();
         <section id="form">
             <div class="container">
                 <button onclick="window.location.href='../indexView.php';">Volver</button>
-                <form method="post" action="../action/sessionAction.php">
+                <form method="post" action="../action/sessionAdminAction.php">
                     <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
                 </form>
 

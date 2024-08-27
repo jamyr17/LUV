@@ -20,6 +20,7 @@
             if (isset($_GET['error'])) {
                 $mensaje = match(true){
                     $_GET['error']=="accessDenied" => "Por favor, inicie sesión e inténtelo de nuevo.",
+                    $_GET['error']=="noValidated" => "No se pudo verificar su cuenta. Inténtelo de nuevo.",
                     default => "Ocurrió un problema inesperado.",
                   };
             }
@@ -27,6 +28,7 @@
             if (isset($_GET['success'])) {
                 $mensaje = match(true){
                     $_GET['success']=="logout" => "Ha cerrado su sesión exitosamente.",
+                    $_GET['success']=="inserted" => "Ha creado una cuenta de manera exitosa. Puede iniciar sesión.",
                     default => "Transacción realizada correctamente.",
                   };
             }
@@ -49,6 +51,11 @@
                     <button type="submit" class="btn btn-success" name="login" id="login">Ingresar</button>
                 </div>
             </form>
+        </div>
+
+        <div>
+            <h5>¿No tiene una cuenta?</h5>
+                <a href="registerView.php">Regístrese</a>
         </div>
 
     </section>

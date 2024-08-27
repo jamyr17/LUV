@@ -1,125 +1,165 @@
-let criterios = [];
-let valores = [];
+class PerfilPersonal {
+    constructor() {
+        this.criterios = [];
+        this.valores = [];
+        this.init();
+    }
 
-// Función para cargar criterios y valores una sola vez
-function loadInitialCriteriaData() {
-    fetch('../data/getData.php?type=6')
-        .then(response => response.json())
-        .then(data => {
-            criterios = data;
-            populateCriteriaSection(); // Cargar todos los criterios en la sección de criterios
-        })
-        .catch(error => console.error('Error al cargar datos iniciales:', error));
-}
+    // Inicializa la carga de datos
+    async init() {
+        this.showLoading(true);
+        try {
+            await this.loadInitialCriteriaData();
+            await this.loadInitialValuesData();
+        } catch (error) {
+            console.error('Error al cargar los datos:', error);
+        } finally {
+            this.showLoading(false);
+        }
+    }
 
-function loadInitialValuesData() {
-    fetch('../data/getData.php?type=7')
-        .then(response => response.json())
-        .then(data => {
-            valores = data;
-            criterios.forEach((criterio, index) => {
+    // Mostrar o ocultar el indicador de carga
+    showLoading(show) {
+        const loadingDiv = document.getElementById('loading');
+        loadingDiv.style.display = show ? 'block' : 'none';
+    }
+
+    // Función para hacer fetch con reintento
+    async fetchDataWithRetry(url, retries = 3) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Error en la respuesta');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(`Error en el intento ${i + 1}: ${error.message}`);
+                if (i === retries - 1) throw error;
+            }
+        }
+    }
+
+    // Función para cargar criterios
+    async loadInitialCriteriaData() {
+        try {
+            this.criterios = await this.fetchDataWithRetry('../data/getData.php?type=6');
+            this.populateCriteriaSection();
+        } catch (error) {
+            console.error('Error al cargar criterios:', error);
+            alert('No se pudieron cargar los criterios. Por favor, inténtelo más tarde.');
+        }
+    }
+
+    // Función para cargar valores
+    async loadInitialValuesData() {
+        try {
+            this.valores = await this.fetchDataWithRetry('../data/getData.php?type=7');
+            this.criterios.forEach((criterio, index) => {
                 const select = document.getElementById(`value${index + 1}`);
-                loadValues(select, index + 1);
+                this.loadValues(select, index + 1);
             });
-        })
-        .catch(error => console.error('Error al cargar datos iniciales:', error));
-}
-
-// Función para cargar todos los criterios en la vista
-function populateCriteriaSection() {
-    const criteriaSection = document.getElementById('criteriaSection');
-
-    criterios.forEach((criterio, index) => {
-        const criterionIndex = index + 1;
-        const criterionDiv = document.createElement('div');
-        criterionDiv.className = 'criterion';
-        criterionDiv.innerHTML = `
-            <label for="value${criterionIndex}">${criterio.name}:</label>
-            <select name="value[]" id="value${criterionIndex}" onchange="toggleOtherField(this, ${criterionIndex})">
-                <!-- Las opciones de valores se cargarán dinámicamente -->
-            </select>
-            <input type="text" id="otherField${criterionIndex}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-        `;
-        criteriaSection.appendChild(criterionDiv);
-    });
-}
-
-function loadValues(select, index) {
-    const criterionId = criterios[index - 1].id;
-
-    const valueSelect = document.getElementById(`value${index}`);
-    if (!valueSelect) {
-        console.error(`Elemento select de valores no encontrado para el índice ${index}`);
-        return;
+        } catch (error) {
+            console.error('Error al cargar valores:', error);
+            alert('No se pudieron cargar los valores. Por favor, inténtelo más tarde.');
+        }
     }
 
-    valueSelect.innerHTML = '';  // Limpiar opciones actuales
+    // Función para cargar todos los criterios en la vista
+    populateCriteriaSection() {
+        const criteriaSection = document.getElementById('criteriaSection');
 
-    const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
-
-    if (filteredValues.length === 0) {
-        const option = document.createElement('option');
-        option.textContent = 'No hay valores disponibles';
-        valueSelect.appendChild(option);
-        return;
+        this.criterios.forEach((criterio, index) => {
+            const criterionIndex = index + 1;
+            const criterionDiv = document.createElement('div');
+            criterionDiv.className = 'criterion';
+            criterionDiv.innerHTML = `
+                <label for="value${criterionIndex}">${criterio.name}:</label>
+                <select name="value[]" id="value${criterionIndex}" onchange="perfilPersonal.toggleOtherField(this, ${criterionIndex})">
+                    <!-- Las opciones de valores se cargarán dinámicamente -->
+                </select>
+                <input type="text" id="otherField${criterionIndex}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+            `;
+            criteriaSection.appendChild(criterionDiv);
+        });
     }
 
-    filteredValues.forEach(valor => {
-        const option = document.createElement('option');
-        option.value = valor.id;
-        option.textContent = valor.name;
-        option.setAttribute('data-nombre', valor.name);  // Agregar atributo data-nombre
-        valueSelect.appendChild(option);
-    });
+    // Función para cargar los valores en los select correspondientes
+    loadValues(select, index) {
+        const criterionId = this.criterios[index - 1].id;
 
-    const otherOption = document.createElement('option');
-    otherOption.value = 'other';
-    otherOption.textContent = 'Otro';
-    valueSelect.appendChild(otherOption);
-}
+        const valueSelect = document.getElementById(`value${index}`);
+        if (!valueSelect) {
+            console.error(`Elemento select de valores no encontrado para el índice ${index}`);
+            return;
+        }
 
-function toggleOtherField(select, index) {
-    const otherField = document.getElementById(`otherField${index}`);
-    if (select.value === 'other') {
-        otherField.style.display = 'block';
-    } else {
-        otherField.style.display = 'none';
-        otherField.value = '';
+        valueSelect.innerHTML = '';  // Limpiar opciones actuales
+
+        const filteredValues = this.valores.filter(valor => valor.idCriterio == criterionId);
+
+        if (filteredValues.length === 0) {
+            const option = document.createElement('option');
+            option.textContent = 'No hay valores disponibles';
+            valueSelect.appendChild(option);
+            return;
+        }
+
+        filteredValues.forEach(valor => {
+            const option = document.createElement('option');
+            option.value = valor.id;
+            option.textContent = valor.name;
+            option.setAttribute('data-nombre', valor.name);  // Agregar atributo data-nombre
+            valueSelect.appendChild(option);
+        });
+
+        const otherOption = document.createElement('option');
+        otherOption.value = 'other';
+        otherOption.textContent = 'Otro';
+        valueSelect.appendChild(otherOption);
     }
-}
 
-function submitForm() {
-    const criteria = criterios.map(c => c.name);
-    const values = document.querySelectorAll('select[name="value[]"]');
-    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
-
-    let criteriaString = criteria.join(',');
-    let valuesString = '';
-
-    for (let i = 0; i < values.length; i++) {
-        if (values[i].value === 'other' && otherValues[i].value) {
-            valuesString += otherValues[i].value;
+    // Para que el usuario pueda agregar un valor personalizado
+    toggleOtherField(select, index) {
+        const otherField = document.getElementById(`otherField${index}`);
+        if (select.value === 'other') {
+            otherField.style.display = 'block';
         } else {
-            const selectedValue = values[i].selectedOptions[0];
-            const valueName = selectedValue.getAttribute('data-nombre');
-            valuesString += valueName;
-        }
- 
-        if (i < values.length - 1) {
-            valuesString += ',';
+            otherField.style.display = 'none';
+            otherField.value = ''; // Limpiar el campo de texto si se oculta
         }
     }
 
-    console.log('Criteria String:', criteriaString);
-    console.log('Values String:', valuesString);
+    // Función para validar el formulario antes de enviarlo
+    submitForm() {
+        const criteria = this.criterios.map(c => c.name);
+        const values = document.querySelectorAll('select[name="value[]"]');
+        const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
 
-    document.getElementById('criteriaString').value = criteriaString;
-    document.getElementById('valuesString').value = valuesString;
+        let criteriaString = criteria.join(',');
+        let valuesString = '';
 
-    return true;
+        for (let i = 0; i < values.length; i++) {
+            if (values[i].value === 'other' && otherValues[i].value) {
+                valuesString += otherValues[i].value;
+            } else {
+                const selectedValue = values[i].selectedOptions[0];
+                const valueName = selectedValue.getAttribute('data-nombre');
+                valuesString += valueName;
+            }
+
+            if (i < values.length - 1) {
+                valuesString += ',';
+            }
+        }
+
+        console.log('Criteria String:', criteriaString);
+        console.log('Values String:', valuesString);
+
+        document.getElementById('criteriaString').value = criteriaString;
+        document.getElementById('valuesString').value = valuesString;
+
+        return true;
+    }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadInitialCriteriaData();
-    loadInitialValuesData();
-});
+const perfilPersonal = new PerfilPersonal();

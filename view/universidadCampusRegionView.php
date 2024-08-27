@@ -1,5 +1,5 @@
 <?php
-  include "../action/sessionAction.php";
+  include "../action/sessionAdminAction.php";
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +60,7 @@
       <div class="container">
 
         <button onclick="window.location.href='../indexView.php';">Volver</button>
-        <form method="post" action="../action/sessionAction.php">
+        <form method="post" action="../action/sessionAdminAction.php">
           <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
         </form>
 
@@ -70,8 +70,8 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/campusRegionAction.php" style="width: 50vw; min-width:300px;">
-                <input type="hidden" name="campusRegion" value="<?php echo htmlspecialchars($idCampusRegion); ?>">
+            <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;">
+                <input type="hidden" name="idUniversidadCampusRegion" value="0">
 
                 <div class="row">
                     <div class="col">
@@ -111,20 +111,20 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/campusRegionBusiness.php';
-          $campusRegionBusiness = new CampusRegionBusiness();
-          $campusRegions = $campusRegionBusiness->getAllTbCampusRegion();
+          include '../bussiness/universidadCampusRegionBussiness.php';
+          $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+          $campusRegions = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
           $mensajeActualizar = "¿Desea actualizar esta región?";
           $mensajeEliminar = "¿Desea eliminar esta región?";
 
           if ($campusRegions != null) {
             foreach ($campusRegions as $campusRegion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/campusRegionAction.php">';
-              echo '<input type="hidden" name="idCampusRegion" value="' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '">';
-              echo '<td>' . htmlspecialchars($campusRegion->getTbCampusRegionId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbCampusRegionNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusRegion->getTbCampusRegionDescripcion()) . '" class="form-control" /></td>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php">';
+              echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '">';
+              echo '<td>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '</td>';
+              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '" class="form-control" /></td>';
+              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionDescripcion()) . '" class="form-control" /></td>';
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";

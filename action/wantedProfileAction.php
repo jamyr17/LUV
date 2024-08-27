@@ -2,20 +2,47 @@
 
 include_once "../bussiness/wantedProfileBusiness.php";
 $wantedProfileBusiness = new WantedProfileBussiness();
+include_once "../bussiness/usuarioBusiness.php";
+$usuarioBusiness = new UsuarioBusiness();
+
 
 //Nuevo registro de perfil deseado
-if(isset($_POST["registrar"])){
+if(isset($_POST["search"])){
     if(isset($_POST["criteriaString"]) && isset($_POST["valuesString"]) && isset($_POST["percentagesString"]) && isset($_POST["totalPercentageInp"])){ //todos los datos
+        
         if($_POST["totalPercentageInp"]!=100){ //no repartió correctamente los porcentajes
             header("location: ../view/userWantedProfileView.php?error=percentageIncomplete");
         }
 
-        $criterio = $_POST["criteriaString"];
-        $valor = $_POST["valuesString"];
-        $porcentaje = $_POST["percentagesString"];
+        // insertar el registro de lo deseado por el usuario:
+        $criterioParam = $_POST["criteriaString"];
+        $valorParam = $_POST["valuesString"];
+        $porcentajeParam = $_POST["percentagesString"];
+        
+        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
 
-        $wantedProfileBusiness->insertTbPerfilDeseado($criterio,$valor,$porcentaje);
-        header("location: ../view/userWantedProfileView.php?success=inserted");
+        if($wantedProfileBusiness->profileExists($usuarioId)){
+            $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam,$valorParam,$porcentajeParam, $usuarioId); 
+        }else{
+            $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam,$valorParam,$porcentajeParam, $usuarioId); 
+        }
+
+
+        // filtrar perfiles segun lo que desea el usuario: 
+        $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
+
+        // si no hay perfiles registrados
+        if(empty($allPerfiles)){
+            header("location: ../view/userWantedProfileView.php?error=noProfiles");
+        }else{
+            $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+
+            // guardar los perfiles filtrados en sesión
+            session_start(); 
+            $_SESSION['perfilesMatcheados'] = $perfilesFiltrados;
+            header("location: ../view/userProfileRecommendationsView.php");
+        }
+               
     }
     else{
         header("location: ../view/userWantedProfileView.php?error=formIncomplete");
@@ -23,38 +50,54 @@ if(isset($_POST["registrar"])){
      
 }
 
-    if (isset($_POST["filtrado"])) {
-        if (isset($_POST["criteriaString"]) && isset($_POST["valuesString"])) {
-            $criterio = $_POST["criteriaString"];
-            $valor = $_POST["valuesString"];
-            $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
+// Definir función para filtrar y ordenar perfiles
+function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId) {
+    $criterioDividido = explode(',', $criterioParam);
+    $valorDividido = explode(',', $valorParam);
+    $porcentajeDividido = explode(',', $porcentajeParam);
+
+    foreach ($allPerfiles as $indicePerfil => $perfil) {
+        // Inicializa 'ponderado' si no existe
+        if($perfil['usuarioId'] !== $usuarioId){
+
+            if (!isset($allPerfiles[$indicePerfil]['ponderado']) && !isset($allPerfiles[$indicePerfil]['coincidencias'])) {
+                $allPerfiles[$indicePerfil]['ponderado'] = 0;
+                $allPerfiles[$indicePerfil]['coincidencias'] = '';
+            }
+
+            $criteriosPerfil = explode(',', $perfil['criterio']);
             
-            echo "Criterio: " . $criterio . " Valor: " . $valor . "<br>";
-            
-            $perfilesFiltrados = [];
-    
-            if ($allPerfiles) {
-                foreach ($allPerfiles as $perfil) {
-                    echo "CriterioPer: " . $perfil['criterio'] . " ValorPer: " . $perfil['valor'] . "<br>";
-                    if ($perfil['criterio'] == $criterio) {
-                        if ($perfil['valor'] == $valor) {
-                            $perfilesFiltrados[] = $perfil;
+            foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
+                foreach ($criteriosPerfil as $indiceCriterioPerfil => $criterioPerfil) {
+                    // Comparar los criterios
+                    if ($criterioDeseado === $criterioPerfil) {
+                        $valorCriterio = explode(',', $perfil['valor'])[$indiceCriterioPerfil]; 
+
+                        if ($valorCriterio == $valorDividido[$indiceCriterioDeseado]) {
+                            $allPerfiles[$indicePerfil]['ponderado'] += $porcentajeDividido[$indiceCriterioDeseado];
+                            $allPerfiles[$indicePerfil]['coincidencias'] .= $criterioDeseado . ' (' . $valorCriterio  .')  [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
                         }
                     }
                 }
-    
-                if (!empty($perfilesFiltrados)) {
-                    foreach ($perfilesFiltrados as $perfil) {
-                        echo "Criterio: " . $perfil['criterio'] . " Valor: " . $perfil['valor'] . "<br>";
-                    }
-                } else {
-                    echo "No se encontraron perfiles deseados que coincidan con los criterios de filtrado.";
-                }
-            } else {
-                echo "No se encontraron perfiles deseados que coincidan con los criterios de filtrado.";
             }
-        } else {
-            echo "Debe proporcionar un criterio y un valor para realizar el filtrado.";
+
         }
     }
-    ?>
+
+    // Filtrar los perfiles con un ponderado mayor al 30%
+    $perfilesFiltrados = array_filter($allPerfiles, function($perfil) {
+        return $perfil['ponderado'] > 30;
+    });
+
+    // Ordenar los perfiles filtrados de mayor a menor ponderado
+    usort($perfilesFiltrados, function($a, $b) {
+        return $b['ponderado'] <=> $a['ponderado'];
+    });
+
+    // Limitar a los 20 perfiles con mayor ponderado si hay más de 20
+    if (count($perfilesFiltrados) > 20) {
+        $perfilesFiltrados = array_slice($perfilesFiltrados, 0, 20);
+    }
+
+    return $perfilesFiltrados;
+}

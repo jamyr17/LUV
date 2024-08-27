@@ -1,16 +1,16 @@
 <?php
 
 include_once 'data.php';
-include '../domain/campusregion.php';
+include '../domain/universidadcampusregion.php';
 
-class CampusRegionData extends Data
+class UniversidadCampusRegionData extends Data
 {
-    public function insertTbCampusRegion($campusRegion)
+    public function insertTbUniversidadCampusRegion($campusRegion)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryGetLastId = "SELECT MAX(tbcampusregionid) AS max_id FROM tbcampusregion";
+        $queryGetLastId = "SELECT MAX(tbuniversidadcampusregionid) AS max_id FROM tbuniversidadcampusregion";
         $result = mysqli_query($conn, $queryGetLastId);
 
         if ($row = mysqli_fetch_assoc($result)) {
@@ -20,11 +20,11 @@ class CampusRegionData extends Data
             $nextId = 1;
         }
 
-        $nombre = mysqli_real_escape_string($conn, $campusRegion->getTbcampusregionnombre());
-        $descripcion = mysqli_real_escape_string($conn, $campusRegion->getTbcampusregiondescripcion());
+        $nombre = mysqli_real_escape_string($conn, $campusRegion->getTbUniversidadCampusRegionNombre());
+        $descripcion = mysqli_real_escape_string($conn, $campusRegion->getTbUniversidadCampusRegionDescripcion());
         $estado = 1;
 
-        $queryInsert = "INSERT INTO tbcampusregion (tbcampusregionid, tbcampusregionnombre, tbcampusregiondescripcion, tbcampusregionestado) 
+        $queryInsert = "INSERT INTO tbuniversidadcampusregion (tbuniversidadcampusregionid, tbuniversidadcampusregionnombre, tbuniversidadcampusregiondescripcion, tbuniversidadcampusregionestado) 
                         VALUES ($nextId, '$nombre', '$descripcion', $estado)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
@@ -33,16 +33,16 @@ class CampusRegionData extends Data
         return $resultInsert;
     }
 
-    public function updateTbCampusRegion($campusRegion)
+    public function updateTbUniversidadCampusRegion($campusRegion)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $id = intval($campusRegion->getTbcampusregionid()); 
-        $nombre = mysqli_real_escape_string($conn, $campusRegion->getTbcampusregionnombre());
-        $descripcion = mysqli_real_escape_string($conn, $campusRegion->getTbcampusregiondescripcion());
+        $id = intval($campusRegion->getTbUniversidadCampusRegionId()); 
+        $nombre = mysqli_real_escape_string($conn, $campusRegion->getTbUniversidadCampusRegionNombre());
+        $descripcion = mysqli_real_escape_string($conn, $campusRegion->getTbUniversidadCampusRegionDescripcion());
 
-        $queryUpdate = "UPDATE tbcampusregion SET tbcampusregionnombre='$nombre', tbcampusregiondescripcion='$descripcion' WHERE tbcampusregionid=$id;";
+        $queryUpdate = "UPDATE tbuniversidadcampusregion SET tbuniversidadcampusregionnombre='$nombre', tbuniversidadcampusregiondescripcion='$descripcion' WHERE tbuniversidadcampusregionid=$id;";
 
         $result = mysqli_query($conn, $queryUpdate);
         mysqli_close($conn);
@@ -50,40 +50,40 @@ class CampusRegionData extends Data
         return $result;
     }
 
-    public function deleteTbCampusRegion($campusRegionId)
+    public function deleteTbUniversidadCampusRegion($campusRegionId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "UPDATE tbcampusregion SET tbcampusregionestado = '0' WHERE tbcampusregionid=$campusRegionId;";
+        $queryDelete = "UPDATE tbuniversidadcampusregion SET tbuniversidadcampusregionestado = '0' WHERE tbuniversidadcampusregionid=$campusRegionId;";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
         return $result;
     }
 
-    public function deleteForeverTbCampusRegion($campusRegionId)
+    public function deleteForeverTbUniversidadCampusRegion($campusRegionId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $queryDelete = "DELETE FROM tbcampusregion WHERE tbcampusregionid=$campusRegionId;";
+        $queryDelete = "DELETE FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionid=$campusRegionId;";
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
         return $result;
     }
 
-    public function getAllTbCampusRegion()
+    public function getAllTbUniversidadCampusRegion()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampusregion WHERE tbcampusregionestado = 1;";
+        $querySelect = "SELECT * FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionestado = 1;";
         $result = mysqli_query($conn, $querySelect);
         $campusRegions = [];
         while ($row = mysqli_fetch_array($result)) {
-            $campusRegionActual = new CampusRegion($row['tbcampusregionid'], $row['tbcampusregionnombre'], $row['tbcampusregiondescripcion'], $row['tbcampusregionestado']);
+            $campusRegionActual = new UniversidadCampusRegion($row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusregionnombre'], $row['tbuniversidadcampusregiondescripcion'], $row['tbuniversidadcampusregionestado']);
             array_push($campusRegions, $campusRegionActual);
         }
         mysqli_close($conn);
@@ -91,16 +91,16 @@ class CampusRegionData extends Data
         return $campusRegions;
     }
 
-    public function getAllDeletedTbCampusRegion()
+    public function getAllDeletedTbUniversidadCampusRegion()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbcampusregion WHERE tbcampusregionestado = 0;";
+        $querySelect = "SELECT * FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionestado = 0;";
         $result = mysqli_query($conn, $querySelect);
         $campusRegions = [];
         while ($row = mysqli_fetch_array($result)) {
-            $campusRegionActual = new CampusRegion($row['tbcampusregionid'], $row['tbcampusregionnombre'], $row['tbcampusregiondescripcion'], $row['tbcampusregionestado']);
+            $campusRegionActual = new UniversidadCampusRegion($row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusregionnombre'], $row['tbuniversidadcampusregiondescripcion'], $row['tbuniversidadcampusregionestado']);
             array_push($campusRegions, $campusRegionActual);
         }
         mysqli_close($conn);
@@ -113,7 +113,7 @@ class CampusRegionData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $query = "SELECT COUNT(*) as count FROM tbcampusregion WHERE tbcampusregionnombre = ?";
+        $query = "SELECT COUNT(*) as count FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionnombre = ?";
         
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
@@ -129,17 +129,15 @@ class CampusRegionData extends Data
         return $count > 0;
     }
 
-    
-
     public function nameExists($nombre, $excludeId = null)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $query = "SELECT COUNT(*) as count FROM tbcampusregion WHERE tbcampusregionnombre = ? AND tbcampusregionid != ?";
+        $query = "SELECT COUNT(*) as count FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionnombre = ? AND tbuniversidadcampusregionid != ?";
         
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, 'si', $nombre, $idCampusRegion);
+        mysqli_stmt_bind_param($stmt, 'si', $nombre, $excludeId);
         
         mysqli_stmt_execute($stmt);
         

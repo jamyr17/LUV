@@ -1,7 +1,9 @@
-<!DOCTYPE html>
 <?php
-    include "../action/sessionAction.php";
+  include "../action/sessionUserAction.php";
 ?>
+
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,6 +20,7 @@
             $mensaje .= match(true){
                 $_GET['error']=="percentageIncomplete" => "debe distribuir un 100% entre los criterios.",
                 $_GET['error']=="formIncomplete" => "problemas en el procesamiento de su respuesta.",
+                $_GET['error']=="noProfiles" => "que no hay perfiles registrados en este momento.",
                 default => "un problema inesperado.",
             };
 
@@ -53,9 +56,6 @@
                     </select>
                     <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
 
-                        
-                    </select>
-
                     <label for="percent1">Porcentaje:</label>
                     <input type="number" id="percent1" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
                 </div>
@@ -71,8 +71,7 @@
             <input type="hidden" id="valuesString" name="valuesString">
             <input type="hidden" id="percentagesString" name="percentagesString">
 
-            <button type="submit" name="registrar">Enviar</button>
-            <button type="submit" name="filtrado">Filtrar Perfiles</button>
+            <button type="submit" name="search">Buscar</button>
             
         </form>
     </div>
