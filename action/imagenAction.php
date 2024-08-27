@@ -14,104 +14,113 @@ $generoBusiness = new GeneroBusiness();
 $orientacionSexualBusiness = new OrientacionSexualBusiness();
 $imagenBusiness = new ImagenBusiness();
 
-if(isset($_POST['create'])) {
-// Obtener tipo y valor del combo box
-$type = $_POST['idOptionsHidden'] ?? '';
-$selectedId = $_POST['dynamic-select'] ?? '';
+if (isset($_POST['create'])) {
+    // Obtener tipo y valor del combo box
+    $type = $_POST['idOptionsHidden'] ?? '';
+    $selectedId = $_POST['dynamic-select'] ?? '';
 
-// Definir directorio base
-$baseDir = '../resources/img/';
+    // Definir directorio base
+    $baseDir = '../resources/img/';
 
-// Determinar subdirectorio
-switch ($type) {
-    case '1':
-        $directory = $baseDir . 'universidad/';
-        break;
-    case '2':
-        $directory = $baseDir . 'areaConocimiento/';
-        break;
-    case '3':
-        $directory = $baseDir . 'genero/';
-        break;
-    case '4':
-        $directory = $baseDir . 'orientacionSexual/';
-        break;
-    case '5':
-        $directory = $baseDir . 'campus/';
-        break;
-    default:
-        die('Tipo no válido');
-}
+    // Determinar subdirectorio
+    switch ($type) {
+        case '1':
+            $directory = $baseDir . 'universidad/';
+            break;
+        case '2':
+            $directory = $baseDir . 'areaConocimiento/';
+            break;
+        case '3':
+            $directory = $baseDir . 'genero/';
+            break;
+        case '4':
+            $directory = $baseDir . 'orientacionSexual/';
+            break;
+        case '5':
+            $directory = $baseDir . 'campus/';
+            break;
+        default:
+            die('Tipo no válido');
+    }
 
-// Crear el directorio si no existe
-if (!file_exists($directory)) {
-    mkdir($directory, 0777, true);
-}
+    // Crear el directorio si no existe
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777, true);
+    }
 
-// Procesar la imagen subida
-if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK) {
-    $fileTmpPath = $_FILES['imageUpload']['tmp_name'];
-    $fileExtension = pathinfo($_FILES['imageUpload']['name'], PATHINFO_EXTENSION);
+    // Procesar la imagen subida
+    if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['imageUpload']['tmp_name'];
+        $fileExtension = pathinfo($_FILES['imageUpload']['name'], PATHINFO_EXTENSION);
 
-    // Obtener el nombre del archivo del combo box
-    $itemName = $_POST['dynamic-select-name'] ?? ''; // Campo para el nombre del registro
-    $itemName = strtolower(str_replace(' ', '-', $itemName));
-    $newFileName = $itemName . '.' . $fileExtension;
-    $destination = $directory . $newFileName;
+        // Obtener el nombre del archivo del combo box
+        $itemName = $_POST['dynamic-select-name'] ?? ''; // Campo para el nombre del registro
+        $itemName = strtolower(str_replace(' ', '-', $itemName));
+        $newFileName = $itemName . '.' . $fileExtension;
+        $destination = $directory . $newFileName;
 
-    if (move_uploaded_file($fileTmpPath, $destination)) {
-        $imagen = new Imagen(0, $type, $selectedId, $newFileName, $directory, 1);
-        $result = $imagenBusiness->insertTbimagen($imagen);
+        if (move_uploaded_file($fileTmpPath, $destination)) {
+            $imagen = new Imagen(0, $type, $selectedId, $newFileName, $directory, 1);
+            $result = $imagenBusiness->insertTbimagen($imagen);
 
-        if ($result == 1) {
-            header("location: ../view/imagenView.php?success=inserted");
+            if ($result == 1) {
+                header("location: ../view/imagenView.php?success=inserted");
+            } else {
+                header("location: ../view/imagenView.php?error=dbError");
+            }
         } else {
-            header("location: ../view/imagenView.php?error=dbError");
+            echo 'Error al mover el archivo.';
         }
     } else {
-        echo 'Error al mover el archivo.';
+        echo 'No se ha subido ningún archivo o ha ocurrido un error.';
     }
-} else {
-    echo 'No se ha subido ningún archivo o ha ocurrido un error.';
-}
-
 } else if (isset($_POST['delete'])) {
     if (isset($_POST['id'])) {
 
         $id = $_POST['id'];
+        $imagen = $imagenBusiness->getTbImagenById($id);
 
-        $imagenBusiness = new ImagenBusiness();
-        $result = $imagenBusiness->deleteTbimagen($id);
+        if ($imagen) {
 
-        if ($result == 1) {
-            header("location: ../view/imagenView.php?success=deleted");
+            $filePath = $imagen->getTbImagenDirectorio() . '/' . $imagen->getTbImagenNombre();
+
+            if (file_exists($filePath)) {
+                if (unlink($filePath)) {
+                    $result = $imagenBusiness->deleteTbimagen($id);
+
+                    if ($result == 1) {
+                        header("Location: ../view/imagenView.php?success=deleted");
+                    } else {
+                        header("Location: ../view/imagenView.php?error=dbError");
+                    }
+                } else {
+                    header("Location: ../view/imagenView.php?error=fileDeleteError");
+                }
+            } else {
+                header("location: ../view/imagenView.php?error=error");
+            }
+        }
+    }
+} else if (isset($_POST['update'])) {
+    $id = $_POST['id'] ?? '';
+    $nombreArchivo = $_POST['nombreArchivo'] ?? '';
+    $nombreArchivoImagen = $_POST['dynamic-select-name-update'] ?? '';
+    $crudId = $_POST['idOptionsHidden'];
+    $registroId = $_POST['idRegistroHidden'];
+    $directorioActual = $_POST['directorioActualHidden'] ?? '';
+    $actualizarDirectorio = 0;
+
+    if ($registroId != 0 && !empty($_POST['idOptionHidden'])) {
+        $actualizarDirectorio = 1;
+    }
+    if (!empty($_POST['id']) && !empty($_POST['nombreArchivo'])) {
+        if ($actualizarDirectorio == 1) {
+            $imagenBusiness->uploadImage($id, $nombreArchivoImagen, $crudId, $registroId, $directorioActual);
         } else {
-            header("location: ../view/imagenView.php?error=dbError");
+            $imagenBusiness->uploadImage($id, $nombreArchivo, $crudId, $registroId, $directorioActual);
         }
     } else {
-        header("location: ../view/imagenView.php?error=error");
-    }
-
-} else if (isset($_POST['update'])) {
-        $id = $_POST['id'] ?? '';
-        $nombreArchivo = $_POST['nombreArchivo'] ?? '';
-        $nombreArchivoImagen = $_POST['dynamic-select-name-update'] ?? '';
-        $crudId = $_POST['idOptionsHidden'] ?? '';
-        $registroId = $_POST['idRegistroHidden'] ?? '';
-        $directorioActual = $_POST['directorioActualHidden'] ?? '';
-
-
-        echo "id = $id /";
-        echo "nombreArchivo = $nombreArchivo /";
-        echo "nombreArchivoImagen = $nombreArchivoImagen /";
-        echo "crudId = $crudId /";
-        echo "registroId = $registroId /";
-        echo "directorioActual = $directorioActual";
-
-    if (!empty($id) && !empty($nombreArchivoImagen) && !empty($crudId) && !empty($registroId)) {
-        $imagenBusiness->uploadImage($id, $nombreArchivoImagen, $crudId, $registroId, $directorioActual);
-    } else if (isset($id) && isset($nombreArchivo)) {
-        $imagenBusiness->uploadImage($id, $nombreArchivo, $crudId, $registroId, $directorioActual);
+        header("Location: ../view/imagenView.php?error=emptyField");
     }
 }
 ?>

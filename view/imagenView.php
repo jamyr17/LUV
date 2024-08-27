@@ -17,7 +17,7 @@ $imagenBusiness = new ImagenBusiness();
             select.innerHTML = '';
 
             const option = document.createElement('option');
-            option.value = "";
+            option.value = 0;
             option.text = "Seleccione una opción";
             select.add(option);
 
@@ -108,6 +108,7 @@ $imagenBusiness = new ImagenBusiness();
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicha imagen ya existe.",
+                    "fileDeleteError" => "no se borró el archivo en el server.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
