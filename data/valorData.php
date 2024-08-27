@@ -29,7 +29,6 @@ class ValorData extends Data
         $queryInsert = "INSERT INTO tbvalor (tbvalorid, tbvalornombre, tbcriterioid, tbvalorestado) 
                 VALUES ($nextId, '$nombre', '$criterioId', '$estado')";
 
-
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
 
@@ -85,29 +84,6 @@ class ValorData extends Data
         $conn->set_charset('utf8');
 
         $querySelect = "SELECT * FROM tbvalor WHERE tbvalorestado = 1";
-        $result = mysqli_query($conn, $querySelect);
-        mysqli_close($conn);
-
-        $valores = [];
-        while ($row = mysqli_fetch_array($result)) {
-            $valorActual = new Valor(
-                $row['tbvalorid'],
-                $row['tbvalornombre'],
-                $row['tbcriterioid'],
-                $row['tbvalorestado']
-            );
-            array_push($valores, $valorActual);
-        }
-
-        return $valores;
-    }
-
-    public function getAllTbValorByCriterioId($criterioId)
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
-
-        $querySelect = "SELECT * FROM tbvalor WHERE tbvalorestado = 1 AND tbcriterioid = '$criterioId'";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
 

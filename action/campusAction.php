@@ -46,7 +46,7 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/campusView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+}else if (isset($_POST['delete'])) {
 
     if (isset($_POST['idCampus'])) {
 
