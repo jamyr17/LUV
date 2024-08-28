@@ -1,0 +1,18 @@
+- [ ] Base de datos:
+	- [ ] Cambiar los datos de Región.
+	- [ ] Añadir usuario admin admin.
+	- [ ] Limpiar registros.
+	- [ ] Añadir registros coherentes.
+- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. 
+- [ ] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error.
+- [ ] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios.
+- [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol.
+- [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
+- [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. 
+- [ ] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo.
+- [ ] CRUD Campus
+	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
+	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
+- [ ] Usuario
+	- [ ] Poder subir imagen y guardarla en el server
+	- [ ] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
