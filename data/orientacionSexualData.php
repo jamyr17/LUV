@@ -135,6 +135,7 @@ class OrientacionSexualData extends Data
         
         return $count > 0;
     }
+    
     public function insertRequestTbOrientacionSexual($orientacionSexual)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -164,8 +165,6 @@ class OrientacionSexualData extends Data
         return $resultInsert;
     }
 
-    
-    
 
     public function nameExists($nombre, $excludeId = null)
     {

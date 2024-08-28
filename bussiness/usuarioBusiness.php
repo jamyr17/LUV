@@ -22,4 +22,12 @@ class UsuarioBusiness{
         return $this->usuarioData->getUsuarioId($nombreUsuario);
     }
 
+    public function existPerson($cedula){
+        return $this->usuarioData->existPerson($cedula);
+    }
+
+    public function existUsername($nombreUsuario){
+        return $this->usuarioData->existUsername($nombreUsuario);
+    }
+
 }

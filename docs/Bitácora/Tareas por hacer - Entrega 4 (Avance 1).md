@@ -12,7 +12,7 @@
 - [x] Lógica que procese las respuesta del perfil deseado para generar ponderados con los demás perfiles. (JAMYR y KEVIN)
 - [x] Mostar listado de los perfiles según valor de ponderación de forma descendiente. (KEVIN)
 - [x] Manejo correcto de sesiones. 
-- [ ] Validar existencia al crear nuevo usuario.
+- [x] Validar existencia al crear nuevo usuario.
 - [ ] Arreglar bug al entrar a modelar usuario deseado.
 - [x] Mostrar en qué coinciden los perfiles filtrados.
 - [ ] Limpiar BD.

@@ -15,9 +15,14 @@ $criterioBusiness = new CriterioBusiness();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUV</title>
     <script>
-        function actionConfirmation(mensaje) {
-            return confirm(mensaje);
-        }
+        function actionConfirmation(mensaje){
+      var response = confirm(mensaje)
+      if(response==true){
+        return true
+      }else{
+        return false
+      }
+    }
 
         function showMessage(mensaje) {
             alert(mensaje);
@@ -119,7 +124,7 @@ $criterioBusiness = new CriterioBusiness();
                         foreach ($valores as $valor) {
                             echo '<tr>';
                             echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
-                            echo '<td><form method="post" action="../action/valorAction.php">';
+                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
                             echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
                             echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($valor->getTbCriterioId()) . '">';
                             echo '<input type="text" name="nombre" value="' . htmlspecialchars($valor->getTbValorNombre()) . '" class="form-control" />';

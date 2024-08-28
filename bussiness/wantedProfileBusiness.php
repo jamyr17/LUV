@@ -1,6 +1,6 @@
 <?php
 
-include '../data/WantedProfileData.php';
+include '../data/wantedProfileData.php';
 
 class WantedProfileBussiness{
 

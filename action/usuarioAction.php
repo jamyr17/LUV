@@ -38,21 +38,27 @@ if(isset($_POST['newUser'])){
         if (strlen($cedula) > 0 && strlen($primerNombre > 0 && strlen($primerApellido) > 0 && strlen($nombreUsuario) > 0 && strlen($contrasena) > 0)) {
             if (!is_numeric($primerNombre) && !is_numeric($primerApellido) && !is_numeric($nombreUsuario)) {
                 
-                //$resultExist = $campusBusiness->exist($nombre);
+                $resultPersonExist = $usuarioBusiness->existPerson($cedula);
 
-                //if ($resultExist == 1) {
-                   // header("location: ../view/campusView.php?error=exist");
-                //} else {
-                    
-                    $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena);
+                if ($resultPersonExist == 1) {
+                   header("location: ../view/registerView.php?error=existPerson");
+                } else{
+                    $resultUsernameExist = $usuarioBusiness->existUsername($nombreUsuario);
 
-                    if ($result == 1) {
-                        header("location: ../view/login.php?success=inserted");
+                    if ($resultUsernameExist == 1) {
+                    header("location: ../view/registerView.php?error=existUsername");
                     } else {
-                        header("location: ../view/registerView.php?error=dbError");
-                    }
+                        
+                        $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena);
 
-                //}
+                        if ($result == 1) {
+                            header("location: ../view/login.php?success=inserted");
+                        } else {
+                            header("location: ../view/registerView.php?error=dbError");
+                        }
+
+                    }
+                }
                 
             } else {
                 header("location: ../view/registerView.php?error=numberFormat");

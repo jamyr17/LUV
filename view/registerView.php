@@ -16,7 +16,8 @@
             $_GET['error']=="emptyField" => "campo(s) vacío(s).",
             $_GET['error']=="numberFormat" => "ingreso de valores númericos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "que dicho nombre ya existe.",
+            $_GET['error']=="existPerson" => "que ya hay una cuenta asociada a su cédula.",
+            $_GET['error']=="existUsername" => "que dicho nombre de usuario ya existe.",
             default => "un problema inesperado.",
           };
         } 

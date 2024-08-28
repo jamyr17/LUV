@@ -115,7 +115,7 @@
         </thead>
         <tbody>
           <?php
-          include '../Bussiness/universidadCampusEspecializacionBussiness.php';
+          include '../bussiness/universidadCampusEspecializacionBussiness.php';
           $universidadCampusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
           $especializaciones = $universidadCampusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
           $mensajeActualizar = "¿Desea actualizar esta especialización?";

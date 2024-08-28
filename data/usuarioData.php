@@ -72,5 +72,46 @@ class UsuarioData extends Data{
         }
     }
     
+    public function existPerson($cedula,)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT COUNT(*) as count FROM tbpersona WHERE tbpersonacedula = ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $cedula);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
+    }
+
+    public function existUsername($nombreUsuario,)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT COUNT(*) as count FROM tbusuario WHERE tbusuarionombre = ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $nombreUsuario);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
+    }
 
 }
