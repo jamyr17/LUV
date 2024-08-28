@@ -6,7 +6,7 @@ if (isset($_POST['update'])) {
 
     if (isset($_POST['idCriterio']) && isset($_POST['nombre']) && isset($_POST['idValor'])) {
 
-        $idValor = isset($_POST['idValor']);
+        $idValor = $_POST['idValor']; // Aquí se corrige
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
 
