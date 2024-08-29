@@ -72,7 +72,7 @@ public function updateTbCampus($campus)
     $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
     $conn->set_charset('utf8');
 
-    $id = intval($campus->getTbCampusUniversidadId()); 
+    $id = intval($campus->getTbCampusId()); 
     $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
     $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
     $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());

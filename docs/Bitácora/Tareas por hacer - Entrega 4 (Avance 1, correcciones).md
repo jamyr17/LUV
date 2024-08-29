@@ -18,7 +18,7 @@
 	- [x] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
 - [x] Revisar redirecciones al login. (JAMYR)
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
-- [ ] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
+- [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
 - [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
 - [ ] Poder editar colectivos de un campus.
 - [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.

@@ -49,10 +49,8 @@ function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPor
 // procesar imagenes
 function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
     if (isset($_FILES[$nombreVariableForm])) {
-        echo "Archivo recibido.<br>";
         
         if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
-            echo "Sin errores en la carga del archivo.<br>";
             
             $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
             $fileExtension = pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION);
