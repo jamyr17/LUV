@@ -1,22 +1,22 @@
-- [ ] Base de datos:
+- [ ] Base de datos: (GERALD)
 	- [ ] Cambiar los datos de Región.
 	- [ ] Añadir usuario admin admin.
 	- [ ] Limpiar registros.
 	- [ ] Añadir registros coherentes.
-- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. 
-- [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error.
+- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD)
+- [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
 - [ ] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios.
-- [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol.
+- [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
-- [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. 
+- [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
 - [ ] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo.
-- [ ] CRUD Campus
+- [ ] CRUD Campus (GERALD)
 	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
 	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
 - [ ] Usuario
 	- [ ] Poder subir imagen y guardarla en el server
 	- [ ] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
-- [ ] Revisar redirecciones al login.
+- [x] Revisar redirecciones al login. (JAMYR)
 - [ ] Cambiar errores en nombres de clases de Bussiness.
 - [ ] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
 - [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
