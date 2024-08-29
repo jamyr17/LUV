@@ -5,7 +5,7 @@ session_start();
 
 class UsuarioData extends Data{
 
-    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena){
+    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena, $rutaImagen){
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -37,8 +37,8 @@ class UsuarioData extends Data{
         }
 
         // Consulta para insertar un nuevo registro en tbusuario
-        $queryInsert = "INSERT INTO tbusuario (tbusuarioid, tbpersonaid, tbusuarionombre, tbusuariocontrasena, tbusuarioestado, tbtipousuarioid) 
-                        VALUES ($nexUsuariotId, $nextPersonaId, '$nombreUsuario', '$contrasena', 1, 2)";
+        $queryInsert = "INSERT INTO tbusuario (tbusuarioid, tbpersonaid, tbusuarionombre, tbusuariocontrasena, tbusuarioestado, tbtipousuarioid, tbusuarioimagen) 
+                        VALUES ($nexUsuariotId, $nextPersonaId, '$nombreUsuario', '$contrasena', 1, 2, '$rutaImagen')";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
