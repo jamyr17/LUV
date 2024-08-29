@@ -120,9 +120,9 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/universidadCampusEspecializacionBussiness.php';
-          $universidadCampusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
-          $especializaciones = $universidadCampusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+          include '../business/universidadCampusEspecializacionBusiness.php';
+          $universidadCampusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
+          $especializaciones = $universidadCampusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
           $mensajeActualizar = "¿Desea actualizar esta especialización?";
           $mensajeEliminar = "¿Desea eliminar esta especialización?";
 

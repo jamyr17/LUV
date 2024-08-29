@@ -1,17 +1,17 @@
 <?php
 include "../action/sessionAdminAction.php";
-include '../bussiness/universidadBussiness.php';
-include '../bussiness/campusBussiness.php';
-include '../bussiness/universidadCampusRegionBussiness.php';
-include '../bussiness/universidadCampusColectivoBussiness.php';
-include '../bussiness/universidadCampusEspecializacionBussiness.php';
+include '../business/universidadBusiness.php';
+include '../business/campusBusiness.php';
+include '../business/universidadCampusRegionBusiness.php';
+include '../business/universidadCampusColectivoBusiness.php';
+include '../business/universidadCampusEspecializacionBusiness.php';
 include '../action/functions.php';
 
 $universidadBusiness = new UniversidadBusiness();
-$campusBussiness = new CampusBusiness();
-$campusRegionBussiness = new UniversidadCampusRegionBussiness();
-$campusColectivoBussiness = new UniversidadCampusColectivoBussiness();
-$campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness();
+$campusBusiness = new CampusBusiness();
+$campusRegionBusiness = new UniversidadCampusRegionBusiness();
+$campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+$campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +121,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="idRegion">Seleccione su región: </label>
                         <select name="idRegion" id="idRegion" class="form-control">
                             <?php
-                            $campusRegiones = $campusRegionBussiness->getAllTbUniversidadCampusRegion();
+                            $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
                             $valorRegionSeleccionado = isset($_SESSION['formCrearData']['idRegion']) ? $_SESSION['formCrearData']['idRegion'] : '';
                             if ($campusRegiones != null) {
                                 foreach ($campusRegiones as $campusRegion) {
@@ -135,7 +135,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="colectivos">Seleccione los colectivos: </label>
                         <select name="colectivos[]" id="colectivos" multiple class="form-control">
                             <?php
-                            $campusColectivos = $campusColectivoBussiness->getAllTbUniversidadCampusColectivo();
+                            $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
                             $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
                             if ($campusColectivos != null) {
                                 foreach ($campusColectivos as $campusColectivo) {
@@ -149,7 +149,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="idEspecializacion">Seleccione su especialización: </label>
                         <select name="idEspecializacion" id="idEspecializacion" class="form-control">
                             <?php
-                            $campusEspecializaciones = $campusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
                             $valorEspecializacionSeleccionado = isset($_SESSION['formCrearData']['idEspecializacion']) ? $_SESSION['formCrearData']['idEspecializacion'] : '';
                             if ($campusEspecializaciones != null) {
                                 foreach ($campusEspecializaciones as $campusEspecializacion) {
@@ -185,7 +185,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                 </thead>
                 <tbody>
                     <?php
-                    $campus = $campusBussiness->getAllTbCampus();
+                    $campus = $campusBusiness->getAllTbCampus();
                     $mensajeActualizar = "¿Desea actualizar este campus?";
                     $mensajeEliminar = "¿Desea eliminar este campus?";
                     if ($campus != null) {
@@ -214,7 +214,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                             // Select box para 'Región'
                             echo '<td>';
                             echo '<select name="idRegion" class="form-control">';
-                            $campusRegiones = $campusRegionBussiness->getAllTbUniversidadCampusRegion();
+                            $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
                             
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
@@ -233,7 +233,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                             // Select box para 'Especialización'
                             echo '<td>';
                             echo '<select name="idEspecializacion" class="form-control">';
-                            $campusEspecializaciones = $campusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
                             
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {

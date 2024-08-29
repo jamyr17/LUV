@@ -171,7 +171,7 @@ public function updateTbCampus($campus)
 
         while ($row = mysqli_fetch_array($result)) {
             echo '<tr>';
-            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">';
+            echo '<form method="post" enctype="multipart/form-data" action="../business/campusAction.php" class="campus-form">';
             echo '<input type="hidden" name="idCampus" value="' . $row['tbuniversidadcampusid'] . '">';
             echo '<input type="hidden" name="idUniversidad" value="' . $row['tbuniversidadid'] . '">';
             echo '<td>' . $row['tbuniversidadcampusid'] . '</td>';

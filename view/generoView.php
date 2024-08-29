@@ -121,7 +121,7 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/generoBusiness.php';
+          include '../business/generoBusiness.php';
           $generoBusiness = new GeneroBusiness();
           $generos = $generoBusiness->getAllTbGenero();
           $mensajeActualizar = "¿Desea actualizar este género?";

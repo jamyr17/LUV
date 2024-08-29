@@ -1,6 +1,6 @@
 <?php
 
-include_once '../bussiness/valorBusiness.php'; 
+include_once '../business/valorBusiness.php'; 
 include 'functions.php';
 
 if (isset($_POST['update'])) {

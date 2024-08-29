@@ -1,7 +1,7 @@
 <?php
 
-include_once "../bussiness/personalProfileBusiness.php";
-include_once "../bussiness/usuarioBusiness.php";
+include_once "../business/personalProfileBusiness.php";
+include_once "../business/usuarioBusiness.php";
 $personalProfileBusiness = new PersonalProfileBusiness();
 $usuarioBusiness = new UsuarioBusiness();
 

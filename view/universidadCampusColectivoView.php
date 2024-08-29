@@ -117,9 +117,9 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/universidadCampusColectivoBussiness.php';
-          $universidadCampusColectivoBussiness = new universidadCampusColectivoBussiness();
-          $universidadCampusColectivos = $universidadCampusColectivoBussiness->getAllTbUniversidadCampusColectivo();
+          include '../business/universidadCampusColectivoBusiness.php';
+          $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+          $universidadCampusColectivos = $universidadCampusColectivoBusiness->getAllTbUniversidadCampusColectivo();
           $mensajeActualizar = "¿Desea actualizar este campus colectivo?";
           $mensajeEliminar = "¿Desea eliminar este campus colectivo?";
 

@@ -13,10 +13,12 @@
 - [ ] CRUD Campus (GERALD)
 	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
 	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
-- [ ] Usuario
+- [ ] Usuario (JAMYR)
 	- [ ] Poder subir imagen y guardarla en el server
 	- [ ] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
 - [x] Revisar redirecciones al login. (JAMYR)
-- [ ] Cambiar errores en nombres de clases de Bussiness.
+- [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
 - [ ] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
 - [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
+- [ ] Poder editar colectivos de un campus.
+- [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include '../bussiness/usuarioBusiness.php';
+include '../business/usuarioBusiness.php';
 include 'functions.php';
 
 $usuarioBusiness = new UsuarioBusiness();

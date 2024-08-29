@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/universidadCampusEspecializacionBussiness.php';
+include '../business/universidadCampusEspecializacionBusiness.php';
 include 'functions.php';
 
 if (isset($_POST['update'])) {
@@ -13,9 +13,9 @@ if (isset($_POST['update'])) {
         
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
-                $campusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
+                $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
 
-                $resultExist = $campusEspecializacionBussiness->nameExist($nombre, $idCampusEspecializacion);
+                $resultExist = $campusEspecializacionBusiness->nameExist($nombre, $idCampusEspecializacion);
 
                 if ($resultExist) {
                     guardarFormData();
@@ -23,7 +23,7 @@ if (isset($_POST['update'])) {
                 } else {
                     $universidadCampusEspecializacion = new universidadCampusEspecializacion($idCampusEspecializacion, $nombre, $descripcion, 1);
 
-                    $result = $campusEspecializacionBussiness->updateTbUniversidadCampusEspecializacion($universidadCampusEspecializacion);
+                    $result = $campusEspecializacionBusiness->updateTbUniversidadCampusEspecializacion($universidadCampusEspecializacion);
 
                     if ($result) {
                         header("location: ../view/universidadCampusEspecializacionView.php?success=updated");
@@ -50,8 +50,8 @@ if (isset($_POST['update'])) {
 
         $idCampusEspecializacion = $_POST['idCampusEspecializacion'];
 
-        $campusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
-        $result = $campusEspecializacionBussiness->deleteTbUniversidadCampusEspecializacion($idCampusEspecializacion);
+        $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
+        $result = $campusEspecializacionBusiness->deleteTbUniversidadCampusEspecializacion($idCampusEspecializacion);
 
         if ($result) {
             header("location: ../view/universidadCampusEspecializacionView.php?success=deleted");
@@ -70,9 +70,9 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
-                $campusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
+                $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
 
-                $resultExist = $campusEspecializacionBussiness->exist($nombre);
+                $resultExist = $campusEspecializacionBusiness->exist($nombre);
 
                 if ($resultExist) {
                     guardarFormData();
@@ -80,7 +80,7 @@ if (isset($_POST['update'])) {
                 } else {
                     $universidadCampusEspecializacion = new universidadCampusEspecializacion(0, $nombre, $descripcion, 1);
     
-                    $result = $campusEspecializacionBussiness->insertTbUniversidadCampusEspecializacion($universidadCampusEspecializacion);
+                    $result = $campusEspecializacionBusiness->insertTbUniversidadCampusEspecializacion($universidadCampusEspecializacion);
     
                     if ($result) {
                         header("location: ../view/universidadCampusEspecializacionView.php?success=inserted");

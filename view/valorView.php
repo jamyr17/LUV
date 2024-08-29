@@ -1,7 +1,7 @@
 <?php
 include "../action/sessionAdminAction.php";
-include '../bussiness/valorBusiness.php';
-include '../bussiness/criterioBusiness.php';
+include '../business/valorBusiness.php';
+include '../business/criterioBusiness.php';
 include '../action/functions.php';
 
 $valorBusiness = new ValorBusiness();

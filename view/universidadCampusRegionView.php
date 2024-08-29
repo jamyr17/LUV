@@ -116,8 +116,8 @@
         </thead>
         <tbody>
           <?php
-          include_once '../bussiness/universidadCampusRegionBussiness.php';
-          $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+          include_once '../business/universidadCampusRegionBusiness.php';
+          $campusRegionBusiness = new UniversidadCampusRegionBusiness();
           $campusRegions = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
           $mensajeActualizar = "¿Desea actualizar esta región?";
           $mensajeEliminar = "¿Desea eliminar esta región?";
