@@ -1,5 +1,6 @@
 <?php
   include "../action/sessionAdminAction.php";
+  include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -80,15 +81,19 @@
 
                 <div class="row">
                     <div class="col">
+
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre del género" />
+                        <?php generarCampoTexto('nombre','formCrearData','Nombre del género','') ?>
+
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col">
+
                         <label for="descripcion" class="form-label">Descripción: </label>
-                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción del género" />
+                        <?php generarCampoTexto('descripcion','formCrearData','Descripción del género','') ?>
+
                     </div>
                 </div>
                 
@@ -128,8 +133,22 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/generoAction.php">';
               echo '<input type="hidden" name="idGenero" value="' . htmlspecialchars($genero->getTbGeneroId()) . '">';
               echo '<td>' . htmlspecialchars($genero->getTbGeneroId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($genero->getTbGeneroNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($genero->getTbGeneroDescripcion()) . '" class="form-control" /></td>';
+
+              echo '<td>';
+              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idGenero'] == $genero->getTbGeneroId()) {
+                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                echo '</td>';
+              } else {
+                generarCampoTexto('nombre', '', '', $genero->getTbGeneroNombre());
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', '', '', $genero->getTbGeneroDescripcion());
+                echo '</td>';
+              }
+
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -149,4 +168,7 @@
 <footer>
 </footer>
 
+<?php 
+  eliminarFormData();
+?>
 </html>

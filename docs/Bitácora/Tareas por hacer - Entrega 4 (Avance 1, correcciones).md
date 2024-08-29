@@ -4,7 +4,7 @@
 	- [ ] Limpiar registros.
 	- [ ] Añadir registros coherentes.
 - [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. 
-- [ ] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error.
+- [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error.
 - [ ] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios.
 - [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol.
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
@@ -16,3 +16,7 @@
 - [ ] Usuario
 	- [ ] Poder subir imagen y guardarla en el server
 	- [ ] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
+- [ ] Revisar redirecciones al login.
+- [ ] Cambiar errores en nombres de clases de Bussiness.
+- [ ] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
+- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 

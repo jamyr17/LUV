@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/universidadCampusRegionBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -17,6 +18,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusRegionBusiness->nameExist($nombre, $idUniversidadCampusRegion);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusRegionView.php?error=exist");
                 } else {
                     $campusRegion = new UniversidadCampusRegion($idUniversidadCampusRegion, $nombre, $descripcion, 1);
@@ -26,16 +28,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadCampusRegionView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusRegionView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusRegionView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusRegionView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusRegionView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -69,6 +75,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusRegionBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusRegionView.php?error=exist");
                 } else {
                     $campusRegion = new UniversidadCampusRegion(0, $nombre, $descripcion, 1);
@@ -78,17 +85,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadCampusRegionView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusRegionView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusRegionView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusRegionView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusRegionView.php?error=error");
     }
 }
-?>

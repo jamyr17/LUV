@@ -1,6 +1,7 @@
 <?php
 
-include_once '../bussiness/valorBusiness.php'; // Incluye el archivo de negocios correspondiente
+include_once '../bussiness/valorBusiness.php'; 
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -17,6 +18,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $valorBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("Location: ../view/valorView.php?error=exist");
                 } else {
                     $valor = new Valor($idValor, $nombre, $idCriterio, 1); // Estado 1 = Activo
@@ -25,16 +27,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("Location: ../view/valorView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("Location: ../view/valorView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("Location: ../view/valorView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("Location: ../view/valorView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("Location: ../view/valorView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -69,6 +75,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $valorBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("Location: ../view/valorView.php?error=exist");
                 } else {
                     $valor = new Valor(0, $nombre, $idCriterio, 1); // Estado 1 = Activo
@@ -77,16 +84,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("Location: ../view/valorView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("Location: ../view/valorView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("Location: ../view/valorView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("Location: ../view/valorView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("Location: ../view/valorView.php?error=error");
     }
 } else if(isset($_GET['idCriterio'])) {

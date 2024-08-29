@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/universidadCampusEspecializacionBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -17,6 +18,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusEspecializacionBussiness->nameExist($nombre, $idCampusEspecializacion);
 
                 if ($resultExist) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusEspecializacionView.php?error=exist");
                 } else {
                     $universidadCampusEspecializacion = new universidadCampusEspecializacion($idCampusEspecializacion, $nombre, $descripcion, 1);
@@ -26,16 +28,20 @@ if (isset($_POST['update'])) {
                     if ($result) {
                         header("location: ../view/universidadCampusEspecializacionView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusEspecializacionView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusEspecializacionView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusEspecializacionView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusEspecializacionView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -69,6 +75,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusEspecializacionBussiness->exist($nombre);
 
                 if ($resultExist) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusEspecializacionView.php?error=exist");
                 } else {
                     $universidadCampusEspecializacion = new universidadCampusEspecializacion(0, $nombre, $descripcion, 1);
@@ -78,16 +85,20 @@ if (isset($_POST['update'])) {
                     if ($result) {
                         header("location: ../view/universidadCampusEspecializacionView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusEspecializacionView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusEspecializacionView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusEspecializacionView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusEspecializacionView.php?error=error");
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/criterioBusiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -16,6 +17,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $criterioBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/criterioView.php?error=exist");
                 } else {
                     $criterio = new Criterio($idCriterio, $nombre, 1);
@@ -25,16 +27,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/criterioView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/criterioView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/criterioView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/criterioView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/criterioView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -67,6 +73,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $criterioBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/criterioView.php?error=exist");
                 } else {
                     $criterio = new Criterio(0, $nombre, 1);
@@ -76,17 +83,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/criterioView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/criterioView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/criterioView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/criterioView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/criterioView.php?error=error");
     }
 }
-?>

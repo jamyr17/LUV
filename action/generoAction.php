@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/generoBusiness.php';
+include '../action/functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -17,6 +18,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $generoBusiness->nameExist($nombre, $idGenero);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/generoView.php?error=exist");
                 } else {
                     $genero = new Genero($idGenero, $nombre, $descripcion, 1);
@@ -26,16 +28,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/generoView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/generoView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/generoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/generoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/generoView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -69,6 +75,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $generoBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/generoView.php?error=exist");
                 } else {
                     $genero = new Genero(0, $nombre, $descripcion, 1);
@@ -78,17 +85,20 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/generoView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/generoView.php?error=dbError");
                     }
                 }
             } else {
+                guardarFormData();
                 header("location: ../view/generoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/generoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/generoView.php?error=error");
     }
 }
-?>

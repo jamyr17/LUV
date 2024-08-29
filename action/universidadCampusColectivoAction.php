@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/universidadCampusColectivoBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -18,6 +19,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $universidadCampusColectivoBussiness->nameExist($nombre, $idUniversidadCampusColectivo);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusColectivoView.php?error=exist");
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo($idUniversidadCampusColectivo, $nombre, $descripcion, 1);
@@ -27,18 +29,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadCampusColectivoView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusColectivoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusColectivoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusColectivoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusColectivoView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -73,6 +79,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $universidadCampusColectivoBussiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadCampusColectivoView.php?error=exist");
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, 1);
@@ -82,20 +89,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadCampusColectivoView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadCampusColectivoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/universidadCampusColectivoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadCampusColectivoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadCampusColectivoView.php?error=error");
     }
 }
-
-?>

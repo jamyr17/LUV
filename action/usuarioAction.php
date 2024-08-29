@@ -1,7 +1,11 @@
 <?php
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 include '../bussiness/usuarioBusiness.php';
+include 'functions.php';
 
 $usuarioBusiness = new UsuarioBusiness();
 
@@ -41,12 +45,14 @@ if(isset($_POST['newUser'])){
                 $resultPersonExist = $usuarioBusiness->existPerson($cedula);
 
                 if ($resultPersonExist == 1) {
-                   header("location: ../view/registerView.php?error=existPerson");
+                    guardarFormData();
+                    header("location: ../view/registerView.php?error=existPerson");
                 } else{
                     $resultUsernameExist = $usuarioBusiness->existUsername($nombreUsuario);
 
                     if ($resultUsernameExist == 1) {
-                    header("location: ../view/registerView.php?error=existUsername");
+                        guardarFormData();
+                        header("location: ../view/registerView.php?error=existUsername");
                     } else {
                         
                         $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena);
@@ -54,6 +60,7 @@ if(isset($_POST['newUser'])){
                         if ($result == 1) {
                             header("location: ../view/login.php?success=inserted");
                         } else {
+                            guardarFormData();
                             header("location: ../view/registerView.php?error=dbError");
                         }
 
@@ -61,9 +68,11 @@ if(isset($_POST['newUser'])){
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/registerView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/registerView.php?error=emptyField");
         }
 

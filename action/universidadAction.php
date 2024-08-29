@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/universidadBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -17,6 +18,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $universidadBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadView.php?error=exist");
                 } else {
                     $universidad = new Universidad($idUniversidad, $nombre, 1);
@@ -26,19 +28,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/universidadView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadView.php?error=emptyField");
         }
     } else {
-        
+        guardarFormData();
         header("location: ../view/universidadView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
@@ -73,6 +78,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $universidadBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/universidadView.php?error=exist");
                 } else {
                     $universidad = new Universidad(0, $nombre, 1);
@@ -82,18 +88,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/universidadView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/universidadView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/universidadView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/universidadView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/universidadView.php?error=error");
     }
 }

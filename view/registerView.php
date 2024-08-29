@@ -1,3 +1,7 @@
+<?php 
+  include '../action/functions.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,15 +38,25 @@
             <h3>Ingrese sus datos</h3>
 
             <form method="post" action="../action/usuarioAction.php">
-                <input required type="text" name="cedula" id="cedula" placeholder="Ingrese su número de cédula" /><br>
-                <input required type="text" name="primerNombre" id="primerNombre" placeholder="Ingrese su primer nombre" /><br>
-                <input required type="text" name="primerApellido" id="primerNombre" placeholder="Ingrese su primer apellido" /><br>
-                <input required type="text" name="nombreUsuario" id="nombreUsuario" placeholder="Ingrese un nombre de usuario" /><br>
-                <input required type="password" name="contrasena" id="contrasena" placeholder="Ingrese una contraseña" /><br>
 
-                <div>
-                    <button type="submit" class="btn btn-success" name="newUser" id="newUser">Registrarse</button>
-                </div>
+              <label for="nombre" class="form-label">Cédula: </label>
+              <?php generarCampoTexto('cedula','formCrearData','Ingrese su número de cédula','') ?><br>
+
+              <label for="nombre" class="form-label">Primer nombre: </label>
+              <?php generarCampoTexto('primerNombre','formCrearData','Ingrese su primer nombre','') ?><br>
+
+              <label for="nombre" class="form-label">Primer apellido: </label>
+              <?php generarCampoTexto('primerApellido','formCrearData','Ingrese su primer apellido','') ?><br>
+
+              <label for="nombre" class="form-label">Nombre de usuario: </label>
+              <?php generarCampoTexto('nombreUsuario','formCrearData','Ingrese un nombre de usuario','') ?><br>
+
+              <label for="nombre" class="form-label">Contraseña: </label>
+              <?php generarCampoContrasena('contrasena','formCrearData', 'Ingrese su contraseña','') ?><br>
+
+              <div>
+                  <button type="submit" class="btn btn-success" name="newUser" id="newUser">Registrarse</button>
+              </div>
             </form>
         </div>
 
@@ -53,4 +67,7 @@
 <footer>
 </footer>
 
+<?php 
+  eliminarFormData();
+?>
 </html>

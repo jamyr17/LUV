@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/areaConocimientoBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -18,6 +19,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $areaConocimientoBusiness->nameExist($nombre, $idAreaConocimiento);
 
                 if ($resultExist) {
+                    guardarFormData();
                     header("location: ../view/areaConocimientoView.php?error=exist");
                 } else {
                     $areaConocimiento = new AreaConocimiento($idAreaConocimiento, $nombre, $descripcion, 1);
@@ -27,18 +29,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/areaConocimientoView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/areaConocimientoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/areaConocimientoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/areaConocimientoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/areaConocimientoView.php?error=error");
     }
 }else if (isset($_POST['delete'])) {
@@ -74,6 +80,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $areaConocimientoBussiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/areaConocimientoView.php?error=exist");
                 } else {
                     $areaConocimiento = new AreaConocimiento(0, $nombre, $descripcion, 1);
@@ -83,19 +90,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/areaConocimientoView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/areaConocimientoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/areaConocimientoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/areaConocimientoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/areaConocimientoView.php?error=error");
     }
 }
-?>

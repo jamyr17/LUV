@@ -1,6 +1,7 @@
 <?php
 
 include '../bussiness/campusBussiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -23,6 +24,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/campusView.php?error=exist");
                 } else {
                     $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, 1, $latitud, $longitud, $idEspecializacion);
@@ -31,18 +33,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/campusView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/campusView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/campusView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/campusView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/campusView.php?error=error");
     }
 }else if (isset($_POST['delete'])) {
@@ -84,6 +90,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $campusBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/campusView.php?error=exist");
                 } else {
                     $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $idEspecializacion, $colectivos);
@@ -92,18 +99,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/campusView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/campusView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/campusView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/campusView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/campusView.php?error=error");
     }
 } else if(isset($_GET['idU'])) { 
