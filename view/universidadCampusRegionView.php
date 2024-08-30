@@ -1,5 +1,6 @@
 <?php
   include "../action/sessionAdminAction.php";
+  include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -75,15 +76,19 @@
 
                 <div class="row">
                     <div class="col">
-                        <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de la región" />
+
+                      <label for="nombre" class="form-label">Nombre: </label>
+                      <?php generarCampoTexto('nombre','formCrearData','Nombre de la región','') ?>
+
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col">
-                        <label for="descripcion" class="form-label">Descripción: </label>
-                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción de la región" />
+
+                    <label for="descripcion" class="form-label">Descripción: </label>
+                    <?php generarCampoTexto('descripcion','formCrearData','Descripción de la región','') ?>
+
                     </div>
                 </div>
                 
@@ -111,8 +116,8 @@
         </thead>
         <tbody>
           <?php
-          include_once '../bussiness/universidadCampusRegionBussiness.php';
-          $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+          include_once '../business/universidadCampusRegionBusiness.php';
+          $campusRegionBusiness = new UniversidadCampusRegionBusiness();
           $campusRegions = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
           $mensajeActualizar = "¿Desea actualizar esta región?";
           $mensajeEliminar = "¿Desea eliminar esta región?";
@@ -123,8 +128,22 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php">';
               echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '">';
               echo '<td>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionDescripcion()) . '" class="form-control" /></td>';
+             
+              echo '<td>';
+              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidadCampusRegion'] == $campusRegion->getTbUniversidadCampusRegionId()) {
+                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                echo '</td>';
+              } else {
+                generarCampoTexto('nombre', '', '', $campusRegion->getTbUniversidadCampusRegionNombre());
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', '', '', $campusRegion->getTbUniversidadCampusRegionDescripcion());
+                echo '</td>';
+              }
+
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";

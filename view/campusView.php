@@ -1,16 +1,17 @@
 <?php
 include "../action/sessionAdminAction.php";
-include '../bussiness/universidadBussiness.php';
-include '../bussiness/campusBussiness.php';
-include '../bussiness/universidadCampusRegionBussiness.php';
-include '../bussiness/universidadCampusColectivoBussiness.php';
-include '../bussiness/universidadCampusEspecializacionBussiness.php';
+include '../business/universidadBusiness.php';
+include '../business/campusBusiness.php';
+include '../business/universidadCampusRegionBusiness.php';
+include '../business/universidadCampusColectivoBusiness.php';
+include '../business/universidadCampusEspecializacionBusiness.php';
+include '../action/functions.php';
 
 $universidadBusiness = new UniversidadBusiness();
-$campusBussiness = new CampusBusiness();
-$campusRegionBussiness = new UniversidadCampusRegionBussiness();
-$campusColectivoBussiness = new UniversidadCampusColectivoBussiness();
-$campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness();
+$campusBusiness = new CampusBusiness();
+$campusRegionBusiness = new UniversidadCampusRegionBusiness();
+$campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+$campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +20,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Management</title>
+    <title>Campus</title>
     <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
     <script>
         function actionConfirmation(mensaje) {
@@ -85,11 +86,13 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <select id="idUniversidad" name="idUniversidad" class="form-control">
                             <?php
                             $universidades = $universidadBusiness->getAllTbUniversidad();
+                            $valorUniversidadSeleccionado = isset($_SESSION['formCrearData']['idUniversidad']) ? $_SESSION['formCrearData']['idUniversidad'] : '';
                             if ($universidades != null) {
                                 foreach ($universidades as $universidad) {
+                                    $selected = ($universidad->getTbUniversidadId() == $valorUniversidadSeleccionado) ? 'selected' : '';
                                     $id = htmlspecialchars($universidad->getTbUniversidadId());
                                     $nombre = htmlspecialchars($universidad->getTbUniversidadNombre());
-                                    echo '<option value="' . $id . '">' . $nombre . '</option>';
+                                    echo '<option value="' . $id . '" ' . $selected . '>' . $nombre . '</option>';
                                 }
                             }
                             ?>
@@ -97,15 +100,19 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
 
                         <div class="row">
                             <div class="col">
+
                                 <label for="nombre" class="form-label">Nombre: </label>
-                                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Campus Omar Dengo" />
+                                <?php generarCampoTexto('nombre','formCrearData','Campus Omar Dengo','') ?>
+
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col">
+
                                 <label for="direccion" class="form-label">Dirección: </label>
-                                <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Ingresa el nombre de una sede..." />
+                                <?php generarCampoTexto('direccion','formCrearData','Ingresa el nombre de una sede...','') ?>
+
                                 <input type="hidden" id="latitud" name="latitud"/>
                                 <input type="hidden" id="longitud" name="longitud"/>
                             </div>
@@ -114,10 +121,12 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="idRegion">Seleccione su región: </label>
                         <select name="idRegion" id="idRegion" class="form-control">
                             <?php
-                            $campusRegiones = $campusRegionBussiness->getAllTbUniversidadCampusRegion();
+                            $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
+                            $valorRegionSeleccionado = isset($_SESSION['formCrearData']['idRegion']) ? $_SESSION['formCrearData']['idRegion'] : '';
                             if ($campusRegiones != null) {
                                 foreach ($campusRegiones as $campusRegion) {
-                                    echo '<option value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '"> ' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '</option>';
+                                    $selected = ($campusRegion->getTbUniversidadCampusRegionId() == $valorRegionSeleccionado) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '" ' . $selected . '> ' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '</option>';
                                 }
                             }
                             ?>
@@ -126,10 +135,12 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="colectivos">Seleccione los colectivos: </label>
                         <select name="colectivos[]" id="colectivos" multiple class="form-control">
                             <?php
-                            $campusColectivos = $campusColectivoBussiness->getAllTbUniversidadCampusColectivo();
+                            $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
+                            $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
                             if ($campusColectivos != null) {
                                 foreach ($campusColectivos as $campusColectivo) {
-                                    echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '">' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
+                                    $selected = in_array($campusColectivo->getTbUniversidadCampusColectivoId(), $valoresSeleccionados) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
                                 }
                             }
                             ?>
@@ -138,10 +149,12 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                         <label for="idEspecializacion">Seleccione su especialización: </label>
                         <select name="idEspecializacion" id="idEspecializacion" class="form-control">
                             <?php
-                            $campusEspecializaciones = $campusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
+                            $valorEspecializacionSeleccionado = isset($_SESSION['formCrearData']['idEspecializacion']) ? $_SESSION['formCrearData']['idEspecializacion'] : '';
                             if ($campusEspecializaciones != null) {
                                 foreach ($campusEspecializaciones as $campusEspecializacion) {
-                                    echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionId()) . '">' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionNombre()) . '</option>';
+                                    $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $valorEspecializacionSeleccionado) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionId()) . '" ' . $selected . '>' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionNombre()) . '</option>';
                                 }
                             }
                             ?>
@@ -172,7 +185,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                 </thead>
                 <tbody>
                     <?php
-                    $campus = $campusBussiness->getAllTbCampus();
+                    $campus = $campusBusiness->getAllTbCampus();
                     $mensajeActualizar = "¿Desea actualizar este campus?";
                     $mensajeEliminar = "¿Desea eliminar este campus?";
                     if ($campus != null) {
@@ -182,27 +195,55 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
                             echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($camp->getTbCampusId()) . '">';
                             echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($camp->getTbCampusUniversidadId()) . '">';
                             echo '<td>' . htmlspecialchars($camp->getTbCampusId()) . '</td>';
-                            echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($camp->getTbCampusNombre()) . '" class="form-control" /></td>';
-                            echo '<td><input type="text" name="direccion" id="direccion" value="' . htmlspecialchars($camp->getTbCampusDireccion()) . '" class="form-control" /></td>';
-                            
 
-                            // Región select box
+                            echo '<td>';
+                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
+                                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                                echo '</td>';
+                                echo '<td>';
+                                generarCampoTexto('direccion', 'formActualizarData', '', '');
+                                echo '</td>';
+                            } else {
+                                generarCampoTexto('nombre', '', '', $camp->getTbCampusNombre());
+                                echo '</td>';
+                                echo '<td>';
+                                generarCampoTexto('direccion', '', '', $camp->getTbCampusDireccion());
+                                echo '</td>';
+                            }
+
+                            // Select box para 'Región'
                             echo '<td>';
                             echo '<select name="idRegion" class="form-control">';
-                            $campusRegiones = $campusRegionBussiness->getAllTbUniversidadCampusRegion();
+                            $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
+                            
+                            // Comprobar si hay datos de sesión para el campus actual
+                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
+                                $idRegionSeleccionada = $_SESSION['formActualizarData']['idRegion'];
+                            } else {
+                                $idRegionSeleccionada = $camp->getTbCampusRegionId();
+                            }
+
                             foreach ($campusRegiones as $campusRegion) {
-                                $selected = ($campusRegion->getTbUniversidadCampusRegionId() == $camp->getTbCampusRegionId()) ? 'selected' : '';
+                                $selected = ($campusRegion->getTbUniversidadCampusRegionId() == $idRegionSeleccionada) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '" ' . $selected . '>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionNombre()) . '</option>';
                             }
                             echo '</select>';
                             echo '</td>';
 
-                            // Especialización select box
+                            // Select box para 'Especialización'
                             echo '<td>';
                             echo '<select name="idEspecializacion" class="form-control">';
-                            $campusEspecializaciones = $campusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
+                            
+                            // Comprobar si hay datos de sesión para el campus actual
+                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
+                                $idEspecializacionSeleccionada = $_SESSION['formActualizarData']['idEspecializacion'];
+                            } else {
+                                $idEspecializacionSeleccionada = $camp->getTbCampusEspecializacionId();
+                            }
+
                             foreach ($campusEspecializaciones as $campusEspecializacion) {
-                                $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $camp->getTbCampusEspecializacionId()) ? 'selected' : '';
+                                $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $idEspecializacionSeleccionada) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionId()) . '" ' . $selected . '>' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionNombre()) . '</option>';
                             }
                             echo '</select>';
@@ -229,4 +270,7 @@ $campusEspecializacionBussiness = new UniversidadCampusEspecializacionBussiness(
     </div>
 </body>
 
+<?php 
+    eliminarFormData();
+?>
 </html>

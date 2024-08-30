@@ -1,7 +1,11 @@
 <?php
-session_start();
 
-include '../bussiness/usuarioBusiness.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+include '../business/usuarioBusiness.php';
+include 'functions.php';
 
 $usuarioBusiness = new UsuarioBusiness();
 
@@ -35,25 +39,41 @@ if(isset($_POST['newUser'])){
         $nombreUsuario = $_POST['nombreUsuario'];
         $contrasena = $_POST['contrasena'];
 
-        if (strlen($cedula) > 0 && strlen($primerNombre > 0 && strlen($primerApellido) > 0 && strlen($nombreUsuario) > 0 && strlen($contrasena) > 0)) {
+        if (strlen($cedula) > 0 && strlen($primerNombre) > 0 && strlen($primerApellido) > 0 && strlen($nombreUsuario) > 0 && strlen($contrasena) > 0) {
             if (!is_numeric($primerNombre) && !is_numeric($primerApellido) && !is_numeric($nombreUsuario)) {
                 
                 $resultPersonExist = $usuarioBusiness->existPerson($cedula);
 
                 if ($resultPersonExist == 1) {
-                   header("location: ../view/registerView.php?error=existPerson");
+                    guardarFormData();
+                    header("location: ../view/registerView.php?error=existPerson");
                 } else{
                     $resultUsernameExist = $usuarioBusiness->existUsername($nombreUsuario);
 
                     if ($resultUsernameExist == 1) {
-                    header("location: ../view/registerView.php?error=existUsername");
+                        guardarFormData();
+                        header("location: ../view/registerView.php?error=existUsername");
                     } else {
-                        
-                        $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena);
+                        if(isset($_FILES['pfp'])){
+                            $directorioImagenes = '../resources/img/profile/';
+                            $nombreArchivoImagen = strtolower(str_replace(' ', '-', $nombreUsuario));
+
+                            $resultImagen = procesarImagen('pfp', $directorioImagenes, $nombreArchivoImagen);
+
+                            if (!$resultImagen) {
+                                guardarFormData();
+                                header("location: ../view/registerView.php?error=imageUpload");
+                                exit();
+                            }
+
+                        }
+
+                        $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena, $resultImagen);
 
                         if ($result == 1) {
                             header("location: ../view/login.php?success=inserted");
                         } else {
+                            guardarFormData();
                             header("location: ../view/registerView.php?error=dbError");
                         }
 
@@ -61,9 +81,11 @@ if(isset($_POST['newUser'])){
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/registerView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/registerView.php?error=emptyField");
         }
 

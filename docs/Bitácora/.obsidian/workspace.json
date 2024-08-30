@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "ea6822e07802f8ef",
+            "id": "3a69c412eed50d33",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
+                "file": "Tareas por hacer - Entrega 4 (Avance 1, correcciones).md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
+                "file": "Tareas por hacer - Entrega 4 (Avance 1, correcciones).md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md",
+                "file": "Tareas por hacer - Entrega 4 (Avance 1, correcciones).md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Tareas por hacer - Entrega 4 (Avance 1).md"
+                "file": "Tareas por hacer - Entrega 4 (Avance 1, correcciones).md"
               }
             }
           }
@@ -146,13 +146,15 @@
       "command-palette:Abrir paleta de comandos": false
     }
   },
-  "active": "ea6822e07802f8ef",
+  "active": "3a69c412eed50d33",
   "lastOpenFiles": [
-    "Tareas por hacer - Entrega 4 (Avance 1).md",
-    "Tareas por hacer - Entrega 3.md",
+    "27-08-2024 revisión 4.md",
+    "Tareas por hacer - Entrega 4 (Avance 1, correcciones).md",
     "20-08-2024 revisión 3.md",
     "13-08-2024 revisión 2.md",
     "30-07-2024 revisión 1.md",
+    "Tareas por hacer - Entrega 4 (Avance 1).md",
+    "Tareas por hacer - Entrega 3.md",
     "Tareas por hacer.md",
     "Bitácora General.md",
     "Bienvenido.md"

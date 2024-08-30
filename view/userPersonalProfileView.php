@@ -1,9 +1,8 @@
 <?php
-  include "../action/sessionUserAction.php";
+include "../action/sessionUserAction.php";
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,34 +12,34 @@
 <body>
     <section id="alerts">
         <?php
-            if (isset($_GET['error'])) {
-                $mensaje = "Ocurrió un error debido a ";
-                $mensaje .= match(true){
-                    $_GET['error']=="formIncomplete" => "problemas en el procesamiento de su respuesta.",
-                    default => "un problema inesperado.",
-                };
-            } else if (isset($_GET['success'])) {
-                $mensaje = match(true){
-                    $_GET['success']=="inserted" => "Se ha guardado el perfil personal.",
-                    default => "Transacción realizada.",
-                };
+        if (isset($_GET['error'])) {
+            $mensaje = "Ocurrió un error debido a ";
+            $mensaje .= match(true){
+                $_GET['error']=="formIncomplete" => "problemas en el procesamiento de su respuesta.",
+                default => "un problema inesperado.",
+            };
+        } else if (isset($_GET['success'])) {
+            $mensaje = match(true){
+                $_GET['success']=="inserted" => "Se ha guardado el perfil personal.",
+                default => "Transacción realizada.",
+            };
 
-                echo "<script>
-                    alert('$mensaje');
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var continuarBtn = document.createElement('button');
-                        continuarBtn.innerHTML = 'Continuar';
-                        continuarBtn.onclick = function() {
-                            window.location.href = '../view/userWantedProfileView.php';
-                        };
-                        document.body.appendChild(continuarBtn);
-                    });
-                </script>";
-            }
+            echo "<script>
+                alert('$mensaje');
+                document.addEventListener('DOMContentLoaded', function() {
+                    var continuarBtn = document.createElement('button');
+                    continuarBtn.innerHTML = 'Continuar';
+                    continuarBtn.onclick = function() {
+                        window.location.href = '../view/userWantedProfileView.php';
+                    };
+                    document.body.appendChild(continuarBtn);
+                });
+            </script>";
+        }
 
-            if(isset($mensaje) && !isset($_GET['success'])) {
-                echo "<script>alert('$mensaje')</script>";
-            }
+        if(isset($mensaje) && !isset($_GET['success'])) {
+            echo "<script>alert('$mensaje')</script>";
+        }
         ?>
     </section>
 
@@ -52,11 +51,12 @@
 
         <form id="criteriaForm" method="post" action="../action/personalProfileAction.php" onsubmit="return perfilPersonal.submitForm()">
             <div id="criteriaSection">
-                <!-- Los criterios y valores se cargarán aquí -->
+                <!-- Los criterios y valores se cargarán aquí dinámicamente -->
             </div>
 
             <input type="hidden" id="criteriaString" name="criteriaString">
             <input type="hidden" id="valuesString" name="valuesString">
+            <button type="button" onclick="perfilPersonal.addCriterion()">Agregar criterio</button>
 
             <button type="submit" name="registrar">Enviar</button>
         </form>

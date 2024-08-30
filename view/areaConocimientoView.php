@@ -1,5 +1,8 @@
 <?php
+  session_start();
+
   include "../action/sessionAdminAction.php";
+  include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -74,15 +77,19 @@
 
             <div class="row mb-3">
               <div class="col">
+
                 <label for="nombre" class="form-label">Nombre: </label>
-                <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Ciencias sociales" />
+                <?php generarCampoTexto('nombre', 'formCrearData', 'Ciencias Sociales', '') ?>
+
               </div>
             </div>
 
             <div class="row mb-3">
               <div class="col">
+
                 <label for="descripcion" class="form-label">Descripción: </label>
-                <textarea required name="descripcion" id="descripcion" class="form-control" placeholder="Descripción del área de conocimiento" rows="3"></textarea>
+                <?php generarTextarea('descripcion', 'formCrearData', 'Describa el área de conocimiento', '', 3, 30, false)?>
+                
               </div>
             </div>
 
@@ -111,9 +118,9 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/areaConocimientoBussiness.php';
-          $areaConocimientoBussiness = new AreaConocimientoBussiness();
-          $areasConocimiento = $areaConocimientoBussiness->getAllTbAreaConocimiento();
+          include '../business/areaConocimientoBusiness.php';
+          $areaConocimientoBusiness = new AreaConocimientoBusiness();
+          $areasConocimiento = $areaConocimientoBusiness->getAllTbAreaConocimiento();
           $mensajeActualizar = "¿Desea actualizar esta área de conocimiento?";
           $mensajeEliminar = "¿Desea eliminar esta área de conocimiento?";
 
@@ -123,8 +130,24 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/areaConocimientoAction.php">';
               echo '<input type="hidden" name="idAreaConocimiento" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '">';
               echo '<td>' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoDescripcion()) . '" class="form-control" /></td>';
+
+              echo '<td>';
+              // Comprobar si hay datos en la sesión y si el idAreaConocimiento coincide
+              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idAreaConocimiento'] == $areaConocimiento->getTbAreaConocimientoId()) {
+                  generarCampoTexto('nombre', 'formActualizarData', '', '');
+                  echo '</td>';
+                  echo '<td>';
+                  generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                  echo '</td>';
+              } else {
+                  // Uso de la función para generar el campo de texto sin datos de sesión
+                  generarCampoTexto('nombre', '', '', $areaConocimiento->getTbAreaConocimientoNombre());
+                  echo '</td>';
+                  echo '<td>';
+                  generarCampoTexto('descripcion', '', '', $areaConocimiento->getTbAreaConocimientoDescripcion());
+                  echo '</td>';
+              }
+              
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -144,4 +167,8 @@
 <footer>
 </footer>
 
+<?php 
+  //limpiar variables de sesion de los formularios
+  eliminarFormData();
+?>
 </html>

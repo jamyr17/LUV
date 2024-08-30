@@ -1,7 +1,8 @@
 <?php
 include "../action/sessionAdminAction.php";
-include '../bussiness/valorBusiness.php';
-include '../bussiness/criterioBusiness.php';
+include '../business/valorBusiness.php';
+include '../business/criterioBusiness.php';
+include '../action/functions.php';
 
 $valorBusiness = new ValorBusiness();
 $criterioBusiness = new CriterioBusiness();
@@ -82,17 +83,22 @@ $criterioBusiness = new CriterioBusiness();
 
                         <label for="idCriterio">Criterio:</label>
                         <select name="idCriterio" id="idCriterio">
-                            <?php
+                        <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
+                            // Recuperar el valor guardado en la sesión para 'idCriterio'
+                            $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
+                            
                             if ($criterios != null) {
                                 foreach ($criterios as $criterio) {  
-                                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '">' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
+                                    $selected = ($criterio->getTbCriterioId() == $valorSeleccionado) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
                                 }
                             }
                             ?>
                         </select><br>
-
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre">
+                        
+                        <label for="nombre" class="form-label">Nombre: </label>
+                        <?php generarCampoTexto('nombre','formCrearData','Nombre de la opción','') ?>
 
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
@@ -127,7 +133,13 @@ $criterioBusiness = new CriterioBusiness();
                             echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
                             echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
                             echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($valor->getTbCriterioId()) . '">';
-                            echo '<input type="text" name="nombre" value="' . htmlspecialchars($valor->getTbValorNombre()) . '" class="form-control" />';
+                            
+                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
+                                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                            } else {
+                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
+                            }
+
                             echo '<td>';
                             echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
                             echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -143,13 +155,12 @@ $criterioBusiness = new CriterioBusiness();
         </section>
     </div>
 
-    <script>
-        // Additional scripts if needed
-    </script>
-
 </body>
 
 <footer>
 </footer>
 
+<?php 
+    eliminarFormData();
+?>
 </html>

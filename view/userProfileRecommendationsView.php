@@ -26,7 +26,14 @@
             echo "Apellido: " . htmlspecialchars($perfil['primerApellido']) . "<br>";
             echo "Nombre de usuario: " . htmlspecialchars($perfil['nombreUsuario']) . "<br>";
             echo "Coincidencias: " . htmlspecialchars($perfil['coincidencias']) . "<br>";
-            echo "Afinidiad general = " . htmlspecialchars($perfil['ponderado']) . "%<br>";
+            echo "Afinidad general = " . htmlspecialchars($perfil['ponderado']) . "%<br>";
+
+            if (isset($perfil['pfp']) && !empty($perfil['pfp'])) {
+                if (file_exists($perfil['pfp'])) {
+                    echo '<img src="' . htmlspecialchars($perfil['pfp']) . '" alt="Perfil" style="max-width: 150px; max-height: 150px;">';
+                } 
+            }
+
             echo "</li>";
         }
         echo "</ul>";

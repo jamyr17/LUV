@@ -1,5 +1,6 @@
 <?php
   include "../action/sessionAdminAction.php";
+  include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -79,15 +80,19 @@
 
                 <div class="row">
                     <div class="col">
+
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de la especialización" />
+                        <?php generarCampoTexto('nombre','formCrearData','Nombre de la especialización','') ?>
+
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col">
+
                         <label for="descripcion" class="form-label">Descripción: </label>
-                        <input required type="text" name="descripcion" id="descripcion" class="form-control" placeholder="Descripción de la especialización" />
+                        <?php generarCampoTexto('descripcion','formCrearData','Descripción de la especialización','') ?>
+
                     </div>
                 </div>
                 
@@ -115,9 +120,9 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/universidadCampusEspecializacionBussiness.php';
-          $universidadCampusEspecializacionBussiness = new universidadCampusEspecializacionBussiness();
-          $especializaciones = $universidadCampusEspecializacionBussiness->getAllTbUniversidadCampusEspecializacion();
+          include '../business/universidadCampusEspecializacionBusiness.php';
+          $universidadCampusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
+          $especializaciones = $universidadCampusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
           $mensajeActualizar = "¿Desea actualizar esta especialización?";
           $mensajeEliminar = "¿Desea eliminar esta especialización?";
 
@@ -127,8 +132,22 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php">';
               echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
               echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionNombre()) . '" class="form-control" /></td>';
-              echo '<td><input type="text" name="descripcion" id="descripcion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionDescripcion()) . '" class="form-control" /></td>';
+              
+              echo '<td>';
+              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampusEspecializacion'] == $especializacion->getTbUniversidadCampusEspecializacionId()) {
+                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                echo '</td>';
+              } else {
+                generarCampoTexto('nombre', '', '', $especializacion->getTbUniversidadCampusEspecializacionNombre());
+                echo '</td>';
+                echo '<td>';
+                generarCampoTexto('descripcion', '', '', $especializacion->getTbUniversidadCampusEspecializacionDescripcion());
+                echo '</td>';
+              }
+              
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -148,4 +167,7 @@
 <footer>
 </footer>
 
+<?php 
+  eliminarFormData();
+?>
 </html>

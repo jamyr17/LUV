@@ -72,7 +72,7 @@ public function updateTbCampus($campus)
     $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
     $conn->set_charset('utf8');
 
-    $id = intval($campus->getTbCampusUniversidadId()); 
+    $id = intval($campus->getTbCampusId()); 
     $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
     $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
     $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
@@ -171,7 +171,7 @@ public function updateTbCampus($campus)
 
         while ($row = mysqli_fetch_array($result)) {
             echo '<tr>';
-            echo '<form method="post" enctype="multipart/form-data" action="../bussiness/campusAction.php" class="campus-form">';
+            echo '<form method="post" enctype="multipart/form-data" action="../business/campusAction.php" class="campus-form">';
             echo '<input type="hidden" name="idCampus" value="' . $row['tbuniversidadcampusid'] . '">';
             echo '<input type="hidden" name="idUniversidad" value="' . $row['tbuniversidadid'] . '">';
             echo '<td>' . $row['tbuniversidadcampusid'] . '</td>';

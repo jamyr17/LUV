@@ -1,6 +1,7 @@
 <?php
 
-include '../bussiness/areaConocimientoBussiness.php';
+include '../business/areaConocimientoBusiness.php';
+include 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -13,11 +14,12 @@ if (isset($_POST['update'])) {
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
 
-                $areaConocimientoBusiness = new AreaConocimientoBussiness();
+                $areaConocimientoBusiness = new AreaConocimientoBusiness();
 
                 $resultExist = $areaConocimientoBusiness->nameExist($nombre, $idAreaConocimiento);
 
                 if ($resultExist) {
+                    guardarFormData();
                     header("location: ../view/areaConocimientoView.php?error=exist");
                 } else {
                     $areaConocimiento = new AreaConocimiento($idAreaConocimiento, $nombre, $descripcion, 1);
@@ -27,18 +29,22 @@ if (isset($_POST['update'])) {
                     if ($result == 1) {
                         header("location: ../view/areaConocimientoView.php?success=updated");
                     } else {
+                        guardarFormData();
                         header("location: ../view/areaConocimientoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/areaConocimientoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/areaConocimientoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/areaConocimientoView.php?error=error");
     }
 }else if (isset($_POST['delete'])) {
@@ -48,8 +54,8 @@ if (isset($_POST['update'])) {
         $idAreaConocimiento = $_POST['idAreaConocimiento'];
         echo "$idAreaConocimiento";
 
-        $areaConocimientoBussiness = new AreaConocimientoBussiness();
-        $result = $areaConocimientoBussiness->deleteTbAreaConocimiento($idAreaConocimiento);
+        $areaConocimientoBusiness = new AreaConocimientoBusiness();
+        $result = $areaConocimientoBusiness->deleteTbAreaConocimiento($idAreaConocimiento);
 
         if ($result == 1) {
             header("location: ../view/areaConocimientoView.php?success=deleted");
@@ -69,33 +75,37 @@ if (isset($_POST['update'])) {
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
                 
-                $areaConocimientoBussiness = new AreaConocimientoBussiness();
+                $areaConocimientoBusiness = new AreaConocimientoBusiness();
 
-                $resultExist = $areaConocimientoBussiness->exist($nombre);
+                $resultExist = $areaConocimientoBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
+                    guardarFormData();
                     header("location: ../view/areaConocimientoView.php?error=exist");
                 } else {
                     $areaConocimiento = new AreaConocimiento(0, $nombre, $descripcion, 1);
     
-                    $result = $areaConocimientoBussiness->insertTbAreaConocimiento($areaConocimiento);
+                    $result = $areaConocimientoBusiness->insertTbAreaConocimiento($areaConocimiento);
     
                     if ($result == 1) {
                         header("location: ../view/areaConocimientoView.php?success=inserted");
                     } else {
+                        guardarFormData();
                         header("location: ../view/areaConocimientoView.php?error=dbError");
                     }
 
                 }
                 
             } else {
+                guardarFormData();
                 header("location: ../view/areaConocimientoView.php?error=numberFormat");
             }
         } else {
+            guardarFormData();
             header("location: ../view/areaConocimientoView.php?error=emptyField");
         }
     } else {
+        guardarFormData();
         header("location: ../view/areaConocimientoView.php?error=error");
     }
 }
-?>

@@ -1,5 +1,6 @@
 <?php
   include "../action/sessionAdminAction.php";
+  include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -83,8 +84,10 @@
 
                 <div class="row">
                     <div class="col">
+
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <input required type="text" name="nombre" id="nombre" class="form-control" placeholder="Universidad Nacional" />
+                        <?php generarCampoTexto('nombre', 'formCrearData', 'Universidad Nacional', ''); ?>
+
                     </div>
                 </div>
                 
@@ -112,7 +115,7 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/universidadBussiness.php';
+          include '../business/universidadBusiness.php';
           $universidadBusiness = new UniversidadBusiness();
           $universidades = $universidadBusiness->getAllTbUniversidad();
           $mensajeActualizar = "¿Desea actualizar esta universidad?";
@@ -124,7 +127,18 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/universidadAction.php">';
               echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '">';
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
-              echo '<td><input type="text" name="nombre" id="nombre" value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '" class="form-control" /></td>';
+              
+              echo '<td>';
+              // Comprobar si hay datos en la sesión y si el idUniversidad coincide
+              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidad'] == $universidad->getTbUniversidadId()) {
+                  // Uso de la función para generar el campo de texto con los datos de sesión
+                  generarCampoTexto('nombre', 'formActualizarData', '', '');
+              } else {
+                  // Uso de la función para generar el campo de texto sin datos de sesión
+                  generarCampoTexto('nombre', '', '', $universidad->getTbUniversidadNombre());
+              }
+              echo '</td>';
+              
               echo '<td>';
               echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
               echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
@@ -145,4 +159,8 @@
 <footer>
 </footer>
 
+<?php 
+  //limpiar variables de sesion de los formularios
+  eliminarFormData();
+?>
 </html>

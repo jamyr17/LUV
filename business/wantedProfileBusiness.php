@@ -2,7 +2,7 @@
 
 include '../data/wantedProfileData.php';
 
-class WantedProfileBussiness{
+class WantedProfileBusiness{
 
     private $wantedProfileData;
 
@@ -27,5 +27,3 @@ class WantedProfileBussiness{
     }
 
 }
-
-?>
