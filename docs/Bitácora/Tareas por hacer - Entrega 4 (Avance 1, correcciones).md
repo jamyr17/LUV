@@ -5,7 +5,7 @@
 	- [ ] Añadir registros coherentes.
 - [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD)
 - [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
-- [ ] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios.
+- [x] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios. (JAMYR)
 - [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
 - [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
@@ -18,7 +18,8 @@
 	- [x] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
 - [x] Revisar redirecciones al login. (JAMYR)
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
-- [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
+- [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
 - [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
 - [ ] Poder editar colectivos de un campus.
 - [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
+- [ ] Así como se pueden agregar criterios, que también se puedan quitar.

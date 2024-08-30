@@ -2,6 +2,7 @@ class PerfilPersonal {
     constructor() {
         this.criterios = [];
         this.valores = [];
+        this.criterionCount = 0; // Contador para los criterios cargados
         this.init();
     }
 
@@ -9,8 +10,9 @@ class PerfilPersonal {
     async init() {
         this.showLoading(true);
         try {
-            await this.loadInitialCriteriaData();
-            await this.loadInitialValuesData();
+            await this.loadInitialCriteriaData(); // Cargar criterios desde la base de datos
+            await this.loadInitialValuesData(); // Cargar valores desde la base de datos
+            this.addCriterion(); // Agregar el primer criterio al iniciar
         } catch (error) {
             console.error('Error al cargar los datos:', error);
         } finally {
@@ -43,7 +45,6 @@ class PerfilPersonal {
     async loadInitialCriteriaData() {
         try {
             this.criterios = await this.fetchDataWithRetry('../data/getData.php?type=6');
-            this.populateCriteriaSection();
         } catch (error) {
             console.error('Error al cargar criterios:', error);
             alert('No se pudieron cargar los criterios. Por favor, inténtelo más tarde.');
@@ -54,40 +55,43 @@ class PerfilPersonal {
     async loadInitialValuesData() {
         try {
             this.valores = await this.fetchDataWithRetry('../data/getData.php?type=7');
-            this.criterios.forEach((criterio, index) => {
-                const select = document.getElementById(`value${index + 1}`);
-                this.loadValues(select, index + 1);
-            });
         } catch (error) {
             console.error('Error al cargar valores:', error);
             alert('No se pudieron cargar los valores. Por favor, inténtelo más tarde.');
         }
     }
 
-    // Función para cargar todos los criterios en la vista
-    populateCriteriaSection() {
+    // Función para agregar un nuevo criterio
+    addCriterion() {
+        this.criterionCount++;
         const criteriaSection = document.getElementById('criteriaSection');
 
-        this.criterios.forEach((criterio, index) => {
-            const criterionIndex = index + 1;
-            const criterionDiv = document.createElement('div');
-            criterionDiv.className = 'criterion';
-            criterionDiv.innerHTML = `
-                <label for="value${criterionIndex}">${criterio.name}:</label>
-                <select name="value[]" id="value${criterionIndex}" onchange="perfilPersonal.toggleOtherField(this, ${criterionIndex})">
-                    <!-- Las opciones de valores se cargarán dinámicamente -->
-                </select>
-                <input type="text" id="otherField${criterionIndex}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-            `;
-            criteriaSection.appendChild(criterionDiv);
-        });
+        const criterio = this.criterios[this.criterionCount - 1];
+        if (!criterio) {
+            console.warn('No hay más criterios para agregar.');
+            return;
+        }
+
+        const newCriterion = document.createElement('div');
+        newCriterion.className = 'criterion';
+        newCriterion.id = `criterion${this.criterionCount}`;
+        newCriterion.innerHTML = `
+            <label for="value${this.criterionCount}">${criterio.name}:</label>
+            <select name="value[]" id="value${this.criterionCount}" onchange="perfilPersonal.toggleOtherField(this, ${this.criterionCount})">
+                <!-- Las opciones de valores se cargarán dinámicamente -->
+            </select>
+            <input type="text" id="otherField${this.criterionCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+        `;
+        criteriaSection.appendChild(newCriterion);
+
+        // Cargar valores para el nuevo criterio
+        this.loadValues(document.getElementById(`value${this.criterionCount}`), this.criterionCount);
     }
 
     // Función para cargar los valores en los select correspondientes
     loadValues(select, index) {
         const criterionId = this.criterios[index - 1].id;
-
-        const valueSelect = document.getElementById(`value${index}`);
+        const valueSelect = select;
         if (!valueSelect) {
             console.error(`Elemento select de valores no encontrado para el índice ${index}`);
             return;
@@ -162,4 +166,5 @@ class PerfilPersonal {
     }
 }
 
+// Inicializar la clase PerfilPersonal
 const perfilPersonal = new PerfilPersonal();
