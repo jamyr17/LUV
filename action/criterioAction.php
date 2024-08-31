@@ -84,7 +84,10 @@ if (isset($_POST['update'])) {
                     guardarFormData();
                     header("location: ../view/criterioView.php?error=exist");
                 } else {
+                    $criterioNombreAnterior = $criterioBusiness->getCriterioNombreById($idCriterio);
                     $criterio = new Criterio($idCriterio, $nombre, 1);
+
+                    rename("../resources/criterios/{$criterioNombreAnterior}.dat", "../resources/criterios/{$nombre}.dat");
 
                     $result = $criterioBusiness->updateTbCriterio($criterio);
 
@@ -112,9 +115,16 @@ if (isset($_POST['update'])) {
         $idCriterio = $_POST['idCriterio'];
 
         $criterioBusiness = new CriterioBusiness();
+        
+        $criterioNombre = $criterioBusiness->getCriterioNombreById($idCriterio);
+
         $result = $criterioBusiness->deleteTbCriterio($idCriterio);
 
         if ($result == 1) {
+            $criterioFile = "../resources/criterios/{$criterioNombre}.dat";
+            if (file_exists($criterioFile)) {
+                unlink($criterioFile);
+            }
             header("location: ../view/criterioView.php?success=deleted");
         } else {
             header("location: ../view/criterioView.php?error=dbError");
