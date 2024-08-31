@@ -19,7 +19,9 @@
 - [x] Revisar redirecciones al login. (JAMYR)
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
 - [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
-- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
+- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. 
 - [ ] Poder editar colectivos de un campus.
 - [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
+- [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box.
 - [ ] Así como se pueden agregar criterios, que también se puedan quitar.
+- [ ] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. 

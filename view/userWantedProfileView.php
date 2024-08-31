@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUV Perfil Deseado</title>
 </head>
-<body>
+<body data-view="WantedProfile">
     <section id="alerts">
 
         <?php
@@ -75,6 +75,6 @@
             
         </form>
     </div>
-    <script src="../js/userWantedProfile.js"></script>
+    <script src="../js/profileModel.js"></script>
 </body>
 </html>
