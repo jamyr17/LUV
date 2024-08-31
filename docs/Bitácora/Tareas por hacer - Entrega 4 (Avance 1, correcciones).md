@@ -23,5 +23,5 @@
 - [ ] Poder editar colectivos de un campus.
 - [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
 - [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
-- [ ] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
+- [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
 - [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)

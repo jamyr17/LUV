@@ -65,6 +65,7 @@ include "../action/sessionUserAction.php";
                         </select>
 
                         <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+                        <button type="button" onclick="removeCriterion(this)">Eliminar</button>
 
                 </div>
 

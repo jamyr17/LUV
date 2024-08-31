@@ -58,6 +58,7 @@
 
                     <label for="percent1">Porcentaje:</label>
                     <input type="number" id="percent1" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+                    <button type="button" onclick="removeCriterion(this)">Eliminar</button>
                 </div>
             </div>
 

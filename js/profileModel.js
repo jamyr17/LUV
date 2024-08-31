@@ -45,6 +45,7 @@ function addCriterion() {
         <label for="percent${criteriaCount}">Porcentaje:</label>
         <input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
         `}
+        <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
     criteriaSection.appendChild(newCriterion);
 
@@ -52,6 +53,25 @@ function addCriterion() {
 
     const select = document.getElementById(`criterion${criteriaCount}`);
     loadValues(select, criteriaCount);
+}
+
+// función parra poder eliminar criterios
+function removeCriterion(button) {
+    const criterionToRemove = button.parentNode;
+
+    const criteriaSection = document.getElementById('criteriaSection');
+    const criteria = criteriaSection.getElementsByClassName('criterion');
+
+    if (criteria.length > 1) {
+        criterionToRemove.remove();
+
+        // Recalcular el total del porcentaje si estamos en la vista 'WantedProfile'
+        if (currentView !== 'PersonalProfile') {
+            updateTotalPercentage();
+        }
+    } else {
+        alert('Debe haber al menos un criterio.');
+    }
 }
 
 // Función para actualizar el porcentaje total (solo para vistas que no sean PersonalProfile)
