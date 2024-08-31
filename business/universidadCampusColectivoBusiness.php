@@ -38,4 +38,8 @@ class universidadCampusColectivoBusiness {
         return $this->universidadCampusColectivoData->nameExists($nombre, $idUniversidadCampusColectivo);
     }
 
+    public function getColectivosByCampusId($campusId) {
+        return $this->universidadCampusColectivoData->getColectivosByCampusId($campusId);
+    }
+
 }

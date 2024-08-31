@@ -5,8 +5,11 @@ include 'functions.php';
 
 if (isset($_POST['update'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
-        
+    // Depuración inicial
+    echo "<h2>Debug Start</h2>";
+
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud']) && isset($_POST['idCampus']) && isset($_POST['idUniversidad']) && isset($_POST['idRegion']) && isset($_POST['idEspecializacion'])) {
+
         $idCampus = $_POST['idCampus'];
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
@@ -15,40 +18,47 @@ if (isset($_POST['update'])) {
         $direccion = $_POST['direccion'];
         $latitud = $_POST['latitud'];
         $longitud = $_POST['longitud'];
+        $colectivos = isset($_POST['colectivos']) ? $_POST['colectivos'] : [];
 
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
                 $campusBusiness = new CampusBusiness();
 
-                $resultExist = $campusBusiness->nameExist($nombre,$idCampus);
+                $resultExist = $campusBusiness->nameExist($nombre, $idCampus);
+
 
                 if ($resultExist == 1) {
                     guardarFormData();
-                    header("location: ../view/campusView.php?error=exist");
+                    header("Location: ../view/campusView.php?error=exist");
+                    exit(); 
                 } else {
-                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, 1, $latitud, $longitud, $idEspecializacion);
+                    $campus = new Campus($idCampus, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $idEspecializacion, $colectivos);
                     $result = $campusBusiness->updateTbCampus($campus);
 
                     if ($result == 1) {
-                        header("location: ../view/campusView.php?success=updated");
+                        header("Location: ../view/campusView.php?success=updated");
+                        exit(); 
                     } else {
                         guardarFormData();
-                        header("location: ../view/campusView.php?error=dbError");
+                        header("Location: ../view/campusView.php?error=dbError");
+                        exit(); 
                     }
-
                 }
                 
             } else {
                 guardarFormData();
-                header("location: ../view/campusView.php?error=numberFormat");
+                header("Location: ../view/campusView.php?error=numberFormat");
+                exit(); 
             }
         } else {
             guardarFormData();
-            header("location: ../view/campusView.php?error=emptyField");
+            header("Location: ../view/campusView.php?error=emptyField");
+            exit();
         }
     } else {
         guardarFormData();
-        header("location: ../view/campusView.php?error=error");
+        header("Location: ../view/campusView.php?error=error");
+        exit(); 
     }
 }else if (isset($_POST['delete'])) {
 

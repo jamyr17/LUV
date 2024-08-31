@@ -157,5 +157,40 @@ class universidadCampusColectivoData extends Data
         
         return $count > 0;
     }
+
+    public function getColectivosByCampusId($campusId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $query = "SELECT tbuniversidadcampuscolectivoid, tbuniversidadcampuscolectivonombre 
+                  FROM tbuniversidadcampuscolectivo
+                  INNER JOIN tbuniversidadcampusuniversidadcolectivo 
+                  ON tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivoid = tbuniversidadcampusuniversidadcolectivo.tbuniversidadcolectivoid
+                  WHERE tbuniversidadcampusuniversidadcolectivo.tbuniversidadcampusid = ?";
+    
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $campusId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    
+        $colectivos = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $colectivo = new universidadCampusColectivo(
+                $row['tbuniversidadcampuscolectivoid'],
+                $row['tbuniversidadcampuscolectivonombre'],
+                '', // Suponiendo que la descripción puede ser vacía en este contexto
+                1  // Suponiendo que el estado es 1 para todos los colectivos recuperados
+            );
+            $colectivos[] = $colectivo;
+        }
+    
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+    
+        return $colectivos;
+    }
+    
+
 }
 ?>

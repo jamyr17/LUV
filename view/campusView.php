@@ -166,7 +166,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                 </div>
             </div>
         </section>
-
+        
         <section id="table">
             <div class="text-center mb-4">
                 <h3>Campus registrados</h3>
@@ -180,6 +180,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                         <th>Dirección</th>
                         <th>Región</th>
                         <th>Especialización</th>
+                        <th>Colectivos</th> <!-- Nueva columna -->
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -215,7 +216,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             echo '<td>';
                             echo '<select name="idRegion" class="form-control">';
                             $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
-                            
+
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
                                 $idRegionSeleccionada = $_SESSION['formActualizarData']['idRegion'];
@@ -233,8 +234,8 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             // Select box para 'Especialización'
                             echo '<td>';
                             echo '<select name="idEspecializacion" class="form-control">';
-                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
-                            
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();            
+
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
                                 $idEspecializacionSeleccionada = $_SESSION['formActualizarData']['idEspecializacion'];
@@ -249,11 +250,29 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             echo '</select>';
                             echo '</td>';
 
+                            echo '<td>';
+                            $campusColectivos = $campusColectivoBusiness->getColectivosByCampusId($camp->getTbCampusId());
+                            $allColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo(); // Obtener todos los colectivos
+                            
+                            // Crear un array con los IDs de los colectivos actuales del campus para marcar los seleccionados
+                            $colectivosSeleccionados = array_map(function($colectivo) {
+                                return $colectivo->getTbUniversidadCampusColectivoId();
+                            }, $campusColectivos);
+                            
+                            echo '<select name="colectivos[]" id="colectivos" multiple class="form-control">';
+                            foreach ($allColectivos as $colectivo) {
+                                $selected = in_array($colectivo->getTbUniversidadCampusColectivoId(), $colectivosSeleccionados) ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($colectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($colectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
+                            }
+                            echo '</select>';
+                            echo '</td>';
+
                             // Acciones
                             echo '<td>';
                             echo '<button type="submit" name="update" onclick="return actionConfirmation(\'' . $mensajeActualizar . '\')" class="btn btn-primary">Actualizar</button>';
                             echo ' <button type="submit" name="delete" onclick="return actionConfirmation(\'' . $mensajeEliminar . '\')" class="btn btn-danger">Eliminar</button>';
                             echo '</td>';
+                            
                             echo '<td><input type="hidden" name="latitud" id="latitud" value="' . htmlspecialchars($camp->getTbCampusLatitud()) . '" class="form-control" /></td>';
                             echo '<td><input type="hidden" name="longitud" id="longitud" value="' . htmlspecialchars($camp->getTbCampusLongitud()) . '" class="form-control" /></td>';
 
@@ -261,11 +280,13 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             echo '</tr>';
                         }
                     } else {
-                        echo '<tr><td colspan="6" class="text-center">No hay campus registrados</td></tr>';
+                        echo '<tr><td colspan="7" class="text-center">No hay campus registrados</td></tr>';
                     }
                     ?>
                 </tbody>
             </table>
+
+
         </section>
     </div>
 </body>
