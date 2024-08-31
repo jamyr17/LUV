@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/generoBusiness.php';
+include '../business/generoBusiness.php';
 include '../action/functions.php';
 
 if (isset($_POST['update'])) {

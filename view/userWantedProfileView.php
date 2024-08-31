@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUV Perfil Deseado</title>
 </head>
-<body>
+<body data-view="WantedProfile">
     <section id="alerts">
 
         <?php
@@ -58,6 +58,7 @@
 
                     <label for="percent1">Porcentaje:</label>
                     <input type="number" id="percent1" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+                    <button type="button" onclick="removeCriterion(this)">Eliminar</button>
                 </div>
             </div>
 
@@ -75,6 +76,6 @@
             
         </form>
     </div>
-    <script src="../js/userWantedProfile.js"></script>
+    <script src="../js/profileModel.js"></script>
 </body>
 </html>

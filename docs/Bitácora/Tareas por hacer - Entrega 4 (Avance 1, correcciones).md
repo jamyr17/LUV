@@ -5,7 +5,7 @@
 	- [ ] Añadir registros coherentes.
 - [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD)
 - [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
-- [ ] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios.
+- [x] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios. (JAMYR)
 - [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
 - [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
@@ -13,10 +13,15 @@
 - [ ] CRUD Campus (GERALD)
 	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
 	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
-- [ ] Usuario
-	- [ ] Poder subir imagen y guardarla en el server
-	- [ ] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
+- [x] Usuario (JAMYR)
+	- [x] Poder subir imagen y guardarla en el server
+	- [x] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
 - [x] Revisar redirecciones al login. (JAMYR)
-- [ ] Cambiar errores en nombres de clases de Bussiness.
-- [ ] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse.
-- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
+- [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
+- [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
+- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. 
+- [ ] Poder editar colectivos de un campus.
+- [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
+- [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
+- [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
+- [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)

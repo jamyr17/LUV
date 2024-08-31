@@ -118,9 +118,9 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/areaConocimientoBussiness.php';
-          $areaConocimientoBussiness = new AreaConocimientoBussiness();
-          $areasConocimiento = $areaConocimientoBussiness->getAllTbAreaConocimiento();
+          include '../business/areaConocimientoBusiness.php';
+          $areaConocimientoBusiness = new AreaConocimientoBusiness();
+          $areasConocimiento = $areaConocimientoBusiness->getAllTbAreaConocimiento();
           $mensajeActualizar = "¿Desea actualizar esta área de conocimiento?";
           $mensajeEliminar = "¿Desea eliminar esta área de conocimiento?";
 

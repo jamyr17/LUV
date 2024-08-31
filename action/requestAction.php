@@ -1,10 +1,10 @@
 <?php
 
 require '../vendor/autoload.php';
-include '../bussiness/universidadBussiness.php';
-include '../bussiness/orientacionSexualBussiness.php';
-include '../bussiness/generoBusiness.php';
-include '../bussiness/campusBussiness.php';
+include '../business/universidadBusiness.php';
+include '../business/orientacionSexualBusiness.php';
+include '../business/generoBusiness.php';
+include '../business/campusBusiness.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

@@ -1,17 +1,17 @@
 <?php
-include '../bussiness/universidadBussiness.php';
-include '../bussiness/campusBussiness.php';
-include '../bussiness/areaConocimientoBussiness.php';
-include '../bussiness/generoBusiness.php';
-include '../bussiness/orientacionSexualBussiness.php';
-include '../bussiness/criterioBusiness.php';
-include '../bussiness/valorBusiness.php';
+include '../business/universidadBusiness.php';
+include '../business/campusBusiness.php';
+include '../business/areaConocimientoBusiness.php';
+include '../business/generoBusiness.php';
+include '../business/orientacionSexualBusiness.php';
+include '../business/criterioBusiness.php';
+include '../business/valorBusiness.php';
 
 header('Content-Type: application/json');
 
 $universidadBusiness = new UniversidadBusiness();
 $campusBusiness = new CampusBusiness();
-$areaConocimientoBusiness = new AreaConocimientoBussiness();
+$areaConocimientoBusiness = new AreaConocimientoBusiness();
 $generoBusiness = new GeneroBusiness();
 $orientacionSexualBusiness = new OrientacionSexualBusiness();
 $criterioBusiness = new CriterioBusiness();

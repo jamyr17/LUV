@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/universidadCampusRegionBussiness.php';
+include '../business/universidadCampusRegionBusiness.php';
 include 'functions.php';
 
 if (isset($_POST['update'])) {
@@ -13,7 +13,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
-                $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+                $campusRegionBusiness = new UniversidadCampusRegionBusiness();
 
                 $resultExist = $campusRegionBusiness->nameExist($nombre, $idUniversidadCampusRegion);
 
@@ -50,7 +50,7 @@ if (isset($_POST['update'])) {
 
         $idUniversidadCampusRegion = $_POST['idUniversidadCampusRegion'];
 
-        $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+        $campusRegionBusiness = new UniversidadCampusRegionBusiness();
         $result = $campusRegionBusiness->deleteTbUniversidadCampusRegion($idUniversidadCampusRegion);
 
         if ($result == 1) {
@@ -70,7 +70,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
-                $campusRegionBusiness = new UniversidadCampusRegionBussiness();
+                $campusRegionBusiness = new UniversidadCampusRegionBusiness();
 
                 $resultExist = $campusRegionBusiness->exist($nombre);
 

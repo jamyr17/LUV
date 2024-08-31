@@ -2,7 +2,7 @@
 
 include '../data/universidadCampusRegionData.php';
 
-class UniversidadCampusRegionBussiness {
+class UniversidadCampusRegionBusiness {
 
     private $universidadCampusRegionData;
 
@@ -43,4 +43,3 @@ class UniversidadCampusRegionBussiness {
     }
 
 }
-?>

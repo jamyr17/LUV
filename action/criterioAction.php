@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/criterioBusiness.php';
+include '../business/criterioBusiness.php';
 include 'functions.php';
 
 $apiKey = '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';

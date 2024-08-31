@@ -1,7 +1,6 @@
 <?php
 
-include '../bussiness/criterioBusiness.php';
-include_once '../bussiness/valorBusiness.php'; 
+include_once '../business/valorBusiness.php'; 
 include 'functions.php';
 
 function agregarValorSiNoExiste($nombreArchivo, $valor) {

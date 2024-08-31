@@ -2,7 +2,7 @@
 
 include '../data/areaConocimientoData.php';
 
-class AreaConocimientoBussiness {
+class AreaConocimientoBusiness {
 
     private $areaConocimientoData;
 
@@ -39,4 +39,3 @@ class AreaConocimientoBussiness {
     }
 
 }
-?>

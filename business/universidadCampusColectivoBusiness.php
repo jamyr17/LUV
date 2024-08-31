@@ -2,7 +2,7 @@
 
 include '../data/universidadCampusColectivoData.php';
 
-class universidadCampusColectivoBussiness {
+class universidadCampusColectivoBusiness {
 
     private $universidadCampusColectivoData;
 
@@ -39,4 +39,3 @@ class universidadCampusColectivoBussiness {
     }
 
 }
-?>

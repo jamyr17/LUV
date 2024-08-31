@@ -118,7 +118,7 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/orientacionSexualBussiness.php';
+          include '../business/orientacionSexualBusiness.php';
           $orientacionSexualBusiness = new OrientacionSexualBusiness();
           $orientacionesSexuales = $orientacionSexualBusiness->getAllTbOrientacionSexual();
           $mensajeActualizar = "¿Desea actualizar esta orientación sexual?";

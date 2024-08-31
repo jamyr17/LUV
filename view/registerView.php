@@ -22,6 +22,7 @@
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="existPerson" => "que ya hay una cuenta asociada a su cédula.",
             $_GET['error']=="existUsername" => "que dicho nombre de usuario ya existe.",
+            $_GET['error']=="imageUpload" => "problemas para procesar su imagen.",
             default => "un problema inesperado.",
           };
         } 
@@ -37,7 +38,7 @@
         <div>
             <h3>Ingrese sus datos</h3>
 
-            <form method="post" action="../action/usuarioAction.php">
+            <form method="post" action="../action/usuarioAction.php" enctype="multipart/form-data">
 
               <label for="nombre" class="form-label">Cédula: </label>
               <?php generarCampoTexto('cedula','formCrearData','Ingrese su número de cédula','') ?><br>
@@ -53,6 +54,9 @@
 
               <label for="nombre" class="form-label">Contraseña: </label>
               <?php generarCampoContrasena('contrasena','formCrearData', 'Ingrese su contraseña','') ?><br>
+
+              <label for="pfp" class="form-label">Foto de perfil: </label>
+              <input type='file' name='pfp' id='pfp' class='form-control' />
 
               <div>
                   <button type="submit" class="btn btn-success" name="newUser" id="newUser">Registrarse</button>

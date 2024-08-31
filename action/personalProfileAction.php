@@ -1,7 +1,7 @@
 <?php
 
-include_once "../bussiness/personalProfileBusiness.php";
-include_once "../bussiness/usuarioBusiness.php";
+include_once "../business/personalProfileBusiness.php";
+include_once "../business/usuarioBusiness.php";
 $personalProfileBusiness = new PersonalProfileBusiness();
 $usuarioBusiness = new UsuarioBusiness();
 
@@ -15,11 +15,12 @@ if(isset($_POST["registrar"])){
         
         if($personalProfileBusiness->profileExists($usuarioId)){
             $personalProfileBusiness->updateTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            header("location: ../view/userPersonalProfileView.php?success=updated");
         }else{
             $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            header("location: ../view/userPersonalProfileView.php?success=inserted");
         }
 
-        header("location: ../view/userPersonalProfileView.php?success=inserted");
     }
     else{
         header("location: ../view/userPersonalProfileView.php?error=formIncomplete");

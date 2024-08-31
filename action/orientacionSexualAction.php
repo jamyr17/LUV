@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/orientacionSexualBussiness.php';
+include '../business/orientacionSexualBusiness.php';
 include 'functions.php';
 
 if (isset($_POST['update'])) {

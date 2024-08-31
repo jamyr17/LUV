@@ -1,6 +1,6 @@
 <?php
 include "../action/sessionAdminAction.php";
-include '../bussiness/imagenBusiness.php';
+include '../business/imagenBusiness.php';
 
 $imagenBusiness = new ImagenBusiness();
 ?>

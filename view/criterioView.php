@@ -111,7 +111,7 @@
         </thead>
         <tbody>
           <?php
-          include '../bussiness/criterioBusiness.php';
+          include '../business/criterioBusiness.php';
           $criterioBusiness = new CriterioBusiness();
           $criterios = $criterioBusiness->getAllTbCriterio();
           $mensajeActualizar = "¿Desea actualizar este criterio?";

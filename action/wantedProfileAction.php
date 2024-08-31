@@ -1,8 +1,8 @@
 <?php
 
-include_once "../bussiness/wantedProfileBusiness.php";
-$wantedProfileBusiness = new WantedProfileBussiness();
-include_once "../bussiness/usuarioBusiness.php";
+include_once "../business/wantedProfileBusiness.php";
+$wantedProfileBusiness = new WantedProfileBusiness();
+include_once "../business/usuarioBusiness.php";
 $usuarioBusiness = new UsuarioBusiness();
 
 

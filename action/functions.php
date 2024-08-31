@@ -45,3 +45,28 @@ function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPor
 
     echo "<input required type='password' name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' value='$valor' $autofocusAttr />";
 }
+
+// procesar imagenes
+function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
+    if (isset($_FILES[$nombreVariableForm])) {
+        
+        if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
+            
+            $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
+            $fileExtension = pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION);
+            
+            $newFileName = $nombreArchivo . '.' . $fileExtension;
+            $destination = $directorio . $newFileName;
+
+            if (move_uploaded_file($fileTmpPath, $destination)) {
+                return $destination;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}

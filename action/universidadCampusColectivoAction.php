@@ -1,6 +1,6 @@
 <?php
 
-include '../bussiness/universidadCampusColectivoBussiness.php';
+include '../business/universidadCampusColectivoBusiness.php';
 include 'functions.php';
 
 if (isset($_POST['update'])) {
@@ -14,9 +14,9 @@ if (isset($_POST['update'])) {
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
                 // Verificar que no exista un registro con el mismo valor que está siendo ingresado
-                $universidadCampusColectivoBussiness = new universidadCampusColectivoBussiness();
+                $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
 
-                $resultExist = $universidadCampusColectivoBussiness->nameExist($nombre, $idUniversidadCampusColectivo);
+                $resultExist = $universidadCampusColectivoBusiness->nameExist($nombre, $idUniversidadCampusColectivo);
 
                 if ($resultExist == 1) {
                     guardarFormData();
@@ -24,7 +24,7 @@ if (isset($_POST['update'])) {
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo($idUniversidadCampusColectivo, $nombre, $descripcion, 1);
 
-                    $result = $universidadCampusColectivoBussiness->updateTbUniversidadCampusColectivo($universidadCampusColectivo);
+                    $result = $universidadCampusColectivoBusiness->updateTbUniversidadCampusColectivo($universidadCampusColectivo);
 
                     if ($result == 1) {
                         header("location: ../view/universidadCampusColectivoView.php?success=updated");
@@ -53,8 +53,8 @@ if (isset($_POST['update'])) {
 
         $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
 
-        $universidadCampusColectivoBussiness = new universidadCampusColectivoBussiness();
-        $result = $universidadCampusColectivoBussiness->deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo);
+        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $result = $universidadCampusColectivoBusiness->deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo);
 
         if ($result == 1) {
             header("location: ../view/universidadCampusColectivoView.php?success=deleted");
@@ -74,9 +74,9 @@ if (isset($_POST['update'])) {
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
                 // Verificar que no exista un registro con el mismo valor que está siendo ingresado
-                $universidadCampusColectivoBussiness = new universidadCampusColectivoBussiness();
+                $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
 
-                $resultExist = $universidadCampusColectivoBussiness->exist($nombre);
+                $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
                     guardarFormData();
@@ -84,7 +84,7 @@ if (isset($_POST['update'])) {
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, 1);
     
-                    $result = $universidadCampusColectivoBussiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
+                    $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
     
                     if ($result == 1) {
                         header("location: ../view/universidadCampusColectivoView.php?success=inserted");

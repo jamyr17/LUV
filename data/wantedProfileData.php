@@ -41,6 +41,7 @@ class WantedProfileData extends Data{
                 p.tbusuarioid AS usuarioId,
                 p.tbperfilusuariopersonalestado AS estado,
                 u.tbusuarionombre AS nombreUsuario,
+                u.tbusuarioimagen AS pfp,
                 per.tbpersonaprimernombre AS primerNombre,
                 per.tbpersonaprimerapellido AS primerApellido
             FROM 
@@ -65,7 +66,8 @@ class WantedProfileData extends Data{
                 'estado' => $row['estado'],
                 'nombreUsuario' => $row['nombreUsuario'],
                 'primerNombre' => $row['primerNombre'],
-                'primerApellido' => $row['primerApellido']
+                'primerApellido' => $row['primerApellido'],
+                'pfp' => $row['pfp']
             ];
             array_push($profiles, $profile);
         }
