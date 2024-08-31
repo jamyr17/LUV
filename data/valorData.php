@@ -42,10 +42,11 @@ class ValorData extends Data
 
         $id = intval($valor->getTbValorId());
         $nombre = mysqli_real_escape_string($conn, $valor->getTbValorNombre());
+        $idcriterio = mysqli_real_escape_string($conn, $valor->getTbCriterioId());
         $estado = mysqli_real_escape_string($conn, $valor->getTbValorEstado());
 
         $queryUpdate = "UPDATE tbvalor 
-                        SET tbvalornombre='$nombre', tbvalorestado='$estado' 
+                        SET tbvalornombre='$nombre', tbcriterioid='$idcriterio' , tbvalorestado='$estado' 
                         WHERE tbvalorid=$id";
 
         $result = mysqli_query($conn, $queryUpdate);
@@ -144,5 +145,28 @@ class ValorData extends Data
 
         return $count > 0;
     }
+
+    
+    public function nameExists($nombre, $excludeId = null)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $query = "SELECT COUNT(*) as count FROM tbvalor WHERE tbvalornombre = ? AND tbvalorid != ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'si', $nombre, $idValor);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
+    }
+
 }
 ?>

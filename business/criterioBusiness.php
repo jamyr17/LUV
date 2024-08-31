@@ -43,7 +43,7 @@ class CriterioBusiness {
     }
 
     public function getCriterioNombreById($idCriterio) {
-        return $this->valorData->getCriterioNombreById($idCriterio);
+        return $this->criterioData->getCriterioNombreById($idCriterio);
     }
 
 

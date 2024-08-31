@@ -42,4 +42,9 @@ class ValorBusiness {
         return $this->valorData->exist($nombre);
     }
 
+    public function nameExist($nombre, $idValor){
+        return $this->valorData->nameExists($nombre, $idValor);
+    }
+
+
 }

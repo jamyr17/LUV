@@ -18,10 +18,9 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($nombre)) {
-                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusBusiness = new CampusBusiness();
 
-                $resultExist = $campusBusiness->nameExist($nombre);
+                $resultExist = $campusBusiness->nameExist($nombre,$idCampus);
 
                 if ($resultExist == 1) {
                     guardarFormData();

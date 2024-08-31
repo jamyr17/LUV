@@ -42,8 +42,7 @@ if (isset($_POST['update'])) {
             if (!is_numeric($nombre)) {
                 $valorBusiness = new ValorBusiness();
 
-                $resultExist = $valorBusiness->exist($nombre);
-
+                $resultExist = $valorBusiness->nameExist($nombre,$idValor);
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("Location: ../view/valorView.php?error=exist");

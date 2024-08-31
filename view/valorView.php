@@ -127,39 +127,58 @@ $criterioBusiness = new CriterioBusiness();
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Criterio</th>
                         <th>Nombre</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $valores = $valorBusiness->getAllTbValor();
-                    $mensajeActualizar = "¿Desea actualizar este valor?";
-                    $mensajeEliminar = "¿Desea eliminar este valor?";
-                    if ($valores != null) {
-                        foreach ($valores as $valor) {
-                            echo '<tr>';
-                            echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
-                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
-                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
-                            echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($valor->getTbCriterioId()) . '">';
-                            
-                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
-                                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                            } else {
-                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
-                            }
+                <?php
+        $valores = $valorBusiness->getAllTbValor();
+        $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
+        $mensajeActualizar = "¿Desea actualizar este valor?";
+        $mensajeEliminar = "¿Desea eliminar este valor?";
 
-                            echo '<td>';
-                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-                            echo '</td>';
-                            echo '</form>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    }
-                    ?>
+        if ($valores != null) {
+            foreach ($valores as $valor) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
+
+                echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
+                echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+
+                // Combo box para seleccionar el criterio
+                echo '<select name="idCriterio" class="form-select">';
+                foreach ($criterios as $criterio) {
+                    $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
+                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
+                    echo htmlspecialchars($criterio->getTbCriterioNombre());
+                    echo '</option>';
+                }
+                echo '</select>';
+
+                echo '</td>';
+
+                // Campo de texto para el nombre del valor
+                echo '<td>';
+                if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
+                    generarCampoTexto('nombre', 'formActualizarData', '', '');
+                } else {
+                    generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
+                }
+                echo '</td>';
+
+                // Botones de acción
+                echo '<td>';
+                echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                echo '</td>';
+
+                echo '</form>';
+                echo '</tr>';
+            }
+        }
+        ?>
                 </tbody>
             </table>
         </section>
