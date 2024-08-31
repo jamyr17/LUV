@@ -184,11 +184,34 @@ function loadValues(select, index) {
     valueSelect.disabled = false; 
 }
 
-// Para que el usuario pueda agregar un valor personalizado
+// Función para inicializar el autocompletado en el campo de texto "Otro"
+async function initializeAutocomplete(input, criterionName) {
+    try {
+        const response = await fetch(`../data/getData.php?criterion=${criterionName}`);
+        const suggestions = await response.json();
+
+        $(input).autocomplete({
+            source: suggestions  // Usar las sugerencias para el autocompletado
+        });
+    } catch (error) {
+        console.error('Error al obtener sugerencias:', error);
+    }
+}
+
+// Modificar la función toggleOtherField para inicializar el autocompletado
 function toggleOtherField(select, index) {
     const otherField = document.getElementById(`otherField${index}`);
     if (select.value === 'other') {
         otherField.style.display = 'block';
+
+        // Obtener el nombre del criterio seleccionado
+        const criterionSelect = document.getElementById(`criterion${index}`);
+        const criterionName = criterionSelect.selectedOptions[0].getAttribute('data-nombre');
+
+        // Inicializar autocompletado solo si se ha seleccionado un criterio
+        if (criterionName) {
+            initializeAutocomplete(otherField, criterionName);
+        }
     } else {
         otherField.style.display = 'none';
         otherField.value = ''; 

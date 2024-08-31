@@ -64,7 +64,7 @@ function obtenerDatosIA($nombre, $apiKey) {
         return $opcionesFiltradas;
     }
 
-    return ["No se generaron valores"]; // Valor de fallback si la IA no generó nada útil
+    return [""]; // Valor de fallback si la IA no generó nada útil
 }
 
 
