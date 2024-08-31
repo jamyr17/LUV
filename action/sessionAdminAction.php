@@ -12,7 +12,7 @@ function baseUrl() {
     $host = $_SERVER['HTTP_HOST'];
     
     // Definir la carpeta raíz del proyecto
-    $projectRoot = '/programacionparadigmas';
+    $projectRoot = '/LUV';
 
     // Construir y retornar la URL base
     return $protocol . "://" . $host . $projectRoot;
