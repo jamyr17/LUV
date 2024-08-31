@@ -20,7 +20,7 @@
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
 - [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
 - [x] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. (Kevin)
-- [ ] Poder editar colectivos de un campus.(Kevin)
+- [x] Poder editar colectivos de un campus.(Kevin)
 - [x] Mostrar y poder editar el criterio de los valores en CRUD Valor.(Kevin)
 - [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
 - [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
