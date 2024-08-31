@@ -64,15 +64,15 @@ if (isset($_POST['create'])) {
             $result = $imagenBusiness->insertTbimagen($imagen);
 
             if ($result == 1) {
-                header("location: ../view/imagenView.php?success=inserted");
+                header("Location: ../view/imagenView.php?success=inserted");
             } else {
-                header("location: ../view/imagenView.php?error=dbError");
+                header("Location: ../view/imagenView.php?error=dbError");
             }
         } else {
-            echo 'Error al mover el archivo.';
+            header("Location: ../view/imagenView.php?error=movingImg");
         }
     } else {
-        echo 'No se ha subido ningún archivo o ha ocurrido un error.';
+        header("Location: ../view/imagenView.php?error=unknown");
     }
 } else if (isset($_POST['delete'])) {
     if (isset($_POST['id'])) {
@@ -123,4 +123,3 @@ if (isset($_POST['create'])) {
         header("Location: ../view/imagenView.php?error=emptyField");
     }
 }
-?>

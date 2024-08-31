@@ -25,7 +25,8 @@
 - [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
 - [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
 - [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)
-- [ ] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. Se debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen: (JAMYR)
-	- [ ] No seleccionar una imagen al enviar el formulario.
-	- [ ] No escoger un valor requerido.
-	- [ ] Seleccionar un criterio y no elegir un valor.
+- [x] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. Se debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen: (JAMYR)
+	- [x] No seleccionar una imagen al enviar el formulario.
+	- [x] No escoger un valor requerido.
+	- [x] Seleccionar un criterio y no elegir un valor.
+- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs.

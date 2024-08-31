@@ -13,19 +13,15 @@ $imagenBusiness = new ImagenBusiness();
     <title>LUV</title>
     <script>
         async function updateOptions(type, selectId, selectedValue) {
+            let cantidad = 0;
             const select = document.getElementById(selectId);
             select.innerHTML = '';
-
-            const option = document.createElement('option');
-            option.value = 0;
-            option.text = "Seleccione una opción";
-            select.add(option);
 
             if (!type) return;
 
             try {
                 const response = await fetch(`../data/getData.php?type=${encodeURIComponent(type)}`);
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error('No se pudieron cargar las opciones');
 
                 const data = await response.json();
 
@@ -34,14 +30,17 @@ $imagenBusiness = new ImagenBusiness();
                     option.value = item.id;
                     option.text = item.name;
                     select.add(option);
+
+                    if(cantidad===0){
+                        select.value = option.value;
+                        updateFileName('dynamic-select', 'dynamic-select-name');
+                    }
+
+                    cantidad++;
                 });
 
-                // Seleccionar la opción correcta
-                if (selectedValue) {
-                    select.value = selectedValue;
-                }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error cargando la data:', error);
             }
         }
 
@@ -90,6 +89,18 @@ $imagenBusiness = new ImagenBusiness();
         document.addEventListener("DOMContentLoaded", () => {
             updateAllDynamicSelects();
         });
+
+        function validateForm() {
+            const selectElement = document.getElementById('idOptions');
+            const selectedValue = selectElement.value;
+
+            if (selectedValue === "") {
+                alert("Por favor, seleccione una opción válida.");
+                return false; 
+            }
+
+            return true;
+        }
     </script>
 </head>
 
@@ -104,11 +115,14 @@ $imagenBusiness = new ImagenBusiness();
             if (isset($_GET['error'])) {
                 $mensaje = "Ocurrió un error debido a ";
                 $mensaje .= match ($_GET['error']) {
+                    "type" => "que no seleccionó un tipo válido.",
                     "emptyField" => "campo(s) vacío(s).",
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicha imagen ya existe.",
                     "fileDeleteError" => "no se borró el archivo en el server.",
+                    "movingImg" => "que no se pudo subir la imagen.",
+                    "unknown" => "problemas inesperados.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
@@ -150,7 +164,7 @@ $imagenBusiness = new ImagenBusiness();
                     </select>
                 </div>
 
-                <form method="post" action="../action/imagenAction.php" enctype="multipart/form-data" style="width: 50vw; min-width:300px;">
+                <form method="post" action="../action/imagenAction.php" enctype="multipart/form-data" style="width: 50vw; min-width:300px;" onsubmit="return validateForm();">
                     <input type="hidden" name="idOptionsHidden" id="idOptionsHidden">
                     <input type="hidden" name="dynamic-select-name" id="dynamic-select-name">
                     <div>
@@ -161,7 +175,7 @@ $imagenBusiness = new ImagenBusiness();
 
                     <div class="mt-3">
                         <label for="imageUpload">Subir imagen:</label>
-                        <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
+                        <input required type="file" id="imageUpload" name="imageUpload" accept="image/*">
                     </div>
 
                     <div class="mt-3">
