@@ -25,3 +25,7 @@
 - [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
 - [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
 - [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)
+- [ ] Modificar el sistema para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. S debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen:
+	- [ ] No seleccionar una imagen al enviar el formulario.
+	- [ ] No escoger un valor requerido.
+	- [ ] Seleccionar un criterio y no elegir un valor.
