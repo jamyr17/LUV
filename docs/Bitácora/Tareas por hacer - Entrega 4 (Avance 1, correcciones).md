@@ -22,6 +22,6 @@
 - [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. 
 - [ ] Poder editar colectivos de un campus.
 - [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
-- [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box.
-- [ ] Así como se pueden agregar criterios, que también se puedan quitar.
-- [ ] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. 
+- [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
+- [ ] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
+- [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)

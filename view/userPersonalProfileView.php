@@ -21,6 +21,7 @@ include "../action/sessionUserAction.php";
         } else if (isset($_GET['success'])) {
             $mensaje = match(true){
                 $_GET['success']=="inserted" => "Se ha guardado el perfil personal.",
+                $_GET['success']=="updated" => "Se ha actualizado su perfil personal.",
                 default => "Transacción realizada.",
             };
 
@@ -28,7 +29,7 @@ include "../action/sessionUserAction.php";
                 alert('$mensaje');
                 document.addEventListener('DOMContentLoaded', function() {
                     var continuarBtn = document.createElement('button');
-                    continuarBtn.innerHTML = 'Continuar';
+                    continuarBtn.innerHTML = 'Buscar perfiles';
                     continuarBtn.onclick = function() {
                         window.location.href = '../view/userWantedProfileView.php';
                     };
