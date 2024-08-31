@@ -76,16 +76,14 @@ $criterioBusiness = new CriterioBusiness();
                     <h3>Agregar un nuevo valor</h3>
                     <p class="text-muted">Complete el formulario para añadir un nuevo valor</p>
                 </div>
-
                 <div class="container d-flex justify-content-center">
-                <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
-                    <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
+                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
+                        <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="idCriterio">Criterio:</label>
-                        <select name="idCriterio" id="idCriterio">
+                        <select name="idCriterio" id="idCriterio" onchange="updateCriterioNombre()">
                         <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
-                            // Recuperar el valor guardado en la sesión para 'idCriterio'
                             $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
                             
                             if ($criterios != null) {
@@ -94,9 +92,11 @@ $criterioBusiness = new CriterioBusiness();
                                     echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
                                 }
                             }
-                            ?>
+                        ?>
                         </select><br>
                         
+                        <input type="hidden" name="criterioNombre" id="criterioNombre" value="">
+
                         <label for="nombre" class="form-label">Nombre: </label>
                         <?php generarCampoTexto('nombre','formCrearData','Nombre de la opción','') ?>
 
@@ -105,6 +105,16 @@ $criterioBusiness = new CriterioBusiness();
                         </div>
                     </form>
                 </div>
+
+                <script>
+                    function updateCriterioNombre() {
+                        var select = document.getElementById('idCriterio');
+                        var nombre = select.options[select.selectedIndex].text;
+                        document.getElementById('criterioNombre').value = nombre;
+                    }
+
+                    updateCriterioNombre(); 
+                </script>
             </div>
         </section>
 

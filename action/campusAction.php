@@ -21,7 +21,7 @@ if (isset($_POST['update'])) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
                 $campusBusiness = new CampusBusiness();
 
-                $resultExist = $campusBusiness->exist($nombre);
+                $resultExist = $campusBusiness->nameExist($nombre);
 
                 if ($resultExist == 1) {
                     guardarFormData();

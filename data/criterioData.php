@@ -134,8 +134,7 @@ class CriterioData extends Data
         return $count > 0;
     }
 
-    public function insertRequestTbCriterio($criterio)
-    {
+    public function insertRequestTbCriterio($criterio){
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -164,4 +163,25 @@ class CriterioData extends Data
 
         return $resultInsert;
     }
+
+    public function getCriterioNombreById($idCriterio){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT tbcriterionombre FROM tbcriterio WHERE tbcriterioid = ? AND tbcriterioestado = 1";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $idCriterio);  // 'i' indica que el parámetro es un entero
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $nombre);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $nombre;
+    }
+
 }

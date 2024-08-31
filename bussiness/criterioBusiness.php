@@ -42,4 +42,9 @@ class CriterioBusiness {
         return $this->criterioData->insertRequestTbCriterio($criterio);
     }
 
+    public function getCriterioNombreById($idCriterio) {
+        return $this->valorData->getCriterioNombreById($idCriterio);
+    }
+
+
 }

@@ -1,7 +1,35 @@
 <?php
 
+include '../bussiness/criterioBusiness.php';
 include_once '../bussiness/valorBusiness.php'; 
 include 'functions.php';
+
+function agregarValorSiNoExiste($nombreArchivo, $valor) {
+    $filePath = "../resources/criterios/{$nombreArchivo}.dat";
+
+    // Leer el archivo y obtener los contenidos
+    $contenidoActual = [];
+    if (file_exists($filePath)) {
+        $contenidoActual = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    }
+
+    // Verificar si el valor ya existe en el archivo
+    if (!in_array($valor, $contenidoActual)) {
+        // Si el valor no existe, agregarlo al archivo
+        $file = fopen($filePath, 'a');
+        if ($file) {
+            fwrite($file, ",". $valor . PHP_EOL);
+            fclose($file);
+            return "Valor '{$valor}' agregado al archivo.";
+        } else {
+            return "Error: No se pudo abrir el archivo {$filePath} para escritura.";
+        }
+    } else {
+        return "El valor '{$valor}' ya existe en el archivo.";
+    }
+}
+
+
 
 if (isset($_POST['update'])) {
 
@@ -62,25 +90,27 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['idCriterio'])) {
+    if (isset($_POST['nombre']) && isset($_POST['idCriterio']) && isset($_POST['criterioNombre'])) {
 
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
-        $criterioId = $_POST['criterioId'];    
-
+        $criterioNombre = $_POST['criterioNombre'];  // Ahora tienes el nombre del criterio directamente
+    
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 $valorBusiness = new ValorBusiness();
-
+    
                 $resultExist = $valorBusiness->exist($nombre);
-
+    
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("Location: ../view/valorView.php?error=exist");
                 } else {
-                    $valor = new Valor(0, $nombre, $idCriterio, 1); // Estado 1 = Activo
+                    $mensaje = agregarValorSiNoExiste($criterioNombre, $nombre);
+    
+                    $valor = new Valor(0, $nombre, $idCriterio, 1);
                     $result = $valorBusiness->insertTbValor($valor);
-
+    
                     if ($result == 1) {
                         header("Location: ../view/valorView.php?success=inserted");
                     } else {
@@ -96,14 +126,13 @@ if (isset($_POST['update'])) {
             guardarFormData();
             header("Location: ../view/valorView.php?error=emptyField");
         }
+    } else if (isset($_GET['idCriterio'])) {
+        $idCriterio = $_GET['idCriterio'];
+        $valorBusiness = new ValorBusiness();
+        //$valorBusiness->getAllTbValorByCriterio($idCriterio);
     } else {
-        guardarFormData();
         header("Location: ../view/valorView.php?error=error");
     }
-} else if(isset($_GET['idCriterio'])) {
-    $idCriterio = $_GET['idCriterio'];
-    $valorBusiness = new ValorBusiness();
-    //$valorBusiness->getAllTbValorByCriterio($idCriterio);
-} else {
-    header("Location: ../view/valorView.php?error=error");
+    
+    
 }

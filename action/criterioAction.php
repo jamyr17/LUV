@@ -3,10 +3,74 @@
 include '../bussiness/criterioBusiness.php';
 include 'functions.php';
 
+$apiKey = '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';
+
+function createFolderIfNotExists($folderPath) {
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0777, true);
+    }
+}
+
+function createDataFile($nombre, $data) {
+    $filePath = "../resources/criterios/{$nombre}.dat";
+    $file = fopen($filePath, 'w');
+    if ($file) {
+        if (is_array($data)) {
+            foreach ($data as $line) {
+                fwrite($file, $line . PHP_EOL);
+            }
+        } else {
+            fwrite($file, $data);
+        }
+        fclose($file);
+    } else {
+        echo "Error: No se pudo crear el archivo {$filePath}";
+    }
+}
+
+function obtenerDatosIA($nombre, $apiKey) {
+    $headers = [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json'
+    ];
+
+    // Prompt dirigido y más claro
+    $prompt = "Genera una lista de opciones claras y concisas para el criterio llamado '{$nombre}'. Cada opción debe estar relacionada directamente con el criterio y ser breve, por ejemplo, 'Gustos por el Arte': 'Pintura', 'Escultura', 'Música', 'Teatro', 'Literatura'.";
+    
+    $postData = [
+        "inputs" => $prompt,
+        "options" => ["wait_for_model" => true]
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://api-inference.huggingface.co/models/gpt2');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $data = json_decode($response, true);
+
+    // Extrae solo el texto generado y separa por comas o líneas
+    if (isset($data[0]['generated_value'])) {
+        $opciones = explode("\n", trim($data[0]['generated_value']));
+        // Asegúrate de limpiar cualquier texto no deseado
+        $opcionesFiltradas = array_filter($opciones, function($opcion) {
+            return !empty($opcion) && strlen($opcion) < 50; // Filtro básico
+        });
+        return $opcionesFiltradas;
+    }
+
+    return ["No se generaron valores"]; // Valor de fallback si la IA no generó nada útil
+}
+
+
+
 if (isset($_POST['update'])) {
-
     if (isset($_POST['nombre'])) {
-
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
 
@@ -44,9 +108,7 @@ if (isset($_POST['update'])) {
         header("location: ../view/criterioView.php?error=error");
     }
 } else if (isset($_POST['delete'])) {
-
     if (isset($_POST['idCriterio'])) {
-
         $idCriterio = $_POST['idCriterio'];
 
         $criterioBusiness = new CriterioBusiness();
@@ -60,43 +122,37 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/criterioView.php?error=error");
     }
+
 } else if (isset($_POST['create'])) {
-
     if (isset($_POST['nombre'])) {
-
         $nombre = $_POST['nombre'];
-
-        if (strlen($nombre) > 0) {
-            if (!is_numeric($nombre)) {
-                $criterioBusiness = new CriterioBusiness();
-
-                $resultExist = $criterioBusiness->exist($nombre);
-
-                if ($resultExist == 1) {
-                    guardarFormData();
-                    header("location: ../view/criterioView.php?error=exist");
-                } else {
-                    $criterio = new Criterio(0, $nombre, 1);
-
-                    $result = $criterioBusiness->insertTbCriterio($criterio);
-
-                    if ($result == 1) {
-                        header("location: ../view/criterioView.php?success=inserted");
-                    } else {
-                        guardarFormData();
-                        header("location: ../view/criterioView.php?error=dbError");
-                    }
+        if (strlen($nombre) > 0 && !is_numeric($nombre)) {
+            $criterioBusiness = new CriterioBusiness();
+            $resultExist = $criterioBusiness->exist($nombre);
+            if ($resultExist == 0) {
+                createFolderIfNotExists('../resources/criterios');
+                
+                // Obtener datos de la IA
+                $data = obtenerDatosIA($nombre, $apiKey);
+                
+                if ($data) {
+                    createDataFile($nombre, $data);
                 }
+
+                $criterio = new Criterio(0, $nombre, 1);
+                $criterioBusiness->insertTbCriterio($criterio);
+                header("location: ../view/criterioView.php?success=inserted");
             } else {
                 guardarFormData();
-                header("location: ../view/criterioView.php?error=numberFormat");
+                header("location: ../view/criterioView.php?error=exist");
             }
         } else {
             guardarFormData();
-            header("location: ../view/criterioView.php?error=emptyField");
+            header("location: ../view/criterioView.php?error=numberFormat");
         }
     } else {
         guardarFormData();
-        header("location: ../view/criterioView.php?error=error");
+        header("location: ../view/criterioView.php?error=emptyField");
     }
 }
+?>

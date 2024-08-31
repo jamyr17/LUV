@@ -35,7 +35,7 @@ class AreaConocimientoBussiness {
     }
 
     public function nameExist($nombre, $idAreaConocimiento){
-        return $this->areaConocimientoData->nameExists($nombre);
+        return $this->areaConocimientoData->nameExists($nombre, $idAreaConocimiento);
     }
 
 }

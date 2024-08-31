@@ -38,6 +38,10 @@ class CampusBusiness {
         return $this->campusData->exist($nombre);
     }
 
+    public function nameExist($nombre, $idUniversidad){
+        return $this->areaConocimientoData->nameExists($nombre, $idUniversidad);
+    }
+
     public function insertRequestTbCampus($campus){
         return $this->campusData->insertRequestTbCampus($campus);
     }
