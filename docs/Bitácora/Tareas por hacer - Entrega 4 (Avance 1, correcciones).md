@@ -9,7 +9,7 @@
 - [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
 - [x] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
-- [ ] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo.
+- [ ] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo. (JAMYR)
 - [ ] CRUD Campus (GERALD)
 	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
 	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
@@ -19,13 +19,13 @@
 - [x] Revisar redirecciones al login. (JAMYR)
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
 - [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
-- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. 
-- [ ] Poder editar colectivos de un campus.
-- [x] Mostrar y poder editar el criterio de los valores en CRUD Valor.
+- [x] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. (Kevin)
+- [ ] Poder editar colectivos de un campus.(Kevin)
+- [x] Mostrar y poder editar el criterio de los valores en CRUD Valor.(Kevin)
 - [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
 - [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
 - [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)
-- [ ] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. S debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen:
+- [ ] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. Se debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen: (JAMYR)
 	- [ ] No seleccionar una imagen al enviar el formulario.
 	- [ ] No escoger un valor requerido.
 	- [ ] Seleccionar un criterio y no elegir un valor.
