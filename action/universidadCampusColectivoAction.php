@@ -82,10 +82,7 @@ if (isset($_POST['update'])) {
                     guardarFormData();
                     header("location: ../view/universidadCampusColectivoView.php?error=exist");
                 } else {
-                    if($descripcion == "Exclusivo"){
-                        $estado = 0;
-                    }
-                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, $estado);
+                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, 1);
     
                     $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
     
