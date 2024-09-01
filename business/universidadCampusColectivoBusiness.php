@@ -41,5 +41,4 @@ class universidadCampusColectivoBusiness {
     public function getColectivosByCampusId($campusId) {
         return $this->universidadCampusColectivoData->getColectivosByCampusId($campusId);
     }
-
 }

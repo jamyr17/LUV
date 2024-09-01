@@ -1,12 +1,10 @@
 <?php
 
 include '../business/campusBusiness.php';
+include '../business/universidadCampusColectivoBusiness.php';
 include 'functions.php';
 
 if (isset($_POST['update'])) {
-
-    // Depuración inicial
-    echo "<h2>Debug Start</h2>";
 
     if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud']) && isset($_POST['idCampus']) && isset($_POST['idUniversidad']) && isset($_POST['idRegion']) && isset($_POST['idEspecializacion'])) {
 
@@ -89,11 +87,12 @@ if (isset($_POST['update'])) {
         $direccion = $_POST['direccion'];
         $latitud = $_POST['latitud'];
         $longitud = $_POST['longitud'];
-        $colectivos = isset($_POST['colectivos']) ? $_POST['colectivos'] : [];
+        $colectivos = isset($_POST['colectivos']) ? $_POST['colectivos'] : []; 
 
         if (strlen($nombre) > 0 && strlen($direccion > 0)) {
+
             if (!is_numeric($nombre)) {
-                // verificar que no exista un registro con el mismo valor que esta siendo ingresado
+
                 $campusBusiness = new CampusBusiness();
 
                 $resultExist = $campusBusiness->exist($nombre);
@@ -111,9 +110,7 @@ if (isset($_POST['update'])) {
                         guardarFormData();
                         header("location: ../view/campusView.php?error=dbError");
                     }
-
                 }
-                
             } else {
                 guardarFormData();
                 header("location: ../view/campusView.php?error=numberFormat");
@@ -130,4 +127,43 @@ if (isset($_POST['update'])) {
     $idU = $_GET['idU'];
     $campusBusiness = new CampusBusiness();
     $campusBusiness->getAllTbCampusByUniversidad($idU);
-} 
+    
+}else if (isset($_POST['colectivoadd'])) {
+
+    if (isset($_POST['nombre'])) {
+        $nombre = $_POST['nombre'];
+
+
+        if (strlen($nombre) > 0) {
+
+            if (!is_numeric($nombre)) {
+                $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+
+                $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
+
+                if ($resultExist == 1) {
+                    echo 'error=exist'; 
+                } else {
+                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "Exclusivo", 0);
+                    $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
+
+                    if ($result['result'] == 1) {
+                        header("location: ../view/campusView.php?success=inserted");
+                    } else {
+                        guardarFormData();
+                        header("location: ../view/campusView.php?error=dbError");
+                    }
+                }
+                } else {
+                    guardarFormData();
+                    header("location: ../view/campusView.php?error=numberFormat");
+                }
+        } else {
+            guardarFormData();
+            header("location: ../view/campusView.php?error=emptyField");
+        }
+    } else {
+        guardarFormData();
+        header("location: ../view/campusView.php?error=error");
+    }
+}

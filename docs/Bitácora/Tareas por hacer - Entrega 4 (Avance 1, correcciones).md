@@ -10,9 +10,9 @@
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
 - [x] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
 - [x] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo. (JAMYR)
-- [ ] CRUD Campus (GERALD)
-	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
-	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
+- [x] CRUD Campus (Kevin)
+	- [x] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
+	- [x] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
 - [x] Usuario (JAMYR)
 	- [x] Poder subir imagen y guardarla en el server
 	- [x] Recuperar imagen de cada perfil para mostrarla en los resultados del matching

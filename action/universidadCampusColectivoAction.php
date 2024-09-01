@@ -73,7 +73,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
-                // Verificar que no exista un registro con el mismo valor que está siendo ingresado
+
                 $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
 
                 $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
@@ -82,7 +82,10 @@ if (isset($_POST['update'])) {
                     guardarFormData();
                     header("location: ../view/universidadCampusColectivoView.php?error=exist");
                 } else {
-                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, 1);
+                    if($descripcion == "Exclusivo"){
+                        $estado = 0;
+                    }
+                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, $estado);
     
                     $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
     

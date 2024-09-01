@@ -26,16 +26,16 @@ class universidadCampusColectivoData extends Data
 
         $nombre = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoNombre());
         $descripcion = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoDescripcion());
-        $estado = 1;
+        $estado = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoEstado());
 
-        // Consulta para insertar un nuevo registro
         $queryInsert = "INSERT INTO tbuniversidadcampuscolectivo (tbuniversidadcampuscolectivoid, tbuniversidadcampuscolectivonombre, tbuniversidadcampuscolectivodescripcion, tbuniversidadcampuscolectivoestado) 
                         VALUES ($nextId, '$nombre', '$descripcion', $estado)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
+
         mysqli_close($conn);
 
-        return $resultInsert;
+        return ['result' => $resultInsert, 'id' => $nextId];
     }
 
     public function updateTbUniversidadCampusColectivo($universidadCampusColectivo)
@@ -84,7 +84,7 @@ class universidadCampusColectivoData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivoestado = 1;";
+        $querySelect = "SELECT * FROM tbuniversidadcampuscolectivo;";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
 
@@ -179,8 +179,8 @@ class universidadCampusColectivoData extends Data
             $colectivo = new universidadCampusColectivo(
                 $row['tbuniversidadcampuscolectivoid'],
                 $row['tbuniversidadcampuscolectivonombre'],
-                '', // Suponiendo que la descripción puede ser vacía en este contexto
-                1  // Suponiendo que el estado es 1 para todos los colectivos recuperados
+                '', 
+                1  
             );
             $colectivos[] = $colectivo;
         }
@@ -190,7 +190,6 @@ class universidadCampusColectivoData extends Data
     
         return $colectivos;
     }
-    
 
 }
 ?>
