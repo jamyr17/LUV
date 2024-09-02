@@ -1,9 +1,9 @@
-- [ ] Base de datos: (GERALD)
-	- [ ] Cambiar los datos de Región.
-	- [ ] Añadir usuario admin admin.
-	- [ ] Limpiar registros.
-	- [ ] Añadir registros coherentes.
-- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD)
+- [x] Base de datos: (GERALD y Jamel)
+	- [x] Cambiar los datos de Región.
+	- [x] Añadir usuario admin admin.
+	- [x] Limpiar registros.
+	- [x] Añadir registros coherentes.
+- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD y Jamel) en eso estoyyy breteando Jamel..
 - [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
 - [x] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios. (JAMYR)
 - [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
