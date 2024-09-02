@@ -6,7 +6,7 @@
 - [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD y Jamel) en eso estoyyy breteando Jamel..
 - [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
 - [x] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios. (JAMYR)
-- [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
+- [x] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB Y JAMYR)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
 - [x] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
 - [x] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo. (JAMYR)

@@ -5,70 +5,87 @@ $wantedProfileBusiness = new WantedProfileBusiness();
 include_once "../business/usuarioBusiness.php";
 $usuarioBusiness = new UsuarioBusiness();
 
-$dataGlobal = "";
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-//Nuevo registro de perfil deseado
-if (isset($_POST["search"])) {
-    if(isset($dataGlobal['updateOrder'])) {
-        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+   
+    //Nuevo registro de perfil deseado
+    if (isset($_POST["search"])) {
+        if(isset($_SESSION['criteriaString']) && !empty([$_SESSION['criteriaString']]) && isset($_SESSION['valueString']) && !empty([$_SESSION['valueString']])){
+            
+            $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+            $criterioParam = $_SESSION['criteriaString'];
+            $valorParam = $_SESSION['valueString'];
+            $porcentajeParam = '20,80'; // se debe llamar a un metodo de logica que brinde un valor de porcentaje para cada criterio
 
-        if ($wantedProfileBusiness->profileExists($usuarioId)) {
-            $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+            if ($wantedProfileBusiness->profileExists($usuarioId)) {
+                $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+            } else {
+                $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+            }
+
+            // filtrar perfiles segun lo que desea el usuario: 
+            $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
+
+            // si no hay perfiles registrados
+            if (empty($allPerfiles)) {
+                header("location: ../view/userWantedProfileView.php?error=noProfiles");
+            } else {
+                $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+
+                // guardar los perfiles filtrados en sesión
+                $_SESSION['perfilesMatcheados'] = $perfilesFiltrados;
+                header("location: ../view/userProfileRecommendationsView.php");
+            }
         } else {
-            $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+            header("location: ../view/userWantedProfileView.php?error=formIncomplete");
+        }
+    }else{
+        header('Content-Type: application/json');
+
+        // Obtener y registrar el contenido crudo
+        $rawInput = file_get_contents('php://input');
+        if (!$rawInput) {
+            echo json_encode(['status' => 'error', 'message' => 'No se recibieron datos']);
+            exit;
         }
 
+        // Decodificar el JSON
+        $data = json_decode($rawInput, true);
 
-        // filtrar perfiles segun lo que desea el usuario: 
-        $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
+        // Verificar si la decodificación fue exitosa
+        if (json_last_error() === JSON_ERROR_NONE && isset($data['updateOrder'])) {
+            $updateOrder = $data['updateOrder'];
 
-        // si no hay perfiles registrados
-        if (empty($allPerfiles)) {
-            header("location: ../view/userWantedProfileView.php?error=noProfiles");
-        } else {
-            $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
 
-            // guardar los perfiles filtrados en sesión
-            session_start();
-            $_SESSION['perfilesMatcheados'] = $perfilesFiltrados;
-            header("location: ../view/userProfileRecommendationsView.php");
-        }
-    } else {
-        header("location: ../view/userWantedProfileView.php?error=formIncomplete");
-    }
-} else if (isset($_POST['updateOrder'])) {
-
-    // se supone que debe entrar aquí cada vez que se actualice, sin embargo no lo está haciendo...
-
-    // Obtener y registrar el contenido crudo
-    $rawInput = file_get_contents('php://input');
-
-    // Decodificar el JSON
-    $data = json_decode($rawInput, true);
-    $dataGlobal = $data; // estoy intentando guardar esos datos acá, pero no en BD, para luego guardarlos o no cuando se haga search.
-
-    if (isset($data['updateOrder'])) {
-        $updateOrder = $data['updateOrder'];
-
-        // Inicializar vectores
-        $criteria = [];
-        $values = [];
+        // Inicializar strings
+        $criteria = '';
+        $values = '';
 
         foreach ($updateOrder as $item) {
-            $criteria[] = $item['criterion'];
-            $values[] = $item['value'];
+            $criteria .= $item['criterion'] . ',';
+            $values .= $item['value'] . ',';
         }
 
+        // Guardar en la sesión
+        $_SESSION['criteriaString'] = rtrim($criteria, ',');
+        $_SESSION['valueString'] = rtrim($values, ',');
 
-        // Aquí puedes realizar la lógica para actualizar el orden en la base de datos
-        // Además se tendrá que realizar la lógica para la distribución de porcentajes
-        // Ejemplo: $resultado = $wantedProfileBusiness->updateOrder($criteria, $values);
-        
-        // Responder con éxito o error
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Parámetro updateOrder no recibido']);
+        // Responder con éxito
+        echo json_encode([
+        'status' => 'success',
+        'guardado' => [
+        'criteriaString' => $_SESSION['criteriaString'],
+        'valueString' => $_SESSION['valueString']
+            ]
+        ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Datos no válidos o parámetro updateOrder no recibido']);
+        }
     }
+
 }
 
 // Definir función para filtrar y ordenar perfiles
@@ -121,4 +138,8 @@ function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajePa
     }
 
     return $perfilesFiltrados;
+}
+
+function calculatePercentage(){
+    
 }

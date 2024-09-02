@@ -86,7 +86,6 @@ function actualizarTablaConCriterio() {
     });
 }
 
-
 async function guardarNuevoOrden() {
     const rows = Array.from(document.querySelectorAll('#sortableTable tbody tr'));
     const nuevoOrden = rows.map(row => {
@@ -106,16 +105,21 @@ async function guardarNuevoOrden() {
         });
 
         if (response.ok) {
-            console.log('Orden guardado exitosamente');
+            const responseText = await response.text(); 
+            try {
+                const jsonResponse = JSON.parse(responseText); 
+                console.log('Orden guardado exitosamente: ', jsonResponse);
+            } catch (jsonError) {
+                console.error('Error al parsear JSON:', jsonError);
+                console.log('Respuesta del servidor:', responseText);
+            }
         } else {
-            console.error('Error al guardar el orden');
+            console.error('Error al guardar el orden. Estado:', response.status);
         }
     } catch (error) {
         console.error('Error de red:', error);
     }
 }
-
-
 
 // función parra poder eliminar criterios
 function removeCriterion(button) {
@@ -126,6 +130,8 @@ function removeCriterion(button) {
 
     if (criteria.length > 1) {
         criterionToRemove.remove();
+        actualizarTablaConCriterio();
+        guardarNuevoOrden();
 
         // Recalcular el total del porcentaje si estamos en la vista 'WantedProfile'
         if (currentView !== 'PersonalProfile') {
