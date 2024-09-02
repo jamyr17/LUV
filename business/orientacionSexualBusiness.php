@@ -38,7 +38,7 @@ class OrientacionSexualBusiness {
     }
 
     public function nameExist($nombre, $idOrientacionSexual) {
-        return $this->orientacionSexualData->nameExists($nombre);
+        return $this->orientacionSexualData->nameExists($nombre, $idOrientacionSexual);
     }
 
 }

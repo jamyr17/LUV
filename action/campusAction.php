@@ -142,7 +142,7 @@ if (isset($_POST['update'])) {
                 $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
 
                 if ($resultExist == 1) {
-                    echo 'error=exist'; 
+                    header("location: ../view/campusView.php?error=exist");
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "Exclusivo", 0);
                     $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);

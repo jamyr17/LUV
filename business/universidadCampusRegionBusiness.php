@@ -38,8 +38,8 @@ class UniversidadCampusRegionBusiness {
         return $this->universidadCampusRegionData->exist($nombre);
     }
 
-    public function nameExist($nombre, $excludeId = null) {
-        return $this->universidadCampusRegionData->nameExists($nombre, $excludeId);
+    public function nameExist($nombre, $idCampusRegion) {
+        return $this->universidadCampusRegionData->nameExists($nombre, $idCampusRegion);
     }
 
 }

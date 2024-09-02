@@ -42,16 +42,17 @@ $imagenBusiness = new ImagenBusiness();
             } catch (error) {
                 console.error('Error cargando la data:', error);
             }
+
         }
 
         async function updateAllDynamicSelects() {
             const selects = document.querySelectorAll('select[id^="idOptionsUpdate"]');
-            selects.forEach(async (select) => {
+            for (const select of selects) {
                 const type = select.value;
                 const dynamicSelectId = select.getAttribute('data-dynamic-select-id');
                 const selectedDynamicValue = select.getAttribute('data-selected-dynamic-value');
                 await updateOptions(type, dynamicSelectId, selectedDynamicValue);
-            });
+            }
         }
 
         function updateHiddenIdOptions() {
@@ -93,14 +94,21 @@ $imagenBusiness = new ImagenBusiness();
         function validateForm() {
             const selectElement = document.getElementById('idOptions');
             const selectedValue = selectElement.value;
+            const fileInput = document.getElementById('imageUpload').value;
 
             if (selectedValue === "") {
                 alert("Por favor, seleccione una opción válida.");
                 return false; 
             }
 
+            if (!fileInput) {
+                alert("Por favor, suba una imagen.");
+                return false;
+            }
+
             return true;
         }
+
     </script>
 </head>
 
@@ -202,6 +210,7 @@ $imagenBusiness = new ImagenBusiness();
                         if ($imagen != null) {
                             foreach ($imagen as $imag) {
 
+                                $nombreImag = explode('.',$imag->getTbImagenNombre())[0];
                                 $selectedOption = htmlspecialchars($imag->getTbImagenCrudId());
                                 $selectedDynamic = htmlspecialchars($imag->getTbImagenRegistroId());
 
@@ -209,7 +218,7 @@ $imagenBusiness = new ImagenBusiness();
                                 echo '<form method="post" enctype="multipart/form-data" action="../action/imagenAction.php">';
                                 echo '<input type="hidden" name="id" value="' . htmlspecialchars($imag->getTbImagenId()) . '">';
                                 echo '<td>' . htmlspecialchars($imag->getTbImagenId()) . '</td>';
-                                echo '<td><input type="text" name="nombreArchivo" id="nombreArchivo" value="' . htmlspecialchars($imag->getTbImagenNombre()) . '" class="form-control" /></td>';
+                                echo '<td><input type="text" name="nombreArchivo" id="nombreArchivo" value="' . $nombreImag . '" class="form-control" /></td>';
                                 echo '<td>
                                     <select 
                                      id="idOptionsUpdate_' . htmlspecialchars($imag->getTbImagenId()) . '"
