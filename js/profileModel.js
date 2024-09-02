@@ -39,21 +39,83 @@ function addCriterion() {
         <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
-        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
         
         ${currentView === 'PersonalProfile' ? '' : `
-        <label for="percent${criteriaCount}">Porcentaje:</label>
-        <input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
-        `}
+        <!-- <label for="percent${criteriaCount}">Porcentaje:</label>-->
+        <!--<input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+        -->`}
         <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
     criteriaSection.appendChild(newCriterion);
 
-    populateCriteria(`criterion${criteriaCount}`); 
+    populateCriteria(`criterion${criteriaCount}`);
 
     const select = document.getElementById(`criterion${criteriaCount}`);
     loadValues(select, criteriaCount);
+
+    actualizarTablaConCriterio();
 }
+
+function actualizarTablaConCriterio() {
+    const tbody = document.querySelector('#sortableTable tbody');
+    tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla nuevamente
+
+    const criteriaSelects = document.querySelectorAll('select[name="criterion[]"]');
+    const valuesSelects = document.querySelectorAll('select[name="value[]"]');
+    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
+
+    criteriaSelects.forEach((select, index) => {
+        const criterionValue = select.options[select.selectedIndex]?.text || 'Sin criterio';
+        const valueSelect = valuesSelects[index];
+        const otherValueInput = otherValues[index];
+
+        let valueValue = valueSelect.options[valueSelect.selectedIndex]?.text || 'Sin valor';
+
+        if (valueSelect.value === 'other') {
+            valueValue = otherValueInput.value || 'Sin valor especificado';
+        }
+
+        const tr = document.createElement('tr');
+        tr.dataset.id = select.value; // Asegúrate de que el valor del select sea el ID del criterio
+        tr.innerHTML = `
+            <td>${criterionValue}</td>
+            <td>${valueValue}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+
+async function guardarNuevoOrden() {
+    const rows = Array.from(document.querySelectorAll('#sortableTable tbody tr'));
+    const nuevoOrden = rows.map(row => {
+        return {
+            criterion: row.children[0].textContent,
+            value: row.children[1].textContent
+        };
+    });
+
+    try {
+        const response = await fetch('../action/wantedProfileAction.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ updateOrder: nuevoOrden }),
+        });
+
+        if (response.ok) {
+            console.log('Orden guardado exitosamente');
+        } else {
+            console.error('Error al guardar el orden');
+        }
+    } catch (error) {
+        console.error('Error de red:', error);
+    }
+}
+
+
 
 // función parra poder eliminar criterios
 function removeCriterion(button) {
@@ -138,11 +200,11 @@ function populateCriteria(selectId) {
         const option = document.createElement('option');
         option.value = criterio.id;
         option.textContent = criterio.name;
-        option.setAttribute('data-nombre', criterio.name); 
+        option.setAttribute('data-nombre', criterio.name);
         select.appendChild(option);
     });
 
-    select.disabled = false; 
+    select.disabled = false;
 }
 
 // Función para cargar los valores basados en el criterio seleccionado
@@ -155,7 +217,7 @@ function loadValues(select, index) {
         return;
     }
 
-    valueSelect.innerHTML = ''; 
+    valueSelect.innerHTML = '';
 
     // Filtrar valores basados en el criterio seleccionado
     const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
@@ -171,7 +233,7 @@ function loadValues(select, index) {
         const option = document.createElement('option');
         option.value = valor.id;
         option.textContent = valor.name;
-        option.setAttribute('data-nombre', valor.name);  
+        option.setAttribute('data-nombre', valor.name);
         valueSelect.appendChild(option);
     });
 
@@ -181,7 +243,9 @@ function loadValues(select, index) {
     otherOption.textContent = 'Otro';
     valueSelect.appendChild(otherOption);
 
-    valueSelect.disabled = false; 
+    valueSelect.disabled = false;
+
+    actualizarTablaConCriterio();
 }
 
 // Para que el usuario pueda agregar un valor personalizado
@@ -191,8 +255,10 @@ function toggleOtherField(select, index) {
         otherField.style.display = 'block';
     } else {
         otherField.style.display = 'none';
-        otherField.value = ''; 
+        otherField.value = '';
     }
+
+    actualizarTablaConCriterio();
 }
 
 function submitForm() {
@@ -207,12 +273,12 @@ function submitForm() {
 
     const criteria = document.querySelectorAll('select[name="criterion[]"]');
     const values = document.querySelectorAll('select[name="value[]"]');
-    const percentages = document.querySelectorAll('input[name="percentage[]"]');
-    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');       
+    // const percentages = document.querySelectorAll('input[name="percentage[]"]');
+    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
 
     let criteriaString = '';
     let valuesString = '';
-    let percentagesString = '';
+    // let percentagesString = '';
 
     for (let i = 0; i < criteria.length; i++) {
         const selectedCriterion = criteria[i].selectedOptions[0];
@@ -227,25 +293,37 @@ function submitForm() {
             valuesString += valueName;
         }
 
-        percentagesString += percentages[i] ? percentages[i].value : '';
+        // percentagesString += percentages[i] ? percentages[i].value : '';
 
         if (i < criteria.length - 1) {
             criteriaString += ',';
             valuesString += ',';
-            percentagesString += ',';
+            // percentagesString += ',';
         }
     }
 
     document.getElementById('criteriaString').value = criteriaString;
     document.getElementById('valuesString').value = valuesString;
-    document.getElementById('percentagesString').value = percentagesString;
+    // document.getElementById('percentagesString').value = percentagesString;
 
     return true;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const sortableTable = document.querySelector('#sortableTable tbody');
+
+    // Configura SortableJS
+    Sortable.create(sortableTable, {
+        animation: 150,
+        onEnd: function (evt) {
+            // Llama a la función para guardar el nuevo orden al finalizar el arrastre
+            guardarNuevoOrden();
+        }
+    });
+
     await loadInitialCriteriaData();
     await loadInitialValuesData();
 
     document.getElementById('criterion1').disabled = false;
+    actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales
 });
