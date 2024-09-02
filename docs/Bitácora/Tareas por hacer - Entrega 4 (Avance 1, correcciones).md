@@ -28,5 +28,10 @@
 - [x] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. Se debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen: (JAMYR)
 	- [x] No seleccionar una imagen al enviar el formulario.
 	- [x] No escoger un valor requerido.
-	- [x] Seleccionar un criterio y no elegir un valor.
-- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs.
+	- [x] Seleccionar un criterio y no elegir un valor. 
+- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update).
+	- [ ] No carga todos los registros de las opciones.
+	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
+- [ ] Poder editar mi perfil.
+- [ ] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction
+	- [ ] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"
