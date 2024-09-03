@@ -504,7 +504,8 @@ CREATE TABLE `tbusuario` (
   `tbusuarionombre` varchar(255) NOT NULL,
   `tbusuariocontrasena` varchar(63) NOT NULL,
   `tbusuarioestado` tinyint(1) NOT NULL,
-  `tbtipousuarioid` int(11) NOT NULL
+  `tbtipousuarioid` int(11) NOT NULL,
+  `tbusuarioimagen` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
