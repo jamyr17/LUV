@@ -363,8 +363,6 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             
                             echo '</select>';
                             echo '</td>';
-                            
-
 
                             // Acciones
                             echo '<td>';

@@ -18,8 +18,24 @@
     function showMessage(mensaje) {
       alert(mensaje);
     }
-  </script>
 
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      var descripcion = document.getElementById("descripcion").value;
+
+      if (nombre.length > 255) {
+        alert("El nombre no puede exceder los 255 caracteres.");
+        return false; // Evita que el formulario se envíe
+      }
+      
+      if (descripcion.length > 255) {
+        alert("La descripción no puede exceder los 255 caracteres.");
+        return false; // Evita que el formulario se envíe
+      }
+
+      return true; // Permite que el formulario se envíe
+    }
+  </script>
 </head>
 
 <body>
@@ -40,6 +56,8 @@
             $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="exist" => "que dicha región ya existe.",
+            $_GET['error']=="nombreTooLong" => "El nombre excede los 255 caracteres.",
+            $_GET['error']=="descripcionTooLong" => "La descripción excede los 255 caracteres.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
@@ -71,24 +89,24 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
                 <input type="hidden" name="idUniversidadCampusRegion" value="0">
 
                 <div class="row">
                     <div class="col">
-
                       <label for="nombre" class="form-label">Nombre: </label>
-                      <?php generarCampoTexto('nombre','formCrearData','Nombre de la región','') ?>
-
+                      <?php 
+                        generarCampoTexto('nombre', 'formCrearData', 'Nombre de la región', '', '255');
+                      ?>
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col">
-
                     <label for="descripcion" class="form-label">Descripción: </label>
-                    <?php generarCampoTexto('descripcion','formCrearData','Descripción de la región','') ?>
-
+                    <?php 
+                      generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la región', '', '255');
+                    ?>
                     </div>
                 </div>
                 
@@ -125,22 +143,22 @@
           if ($campusRegions != null) {
             foreach ($campusRegions as $campusRegion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '">';
               echo '<td>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '</td>';
              
               echo '<td>';
               if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidadCampusRegion'] == $campusRegion->getTbUniversidadCampusRegionId()) {
-                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                generarCampoTexto('nombre', 'formActualizarData', '', '', '255');
                 echo '</td>';
                 echo '<td>';
-                generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                generarCampoTexto('descripcion', 'formActualizarData', '', '', '255');
                 echo '</td>';
               } else {
-                generarCampoTexto('nombre', '', '', $campusRegion->getTbUniversidadCampusRegionNombre());
+                generarCampoTexto('nombre', '', '', $campusRegion->getTbUniversidadCampusRegionNombre(), '255');
                 echo '</td>';
                 echo '<td>';
-                generarCampoTexto('descripcion', '', '', $campusRegion->getTbUniversidadCampusRegionDescripcion());
+                generarCampoTexto('descripcion', '', '', $campusRegion->getTbUniversidadCampusRegionDescripcion(), '255');
                 echo '</td>';
               }
 

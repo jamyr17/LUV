@@ -1,5 +1,4 @@
 <?php
-
 include '../business/universidadCampusRegionBusiness.php';
 include 'functions.php';
 
@@ -10,6 +9,16 @@ if (isset($_POST['update'])) {
         $idUniversidadCampusRegion = $_POST['idUniversidadCampusRegion'];
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
+
+        if (strlen($nombre) > 255) {
+            header("Location: ../view/universidadCampusRegionView.php?error=nombreTooLong");
+            exit();
+        }
+        
+        if (strlen($descripcion) > 255) {
+            header("Location: ../view/universidadCampusRegionView.php?error=descripcionTooLong");
+            exit();
+        }
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
@@ -68,6 +77,16 @@ if (isset($_POST['update'])) {
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
 
+        if (strlen($nombre) > 255) {
+            header("Location: ../view/universidadCampusRegionView.php?error=nombreTooLong");
+            exit();
+        }
+        
+        if (strlen($descripcion) > 255) {
+            header("Location: ../view/universidadCampusRegionView.php?error=descripcionTooLong");
+            exit();
+        }
+
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
                 $campusRegionBusiness = new UniversidadCampusRegionBusiness();
@@ -102,3 +121,4 @@ if (isset($_POST['update'])) {
         header("location: ../view/universidadCampusRegionView.php?error=error");
     }
 }
+?>

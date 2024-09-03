@@ -3,17 +3,12 @@
   include '../action/functions.php';
 
   // Define los límites de longitud para los campos
-  $maxLengthNombre = 100;
+  $maxLengthNombre = 255;
   $maxLengthDescripcion = 255;
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
-
-    if (!preg_match("/^[a-zA-Z\s]+$/", $nombre)) {
-        header("Location: ../view/universidadCampusEspecializacionView.php?error=invalidName");
-        exit();
-    }
 
     if (strlen($nombre) > $maxLengthNombre) {
         header("Location: ../view/universidadCampusEspecializacionView.php?error=nameTooLong");
@@ -24,7 +19,6 @@
         header("Location: ../view/universidadCampusEspecializacionView.php?error=descriptionTooLong");
         exit();
     }
-
   }
 ?>
 
@@ -36,13 +30,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Especializaciones de Campus</title>
   <script>
-    // Función para confirmar una acción
     function actionConfirmation(mensaje){
-      var response = confirm(mensaje);
-      return response;
+      return confirm(mensaje);
     }
 
-    // Función para mostrar un mensaje de alerta
     function showMessage(mensaje){
       alert(mensaje);
     }
@@ -51,16 +42,8 @@
       var nombre = document.getElementById("nombre").value;
       var descripcion = document.getElementById("descripcion").value;
       
-      var maxLengthNombre = 100;
+      var maxLengthNombre = 255;
       var maxLengthDescripcion = 255;
-
-      var regex = /^[a-zA-Z\s]+$/;  // Solo letras y espacios
-
-      // Validar que el nombre solo contenga letras
-      if (!regex.test(nombre)) {
-        alert("El nombre de la especialización solo puede contener letras.");
-        return false;
-      }
 
       if (nombre.length > maxLengthNombre) {
         alert("El nombre no puede tener más de " + maxLengthNombre + " caracteres.");
