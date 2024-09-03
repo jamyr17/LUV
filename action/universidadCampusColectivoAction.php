@@ -73,7 +73,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
-                // Verificar que no exista un registro con el mismo valor que está siendo ingresado
+
                 $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
 
                 $resultExist = $universidadCampusColectivoBusiness->exist($nombre);

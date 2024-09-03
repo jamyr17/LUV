@@ -1,25 +1,37 @@
-- [ ] Base de datos: (GERALD)
-	- [ ] Cambiar los datos de Región.
-	- [ ] Añadir usuario admin admin.
-	- [ ] Limpiar registros.
-	- [ ] Añadir registros coherentes.
-- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD)
+- [x] Base de datos: (GERALD y Jamel)
+	- [x] Cambiar los datos de Región.
+	- [x] Añadir usuario admin admin.
+	- [x] Limpiar registros.
+	- [x] Añadir registros coherentes.
+- [ ] Revisar validaciones en todos los CRUD y sus mensajes de respuesta. (GERALD y Jamel) en eso estoyyy breteando Jamel..
 - [x] Guardar los datos de los formularios para volver a cargarlos en caso de que haya ocurrido algún error. (JAMYR)
 - [x] Agregar en la vista Modela Tu Perfil la funcionalidad de una cantidad personalizable de criterios. (JAMYR)
-- [ ] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB)
+- [x] Reestructurar las vistas de Modelados para que los criterios sean arrastrables y se puedan organizar como árbol. (JEYCOB Y JAMYR)
 - [ ] Lógica para darle valores porcentuales a cada criterio según el ordenamiento realizado por el usuario.
-- [ ] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
-- [ ] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo.
-- [ ] CRUD Campus (GERALD)
-	- [ ] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
-	- [ ] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
+- [x] Por cada criterio debe haber un archivo plano que guarde sus posibles valores, si se crea un nuevo Criterio, se crea su archivo correspondiente. (KEVIN)
+- [x] Que el ingreso de los registros de "Valor" para cada criterio sea un input de texto, que tenga el autocompletado en base al archivo plano que le corresponde a su criterio. Si se ingresa un valor no registrado previamente, se agrega al archivo. (JAMYR)
+- [x] CRUD Campus (Kevin)
+	- [x] Para los colectivos solo debe haber 1 input de texto y 1 combobox no editable, que tenga el autocompletado según un archivo igual que en los criterios y si la opción que manda ya existe, se marca en el combobox, sino se agrega sabiendo que es una nueva opción.
+	- [x] Que se puedan editar los colectivos con la misma naturaleza que lo de arriba. 
 - [x] Usuario (JAMYR)
 	- [x] Poder subir imagen y guardarla en el server
 	- [x] Recuperar imagen de cada perfil para mostrarla en los resultados del matching
 - [x] Revisar redirecciones al login. (JAMYR)
 - [x] Cambiar errores en nombres de clases de Bussiness. (JAMYR)
 - [x] Revisar bug al actualizar campus: no se actualiza el registro que debe actualizarse. (JAMYR)
-- [ ] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que  editar el nombre. 
-- [ ] Poder editar colectivos de un campus.
-- [ ] Mostrar y poder editar el criterio de los valores en CRUD Valor.
-- [ ] Así como se pueden agregar criterios, que también se puedan quitar.
+- [x] Revisar los CRUD para terminar de implementar el poder editar cualquier campo sin necesidad de tener que editar el nombre. (KEVIN)
+- [x] Poder editar colectivos de un campus.(KEVIN)
+- [x] Mostrar y poder editar el criterio de los valores en CRUD Valor.(KEVIN)
+- [x] En Modela Tu Perfil los criterios sean modificables mediante Select Box. (JAMYR)
+- [x] Así como se pueden agregar criterios, que también se puedan quitar. (JAMYR)
+- [x] Mensajes distintos según si se está actualizando el modelo de un perfil o creando uno. (JAMYR)
+- [x] Modificar el CRUD imagen para que en lugar de mostrar un mensaje de error con echo(tipo de mensaje), se realice una redirección. Se debe capturar y mostrar el mensaje de error de manera adecuada para que el usuario pueda entender lo que salió mal. Los errores a manejar incluyen: (JAMYR)
+	- [x] No seleccionar una imagen al enviar el formulario.
+	- [x] No escoger un valor requerido.
+	- [x] Seleccionar un criterio y no elegir un valor. 
+- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update).
+	- [ ] No carga todos los registros de las opciones.
+	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
+- [ ] Poder editar mi perfil.
+- [ ] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction
+	- [ ] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"

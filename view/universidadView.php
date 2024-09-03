@@ -12,16 +12,20 @@
   <title>LUV</title>
   <script>
     function actionConfirmation(mensaje){
-      var response = confirm(mensaje)
-      if(response==true){
-        return true
-      }else{
-        return false
-      }
+      return confirm(mensaje);
     }
 
     function showMessage(mensaje){
       alert(mensaje);
+    }
+
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      if (nombre.length > 150) {
+        alert("El texto no puede exceder los 150 caracteres.");
+        return false; // Evita que el formulario se envíe
+      }
+      return true; // Permite que el formulario se envíe
     }
 
   </script>
@@ -79,7 +83,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/universidadAction.php" style="width: 50vvw; min-width:300px;">
+            <form method="post" action="../action/universidadAction.php" style="width: 50vvw; min-width:300px;" onsubmit="return validateForm()">
                 <input type="hidden" name="universidad" value="<?php echo htmlspecialchars($idUniversidad); ?>">
 
                 <div class="row">

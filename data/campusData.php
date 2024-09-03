@@ -3,102 +3,144 @@
 include_once 'data.php';
 include '../domain/campus.php';
 
-class CampusData extends Data
-{
+class CampusData extends Data {
 
-    public function insertTbCampus($campus)
-{
-    $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-    $conn->set_charset('utf8');
+    public function insertTbCampus($campus){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
 
-    // Consulta para obtener el ID máximo
-    $queryGetLastId = "SELECT MAX(tbuniversidadcampusid) AS max_id FROM tbuniversidadcampus";
-    $result = mysqli_query($conn, $queryGetLastId);
+        // Consulta para obtener el ID máximo
+        $queryGetLastId = "SELECT MAX(tbuniversidadcampusid) AS max_id FROM tbuniversidadcampus";
+        $result = mysqli_query($conn, $queryGetLastId);
 
-    if ($row = mysqli_fetch_assoc($result)) {
-        $maxId = $row['max_id'];
-        $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
-    } else {
-        $nextId = 1;
-    }
-
-    $universidadId = mysqli_real_escape_string($conn, $campus->getTbCampusUniversidadId());
-    $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
-    $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
-    $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
-    $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
-    $estado = 1;
-    $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
-    $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
-
-    // Consulta para insertar un nuevo registro
-    $queryInsert = "INSERT INTO tbuniversidadcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampuslatitud, tbuniversidadcampuslongitud, tbuniversidadcampusestado, tbuniversidadcampusregionid, tbuniversidadcampusespecializacionid) 
-                    VALUES ($nextId, '$universidadId', '$nombre', '$direccion', '$latitud', '$longitud', $estado, $regionId, $especializacionId)";
-
-    $resultInsert = mysqli_query($conn, $queryInsert);
-
-    // Consulta para obtener el ID máximo para colectivos
-    $queryGetLastIdAux = "SELECT MAX(tbuniversidadcampuscolectivoid) AS max_id FROM tbuniversidadcampuscolectivo";
-    $resultAux = mysqli_query($conn, $queryGetLastIdAux);
-
-    if ($row = mysqli_fetch_assoc($resultAux)) {
-        $maxId = $row['max_id'];
-        $nextIdAux = ($maxId !== null) ? (int)$maxId + 1 : 1;
-    } else {
-        $nextIdAux = 1;
-    }
-
-    $colectivos = $campus->getColectivos();
-    if (!is_array($colectivos)) {
-        throw new Exception('El método getColectivos debe devolver un array.');
-    }
-
-    foreach ($colectivos as $colectivoId) {
-        if (!is_scalar($colectivoId)) {
-            throw new Exception('Cada elemento de getColectivos debe ser una cadena o un número.');
+        if ($row = mysqli_fetch_assoc($result)) {
+            $maxId = $row['max_id'];
+            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextId = 1;
         }
-        $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
-        $query = "INSERT INTO tbuniversidadcampusuniversidadcolectivo (tbuniversidadcampusuniversidadcolectivoid, tbuniversidadcampusid, tbuniversidadcolectivoid) VALUES ($nextIdAux, $nextId, '$colectivoIdEscaped')";
-        $resultInsert = mysqli_query($conn, $query);
-        $nextIdAux++;
+
+        $universidadId = mysqli_real_escape_string($conn, $campus->getTbCampusUniversidadId());
+        $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+        $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
+        $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
+        $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
+        $estado = 1;
+        $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
+        $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
+
+        // Consulta para insertar un nuevo registro
+        $queryInsert = "INSERT INTO tbuniversidadcampus (tbuniversidadcampusid, tbuniversidadid, tbuniversidadcampusnombre, tbuniversidadcampusdireccion, tbuniversidadcampuslatitud, tbuniversidadcampuslongitud, tbuniversidadcampusestado, tbuniversidadcampusregionid, tbuniversidadcampusespecializacionid) 
+                        VALUES ($nextId, '$universidadId', '$nombre', '$direccion', '$latitud', '$longitud', $estado, $regionId, $especializacionId)";
+
+        $resultInsert = mysqli_query($conn, $queryInsert);
+
+        // Consulta para obtener el ID máximo para colectivos
+        $queryGetLastIdAux = "SELECT MAX(tbuniversidadcampuscolectivoid) AS max_id FROM tbuniversidadcampuscolectivo";
+        $resultAux = mysqli_query($conn, $queryGetLastIdAux);
+
+        if ($row = mysqli_fetch_assoc($resultAux)) {
+            $maxId = $row['max_id'];
+            $nextIdAux = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextIdAux = 1;
+        }
+
+        $colectivos = $campus->getColectivos();
+        if (!is_array($colectivos)) {
+            throw new Exception('El método getColectivos debe devolver un array.');
+        }
+
+        foreach ($colectivos as $colectivoId) {
+            if (!is_scalar($colectivoId)) {
+                throw new Exception('Cada elemento de getColectivos debe ser una cadena o un número.');
+            }
+            $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
+            $query = "INSERT INTO tbuniversidadcampusuniversidadcolectivo (tbuniversidadcampusuniversidadcolectivoid, tbuniversidadcampusid, tbuniversidadcolectivoid) VALUES ($nextIdAux, $nextId, '$colectivoIdEscaped')";
+            $resultInsert = mysqli_query($conn, $query);
+            $nextIdAux++;
+        }
+
+        mysqli_close($conn);
+
+        return $resultInsert;
     }
 
-    mysqli_close($conn);
+    public function updateTbCampus($campus){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
 
-    return $resultInsert;
-}
-public function updateTbCampus($campus)
-{
-    $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-    $conn->set_charset('utf8');
+        $id = intval($campus->getTbCampusId());
+        $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
+        $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
+        $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
+        $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
+        $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
+        $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
 
-    $id = intval($campus->getTbCampusId()); 
-    $nombre = mysqli_real_escape_string($conn, $campus->getTbCampusNombre());
-    $latitud = mysqli_real_escape_string($conn, $campus->getTbCampusLatitud());
-    $longitud = mysqli_real_escape_string($conn, $campus->getTbCampusLongitud());
-    $direccion = mysqli_real_escape_string($conn, $campus->getTbCampusDireccion());
-    $regionId = mysqli_real_escape_string($conn, $campus->getTbCampusRegionId());
-    $especializacionId = mysqli_real_escape_string($conn, $campus->getTbCampusEspecializacionId());
-    $queryUpdate = "UPDATE tbuniversidadcampus SET 
-                        tbuniversidadcampusnombre='$nombre', 
-                        tbuniversidadcampusdireccion='$direccion',
-                        tbuniversidadcampuslatitud='$latitud',
-                        tbuniversidadcampuslongitud='$longitud',            
-                        tbuniversidadcampusregionid=$regionId,
-                        tbuniversidadcampusespecializacionid=$especializacionId
-                    WHERE tbuniversidadcampusid=$id;";
+        $queryUpdate = "UPDATE tbuniversidadcampus SET 
+                            tbuniversidadcampusnombre='$nombre', 
+                            tbuniversidadcampusdireccion='$direccion',
+                            tbuniversidadcampuslatitud='$latitud',
+                            tbuniversidadcampuslongitud='$longitud',            
+                            tbuniversidadcampusregionid=$regionId,
+                            tbuniversidadcampusespecializacionid=$especializacionId
+                        WHERE tbuniversidadcampusid=$id;";
 
-    $result = mysqli_query($conn, $queryUpdate);
+        $result = mysqli_query($conn, $queryUpdate);
 
-    if (!$result) {
-        // Imprime el error SQL si la consulta falla
-        echo "Error: " . mysqli_error($conn);
+        if (!$result) {
+            echo "Error: " . mysqli_error($conn);
+            mysqli_close($conn);
+            return $result;
+        }
+
+        // Eliminar los colectivos actuales asociados con el campus
+        $queryDeleteColectivos = "DELETE FROM tbuniversidadcampusuniversidadcolectivo WHERE tbuniversidadcampusid=$id;";
+        $resultDelete = mysqli_query($conn, $queryDeleteColectivos);
+
+        if (!$resultDelete) {
+            echo "Error al eliminar colectivos: " . mysqli_error($conn);
+            mysqli_close($conn);
+            return $resultDelete;
+        }
+
+        // Insertar los nuevos colectivos
+        $colectivos = $campus->getColectivos();
+        if (!is_array($colectivos)) {
+            throw new Exception('El método getColectivos debe devolver un array.');
+        }
+
+        // Obtener el ID máximo actual para los colectivos
+        $queryGetLastIdAux = "SELECT MAX(tbuniversidadcampuscolectivoid) AS max_id FROM tbuniversidadcampuscolectivo";
+        $resultAux = mysqli_query($conn, $queryGetLastIdAux);
+
+        if ($row = mysqli_fetch_assoc($resultAux)) {
+            $maxId = $row['max_id'];
+            $nextIdAux = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            $nextIdAux = 1;
+        }
+
+        foreach ($colectivos as $colectivoId) {
+            if (!is_scalar($colectivoId)) {
+                throw new Exception('Cada elemento de getColectivos debe ser una cadena o un número.');
+            }
+            $colectivoIdEscaped = mysqli_real_escape_string($conn, $colectivoId);
+            $queryInsertColectivo = "INSERT INTO tbuniversidadcampusuniversidadcolectivo (tbuniversidadcampusuniversidadcolectivoid, tbuniversidadcampusid, tbuniversidadcolectivoid) VALUES ($nextIdAux, $id, '$colectivoIdEscaped')";
+            $resultInsert = mysqli_query($conn, $queryInsertColectivo);
+            if (!$resultInsert) {
+                echo "Error al insertar colectivo: " . mysqli_error($conn);
+                mysqli_close($conn);
+                return $resultInsert;
+            }
+            $nextIdAux++;
+        }
+
+        mysqli_close($conn);
+
+        return $result;
     }
-
-    mysqli_close($conn);
-
-    return $result;
-}
 
     public function deleteTbCampus($campusId)
     {
@@ -224,6 +266,28 @@ public function updateTbCampus($campus)
 
         return $count > 0;
     }
+
+    public function nameExists($nombre, $excludeId = null)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $query = "SELECT COUNT(*) as count FROM tbuniversidadcampus WHERE tbuniversidadcampusnombre = ? AND tbuniversidadcampusid != ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'si', $nombre, $idAreaConocimiento);
+        
+        mysqli_stmt_execute($stmt);
+        
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return $count > 0;
+    }
+
 
     public function insertRequestTbCampus($campus)
     {

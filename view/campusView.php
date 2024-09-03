@@ -30,6 +30,86 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
         function showMessage(mensaje) {
             alert(mensaje);
         }
+
+        function seleccionarColectivo() {
+            var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
+
+            if (nombreColectivo === '') {
+                alert('Por favor, ingrese un nombre para el colectivo.');
+                return;
+            }
+
+            var select = document.getElementById('colectivos');
+            select.disabled = false;
+
+            var options = select.options;
+            var encontrado = false;
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
+                    options[i].selected = true;
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                var nuevaOpcion = document.createElement('option');
+                nuevaOpcion.text = nombreColectivo;
+                nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
+                nuevaOpcion.selected = true;
+                select.appendChild(nuevaOpcion);
+
+                var formData = new FormData();
+                formData.append('colectivoadd', true);
+                formData.append('nombre', nombreColectivo);
+
+                fetch('../action/campusAction.php', { 
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        var nuevaOpcion = select.querySelector('option[value^="new_"]');
+                        if (nuevaOpcion) {
+                            nuevaOpcion.value = data.id;
+                        }
+                        alert('Se a registrado un colectivo no registrado previamente');
+                    } else if (data.status === 'error') {
+                        if (data.code === 'exist') {
+                            alert('El colectivo ya existe.');
+                        } else if (data.code === 'dbError') {
+                            alert('Error al insertar en la base de datos.');
+                        } else if (data.code === 'numberFormat') {
+                            alert('Formato de nombre inválido.');
+                        } else if (data.code === 'emptyField') {
+                            alert('El nombre del colectivo está vacío.');
+                        } else {
+                            alert('Error desconocido: ' + data.code);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            select.disabled = true;
+        }
+
+        function activarYDesactivarSelectColectivos() {
+            var select = document.getElementById('colectivos');
+            select.disabled = false; 
+            setTimeout(function() {
+                select.disabled = true; 
+            }, 0);
+        }
+
+        window.onload = function() {
+            document.getElementById('colectivos').disabled = true; 
+        };
+
     </script>
 </head>
 
@@ -79,7 +159,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                 </div>
 
                 <div class="container d-flex justify-content-center">
-                    <form method="post" action="../action/campusAction.php" style="width: 50vw; min-width:300px;">
+                    <form method="post" action="../action/campusAction.php" style="width: 50vw; min-width:300px;" onsubmit="activarYDesactivarSelectColectivos()">
                         <input type="hidden" name="idCampus" value="">
 
                         <label for="idUniversidad">Universidad:</label>
@@ -131,20 +211,28 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             }
                             ?>
                         </select><br>
+                        
 
-                        <label for="colectivos">Seleccione los colectivos: </label>
-                        <select name="colectivos[]" id="colectivos" multiple class="form-control">
-                            <?php
-                            $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
-                            $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
-                            if ($campusColectivos != null) {
-                                foreach ($campusColectivos as $campusColectivo) {
-                                    $selected = in_array($campusColectivo->getTbUniversidadCampusColectivoId(), $valoresSeleccionados) ? 'selected' : '';
-                                    echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
+                            <label for="colectivos">Agregue los colectivos: </label>
+
+                            <?php generarCampoTexto('colectivo', 'formCrearData', 'Volleyball', '') ?>
+                            
+                            <button type="button" onclick="seleccionarColectivo()">Agregar Colectivo</button>
+
+                            <select name="colectivos[]" id="colectivos" multiple class="form-control" disabled>
+                                <?php
+                                $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
+                                $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
+                                if ($campusColectivos != null ) {
+                                    foreach ($campusColectivos as $campusColectivo) {
+                                        if ($campusColectivo->getTbUniversidadCampusColectivoEstado() == 1) {
+                                            $selected = in_array($campusColectivo->getTbUniversidadCampusColectivoId(), $valoresSeleccionados) ? 'selected' : '';
+                                            echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
+                                        }
+                                    }
                                 }
-                            }
-                            ?>
-                        </select><br>
+                                ?>
+                            </select><br>
 
                         <label for="idEspecializacion">Seleccione su especialización: </label>
                         <select name="idEspecializacion" id="idEspecializacion" class="form-control">
@@ -166,7 +254,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                 </div>
             </div>
         </section>
-
+        
         <section id="table">
             <div class="text-center mb-4">
                 <h3>Campus registrados</h3>
@@ -180,6 +268,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                         <th>Dirección</th>
                         <th>Región</th>
                         <th>Especialización</th>
+                        <th>Colectivos</th> <!-- Nueva columna -->
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -215,7 +304,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             echo '<td>';
                             echo '<select name="idRegion" class="form-control">';
                             $campusRegiones = $campusRegionBusiness->getAllTbUniversidadCampusRegion();
-                            
+
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
                                 $idRegionSeleccionada = $_SESSION['formActualizarData']['idRegion'];
@@ -233,8 +322,8 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             // Select box para 'Especialización'
                             echo '<td>';
                             echo '<select name="idEspecializacion" class="form-control">';
-                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
-                            
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();            
+
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
                                 $idEspecializacionSeleccionada = $_SESSION['formActualizarData']['idEspecializacion'];
@@ -246,14 +335,43 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                                 $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $idEspecializacionSeleccionada) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionId()) . '" ' . $selected . '>' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionNombre()) . '</option>';
                             }
+                            
                             echo '</select>';
                             echo '</td>';
+
+                            echo '<td>';
+                            $campusColectivos = $campusColectivoBusiness->getColectivosByCampusId($camp->getTbCampusId());
+                            $allColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
+                            
+                            $colectivosSeleccionados = array_map(function($colectivo) {
+                                return $colectivo->getTbUniversidadCampusColectivoId();
+                            }, $campusColectivos);
+                            
+                            echo '<select name="colectivos[]" id="colectivos" multiple class="form-control">';
+                            foreach ($allColectivos as $colectivo) {
+                                $idColectivo = $colectivo->getTbUniversidadCampusColectivoId();
+                                $descripcion = $colectivo->getTbUniversidadCampusColectivoDescripcion();
+                                $estado = $colectivo->getTbUniversidadCampusColectivoEstado();
+                                $nombreColectivo = $colectivo->getTbUniversidadCampusColectivoNombre();
+                            
+                                if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "Exclusivo")) {
+                                    $selected = in_array($idColectivo, $colectivosSeleccionados) ? 'selected' : '';
+                                    echo '<option value="' . htmlspecialchars($idColectivo) . '" ' . $selected . '>' . htmlspecialchars($nombreColectivo) . '</option>';
+                                }
+                                
+                            }
+                            
+                            echo '</select>';
+                            echo '</td>';
+                            
+
 
                             // Acciones
                             echo '<td>';
                             echo '<button type="submit" name="update" onclick="return actionConfirmation(\'' . $mensajeActualizar . '\')" class="btn btn-primary">Actualizar</button>';
                             echo ' <button type="submit" name="delete" onclick="return actionConfirmation(\'' . $mensajeEliminar . '\')" class="btn btn-danger">Eliminar</button>';
                             echo '</td>';
+                            
                             echo '<td><input type="hidden" name="latitud" id="latitud" value="' . htmlspecialchars($camp->getTbCampusLatitud()) . '" class="form-control" /></td>';
                             echo '<td><input type="hidden" name="longitud" id="longitud" value="' . htmlspecialchars($camp->getTbCampusLongitud()) . '" class="form-control" /></td>';
 
@@ -261,11 +379,13 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                             echo '</tr>';
                         }
                     } else {
-                        echo '<tr><td colspan="6" class="text-center">No hay campus registrados</td></tr>';
+                        echo '<tr><td colspan="7" class="text-center">No hay campus registrados</td></tr>';
                     }
                     ?>
                 </tbody>
             </table>
+
+
         </section>
     </div>
 </body>

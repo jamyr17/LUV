@@ -76,16 +76,14 @@ $criterioBusiness = new CriterioBusiness();
                     <h3>Agregar un nuevo valor</h3>
                     <p class="text-muted">Complete el formulario para añadir un nuevo valor</p>
                 </div>
-
                 <div class="container d-flex justify-content-center">
-                <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
-                    <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
+                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
+                        <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="idCriterio">Criterio:</label>
-                        <select name="idCriterio" id="idCriterio">
+                        <select name="idCriterio" id="idCriterio" onchange="updateCriterioNombre()">
                         <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
-                            // Recuperar el valor guardado en la sesión para 'idCriterio'
                             $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
                             
                             if ($criterios != null) {
@@ -94,9 +92,11 @@ $criterioBusiness = new CriterioBusiness();
                                     echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
                                 }
                             }
-                            ?>
+                        ?>
                         </select><br>
                         
+                        <input type="hidden" name="criterioNombre" id="criterioNombre" value="">
+
                         <label for="nombre" class="form-label">Nombre: </label>
                         <?php generarCampoTexto('nombre','formCrearData','Nombre de la opción','') ?>
 
@@ -105,6 +105,16 @@ $criterioBusiness = new CriterioBusiness();
                         </div>
                     </form>
                 </div>
+
+                <script>
+                    function updateCriterioNombre() {
+                        var select = document.getElementById('idCriterio');
+                        var nombre = select.options[select.selectedIndex].text;
+                        document.getElementById('criterioNombre').value = nombre;
+                    }
+
+                    updateCriterioNombre(); 
+                </script>
             </div>
         </section>
 
@@ -117,39 +127,58 @@ $criterioBusiness = new CriterioBusiness();
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Criterio</th>
                         <th>Nombre</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $valores = $valorBusiness->getAllTbValor();
-                    $mensajeActualizar = "¿Desea actualizar este valor?";
-                    $mensajeEliminar = "¿Desea eliminar este valor?";
-                    if ($valores != null) {
-                        foreach ($valores as $valor) {
-                            echo '<tr>';
-                            echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
-                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
-                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
-                            echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($valor->getTbCriterioId()) . '">';
-                            
-                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
-                                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                            } else {
-                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
-                            }
+                <?php
+        $valores = $valorBusiness->getAllTbValor();
+        $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
+        $mensajeActualizar = "¿Desea actualizar este valor?";
+        $mensajeEliminar = "¿Desea eliminar este valor?";
 
-                            echo '<td>';
-                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-                            echo '</td>';
-                            echo '</form>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    }
-                    ?>
+        if ($valores != null) {
+            foreach ($valores as $valor) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
+
+                echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
+                echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+
+                // Combo box para seleccionar el criterio
+                echo '<select name="idCriterio" class="form-select">';
+                foreach ($criterios as $criterio) {
+                    $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
+                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
+                    echo htmlspecialchars($criterio->getTbCriterioNombre());
+                    echo '</option>';
+                }
+                echo '</select>';
+
+                echo '</td>';
+
+                // Campo de texto para el nombre del valor
+                echo '<td>';
+                if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
+                    generarCampoTexto('nombre', 'formActualizarData', '', '');
+                } else {
+                    generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
+                }
+                echo '</td>';
+
+                // Botones de acción
+                echo '<td>';
+                echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                echo '</td>';
+
+                echo '</form>';
+                echo '</tr>';
+            }
+        }
+        ?>
                 </tbody>
             </table>
         </section>

@@ -2,6 +2,9 @@ let criteriaCount = 1;
 let criterios = [];
 let valores = [];
 
+// Determinar si es para la vista de perfil personal o perfil deseado
+const currentView = document.body.getAttribute('data-view');
+
 // Función para hacer fetch con reintento
 async function fetchDataWithRetry(url, retries = 3) {
     for (let i = 0; i < retries; i++) {
@@ -24,6 +27,8 @@ function addCriterion() {
 
     const newCriterion = document.createElement('div');
     newCriterion.className = 'criterion';
+
+    // Contenido HTML dependiendo de la vista actual
     newCriterion.innerHTML = `
         <label for="criterion${criteriaCount}">Criterio:</label>
         <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
@@ -34,23 +39,113 @@ function addCriterion() {
         <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
-        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-
-        <label for="percent${criteriaCount}">Porcentaje:</label>
-        <input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
+        
+        ${currentView === 'PersonalProfile' ? '' : `
+        <!-- <label for="percent${criteriaCount}">Porcentaje:</label>-->
+        <!--<input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+        -->`}
+        <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
     criteriaSection.appendChild(newCriterion);
 
-    // Cargar criterios para el nuevo select
     populateCriteria(`criterion${criteriaCount}`);
-    
-    // Cargar valores para el nuevo criterio
+
     const select = document.getElementById(`criterion${criteriaCount}`);
     loadValues(select, criteriaCount);
+
+    actualizarTablaConCriterio();
 }
 
-// Función para actualizar el porcentaje total
+function actualizarTablaConCriterio() {
+    const tbody = document.querySelector('#sortableTable tbody');
+    tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla nuevamente
+
+    const criteriaSelects = document.querySelectorAll('select[name="criterion[]"]');
+    const valuesSelects = document.querySelectorAll('select[name="value[]"]');
+    const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
+
+    criteriaSelects.forEach((select, index) => {
+        const criterionValue = select.options[select.selectedIndex]?.text || 'Sin criterio';
+        const valueSelect = valuesSelects[index];
+        const otherValueInput = otherValues[index];
+
+        let valueValue = valueSelect.options[valueSelect.selectedIndex]?.text || 'Sin valor';
+
+        if (valueSelect.value === 'other') {
+            valueValue = otherValueInput.value || 'Sin valor especificado';
+        }
+
+        const tr = document.createElement('tr');
+        tr.dataset.id = select.value; // Asegúrate de que el valor del select sea el ID del criterio
+        tr.innerHTML = `
+            <td>${criterionValue}</td>
+            <td>${valueValue}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+async function guardarNuevoOrden() {
+    const rows = Array.from(document.querySelectorAll('#sortableTable tbody tr'));
+    const nuevoOrden = rows.map(row => {
+        return {
+            criterion: row.children[0].textContent,
+            value: row.children[1].textContent
+        };
+    });
+
+    try {
+        const response = await fetch('../action/wantedProfileAction.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ updateOrder: nuevoOrden }),
+        });
+
+        if (response.ok) {
+            const responseText = await response.text(); 
+            try {
+                const jsonResponse = JSON.parse(responseText); 
+                console.log('Orden guardado exitosamente: ', jsonResponse);
+            } catch (jsonError) {
+                console.error('Error al parsear JSON:', jsonError);
+                console.log('Respuesta del servidor:', responseText);
+            }
+        } else {
+            console.error('Error al guardar el orden. Estado:', response.status);
+        }
+    } catch (error) {
+        console.error('Error de red:', error);
+    }
+}
+
+// función parra poder eliminar criterios
+function removeCriterion(button) {
+    const criterionToRemove = button.parentNode;
+
+    const criteriaSection = document.getElementById('criteriaSection');
+    const criteria = criteriaSection.getElementsByClassName('criterion');
+
+    if (criteria.length > 1) {
+        criterionToRemove.remove();
+        actualizarTablaConCriterio();
+        guardarNuevoOrden();
+
+        // Recalcular el total del porcentaje si estamos en la vista 'WantedProfile'
+        if (currentView !== 'PersonalProfile') {
+            updateTotalPercentage();
+        }
+    } else {
+        alert('Debe haber al menos un criterio.');
+    }
+}
+
+// Función para actualizar el porcentaje total (solo para vistas que no sean PersonalProfile)
 function updateTotalPercentage() {
+    if (currentView === 'PersonalProfile') return; // No hacer nada si estamos en la vista PersonalProfile
+
     let total = 0;
     const percentageInputs = document.querySelectorAll('input[name="percentage[]"]');
     percentageInputs.forEach(input => {
@@ -97,7 +192,7 @@ function populateCriteria(selectId) {
         return;
     }
 
-    select.innerHTML = '';  // Limpiar opciones actuales
+    select.innerHTML = '';
 
     if (criterios.length === 0) {
         console.warn('No hay criterios disponibles para cargar.');
@@ -111,11 +206,11 @@ function populateCriteria(selectId) {
         const option = document.createElement('option');
         option.value = criterio.id;
         option.textContent = criterio.name;
-        option.setAttribute('data-nombre', criterio.name); // Agregar atributo data-nombre
+        option.setAttribute('data-nombre', criterio.name);
         select.appendChild(option);
     });
 
-    select.disabled = false; // Habilitar el select después de cargar los criterios
+    select.disabled = false;
 }
 
 // Función para cargar los valores basados en el criterio seleccionado
@@ -128,7 +223,7 @@ function loadValues(select, index) {
         return;
     }
 
-    valueSelect.innerHTML = '';  // Limpiar opciones actuales
+    valueSelect.innerHTML = '';
 
     // Filtrar valores basados en el criterio seleccionado
     const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
@@ -144,7 +239,7 @@ function loadValues(select, index) {
         const option = document.createElement('option');
         option.value = valor.id;
         option.textContent = valor.name;
-        option.setAttribute('data-nombre', valor.name);  // Agregar atributo data-nombre
+        option.setAttribute('data-nombre', valor.name);
         valueSelect.appendChild(option);
     });
 
@@ -154,45 +249,71 @@ function loadValues(select, index) {
     otherOption.textContent = 'Otro';
     valueSelect.appendChild(otherOption);
 
-    valueSelect.disabled = false; // Habilitar el select de valores después de cargar los valores
+    valueSelect.disabled = false;
+
+    actualizarTablaConCriterio();
 }
 
-// Para que el usuario pueda agregar un valor personalizado
+// Función para inicializar el autocompletado en el campo de texto "Otro"
+async function initializeAutocomplete(input, criterionName) {
+    try {
+        const response = await fetch(`../data/getData.php?criterion=${criterionName}`);
+        const suggestions = await response.json();
+
+        $(input).autocomplete({
+            source: suggestions  // Usar las sugerencias para el autocompletado
+        });
+    } catch (error) {
+        console.error('Error al obtener sugerencias:', error);
+    }
+}
+
+// Modificar la función toggleOtherField para inicializar el autocompletado
 function toggleOtherField(select, index) {
     const otherField = document.getElementById(`otherField${index}`);
     if (select.value === 'other') {
         otherField.style.display = 'block';
+
+        // Obtener el nombre del criterio seleccionado
+        const criterionSelect = document.getElementById(`criterion${index}`);
+        const criterionName = criterionSelect.selectedOptions[0].getAttribute('data-nombre');
+
+        // Inicializar autocompletado solo si se ha seleccionado un criterio
+        if (criterionName) {
+            initializeAutocomplete(otherField, criterionName);
+        }
     } else {
         otherField.style.display = 'none';
-        otherField.value = ''; // Limpiar el campo de texto si se oculta
+        otherField.value = '';
     }
+
+    actualizarTablaConCriterio();
 }
 
-// Función para validar el formulario antes de enviarlo
 function submitForm() {
-    const totalPercentage = parseFloat(document.getElementById('totalPercentageInp').value);
+    if (currentView !== 'PersonalProfile') {
+        const totalPercentage = parseFloat(document.getElementById('totalPercentageInp').value);
 
-    if (Math.abs(totalPercentage - 100) > 0.01) {
-        alert('El porcentaje total debe ser 100%.');
-        return false;
+        if (Math.abs(totalPercentage - 100) > 0.01) {
+            alert('El porcentaje total debe ser 100%.');
+            return false;
+        }
     }
 
     const criteria = document.querySelectorAll('select[name="criterion[]"]');
     const values = document.querySelectorAll('select[name="value[]"]');
-    const percentages = document.querySelectorAll('input[name="percentage[]"]');
+    // const percentages = document.querySelectorAll('input[name="percentage[]"]');
     const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
 
     let criteriaString = '';
     let valuesString = '';
-    let percentagesString = '';
+    // let percentagesString = '';
 
     for (let i = 0; i < criteria.length; i++) {
-        // Usar el atributo data-nombre para el nombre del criterio
         const selectedCriterion = criteria[i].selectedOptions[0];
         const criterionName = selectedCriterion.getAttribute('data-nombre');
         criteriaString += criterionName;
 
-        // Usar el atributo data-nombre para el nombre del valor, o el valor del campo de texto si "Otro" está seleccionado
         if (values[i].value === 'other' && otherValues[i].value) {
             valuesString += otherValues[i].value;
         } else {
@@ -201,31 +322,37 @@ function submitForm() {
             valuesString += valueName;
         }
 
-        percentagesString += percentages[i].value;
+        // percentagesString += percentages[i] ? percentages[i].value : '';
 
         if (i < criteria.length - 1) {
             criteriaString += ',';
             valuesString += ',';
-            percentagesString += ',';
+            // percentagesString += ',';
         }
     }
 
-    console.log('Criteria String:', criteriaString);
-    console.log('Values String:', valuesString);
-    console.log('Percentages String:', percentagesString);
-
     document.getElementById('criteriaString').value = criteriaString;
     document.getElementById('valuesString').value = valuesString;
-    document.getElementById('percentagesString').value = percentagesString;
+    // document.getElementById('percentagesString').value = percentagesString;
 
     return true;
 }
 
-// Esperar a que tanto los criterios como los valores estén cargados antes de permitir la interacción
 document.addEventListener('DOMContentLoaded', async () => {
+    const sortableTable = document.querySelector('#sortableTable tbody');
+
+    // Configura SortableJS
+    Sortable.create(sortableTable, {
+        animation: 150,
+        onEnd: function (evt) {
+            // Llama a la función para guardar el nuevo orden al finalizar el arrastre
+            guardarNuevoOrden();
+        }
+    });
+
     await loadInitialCriteriaData();
     await loadInitialValuesData();
 
-    // Habilitar el primer select para que el usuario pueda empezar a seleccionar criterios y valores
     document.getElementById('criterion1').disabled = false;
+    actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales
 });

@@ -26,16 +26,16 @@ class universidadCampusColectivoData extends Data
 
         $nombre = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoNombre());
         $descripcion = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoDescripcion());
-        $estado = 1;
+        $estado = mysqli_real_escape_string($conn, $universidadCampusColectivo->getTbUniversidadCampusColectivoEstado());
 
-        // Consulta para insertar un nuevo registro
         $queryInsert = "INSERT INTO tbuniversidadcampuscolectivo (tbuniversidadcampuscolectivoid, tbuniversidadcampuscolectivonombre, tbuniversidadcampuscolectivodescripcion, tbuniversidadcampuscolectivoestado) 
                         VALUES ($nextId, '$nombre', '$descripcion', $estado)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
+
         mysqli_close($conn);
 
-        return $resultInsert;
+        return ['result' => $resultInsert, 'id' => $nextId];
     }
 
     public function updateTbUniversidadCampusColectivo($universidadCampusColectivo)
@@ -84,7 +84,7 @@ class universidadCampusColectivoData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivoestado = 1;";
+        $querySelect = "SELECT * FROM tbuniversidadcampuscolectivo;";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
 
@@ -157,5 +157,39 @@ class universidadCampusColectivoData extends Data
         
         return $count > 0;
     }
+
+    public function getColectivosByCampusId($campusId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $query = "SELECT tbuniversidadcampuscolectivoid, tbuniversidadcampuscolectivonombre 
+                  FROM tbuniversidadcampuscolectivo
+                  INNER JOIN tbuniversidadcampusuniversidadcolectivo 
+                  ON tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivoid = tbuniversidadcampusuniversidadcolectivo.tbuniversidadcolectivoid
+                  WHERE tbuniversidadcampusuniversidadcolectivo.tbuniversidadcampusid = ?";
+    
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $campusId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    
+        $colectivos = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $colectivo = new universidadCampusColectivo(
+                $row['tbuniversidadcampuscolectivoid'],
+                $row['tbuniversidadcampuscolectivonombre'],
+                '', 
+                1  
+            );
+            $colectivos[] = $colectivo;
+        }
+    
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+    
+        return $colectivos;
+    }
+
 }
 ?>

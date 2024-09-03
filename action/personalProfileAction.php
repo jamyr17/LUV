@@ -15,11 +15,12 @@ if(isset($_POST["registrar"])){
         
         if($personalProfileBusiness->profileExists($usuarioId)){
             $personalProfileBusiness->updateTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            header("location: ../view/userPersonalProfileView.php?success=updated");
         }else{
             $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            header("location: ../view/userPersonalProfileView.php?success=inserted");
         }
 
-        header("location: ../view/userPersonalProfileView.php?success=inserted");
     }
     else{
         header("location: ../view/userPersonalProfileView.php?error=formIncomplete");
