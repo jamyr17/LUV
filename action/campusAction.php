@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 
 include '../business/campusBusiness.php';
 include '../business/universidadCampusColectivoBusiness.php';
@@ -63,7 +64,8 @@ if (isset($_POST['update'])) {
     if (isset($_POST['idCampus'])) {
 
         $idCampus = $_POST['idCampus'];
-        
+        echo "$idCampus";
+
         $campusBusiness = new CampusBusiness();
         $result = $campusBusiness->deleteTbCampus($idCampus);
 
@@ -77,7 +79,7 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud']) && isset($_POST['idUniversidad']) && isset($_POST['idRegion']) && isset($_POST['idEspecializacion'])) {
+    if (isset($_POST['nombre']) && isset($_POST['direccion']) && isset($_POST['latitud']) && isset($_POST['longitud'])) {
 
         $idUniversidad = $_POST['idUniversidad'];
         $idRegion = $_POST['idRegion'];
@@ -122,47 +124,42 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/campusView.php?error=error");
     }
-} else if (isset($_GET['idU'])) { 
+} else if(isset($_GET['idU'])) { 
     $idU = $_GET['idU'];
     $campusBusiness = new CampusBusiness();
     $campusBusiness->getAllTbCampusByUniversidad($idU);
     
 }else if (isset($_POST['colectivoadd'])) {
 
-    if (isset($_POST['nombre'])) {
-        $nombre = $_POST['nombre'];
+    if (isset($_POST['nombre']) && trim($_POST['nombre']) !== '') {
+        $nombre = trim($_POST['nombre']);
 
+        if (!is_numeric($nombre)) {
+            $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
 
-        if (strlen($nombre) > 0) {
+            $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
 
-            if (!is_numeric($nombre)) {
-                $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+            if ($resultExist == 1) {
+                echo json_encode(['status' => 'error', 'code' => 'exist']);
+            } else {
+                $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "Exclusivo", 0);
 
-                $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
+                $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
+                
+                // Registra el resultado para depuración
+                error_log("Resultado de la inserción del colectivo: " . json_encode($result));
+                
 
-                if ($resultExist == 1) {
-                    header("location: ../view/campusView.php?error=exist");
+                if ($result['result']) {
+                    echo json_encode(['status' => 'success', 'id' => $result['id']]);
                 } else {
-                    $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "Exclusivo", 0);
-                    $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
-
-                    if ($result['result'] == 1) {
-                        header("location: ../view/campusView.php?success=inserted");
-                    } else {
-                        guardarFormData();
-                        header("location: ../view/campusView.php?error=dbError");
-                    }
+                    echo json_encode(['status' => 'error', 'code' => 'dbError']);
                 }
-                } else {
-                    guardarFormData();
-                    header("location: ../view/campusView.php?error=numberFormat");
-                }
+            }
         } else {
-            guardarFormData();
-            header("location: ../view/campusView.php?error=emptyField");
+            echo json_encode(['status' => 'error', 'code' => 'numberFormat']);
         }
     } else {
-        guardarFormData();
-        header("location: ../view/campusView.php?error=error");
+        echo json_encode(['status' => 'error', 'code' => 'emptyField']);
     }
 }

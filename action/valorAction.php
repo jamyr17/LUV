@@ -3,6 +3,8 @@
 include_once '../business/valorBusiness.php'; 
 include 'functions.php';
 
+$maxLength = 255;
+
 function agregarValorSiNoExiste($nombreArchivo, $valor) {
     $filePath = "../resources/criterios/{$nombreArchivo}.dat";
 
@@ -37,6 +39,12 @@ if (isset($_POST['update'])) {
         $idValor = $_POST['idValor']; // Aquí se corrige
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
+
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/valorView.php?error=nameTooLong");
+            exit();
+        }
 
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
@@ -93,7 +101,13 @@ if (isset($_POST['update'])) {
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
         $criterioNombre = $_POST['criterioNombre'];  // Ahora tienes el nombre del criterio directamente
-    
+
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/valorView.php?error=nameTooLong");
+            exit();
+        }
+
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 $valorBusiness = new ValorBusiness();

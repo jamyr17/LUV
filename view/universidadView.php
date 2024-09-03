@@ -51,6 +51,7 @@
             $_GET['error']=="numberFormat" => "ingreso de valores númericos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="exist" => "que dicha universidad ya existe.",
+            $_GET['error']=="longText" => "el nombre supera los 150 caracteres.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
@@ -128,43 +129,34 @@
           if ($universidades != null) {
             foreach ($universidades as $universidad) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '">';
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               
               echo '<td>';
               // Comprobar si hay datos en la sesión y si el idUniversidad coincide
-              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidad'] == $universidad->getTbUniversidadId()) {
-                  // Uso de la función para generar el campo de texto con los datos de sesión
-                  generarCampoTexto('nombre', 'formActualizarData', '', '');
+              if (isset($_SESSION['formCrearData']) && $_SESSION['formCrearData']['idUniversidad'] == $universidad->getTbUniversidadId()) {
+                echo '<input type="text" name="nombre" id="nombre" class="form-control" value="' . htmlspecialchars($_SESSION['formCrearData']['nombre']) . '">';
               } else {
-                  // Uso de la función para generar el campo de texto sin datos de sesión
-                  generarCampoTexto('nombre', '', '', $universidad->getTbUniversidadNombre());
+                echo '<input type="text" name="nombre" id="nombre" class="form-control" value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '">';
               }
               echo '</td>';
-              
+
               echo '<td>';
-              echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")' >Actualizar</button>";
-              echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+              echo '<button type="submit" name="update" onclick="return actionConfirmation(\'' . $mensajeActualizar . '\');">Actualizar</button>';
+              echo '<button type="submit" name="delete" onclick="return actionConfirmation(\'' . $mensajeEliminar . '\');">Eliminar</button>';
               echo '</td>';
               echo '</form>';
               echo '</tr>';
             }
           }
           ?>
-          
         </tbody>
       </table>
     </section>
+
   </div>
 
-  </body>
+</body>
 
-<footer>
-</footer>
-
-<?php 
-  //limpiar variables de sesion de los formularios
-  eliminarFormData();
-?>
 </html>

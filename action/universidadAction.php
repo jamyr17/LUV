@@ -10,6 +10,13 @@ if (isset($_POST['update'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $nombre = $_POST['nombre'];
         
+        // Verifica que el nombre no exceda los 150 caracteres
+        if (strlen($nombre) > 150) {
+            guardarFormData();
+            header("location: ../view/universidadView.php?error=longText");
+            exit();
+        }
+
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
@@ -70,6 +77,13 @@ if (isset($_POST['update'])) {
             
         $nombre = $_POST['nombre'];
 
+        // Verifica que el nombre no exceda los 150 caracteres
+        if (strlen($nombre) > 150) {
+            guardarFormData();
+            header("location: ../view/universidadView.php?error=longText");
+            exit();
+        }
+
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 // verificar que no exista un registro con el mismo valor que esta siendo ingresado
@@ -107,3 +121,4 @@ if (isset($_POST['update'])) {
         header("location: ../view/universidadView.php?error=error");
     }
 }
+?>

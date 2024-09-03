@@ -162,7 +162,7 @@
           if ($especializaciones != null) {
             foreach ($especializaciones as $especializacion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php"onsubmit="return validarNombreEspecializacion()">';
               echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
               echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
               
