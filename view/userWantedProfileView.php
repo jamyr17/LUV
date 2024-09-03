@@ -97,7 +97,7 @@ include "../action/sessionUserAction.php";
                     <!-- Las filas se cargarán aquí mediante JavaScript -->
                 </tbody>
             </table>
-            <button type="submit" name="search">Buscar</button>
+            <button type="submit" name="registrar">Buscar</button>
         </form>
         <!-- Acá termina el ordenamiento tipo árbol -->
 

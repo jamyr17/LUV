@@ -7,6 +7,7 @@ include "../action/sessionUserAction.php";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
     <title>LUV Perfil personal</title>
     
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -79,8 +80,26 @@ include "../action/sessionUserAction.php";
             <input type="hidden" id="valuesString" name="valuesString">
             <button type="button" onclick="addCriterion()">Agregar criterio</button>
 
+        </form>
+
+        <hr><br>
+        <!-- Acá empieza el ordenamiento tipo árbol -->
+         <h3>Define el orden de los criterios de búsqueda</h3>
+        <form id="ordenForm" method="post" action="../action/personalProfileAction.php" onsubmit="return submitOrden()">
+            <table id="sortableTable">
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas se cargarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
             <button type="submit" name="registrar">Enviar</button>
         </form>
+        <!-- Acá termina el ordenamiento tipo árbol -->
     </div>
 
     <script src="../js/profileModel.js"></script>

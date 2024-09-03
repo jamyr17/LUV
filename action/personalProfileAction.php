@@ -5,19 +5,22 @@ include_once "../business/usuarioBusiness.php";
 $personalProfileBusiness = new PersonalProfileBusiness();
 $usuarioBusiness = new UsuarioBusiness();
 
-if(isset($_POST["registrar"])){
-    if(isset($_POST["criteriaString"]) && isset($_POST["valuesString"])){ //todos los datos
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-        $criterio = $_POST["criteriaString"];
-        $valor = $_POST["valuesString"];
+if(isset($_POST["registrar"])){
+    if(isset($_SESSION['criteriaString']) && !empty([$_SESSION['criteriaString']]) && isset($_SESSION['valueString']) && !empty([$_SESSION['valueString']])){ //todos los datos
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        $criterioParam = $_SESSION['criteriaString'];
+        $valorParam = $_SESSION['valueString'];
         
         if($personalProfileBusiness->profileExists($usuarioId)){
-            $personalProfileBusiness->updateTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            $personalProfileBusiness->updateTbPerfilPersonal($criterioParam,$valorParam, $usuarioId); 
             header("location: ../view/userPersonalProfileView.php?success=updated");
         }else{
-            $personalProfileBusiness->insertTbPerfilPersonal($criterio,$valor, $usuarioId); 
+            $personalProfileBusiness->insertTbPerfilPersonal($criterioParam,$valorParam, $usuarioId); 
             header("location: ../view/userPersonalProfileView.php?success=inserted");
         }
 
