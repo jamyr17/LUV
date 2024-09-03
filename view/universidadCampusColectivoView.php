@@ -23,6 +23,27 @@
     function showMessage(mensaje){
       alert(mensaje);
     }
+
+    
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      var descripcion = document.getElementById("descripcion").value;
+      
+      var maxLength = 255;
+
+      if (nombre.length > maxLength) {
+        alert("El nombre no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      if (descripcion.length > maxLength) {
+        alert("La descripción no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      return true;
+    }
+
   </script>
 
 </head>
@@ -45,6 +66,8 @@
             $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="exist" => "dicho campus colectivo ya existe.",
+            $_GET['error']=="nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
+            $_GET['error']=="descriptionTooLong" => "que la descripción es demasiado larga, el limite es de 255 caracteres.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
@@ -74,7 +97,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/universidadCampusColectivoAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/universidadCampusColectivoAction.php" style="width: 50vw; min-width:300px;" onsubmit=" return validateForm();">
                 <input type="hidden" name="idUniversidadCampusColectivo" value="<?php echo htmlspecialchars($tbUniversidadCampusColectivoId); ?>">
 
                 <div class="row">
@@ -123,36 +146,40 @@
           $mensajeActualizar = "¿Desea actualizar este campus colectivo?";
           $mensajeEliminar = "¿Desea eliminar este campus colectivo?";
 
-          if ($universidadCampusColectivos != null) {
-            foreach ($universidadCampusColectivos as $universidadCampusColectivo) {
-              echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusColectivoAction.php">';
-              echo '<input type="hidden" name="idUniversidadCampusColectivo" value="' . htmlspecialchars($universidadCampusColectivo->getTbUniversidadCampusColectivoId()) . '">';
-              echo '<td>' . htmlspecialchars($universidadCampusColectivo->getTbUniversidadCampusColectivoId()) . '</td>';
-              
-              echo '<td>';
-              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidadCampusColectivo'] == $universidadCampusColectivo->getTbUniversidadCampusColectivoId()) {
-                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                echo '</td>';
-                echo '<td>';
-                generarCampoTexto('descripcion', 'formActualizarData', '', '');
-                echo '</td>';
-              } else {
-                generarCampoTexto('nombre', '', '', $universidadCampusColectivo->getTbUniversidadCampusColectivoNombre());
-                echo '</td>';
-                echo '<td>';
-                generarCampoTexto('descripcion', '', '', $universidadCampusColectivo->getTbUniversidadCampusColectivoDescripcion());
-                echo '</td>';
-              }
-
-              echo '<td>';
-              echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-              echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-              echo '</td>';
-              echo '</form>';
-              echo '</tr>';
+            if ($universidadCampusColectivos != null) {
+              foreach ($universidadCampusColectivos as $universidadCampusColectivo) {
+                  // Solo mostrar los colectivos con estado 1
+                  if ($universidadCampusColectivo->getTbUniversidadCampusColectivoEstado() == 1) {
+                      echo '<tr>';
+                      echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusColectivoAction.php" onsubmit="return validateForm()">';
+                      echo '<input type="hidden" name="idUniversidadCampusColectivo" value="' . htmlspecialchars($universidadCampusColectivo->getTbUniversidadCampusColectivoId()) . '">';
+                      echo '<td>' . htmlspecialchars($universidadCampusColectivo->getTbUniversidadCampusColectivoId()) . '</td>';
+                      
+                      echo '<td>';
+                      if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidadCampusColectivo'] == $universidadCampusColectivo->getTbUniversidadCampusColectivoId()) {
+                          generarCampoTexto('nombre', 'formActualizarData', '', '');
+                          echo '</td>';
+                          echo '<td>';
+                          generarCampoTexto('descripcion', 'formActualizarData', '', '');
+                          echo '</td>';
+                      } else {
+                          generarCampoTexto('nombre', '', '', $universidadCampusColectivo->getTbUniversidadCampusColectivoNombre());
+                          echo '</td>';
+                          echo '<td>';
+                          generarCampoTexto('descripcion', '', '', $universidadCampusColectivo->getTbUniversidadCampusColectivoDescripcion());
+                          echo '</td>';
+                      }
+          
+                      echo '<td>';
+                      echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                      echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                      echo '</td>';
+                      echo '</form>';
+                      echo '</tr>';
+                    }
+                }
             }
-          }
+          
           ?>
           
         </tbody>

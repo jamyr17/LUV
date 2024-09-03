@@ -30,73 +30,72 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
         function showMessage(mensaje) {
             alert(mensaje);
         }
-
         function seleccionarColectivo() {
-            var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
+    var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
 
-            if (nombreColectivo === '') {
-                alert('Por favor, ingrese un nombre para el colectivo.');
-                return;
-            }
+    if (nombreColectivo === '') {
+        alert('Por favor, ingrese un nombre para el colectivo.');
+        return;
+    }
 
-            var select = document.getElementById('colectivos');
-            select.disabled = false;
+    var select = document.getElementById('colectivos');
+    select.disabled = false;
 
-            var options = select.options;
-            var encontrado = false;
+    var options = select.options;
+    var encontrado = false;
 
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
-                    options[i].selected = true;
-                    encontrado = true;
-                    break;
-                }
-            }
-
-            if (!encontrado) {
-                var nuevaOpcion = document.createElement('option');
-                nuevaOpcion.text = nombreColectivo;
-                nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
-                nuevaOpcion.selected = true;
-                select.appendChild(nuevaOpcion);
-
-                var formData = new FormData();
-                formData.append('colectivoadd', true);
-                formData.append('nombre', nombreColectivo);
-
-                fetch('../action/campusAction.php', { 
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        var nuevaOpcion = select.querySelector('option[value^="new_"]');
-                        if (nuevaOpcion) {
-                            nuevaOpcion.value = data.id;
-                        }
-                        alert('Se a registrado un colectivo no registrado previamente');
-                    } else if (data.status === 'error') {
-                        if (data.code === 'exist') {
-                            alert('El colectivo ya existe.');
-                        } else if (data.code === 'dbError') {
-                            alert('Error al insertar en la base de datos.');
-                        } else if (data.code === 'numberFormat') {
-                            alert('Formato de nombre inválido.');
-                        } else if (data.code === 'emptyField') {
-                            alert('El nombre del colectivo está vacío.');
-                        } else {
-                            alert('Error desconocido: ' + data.code);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-
-            select.disabled = true;
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
+            options[i].selected = true;
+            encontrado = true;
+            break;
         }
+    }
+
+    if (!encontrado) {
+        var nuevaOpcion = document.createElement('option');
+        nuevaOpcion.text = nombreColectivo;
+        nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
+        nuevaOpcion.selected = true;
+        select.appendChild(nuevaOpcion);
+
+        var formData = new FormData();
+        formData.append('colectivoadd', true);
+        formData.append('nombre', nombreColectivo);
+
+fetch('../action/campusAction.php', { 
+    method: 'POST',
+    body: formData
+})
+.then(response => {
+    if (!response.ok) {
+        // Si la respuesta no es "ok", lanza un error
+        return response.text().then(text => { throw new Error(text) });
+    }
+    return response.json();
+})
+.then(data => {
+    if (data.status === 'success') {
+        nuevaOpcion.value = data.id; // Actualiza con el ID real
+        alert('Se a registrado un colectivo no registrado previamente');
+    } else if (data.status === 'error') {
+        manejarErrores(data);
+        nuevaOpcion.remove(); // Elimina la opción en caso de error
+    }
+})
+.catch(error => {
+    console.error('Error capturado:', error.message);
+    alert('Hubo un problema al añadir el colectivo. Respuesta del servidor: ' + error.message);
+    nuevaOpcion.remove(); // Elimina la opción en caso de error
+})
+.finally(() => {
+    select.disabled = true; // Deshabilitar el select después de manejar la petición
+});
+
+    } else {
+        select.disabled = true; // Deshabilitar si se encontró el colectivo
+    }
+}
 
         function activarYDesactivarSelectColectivos() {
             var select = document.getElementById('colectivos');

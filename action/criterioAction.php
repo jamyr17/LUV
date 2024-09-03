@@ -3,6 +3,8 @@
 include '../business/criterioBusiness.php';
 include 'functions.php';
 
+$maxLength = 255;
+
 $apiKey = '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';
 
 function createFolderIfNotExists($folderPath) {
@@ -74,6 +76,13 @@ if (isset($_POST['update'])) {
         $idCriterio = $_POST['idCriterio'];
         $nombre = $_POST['nombre'];
 
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/criterioView.php?error=nameTooLong");
+            exit();
+        }
+
+
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 $criterioBusiness = new CriterioBusiness();
@@ -136,6 +145,13 @@ if (isset($_POST['update'])) {
 } else if (isset($_POST['create'])) {
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
+        
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/criterioView.php?error=nameTooLong");
+            exit();
+        }
+
         if (strlen($nombre) > 0 && !is_numeric($nombre)) {
             $criterioBusiness = new CriterioBusiness();
             $resultExist = $criterioBusiness->exist($nombre);

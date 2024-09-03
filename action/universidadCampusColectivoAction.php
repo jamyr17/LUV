@@ -2,6 +2,7 @@
 
 include '../business/universidadCampusColectivoBusiness.php';
 include 'functions.php';
+$maxLength = 255;
 
 if (isset($_POST['update'])) {
 
@@ -10,6 +11,19 @@ if (isset($_POST['update'])) {
         $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
+
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/universidadCampusColectivoView.php?error=nameTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/universidadCampusColectivoView.php?error=descriptionTooLong");
+            exit();
+        }
+
         
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
@@ -71,6 +85,19 @@ if (isset($_POST['update'])) {
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
 
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/universidadCampusColectivoView.php?error=nameTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/universidadCampusColectivoView.php?error=descriptionTooLong");
+            exit();
+        }
+
+
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
 
@@ -86,7 +113,7 @@ if (isset($_POST['update'])) {
     
                     $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
     
-                    if ($result == 1) {
+                    if ($result['result'] == 1) {
                         header("location: ../view/universidadCampusColectivoView.php?success=inserted");
                     } else {
                         guardarFormData();

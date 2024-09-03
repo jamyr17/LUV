@@ -3,6 +3,8 @@
 include '../business/generoBusiness.php';
 include '../action/functions.php';
 
+$maxLength = 255;
+
 if (isset($_POST['update'])) {
 
     if (isset($_POST['nombre']) && isset($_POST['descripcion'])) {
@@ -10,6 +12,19 @@ if (isset($_POST['update'])) {
         $idGenero = $_POST['idGenero'];
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
+
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/generoView.php?error=nameTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/generoView.php?error=descriptionTooLong");
+            exit();
+        }
+
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {
@@ -67,6 +82,19 @@ if (isset($_POST['update'])) {
 
         $nombre = $_POST['nombre'];
         $descripcion = $_POST['descripcion'];
+
+        if (strlen($nombre) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/generoView.php?error=nameTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > $maxLength) {
+            guardarFormData();
+            header("Location: ../view/generoView.php?error=descriptionTooLong");
+            exit();
+        }
+
 
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre) && !is_numeric($descripcion)) {

@@ -28,6 +28,21 @@ $criterioBusiness = new CriterioBusiness();
         function showMessage(mensaje) {
             alert(mensaje);
         }
+
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      
+      var maxLength = 255;
+
+      if (nombre.length > maxLength) {
+        alert("El nombre no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      return true;
+    }
+
+
     </script>
 </head>
 
@@ -48,6 +63,7 @@ $criterioBusiness = new CriterioBusiness();
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho valor ya existe.",
+                    "nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
@@ -77,7 +93,7 @@ $criterioBusiness = new CriterioBusiness();
                     <p class="text-muted">Complete el formulario para añadir un nuevo valor</p>
                 </div>
                 <div class="container d-flex justify-content-center">
-                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;">
+                    <form method="post" action="../action/valorAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
                         <input type="hidden" name="idValor" value="<?php echo htmlspecialchars($idValor); ?>">
 
                         <label for="idCriterio">Criterio:</label>
@@ -144,7 +160,7 @@ $criterioBusiness = new CriterioBusiness();
                 echo '<tr>';
                 echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
 
-                echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php">';
+                echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
                 echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
 
                 // Combo box para seleccionar el criterio

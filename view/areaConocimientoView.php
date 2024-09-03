@@ -21,6 +21,26 @@
     function showMessage(mensaje){
       alert(mensaje);
     }
+
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      var descripcion = document.getElementById("descripcion").value;
+      
+      var maxLength = 255;
+
+      if (nombre.length > maxLength) {
+        alert("El nombre no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      if (descripcion.length > maxLength) {
+        alert("La descripción no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      return true;
+    }
+
   </script>
 </head>
 
@@ -41,6 +61,8 @@
             $_GET['error']=="numberFormat" => "ingreso de valores númericos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="exist" => "que dicho nombre ya existe.",
+            $_GET['error']=="nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
+            $_GET['error']=="descriptionTooLong" => "que la descripción es demasiado larga, el limite es de 255 caracteres.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
@@ -72,7 +94,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-          <form method="post" action="../action/areaConocimientoAction.php" style="width: 50vw; min-width:300px;">
+          <form method="post" action="../action/areaConocimientoAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
             <input type="hidden" name="areaConocimiento" value="<?php echo htmlspecialchars($idAreaConocimiento ?? ''); ?>">
 
             <div class="row mb-3">
@@ -127,7 +149,7 @@
           if ($areasConocimiento != null) {
             foreach ($areasConocimiento as $areaConocimiento) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/areaConocimientoAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/areaConocimientoAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idAreaConocimiento" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '">';
               echo '<td>' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '</td>';
 

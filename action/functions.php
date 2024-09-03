@@ -30,6 +30,15 @@ function generarCampoTexto($nombreCampo, $tipoForm, $placeholder, $valorPorDefec
     echo "<input required type='text' name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' value='$valor' $autofocusAttr />";
 }
 
+// generar input de texto para poder aplicar logica de si hay data que debe ser cargada o no
+function generarCampoTextoSinRequired($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '') {
+    $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
+    $autofocusAttr = isset($_SESSION[$tipoForm][$nombreCampo]) ? 'autofocus' : '';
+
+    echo "<input type='text' name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' value='$valor' $autofocusAttr />";
+}
+
+
 // generar input de textarea para poder aplicar logica de si hay data que debe ser cargada o no
 function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '', $filas = 3, $columnas = 30, $autofocus = true) {
     $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
@@ -37,6 +46,8 @@ function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto
 
     echo "<textarea name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' rows='$filas' cols='$columnas' $autofocusAttr>$valor</textarea>";
 }
+
+
 
 // generar input de password para poder aplicar logica de si hay data que debe ser cargada o no
 function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '') {

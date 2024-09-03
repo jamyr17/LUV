@@ -23,6 +23,27 @@
     function showMessage(mensaje){
       alert(mensaje);
     }
+
+    function validateForm() {
+      var nombre = document.getElementById("nombre").value;
+      var descripcion = document.getElementById("descripcion").value;
+      
+      var maxLength = 255;
+
+      if (nombre.length > maxLength) {
+        alert("El nombre no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      if (descripcion.length > maxLength) {
+        alert("La descripción no puede tener más de " + maxLength + " caracteres.");
+        return false;
+      }
+
+      return true;
+    }
+
+
   </script>
 
 </head>
@@ -45,6 +66,8 @@
             $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
             $_GET['error']=="dbError" => "un problema al procesar la transacción.",
             $_GET['error']=="exist" => "dicha orientación sexual ya existe.",
+            $_GET['error']=="nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
+            $_GET['error']=="descriptionTooLong" => "que la descripción es demasiado larga, el limite es de 255 caracteres.",
             default => "un problema inesperado.",
           };
         } else if (isset($_GET['success'])) {
@@ -75,7 +98,7 @@
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/orientacionSexualAction.php" style="width: 50vw; min-width:300px;">
+            <form method="post" action="../action/orientacionSexualAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
                 <input type="hidden" name="idOrientacionSexual" value="<?php echo htmlspecialchars($tbOrientacionSexualId); ?>">
 
                 <div class="row">
@@ -127,7 +150,7 @@
           if ($orientacionesSexuales != null) {
             foreach ($orientacionesSexuales as $orientacionSexual) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/orientacionSexualAction.php">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/orientacionSexualAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idOrientacionSexual" value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '">';
               echo '<td>' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '</td>';
 
