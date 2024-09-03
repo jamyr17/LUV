@@ -28,6 +28,7 @@ include "../action/sessionUserAction.php";
                 $_GET['error'] == "percentageIncomplete" => "debe distribuir un 100% entre los criterios.",
                 $_GET['error'] == "formIncomplete" => "problemas en el procesamiento de su respuesta.",
                 $_GET['error'] == "noProfiles" => "que no hay perfiles registrados en este momento.",
+                $_GET['error'] == "percetageCal" => "problemas al procesar su modelo deseado.",
                 default => "un problema inesperado.",
             };
         } else if (isset($_GET['success'])) {

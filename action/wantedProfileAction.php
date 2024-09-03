@@ -18,27 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
             $criterioParam = $_SESSION['criteriaString'];
             $valorParam = $_SESSION['valueString'];
-            $porcentajeParam = '20,80'; // se debe llamar a un metodo de logica que brinde un valor de porcentaje para cada criterio
+            $porcentajeParam = calculatePercentage(); // calcula y si hay algun error devuelve null
 
-            if ($wantedProfileBusiness->profileExists($usuarioId)) {
-                $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
-            } else {
-                $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+            if(isset($porcentajeParam)){
+
+                if ($wantedProfileBusiness->profileExists($usuarioId)) {
+                    $wantedProfileBusiness->updateTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+                } else {
+                    $wantedProfileBusiness->insertTbPerfilDeseado($criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+                }
+    
+                // filtrar perfiles segun lo que desea el usuario: 
+                $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
+    
+                // si no hay perfiles registrados
+                if (empty($allPerfiles)) {
+                    header("location: ../view/userWantedProfileView.php?error=noProfiles");
+                } else {
+                    $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
+    
+                    // guardar los perfiles filtrados en sesión
+                    $_SESSION['perfilesMatcheados'] = $perfilesFiltrados;
+                    header("location: ../view/userProfileRecommendationsView.php");
+                }
+            }else{
+                header("location: ../view/userWantedProfileView.php?error=percentageCalc");
             }
-
-            // filtrar perfiles segun lo que desea el usuario: 
-            $allPerfiles = $wantedProfileBusiness->getAllTbPerfiles();
-
-            // si no hay perfiles registrados
-            if (empty($allPerfiles)) {
-                header("location: ../view/userWantedProfileView.php?error=noProfiles");
-            } else {
-                $perfilesFiltrados = filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajeParam, $usuarioId);
-
-                // guardar los perfiles filtrados en sesión
-                $_SESSION['perfilesMatcheados'] = $perfilesFiltrados;
-                header("location: ../view/userProfileRecommendationsView.php");
-            }
+            
         } else {
             header("location: ../view/userWantedProfileView.php?error=formIncomplete");
         }
@@ -72,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         // Guardar en la sesión
         $_SESSION['criteriaString'] = rtrim($criteria, ',');
         $_SESSION['valueString'] = rtrim($values, ',');
+        $_SESSION['cantCriteria'] = count($updateOrder);
 
         // Responder con éxito
         echo json_encode([
@@ -140,6 +147,21 @@ function filterProfiles($allPerfiles, $criterioParam, $valorParam, $porcentajePa
     return $perfilesFiltrados;
 }
 
+// funcion para generar un calculo logico de porcentajes segun el orden escogido por el usuario
 function calculatePercentage(){
+    if(isset($_SESSION['cantCriteria'])){
+        $n = $_SESSION['cantCriteria'];
+        $total = $n * ($n + 1) / 2;
     
+        $percentages = [];
+        for ($i = $n; $i >= 1; $i--) {
+            $percentage = ($i / $total) * 100;
+            $percentages[] = round($percentage, 2); 
+        }
+        
+        return implode(',', $percentages);
+    }else{
+        return null;
+    }
+
 }
