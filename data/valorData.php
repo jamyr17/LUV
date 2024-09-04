@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/valor.php'; // Ajusta la ruta si es necesario
+include '../domain/valorDomain.php'; 
 
 class ValorData extends Data
 {

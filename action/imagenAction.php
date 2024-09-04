@@ -5,7 +5,7 @@ include '../business/areaConocimientoBusiness.php';
 include '../business/generoBusiness.php';
 include '../business/orientacionSexualBusiness.php';
 include '../business/imagenBusiness.php';
-include_once  '../domain/imagen.php';
+include_once  '../domain/imagenDomain.php';
 include 'functions.php';
 
 $universidadBusiness = new UniversidadBusiness();

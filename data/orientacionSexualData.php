@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/orientacionSexual.php';
+include '../domain/orientacionSexualDomain.php';
 
 class OrientacionSexualData extends Data
 {

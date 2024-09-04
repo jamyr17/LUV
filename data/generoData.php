@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/genero.php';
+include '../domain/generoDomain.php';
 
 class GeneroData extends Data
 {
