@@ -1,17 +1,18 @@
-- [ ] Las imágenes subidas se formateen a web.
+- [x] Las imágenes subidas se formateen a web. (JAMYR)
 - [ ] Autocompletado en todos los campos de nombre de los CRUD. 
 - [ ] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. 
-- [ ] Si la verificación de que ya existe un registro con el mismo nombre es porque es un registro eliminado, indicarlo en el mensaje. 
-- [ ] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. 
-- [ ] Al eliminar un registro (ej: universidad), que el mensaje de confirmación le indique si hay registros (ej: campus) asociados a éste y cuántos.
-- [ ] Cambiar el nombre de archivo en el domain y revisar las referencias a estos.
-- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres.
-- [ ] Corregir el error de redireccionamiento al login.
+- [ ] Si la verificación de que ya existe un registro con el mismo nombre es porque es un registro eliminado, indicarlo en el mensaje. (JAMEL)
+- [ ] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. (JAMEL)
+- [ ] Al eliminar un registro (ej: universidad), que el mensaje de confirmación le indique si hay registros (ej: campus) asociados a éste y cuántos. (JAMEL)
+- [x] Cambiar el nombre de archivo en el domain y revisar las referencias a estos. (JAMEL)
+- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres. (JAMEL)
+- [ ] Corregir el error de redireccionamiento al login. (JAMEL)
 - [ ] Al entrar a las vistas de Modelos de Perfil, si ya hay registros para el usuario logeado, cargarlos. 
 - [ ] En las vistas de modelo, poder seleccionar "Otro" en combo box de criterio.
-- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update).
+- [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update). (JAMYR)
     - [ ] No carga todos los registros de las opciones.
 	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
+	- [ ] Si solo cambio el nombre, se carga la imagen en el directorio de action (no llegan valores de crud y registro).
 - [ ] Poder editar mi perfil.
 - [ ] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction
 	- [ ] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"
