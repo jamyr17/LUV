@@ -57,27 +57,49 @@ function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPor
     echo "<input required type='password' name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' value='$valor' $autofocusAttr />";
 }
 
-// procesar imagenes
 function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
     if (isset($_FILES[$nombreVariableForm])) {
         
         if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
             
             $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
-            $fileExtension = pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION);
+            $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
             
-            $newFileName = $nombreArchivo . '.' . $fileExtension;
+            // Cargar la imagen según su tipo
+            switch ($fileExtension) {
+                case 'jpg':
+                case 'jpeg':
+                    $image = imagecreatefromjpeg($fileTmpPath);
+                    break;
+                case 'png':
+                    $image = imagecreatefrompng($fileTmpPath);
+                    break;
+                case 'gif':
+                    $image = imagecreatefromgif($fileTmpPath);
+                    break;
+                default:
+                    return false; // Tipo de archivo no soportado
+            }
+
+            if (!$image) {
+                return false; // No se pudo crear la imagen
+            }
+
+            $newFileName = $nombreArchivo . '.webp';
             $destination = $directorio . $newFileName;
 
-            if (move_uploaded_file($fileTmpPath, $destination)) {
+            // Convertir la imagen a WebP
+            if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
+                imagedestroy($image); // Liberar la memoria
                 return $destination;
             } else {
-                return false;
+                imagedestroy($image); // Liberar la memoria
+                return false; 
             }
         } else {
-            return false;
+            return false; 
         }
     } else {
-        return false;
+        return false; 
     }
 }

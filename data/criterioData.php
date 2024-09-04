@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/criterio.php';
+include '../domain/criterioDomain.php';
 
 class CriterioData extends Data
 {
