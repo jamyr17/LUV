@@ -6,6 +6,7 @@ include '../business/generoBusiness.php';
 include '../business/orientacionSexualBusiness.php';
 include '../business/imagenBusiness.php';
 include_once  '../domain/imagen.php';
+include 'functions.php';
 
 $universidadBusiness = new UniversidadBusiness();
 $campusBusiness = new CampusBusiness();
@@ -48,19 +49,15 @@ if (isset($_POST['create'])) {
         mkdir($directory, 0777, true);
     }
 
+    // Obtener el nombre del archivo del combo box
+    $itemName = $_POST['dynamic-select-name'] ?? ''; // Campo para el nombre del registro
+    $itemName = strtolower(str_replace(' ', '-', $itemName));
+
     // Procesar la imagen subida
     if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK) {
-        $fileTmpPath = $_FILES['imageUpload']['tmp_name'];
-        $fileExtension = pathinfo($_FILES['imageUpload']['name'], PATHINFO_EXTENSION);
 
-        // Obtener el nombre del archivo del combo box
-        $itemName = $_POST['dynamic-select-name'] ?? ''; // Campo para el nombre del registro
-        $itemName = strtolower(str_replace(' ', '-', $itemName));
-        $newFileName = $itemName . '.' . $fileExtension;
-        $destination = $directory . $newFileName;
-
-        if (move_uploaded_file($fileTmpPath, $destination)) {
-            $imagen = new Imagen(0, $type, $selectedId, $newFileName, $directory, 1);
+        if (procesarImagen('imageUpload',$directory,$itemName)) {
+            $imagen = new Imagen(0, $type, $selectedId, $itemName .'.webp', $directory, 1);
             $result = $imagenBusiness->insertTbimagen($imagen);
 
             if ($result == 1) {
