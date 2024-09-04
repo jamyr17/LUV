@@ -1,4 +1,11 @@
 <?php
+define('BASE_DIR', '../resources/img/');
+define('DIR_UNIVERSIDAD', BASE_DIR . 'universidad/');
+define('DIR_AREA_CONOCIMIENTO', BASE_DIR . 'areaConocimiento/');
+define('DIR_GENERO', BASE_DIR . 'genero/');
+define('DIR_ORIENTACION_SEXUAL', BASE_DIR . 'orientacionSexual/');
+define('DIR_CAMPUS', BASE_DIR . 'campus/');
+
 include '../business/universidadBusiness.php';
 include '../business/campusBusiness.php';
 include '../business/areaConocimientoBusiness.php';
@@ -19,39 +26,11 @@ if (isset($_POST['create'])) {
     // Obtener tipo y valor del combo box
     $type = $_POST['idOptionsHidden'] ?? '';
     $selectedId = $_POST['dynamic-select'] ?? '';
-
-    // Definir directorio base
-    $baseDir = '../resources/img/';
-
-    // Determinar subdirectorio
-    switch ($type) {
-        case '1':
-            $directory = $baseDir . 'universidad/';
-            break;
-        case '2':
-            $directory = $baseDir . 'areaConocimiento/';
-            break;
-        case '3':
-            $directory = $baseDir . 'genero/';
-            break;
-        case '4':
-            $directory = $baseDir . 'orientacionSexual/';
-            break;
-        case '5':
-            $directory = $baseDir . 'campus/';
-            break;
-        default:
-            die('Tipo no válido');
-    }
-
-    // Crear el directorio si no existe
-    if (!file_exists($directory)) {
-        mkdir($directory, 0777, true);
-    }
-
     // Obtener el nombre del archivo del combo box
-    $itemName = $_POST['dynamic-select-name'] ?? ''; // Campo para el nombre del registro
-    $itemName = strtolower(str_replace(' ', '-', $itemName));
+    $itemName = strtolower(str_replace(' ', '-', $_POST['dynamic-select-name'] ?? ''));
+
+    $directory = getDirectoryByType($type);
+    createDirectoryIfNotExists($directory);
 
     // Procesar la imagen subida
     if (isset($_FILES['imageUpload']) && $_FILES['imageUpload']['error'] === UPLOAD_ERR_OK) {
@@ -110,13 +89,72 @@ if (isset($_POST['create'])) {
     if ($registroId != 0 && !empty($_POST['idOptionHidden'])) {
         $actualizarDirectorio = 1;
     }
+    
+    $directory = getDirectoryByType($crudId);
+    createDirectoryIfNotExists($directory);
+
+    $imagen = $imagenBusiness->getTbImagenById($id);
+    $imagen->setTbImagenNombre($nombreArchivo. '.webp');
+    $imagen->setTbImagenCrudId($crudId);
+    $imagen->setTbImagenRegistroId($registroId);
+    $imagen->setTbImagenDirectorio($directory);
+
     if (!empty($_POST['id']) && !empty($_POST['nombreArchivo'])) {
-        if ($actualizarDirectorio == 1) {
-            $imagenBusiness->uploadImage($id, $nombreArchivoImagen, $crudId, $registroId, $directorioActual);
-        } else {
-            $imagenBusiness->uploadImage($id, $nombreArchivo, $crudId, $registroId, $directorioActual);
+        
+        if (isset($_FILES['imageUpload_']) && $_FILES['imageUpload_']['error'] === UPLOAD_ERR_OK || $actualizarDirectorio){
+
+            if(procesarImagen('imageUpload_',$directory,$nombreArchivo)){
+                $result = $imagenBusiness->updateTbimagen($imagen);
+
+                if ($result == 1) {
+                    header("Location: ../view/imagenView.php?success=updated");
+                    exit;
+                } else {
+                    header("Location: ../view/imagenView.php?error=dbError");
+                    exit;
+                }
+
+            } else {
+                header("Location: ../view/imagenView.php?error=movingImg");
+                exit;
+            }
+
+        }else{
+            $result = $imagenBusiness->updateTbimagen($imagen);
+
+            if ($result == 1) {
+                header("Location: ../view/imagenView.php?success=updated");
+                exit;
+            } else {
+                header("Location: ../view/imagenView.php?error=dbError");
+                exit;
+            }
         }
+
     } else {
         header("Location: ../view/imagenView.php?error=emptyField");
+    }
+}
+
+function getDirectoryByType($type) {
+    switch ($type) {
+        case '1':
+            return DIR_UNIVERSIDAD;
+        case '2':
+            return DIR_AREA_CONOCIMIENTO;
+        case '3':
+            return DIR_GENERO;
+        case '4':
+            return DIR_ORIENTACION_SEXUAL;
+        case '5':
+            return DIR_CAMPUS;
+        default:
+            header("Location: ../view/imagenView.php?error=formIncomplete");
+    }
+}
+
+function createDirectoryIfNotExists($directory) {
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777, true);
     }
 }

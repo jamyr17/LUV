@@ -4,6 +4,7 @@ include '../business/imagenBusiness.php';
 
 $imagenBusiness = new ImagenBusiness();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,9 +14,8 @@ $imagenBusiness = new ImagenBusiness();
     <title>LUV</title>
     <script>
         async function updateOptions(type, selectId, selectedValue) {
-            let cantidad = 0;
             const select = document.getElementById(selectId);
-            select.innerHTML = '';
+            select.innerHTML = ''; 
 
             if (!type) return;
 
@@ -31,18 +31,15 @@ $imagenBusiness = new ImagenBusiness();
                     option.text = item.name;
                     select.add(option);
 
-                    if(cantidad===0){
-                        select.value = option.value;
-                        updateFileName('dynamic-select', 'dynamic-select-name');
+                    if (item.id == selectedValue) {
+                        select.value = item.id;
+                        updateFileName(selectId, 'dynamic-select-name');
                     }
-
-                    cantidad++;
                 });
 
             } catch (error) {
                 console.error('Error cargando la data:', error);
             }
-
         }
 
         async function updateAllDynamicSelects() {
@@ -108,7 +105,6 @@ $imagenBusiness = new ImagenBusiness();
 
             return true;
         }
-
     </script>
 </head>
 
@@ -227,7 +223,7 @@ $imagenBusiness = new ImagenBusiness();
                                      data-dynamic-select-id="dynamic-select-update_' . htmlspecialchars($imag->getTbImagenId()) . '" 
                                      data-selected-dynamic-value="' . htmlspecialchars($selectedDynamic) . '" 
                                      data-dynamic-hidden-input="idOptionsHidden_' . htmlspecialchars($imag->getTbImagenId()) . '"
-                                     data-dynamic-hidden-directorio="dynamic-directorio-update_' . htmlspecialchars($imag->getTbImagenId()) . '""
+                                     data-dynamic-hidden-directorio="dynamic-directorio-update_' . htmlspecialchars($imag->getTbImagenId()) . '"
                                     onchange="updateOptions(this.value, this.getAttribute(\'data-dynamic-select-id\'), this.getAttribute(\'data-selected-dynamic-value\'));
                                     updateHiddenIdOptionsU(this.id, this.getAttribute(\'data-dynamic-hidden-input\'));">
 
