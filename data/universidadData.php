@@ -93,23 +93,27 @@ class UniversidadData extends Data
         return $universidades;
     }
 
-    public function getAllDeletedTbUniversidad()
-    {
+    public function getAllDeletedTbUniversidad() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-
-        $querySelect = "SELECT * FROM tbuniversidad;";
-        $result = mysqli_query($conn, $querySelect);
-        mysqli_close($conn);
-
+        $query = "SELECT * FROM tbuniversidad WHERE tbuniversidadestado = 0;";
+        $result = mysqli_query($conn, $query);
         $universidades = [];
         while ($row = mysqli_fetch_array($result)) {
-            $universidadActual = new Universidad($row['tbuniversidadid'], $row['tbuniversidadnombre'], $row['tbuniversidadestado']);
-            array_push($universidades, $universidadActual);
+            $universidad = new Universidad($row['tbuniversidadid'], $row['tbuniversidadnombre'], $row['tbuniversidadestado']);
+            array_push($universidades, $universidad);
         }
-
         return $universidades;
     }
+    
+    public function restoreTbUniversidad($idUniversidad) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "UPDATE tbuniversidad SET tbuniversidadestado = 1 WHERE tbuniversidadid = $idUniversidad;";
+        $result = mysqli_query($conn, $query);
+        return $result;
+    }
+    
 
     public function exist($nombre)
     {

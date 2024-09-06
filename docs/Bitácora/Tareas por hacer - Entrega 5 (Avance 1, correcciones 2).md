@@ -2,7 +2,7 @@
 - [ ] Autocompletado en todos los campos de nombre de los CRUD. 
 - [ ] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. 
 - [ ] Si la verificación de que ya existe un registro con el mismo nombre es porque es un registro eliminado, indicarlo en el mensaje. (JAMEL)
-- [ ] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. (JAMEL)
+- [ ] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. (JAMEL) 
 - [ ] Al eliminar un registro (ej: universidad), que el mensaje de confirmación le indique si hay registros (ej: campus) asociados a éste y cuántos. (JAMEL)
 - [x] Cambiar el nombre de archivo en el domain y revisar las referencias a estos. (JAMEL)
 - [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres. (JAMEL)

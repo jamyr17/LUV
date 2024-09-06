@@ -27,9 +27,10 @@ class UniversidadBusiness {
     }
 
     public function getAllDeletedTbUniversidad() {
-        return $this->universidadData->getAllDeletedTbUniversidad();
+        $universidadData = new UniversidadData();
+        return $universidadData->getAllDeletedTbUniversidad();
     }
-
+    
     public function exist($nombre) {
         return $this->universidadData->exist($nombre);
     }
@@ -37,5 +38,12 @@ class UniversidadBusiness {
     public function insertRequestTbUniversidad($universidad) {
         return $this->universidadData->insertRequestTbUniversidad($universidad);
     }
+
+
+    public function restoreTbUniversidad($idUniversidad) {
+        $universidadData = new UniversidadData();
+        return $universidadData->restoreTbUniversidad($idUniversidad);
+    }
+    
 
 }
