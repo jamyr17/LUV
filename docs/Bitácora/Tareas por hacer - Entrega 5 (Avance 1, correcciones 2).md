@@ -8,7 +8,7 @@
 - [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres. (JAMEL)
 - [ ] Corregir el error de redireccionamiento al login. (JAMEL)
 - [ ] Al entrar a las vistas de Modelos de Perfil, si ya hay registros para el usuario logeado, cargarlos.
-- [ ] En las vistas de modelo, poder seleccionar "Otro" en combo box de criterio.(KEVIN)
+- [ ] En las vistas de modelo, poder seleccionar "Otro" en combo box de criterio.
 - [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update). (JAMYR)
     - [ ] No carga todos los registros de las opciones.
 	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
