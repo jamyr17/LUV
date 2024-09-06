@@ -227,7 +227,7 @@ class CampusData extends Data {
             echo '</tr>';
         }
     }
-
+/*
     public function getAllDeletedTbCampus()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -245,6 +245,42 @@ class CampusData extends Data {
 
         return $campus;
     }
+        */
+
+        public function getAllDeletedTbCampus() {
+            $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+            $conn->set_charset('utf8');
+            $query = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 0;";
+            $result = mysqli_query($conn, $query);
+            $campus = [];
+            while ($row = mysqli_fetch_array($result)) {
+                $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampuslatitud'], $row['tbuniversidadcampuslongitud'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusespecializacionid']);
+                array_push($campus, $campusActual); // Aquí se debe usar $campusActual
+            }
+            return $campus;
+        }
+        
+        
+        public function restoreTbCampus($idCampus) {
+            $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+            $conn->set_charset('utf8');
+        
+            // Escapar el ID del campus
+            $idCampus = mysqli_real_escape_string($conn, $idCampus);
+        
+            // Actualizar el estado en la base de datos
+            $query = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = 1 WHERE tbuniversidadcampusid = '$idCampus';";
+            $result = mysqli_query($conn, $query);
+        
+            if (!$result) {
+                // Mostrar un error si la consulta falla
+                echo "Error al actualizar el estado del campus: " . mysqli_error($conn);
+                return false;
+            }
+        
+            return true;
+        }
+        
 
     public function exist($nombre)
     {

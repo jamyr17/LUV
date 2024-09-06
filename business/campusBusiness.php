@@ -31,7 +31,13 @@ class CampusBusiness {
     }
 
     public function getAllDeletedTbCampus() {
-        return $this->campusData->getAllDeletedTbCampus();
+        $campusData = new CampusData();
+        return $campusData->getAllDeletedTbCampus();
+    }
+
+    public function restoreTbCampus($idCampus) {
+        $campusData = new CampusData();
+        return $campusData->restoreTbCampus($idCampus);
     }
 
     public function exist($nombre) {

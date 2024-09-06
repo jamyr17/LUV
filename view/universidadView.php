@@ -36,7 +36,6 @@
         section.style.display = "none";
       }
     }
-
   </script>
 
 </head>
@@ -148,7 +147,8 @@
       </table>
     </section>
 
-    <section id="table-deleted">
+    <!-- Ocultar esta sección por defecto -->
+    <section id="table-deleted" style="display: none;">
       <div class="text-center mb-4">
         <h3>Universidades eliminadas</h3>
       </div>

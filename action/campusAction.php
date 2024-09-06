@@ -162,4 +162,21 @@ if (isset($_POST['update'])) {
     } else {
         echo json_encode(['status' => 'error', 'code' => 'emptyField']);
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idCampus'])) {
+        $idCampus = $_POST['idCampus'];
+        $campusBusiness = new CampusBusiness();
+        $result = $campusBusiness->restoreTbCampus($idCampus);
+
+        if ($result == 1) {
+            header("location: ../view/campusView.php?success=restored");
+        } else {
+            header("location: ../view/campusView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/campusView.php?error=error");
+    }
 }
+
+?>

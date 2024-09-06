@@ -109,6 +109,16 @@ fetch('../action/campusAction.php', {
             document.getElementById('colectivos').disabled = true; 
         };
 
+        function toggleDeletedCampus() {
+    var section = document.getElementById('table-deleted');
+    if (section.style.display === "none") {
+        section.style.display = "block";
+    } else {
+        section.style.display = "none";
+    }
+}
+
+
     </script>
 </head>
 
@@ -135,6 +145,7 @@ fetch('../action/campusAction.php', {
                     "inserted" => "Campus creado correctamente.",
                     "updated" => "Campus actualizado correctamente.",
                     "deleted" => "Campus eliminado correctamente.",
+                    "restored"=>"Campus restaurado correctamente.",
                     default => "Transacción realizada.",
                 };
             }
@@ -386,6 +397,46 @@ fetch('../action/campusAction.php', {
 
 
         </section>
+    
+    <section id="table-deleted" style="display: none;">
+    <div class="text-center mb-4">
+        <h3>Campus eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $campusEliminados = $campusBusiness->getAllDeletedTbCampus();
+
+          if ($campusEliminados != null) {
+            foreach ($campusEliminados as $campuss) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/campusAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($campuss->getTbCampusId()) . '">';
+              echo '<td>' . htmlspecialchars($campuss->getTbCampusId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $campuss->getTbCampusNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay campus eliminados</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+</section>
+<button onclick="toggleDeletedCampus()" style="margin-top: 20px;">Ver/Ocultar Campus Eliminados</button>
+  </div>
     </div>
 </body>
 
