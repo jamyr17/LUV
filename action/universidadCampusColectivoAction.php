@@ -97,7 +97,6 @@ if (isset($_POST['update'])) {
             exit();
         }
 
-
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
 
@@ -132,6 +131,21 @@ if (isset($_POST['update'])) {
         }
     } else {
         guardarFormData();
+        header("location: ../view/universidadCampusColectivoView.php?error=error");
+    }
+} else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idUniversidadCampusColectivo'])) {
+        $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
+        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $result = $universidadCampusColectivoBusiness->restoreTbCampusColectivo($idUniversidadCampusColectivo);
+
+        if ($result == 1) {
+            header("location: ../view/universidadCampusColectivoView.php?success=restored");
+        } else {
+            header("location: ../view/universidadCampusColectivoView.php?error=dbError");
+        }
+    } else {
         header("location: ../view/universidadCampusColectivoView.php?error=error");
     }
 }

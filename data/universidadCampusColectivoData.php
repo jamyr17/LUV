@@ -97,24 +97,28 @@ class universidadCampusColectivoData extends Data
         return $universidadCampusColectivos;
     }
 
-    public function getAllDeletedTbUniversidadCampusColectivo()
-    {
+    public function getAllDeletedTbUniversidadCampusColectivo() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-
-        $querySelect = "SELECT * FROM tbuniversidadcampuscolectivo;";
-        $result = mysqli_query($conn, $querySelect);
-        mysqli_close($conn);
-
+        $query = "SELECT * FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivoestado = 0;";
+        $result = mysqli_query($conn, $query);
         $universidadCampusColectivos = [];
         while ($row = mysqli_fetch_array($result)) {
             $universidadCampusColectivoActual = new universidadCampusColectivo($row['tbuniversidadcampuscolectivoid'], $row['tbuniversidadcampuscolectivonombre'], $row['tbuniversidadcampuscolectivodescripcion'], $row['tbuniversidadcampuscolectivoestado']);
             array_push($universidadCampusColectivos, $universidadCampusColectivoActual);
         }
-
         return $universidadCampusColectivos;
     }
 
+    public function restoreTbCampusColectivo($universidadCampusColectivoId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $universidadCampusColectivoId = mysqli_real_escape_string($conn, $universidadCampusColectivoId);
+        $query = "UPDATE tbuniversidadcampuscolectivo SET tbuniversidadcampuscolectivoestado = 1 WHERE tbuniversidadcampuscolectivoid = '$universidadCampusColectivoId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
+    }
+    
     public function exist($nombre)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
