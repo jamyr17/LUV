@@ -41,6 +41,15 @@
       return true;
     }
 
+    function toggleDeletedCampusAreaConocimiento() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
+
   </script>
 </head>
 
@@ -70,6 +79,7 @@
               $_GET['success']=="inserted" => "Área de conocimiento creada correctamente.",
               $_GET['success']=="updated" => "Área de conocimiento actualizada correctamente.",
               $_GET['success']=="deleted" => "Área de conocimiento eliminada correctamente.",
+              $_GET['success']=="restored" => "Área de conocimiento restaurada correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -182,15 +192,49 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted" style="display: none;">
+      <div class="text-center mb-4">
+        <h3>Especializaciones eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $areaConocimientoEliminados = $areaConocimientoBusiness->getAllDeletedTbAreaConocimiento();
+
+          if ($areaConocimientoEliminados != null) {
+            foreach ($areaConocimientoEliminados as $areaConocimiento) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/areaConocimientoAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idAreaConocimiento" value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '">';
+              echo '<td>' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $areaConocimiento->getTbAreaConocimientoNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay áreas de conocimieto eliminadas</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedCampusAreaConocimiento()" style="margin-top: 20px;">Ver/Ocultar Áreas de conocimiento Eliminadas</button>
+
   </div>
 
 </body>
 
-<footer>
-</footer>
-
-<?php 
-  //limpiar variables de sesion de los formularios
-  eliminarFormData();
-?>
 </html>

@@ -134,4 +134,19 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/areaConocimientoView.php?error=error");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idAreaConocimiento'])) {
+        $idAreaConocimiento = $_POST['idAreaConocimiento'];
+        $AreaConocimientoBusiness = new AreaConocimientoBusiness();
+        $result = $AreaConocimientoBusiness->restoreTbCampusAreaConocimiento($idAreaConocimiento);
+
+        if ($result == 1) {
+            header("location: ../view/areaConocimientoView.php?success=restored");
+        } else {
+            header("location: ../view/areaConocimientoView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/areaConocimientoView.php?error=error");
+    }
 }
