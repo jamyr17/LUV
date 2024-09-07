@@ -30,6 +30,11 @@ class OrientacionSexualBusiness {
         return $this->orientacionSexualData->getAllDeletedTbOrientacionSexual();
     }
 
+    public function restoreTbCampusOrientacionSexual($idOrientacionSexual) {
+        $orientacionSexualData = new OrientacionSexualData();
+        return $orientacionSexualData->restoreTbCampusOrientacionSexual($idOrientacionSexual);
+    }
+
     public function exist($nombre) {
         return $this->orientacionSexualData->exist($nombre);
     }

@@ -223,7 +223,7 @@
             }
           } else {
             echo '<tr>';
-            echo '<td colspan="8">No hay áreas de conocimieto eliminadas</td>';
+            echo '<td colspan="8">No hay áreas de conocimiento eliminadas</td>';
             echo '</tr>';
           }
           ?>

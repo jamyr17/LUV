@@ -43,6 +43,14 @@
       return true;
     }
 
+    function toggleDeletedOrientacionSexual() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
 
   </script>
 
@@ -75,6 +83,7 @@
               $_GET['success']=="inserted" => "Orientación sexual creada correctamente.",
               $_GET['success']=="updated" => "Orientación sexual actualizada correctamente.",
               $_GET['success']=="deleted" => "Orientación sexual eliminada correctamente.",
+              $_GET['success']=="restored" => "Orientación sexual restaurada correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -182,14 +191,49 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted" style="display: none;">
+      <div class="text-center mb-4">
+        <h3>Orientaciones sexuales eliminadas</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $orientacionesSexualEliminados = $orientacionSexualBusiness->getAllDeletedTbOrientacionSexual();
+
+          if ($orientacionesSexualEliminados != null) {
+            foreach ($orientacionesSexualEliminados as $orientacionesSexuales) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/orientacionSexualAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idOrientacionSexual" value="' . htmlspecialchars($orientacionesSexuales->getTbOrientacionSexualId()) . '">';
+              echo '<td>' . htmlspecialchars($orientacionesSexuales->getTbOrientacionSexualId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $orientacionesSexuales->getTbOrientacionSexualNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay orientaciones sexuales eliminadas</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedOrientacionSexual()" style="margin-top: 20px;">Ver/Ocultar Orientaciones Sexuales Eliminadas</button>
+
   </div>
 
   </body>
 
-<footer>
-</footer>
-
-<?php 
-  eliminarFormData();
-?>
 </html>
