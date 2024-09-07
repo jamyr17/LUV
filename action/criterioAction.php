@@ -180,5 +180,20 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/criterioView.php?error=emptyField");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idCriterio'])) {
+        $idCriterio = $_POST['idCriterio'];
+        $CriterioBusiness = new CriterioBusiness();
+        $result = $CriterioBusiness->restoreTbCriterio($idCriterio);
+
+        if ($result == 1) {
+            header("location: ../view/criterioView.php?success=restored");
+        } else {
+            header("location: ../view/criterioView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/criterioView.php?error=error");
+    }
 }
 ?>

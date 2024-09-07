@@ -35,7 +35,12 @@ class ValorBusiness {
     }
 
     public function getAllDeletedTbValor() {
-        return $this->valorData->getAllTbValorDeleted();
+        return $this->valorData->getAllDeletedTbValor();
+    }
+
+    public function restoreTbValor($idValor) {
+        $valorData = new ValorData();
+        return $valorData->restoreTbValor($idValor);
     }
 
     public function exist($nombre) {

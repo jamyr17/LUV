@@ -145,6 +145,19 @@ if (isset($_POST['update'])) {
     } else {
         header("Location: ../view/valorView.php?error=error");
     }
-    
-    
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idValor'])) {
+        $idValor = $_POST['idValor'];
+        $ValorBusiness = new ValorBusiness();
+        $result = $ValorBusiness->restoreTbValor($idValor);
+
+        if ($result == 1) {
+            header("location: ../view/valorView.php?success=restored");
+        } else {
+            header("location: ../view/valorView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/valorView.php?error=error");
+    }
 }

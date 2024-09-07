@@ -95,7 +95,7 @@ class GeneroData extends Data
 
         return $generos;
     }
-
+/*
     public function getAllDeletedTbGenero()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -111,6 +111,28 @@ class GeneroData extends Data
         mysqli_close($conn);
 
         return $generos;
+    }
+*/  
+    public function getAllDeletedTbGenero() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbgenero WHERE tbgeneroestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $generos = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $generoActual = new Genero($row['tbgeneroid'], $row['tbgeneronombre'], $row['tbgenerodescripcion'], $row['tbgeneroestado']);
+            array_push($generos, $generoActual);
+        }
+        return $generos;
+    }
+
+    public function restoreTbGenero($generoId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $generoId = mysqli_real_escape_string($conn, $generoId);
+        $query = "UPDATE tbgenero SET tbgeneroestado = 1 WHERE tbgeneroid = '$generoId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)

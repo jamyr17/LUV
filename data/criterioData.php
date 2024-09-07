@@ -95,7 +95,7 @@ class CriterioData extends Data
 
         return $criterios;
     }
-
+/*
     public function getAllDeletedTbCriterio()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -111,6 +111,28 @@ class CriterioData extends Data
         mysqli_close($conn);
 
         return $criterios;
+    }
+*/  
+    public function getAllDeletedTbCriterio() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbcriterio WHERE tbcriterioestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $criterios = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $criterioActual = new Criterio($row['tbcriterioid'], $row['tbcriterionombre'], $row['tbcriterioestado']);
+            array_push($criterios, $criterioActual);
+        }
+        return $criterios;
+    }
+
+    public function restoreTbCriterio($criterioId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $criterioId = mysqli_real_escape_string($conn, $criterioId);
+        $query = "UPDATE tbcriterio SET tbcriterioestado = 1 WHERE tbcriterioid = '$criterioId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)

@@ -34,6 +34,11 @@ class CriterioBusiness {
         return $this->criterioData->getAllDeletedTbCriterio();
     }
 
+    public function restoreTbCriterio($idCriterio) {
+        $criterioData = new CriterioData();
+        return $criterioData->restoreTbCriterio($idCriterio);
+    }
+
     public function exist($nombre) {
         return $this->criterioData->exist($nombre);
     }

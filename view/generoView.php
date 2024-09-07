@@ -43,6 +43,15 @@
       return true;
     }
 
+    function toggleDeletedGeneros() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
+
   </script>
 
 </head>
@@ -74,6 +83,7 @@
               $_GET['success']=="inserted" => "Género creado correctamente.",
               $_GET['success']=="updated" => "Género actualizado correctamente.",
               $_GET['success']=="deleted" => "Género eliminado correctamente.",
+              $_GET['success']=="restored" => "Género restaurado correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -183,14 +193,48 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted" style="display: none;">
+      <div class="text-center mb-4">
+        <h3>Géneros eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $generosEliminados = $generoBusiness->getAllDeletedTbGenero();
+
+          if ($generosEliminados != null) {
+            foreach ($generosEliminados as $generos) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/generoAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idGenero" value="' . htmlspecialchars($generos->getTbGeneroId()) . '">';
+              echo '<td>' . htmlspecialchars($generos->getTbGeneroId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $generos->getTbGeneroNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay géneros eliminados</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedGeneros()" style="margin-top: 20px;">Ver/Ocultar Géneros Eliminados</button>
   </div>
 
 </body>
 
-<footer>
-</footer>
-
-<?php 
-  eliminarFormData();
-?>
 </html>

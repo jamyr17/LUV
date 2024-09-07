@@ -34,6 +34,11 @@ class GeneroBusiness {
         return $this->generoData->getAllDeletedTbGenero();
     }
 
+    public function restoreTbGenero($idGenero) {
+        $generoData = new GeneroData();
+        return $generoData->restoreTbGenero($idGenero);
+    }
+
     public function exist($nombre) {
         return $this->generoData->exist($nombre);
     }
