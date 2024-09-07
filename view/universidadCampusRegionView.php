@@ -35,6 +35,15 @@
 
       return true; // Permite que el formulario se envíe
     }
+
+    function toggleDeletedCampusRegiones() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
   </script>
 </head>
 
@@ -65,6 +74,7 @@
               $_GET['success']=="inserted" => "Región creada correctamente.",
               $_GET['success']=="updated" => "Región actualizada correctamente.",
               $_GET['success']=="deleted" => "Región eliminada correctamente.",
+              $_GET['success']=="restored" => "Región restaurada correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -174,6 +184,47 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted">
+      <div class="text-center mb-4">
+        <h3>Regiones eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $campusRegionesEliminados = $campusRegionBusiness->getAllDeletedTbUniversidadCampusRegion();
+
+          if ($campusRegionesEliminados != null) {
+            foreach ($campusRegionesEliminados as $regiones) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($regiones->getTbUniversidadCampusRegionid()) . '">';
+              echo '<td>' . htmlspecialchars($regiones->getTbUniversidadCampusRegionid()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $regiones->getTbUniversidadCampusRegionnombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay regiones eliminadas</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedCampusRegiones()" style="margin-top: 20px;">Ver/Ocultar Regiones Eliminadas</button>
+
   </div>
 
 </body>
