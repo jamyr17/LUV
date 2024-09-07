@@ -419,7 +419,7 @@ fetch('../action/campusAction.php', {
             foreach ($campusEliminados as $campuss) {
               echo '<tr>';
               echo '<form method="post" enctype="multipart/form-data" action="../action/campusAction.php" onsubmit="return validateForm()">';
-              echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($campuss->getTbCampusId()) . '">';
+              echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($campuss->getTbCampusId()) . '">';
               echo '<td>' . htmlspecialchars($campuss->getTbCampusId()) . '</td>';
               echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $campuss->getTbCampusNombre() . '" readonly></td>';
               echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
