@@ -185,7 +185,7 @@
       </table>
     </section>
 
-    <section id="table-deleted">
+    <section id="table-deleted" style="display: none;">
       <div class="text-center mb-4">
         <h3>Regiones eliminados</h3>
       </div>

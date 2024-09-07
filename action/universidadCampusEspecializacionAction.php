@@ -127,5 +127,20 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusEspecializacionView.php?error=error");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idCampusEspecializacion'])) {
+        $idCampusEspecializacion = $_POST['idCampusEspecializacion'];
+        $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
+        $result = $campusEspecializacionBusiness->restoreTbCampusEspecializacion($idCampusEspecializacion);
+
+        if ($result == 1) {
+            header("location: ../view/universidadCampusEspecializacionView.php?success=restored");
+        } else {
+            header("location: ../view/universidadCampusEspecializacionView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/universidadCampusEspecializacionView.php?error=error");
+    }
 }
 ?>

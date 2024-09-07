@@ -20,6 +20,7 @@
         exit();
     }
   }
+  
 ?>
 
 <!DOCTYPE html>
@@ -57,6 +58,15 @@
 
       return true;
     }
+
+    function toggleDeletedCampusEspecializaciones() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
   </script>
 
 </head>
@@ -88,6 +98,7 @@
               $_GET['success']=="inserted" => "Especialización de campus creada correctamente.",
               $_GET['success']=="updated" => "Especialización de campus actualizada correctamente.",
               $_GET['success']=="deleted" => "Especialización de campus eliminada correctamente.",
+              $_GET['success']=="restored" => "Especialización restaurada correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -193,14 +204,49 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted" style="display: none;">
+      <div class="text-center mb-4">
+        <h3>Especializaciones eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $campusEspecializacionesEliminados = $universidadCampusEspecializacionBusiness->getAllDeletedTbUniversidadCampusEspecializacion();
+
+          if ($campusEspecializacionesEliminados != null) {
+            foreach ($campusEspecializacionesEliminados as $especializaciones) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializaciones->getTbUniversidadCampusEspecializacionId()) . '">';
+              echo '<td>' . htmlspecialchars($especializaciones->getTbUniversidadCampusEspecializacionId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $especializaciones->getTbUniversidadCampusEspecializacionNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay especializaciones eliminadas</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedCampusEspecializaciones()" style="margin-top: 20px;">Ver/Ocultar Especializaciones Eliminadas</button>
+
   </div>
 
 </body>
 
-<footer>
-</footer>
-
-<?php 
-  eliminarFormData();
-?>
 </html>
