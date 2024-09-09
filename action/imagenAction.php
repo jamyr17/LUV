@@ -44,7 +44,7 @@ if (isset($_POST['create'])) {
         } 
 
         if(archiveExist($directory, $itemName)){
-            header("Location: ../view/imagenView.php?error=archiveExist");
+            header("Location: ../view/imagenView.php?error=fileExist");
             exit;
         }
 
@@ -97,70 +97,94 @@ if (isset($_POST['create'])) {
     $registroId = $_POST['idRegistroHidden'] ?? '';
     $registroActualizadoId = $_POST['dynamic-select'] ?? '';
     $directorioActual = $_POST['directorioActualHidden'] ?? '';
-    $actualizarDirectorio = 0;
 
-    if ($registroId != 0 && !empty($crudId)) {
-        $actualizarDirectorio = 1;
-    }
-    
-    $directory = getDirectoryByType($crudActualizadoId);
-    createDirectoryIfNotExists($directory);
+    // Determinar el directorio y asegurar que existe
+    $directorio = getDirectoryByType($crudActualizadoId);
+    createDirectoryIfNotExists($directorio);
 
-    $imagen = $imagenBusiness->getTbImagenById($id);
-    $imagen->setTbImagenNombre($nombreArchivo . '.webp');
-    $imagen->setTbImagenCrudId($crudActualizadoId);
-    $imagen->setTbImagenRegistroId($registroActualizadoId);
-    $imagen->setTbImagenDirectorio($directory);
+    $imagenActualizada = $imagenBusiness->getTbImagenById($id);
+    $imagenActualizada->setTbImagenNombre($nombreArchivo . '.webp');
+    $imagenActualizada->setTbImagenCrudId($crudActualizadoId);
+    $imagenActualizada->setTbImagenRegistroId($registroActualizadoId);
+    $imagenActualizada->setTbImagenDirectorio($directorio);
 
-    if($imagenBusiness->getTbImagenById($id)->getTbImagenNombre()!==$imagen->getTbImagenNombre()){
-        if(archiveExist($directory, $nombreArchivo)){
-            header("Location: ../view/imagenView.php?error=archiveExist");
+    // Obtener el registro de imagen anterior
+    $imagenAnterior = $imagenBusiness->getTbImagenById($id);
+
+    // Comprobar si el nombre de la imagen o directorio ha cambiado 
+    if ($imagenAnterior->getTbImagenNombre() !== $imagenActualizada->getTbImagenNombre() || $imagenAnterior->getTbImagenDirectorio() !== $imagenActualizada->getTbImagenDirectorio()) {
+        
+        // ya existe una imagen con ese nombre en el directorio de destino
+        if (archiveExist($directorio, $nombreArchivo)) {
+            header("Location: ../view/imagenView.php?error=fileExist");
+            exit;
+        }
+
+        $rutaImagenAnterior = $imagenAnterior->getTbImagenDirectorio() . '/' . $imagenAnterior->getTbImagenNombre();
+        $nuevaRutaImagen = $directorio . '/' . $imagenActualizada->getTbImagenNombre();
+
+        if (file_exists($rutaImagenAnterior)) {
+            if (!rename($rutaImagenAnterior, $nuevaRutaImagen)) {
+                header("Location: ../view/imagenView.php?error=fileMoveError");
+                exit;
+            }
+        }else{
+            header("Location: ../view/imagenView.php?error=previouslyDeleted");
             exit;
         }
     }
 
+    // validar datos
     if (!empty($_POST['id']) && !empty($_POST['nombreArchivo'])) {
-        if (isset($_FILES['imageUpload_']) && $_FILES['imageUpload_']['error'] === UPLOAD_ERR_OK || $actualizarDirectorio) {
+        // si se subió una imagen nueva se debe procesar
+        if (isset($_FILES['imageUpload_']) && $_FILES['imageUpload_']['error'] === UPLOAD_ERR_OK) {
+            // Comprobar tipo de archivo
             $fileType = mime_content_type($_FILES['imageUpload_']['tmp_name']);
             if (!in_array($fileType, ['image/jpeg', 'image/png', 'image/gif'])) {
                 header("Location: ../view/imagenView.php?error=fileTypeNotAllowed");
                 exit;
             }
 
+            // Comprobar tamaño del archivo
             if ($_FILES['imageUpload_']['size'] > 5 * 1024 * 1024) {
                 header("Location: ../view/imagenView.php?error=fileSizeExceeded");
                 exit;
             }
 
-            if (procesarImagen('imageUpload_', $directory, $nombreArchivo)) {
-                $result = $imagenBusiness->updateTbimagen($imagen);
+            // Procesar y mover la imagen
+            if (procesarImagen('imageUpload_', $directorio, $nombreArchivo)) {
+                $result = $imagenBusiness->updateTbimagen($imagenActualizada);
 
                 if ($result == 1) {
                     header("Location: ../view/imagenView.php?success=updated");
-                    exit;
                 } else {
                     header("Location: ../view/imagenView.php?error=dbError");
-                    exit;
                 }
+                exit;
             } else {
                 header("Location: ../view/imagenView.php?error=movingImg");
                 exit;
             }
         } else {
-            $result = $imagenBusiness->updateTbimagen($imagen);
+            // Actualizar el registro sin carga de archivo
+            $result = $imagenBusiness->updateTbimagen($imagenActualizada);
 
             if ($result == 1) {
                 header("Location: ../view/imagenView.php?success=updated");
             } else {
                 header("Location: ../view/imagenView.php?error=dbError");
             }
+            exit;
         }
     } else {
         header("Location: ../view/imagenView.php?error=missingData");
+        exit;
     }
 } else {
     header("Location: ../view/imagenView.php?error=unknown");
+    exit;
 }
+
 
 function getDirectoryByType($type) {
     switch ($type) {

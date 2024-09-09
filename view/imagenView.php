@@ -124,10 +124,13 @@ $imagenBusiness = new ImagenBusiness();
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicha imagen ya existe.",
-                    "fileDeleteError" => "no se borró el archivo en el server.",
+                    "fileDeleteError" => "que no se borró el archivo en el server.",
                     "movingImg" => "que no se pudo subir la imagen.",
                     "unknown" => "problemas inesperados.",
-                    "archiveExist" => "que dicha imagen ya está guardada.",
+                    "fileExist" => "que dicha imagen ya está guardada.",
+                    "fileTypeNotAllowed" => "que no se puede procesar el tipo de archivo.",
+                    "fileSizeExceeded" => "que la imagen es muy pesada.",
+                    "previouslyDeleted" => "que no se encuentra el archivo de la imagen.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
