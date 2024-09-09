@@ -1,6 +1,6 @@
 - [x] Las imágenes subidas se formateen a web. (JAMYR)
-- [ ] Autocompletado en todos los campos de nombre de los CRUD. 
-- [ ] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. 
+- [ ] Autocompletado en todos los campos de nombre de los CRUD. (JEYCOB)
+- [ ] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. (JEYCOB)
 - [ ] Si la verificación de que ya existe un registro con el mismo nombre es porque es un registro eliminado, indicarlo en el mensaje. (JAMEL)
 - [x] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. (JAMEL) 
 - [ ] Al eliminar un registro (ej: universidad), que el mensaje de confirmación le indique si hay registros (ej: campus) asociados a éste y cuántos. (JAMEL)
@@ -8,7 +8,7 @@
 - [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres. (JAMEL)
 - [ ] Corregir el error de redireccionamiento al login. (JAMEL)
 - [ ] Al entrar a las vistas de Modelos de Perfil, si ya hay registros para el usuario logeado, cargarlos. 
-- [ ] En las vistas de modelo, poder seleccionar "Otro" en combo box de criterio.
+- [ ] En las vistas de modelo, poder seleccionar "Otro" en combo box de criterio. (KEVIN)
 - [ ] Revisar y corregir funcionamiento de CRUD Imagen sin bugs (revisar scripts relacionados a las opciones update). (JAMYR)
     - [ ] No carga todos los registros de las opciones.
 	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  

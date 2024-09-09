@@ -61,19 +61,7 @@ $imagenBusiness = new ImagenBusiness();
         function updateFileName(selectId, nameFieldId) {
             const select = document.getElementById(selectId);
             const hiddenNameField = document.getElementById(nameFieldId);
-            hiddenNameField.value = select.options[select.selectedIndex].text;
-        }
-
-        function updateFileNameU(selectId, nameFieldId) {
-            const select = document.getElementById(selectId);
-            const hiddenNameField = document.getElementById(nameFieldId);
-            hiddenNameField.value = select.value;
-        }
-
-        function updateHiddenIdOptionsU(selectId, nameFieldId) {
-            const select = document.getElementById(selectId);
-            const idOptionsHidden = document.getElementById(nameFieldId);
-            idOptionsHidden.value = select.value;
+            hiddenNameField.value = select.options[select.selectedIndex].text || select.value;
         }
 
         function actionConfirmation(mensaje) {
@@ -91,15 +79,27 @@ $imagenBusiness = new ImagenBusiness();
         function validateForm() {
             const selectElement = document.getElementById('idOptions');
             const selectedValue = selectElement.value;
-            const fileInput = document.getElementById('imageUpload').value;
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
 
             if (selectedValue === "") {
                 alert("Por favor, seleccione una opción válida.");
                 return false; 
             }
 
-            if (!fileInput) {
+            if (!file) {
                 alert("Por favor, suba una imagen.");
+                return false;
+            }
+
+            // Validar tipo y tamaño del archivo
+            if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+                alert("Tipo de archivo no permitido. Solo se aceptan imágenes JPEG, PNG y GIF.");
+                return false;
+            }
+
+            if (file.size > 5 * 1024 * 1024) { // Limite de 5MB
+                alert("El archivo es demasiado grande. El tamaño máximo permitido es 5MB.");
                 return false;
             }
 
@@ -127,6 +127,7 @@ $imagenBusiness = new ImagenBusiness();
                     "fileDeleteError" => "no se borró el archivo en el server.",
                     "movingImg" => "que no se pudo subir la imagen.",
                     "unknown" => "problemas inesperados.",
+                    "archiveExist" => "que dicha imagen ya está guardada.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
