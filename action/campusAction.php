@@ -129,39 +129,6 @@ if (isset($_POST['update'])) {
     $campusBusiness = new CampusBusiness();
     $campusBusiness->getAllTbCampusByUniversidad($idU);
     
-}else if (isset($_POST['colectivoadd'])) {
-
-    if (isset($_POST['nombre']) && trim($_POST['nombre']) !== '') {
-        $nombre = trim($_POST['nombre']);
-
-        if (!is_numeric($nombre)) {
-            $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
-
-            $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
-
-            if ($resultExist == 1) {
-                echo json_encode(['status' => 'error', 'code' => 'exist']);
-            } else {
-                $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "Exclusivo", 0);
-
-                $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
-                
-                // Registra el resultado para depuración
-                error_log("Resultado de la inserción del colectivo: " . json_encode($result));
-                
-
-                if ($result['result']) {
-                    echo json_encode(['status' => 'success', 'id' => $result['id']]);
-                } else {
-                    echo json_encode(['status' => 'error', 'code' => 'dbError']);
-                }
-            }
-        } else {
-            echo json_encode(['status' => 'error', 'code' => 'numberFormat']);
-        }
-    } else {
-        echo json_encode(['status' => 'error', 'code' => 'emptyField']);
-    }
 }else if (isset($_POST['restore'])) {
 
     if (isset($_POST['idCampus'])) {

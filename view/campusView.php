@@ -31,92 +31,92 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
             alert(mensaje);
         }
         function seleccionarColectivo() {
-    var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
+            var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
 
-    if (nombreColectivo === '') {
-        alert('Por favor, ingrese un nombre para el colectivo.');
-        return;
-    }
+            if (nombreColectivo === '') {
+                alert('Por favor, ingrese un nombre para el colectivo.');
+                return;
+            }
 
-    var select = document.getElementById('colectivos');
-    select.disabled = false;
-
-    var options = select.options;
-    var encontrado = false;
-
-    for (var i = 0; i < options.length; i++) {
-        if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
-            options[i].selected = true;
-            encontrado = true;
-            break;
-        }
-    }
-
-    if (!encontrado) {
-        var nuevaOpcion = document.createElement('option');
-        nuevaOpcion.text = nombreColectivo;
-        nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
-        nuevaOpcion.selected = true;
-        select.appendChild(nuevaOpcion);
-
-        var formData = new FormData();
-        formData.append('colectivoadd', true);
-        formData.append('nombre', nombreColectivo);
-
-fetch('../action/campusAction.php', { 
-    method: 'POST',
-    body: formData
-})
-.then(response => {
-    if (!response.ok) {
-        // Si la respuesta no es "ok", lanza un error
-        return response.text().then(text => { throw new Error(text) });
-    }
-    return response.json();
-})
-.then(data => {
-    if (data.status === 'success') {
-        nuevaOpcion.value = data.id; // Actualiza con el ID real
-        alert('Se a registrado un colectivo no registrado previamente');
-    } else if (data.status === 'error') {
-        manejarErrores(data);
-        nuevaOpcion.remove(); // Elimina la opción en caso de error
-    }
-})
-.catch(error => {
-    console.error('Error capturado:', error.message);
-    alert('Hubo un problema al añadir el colectivo. Respuesta del servidor: ' + error.message);
-    nuevaOpcion.remove(); // Elimina la opción en caso de error
-})
-.finally(() => {
-    select.disabled = true; // Deshabilitar el select después de manejar la petición
-});
-
-    } else {
-        select.disabled = true; // Deshabilitar si se encontró el colectivo
-    }
-}
-
-        function activarYDesactivarSelectColectivos() {
             var select = document.getElementById('colectivos');
-            select.disabled = false; 
-            setTimeout(function() {
-                select.disabled = true; 
-            }, 0);
+            select.disabled = false;
+
+            var options = select.options;
+            var encontrado = false;
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
+                    options[i].selected = true;
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                var nuevaOpcion = document.createElement('option');
+                nuevaOpcion.text = nombreColectivo;
+                nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
+                nuevaOpcion.selected = true;
+                select.appendChild(nuevaOpcion);
+
+                var formData = new FormData();
+                formData.append('colectivoadd', true);
+                formData.append('nombre', nombreColectivo);
+                
+                fetch('../action/universidadCampusColectivoAction.php', { 
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Si la respuesta no es "ok", lanza un error
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        nuevaOpcion.value = data.id; // Actualiza con el ID real
+                        alert('Se a registrado un colectivo no registrado previamente');
+                    } else if (data.status === 'error') {
+                        manejarErrores(data);
+                        nuevaOpcion.remove(); // Elimina la opción en caso de error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error capturado:', error.message);
+                    alert('Hubo un problema al añadir el colectivo. Respuesta del servidor: ' + error.message);
+                    nuevaOpcion.remove(); // Elimina la opción en caso de error
+                })
+                .finally(() => {
+                    select.disabled = true; // Deshabilitar el select después de manejar la petición
+                });
+
+            } else {
+                select.disabled = true; // Deshabilitar si se encontró el colectivo
+            }
         }
 
-        window.onload = function() {
-            document.getElementById('colectivos').disabled = true; 
-        };
+                function activarYDesactivarSelectColectivos() {
+                    var select = document.getElementById('colectivos');
+                    select.disabled = false; 
+                    setTimeout(function() {
+                        select.disabled = true; 
+                    }, 0);
+                }
 
-        function toggleDeletedCampus() {
-    var section = document.getElementById('table-deleted');
-    if (section.style.display === "none") {
-        section.style.display = "block";
-    } else {
-        section.style.display = "none";
-    }
-}
+                window.onload = function() {
+                    document.getElementById('colectivos').disabled = true; 
+                };
+
+                function toggleDeletedCampus() {
+            var section = document.getElementById('table-deleted');
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
 
 
     </script>
@@ -364,7 +364,7 @@ fetch('../action/campusAction.php', {
                                 $estado = $colectivo->getTbUniversidadCampusColectivoEstado();
                                 $nombreColectivo = $colectivo->getTbUniversidadCampusColectivoNombre();
                             
-                                if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "Exclusivo")) {
+                                if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "1")) {
                                     $selected = in_array($idColectivo, $colectivosSeleccionados) ? 'selected' : '';
                                     echo '<option value="' . htmlspecialchars($idColectivo) . '" ' . $selected . '>' . htmlspecialchars($nombreColectivo) . '</option>';
                                 }

@@ -96,7 +96,7 @@ if (isset($_POST['update'])) {
             header("Location: ../view/universidadCampusColectivoView.php?error=descriptionTooLong");
             exit();
         }
-
+        
         if (strlen($nombre) > 0 && strlen($descripcion) > 0) {
             if (!is_numeric($nombre)) {
 
@@ -133,19 +133,36 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusColectivoView.php?error=error");
     }
-} else if (isset($_POST['restore'])) {
+    
+}else if (isset($_POST['colectivoadd'])) {
 
-    if (isset($_POST['idUniversidadCampusColectivo'])) {
-        $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
-        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
-        $result = $universidadCampusColectivoBusiness->restoreTbCampusColectivo($idUniversidadCampusColectivo);
+    if (isset($_POST['nombre']) && trim($_POST['nombre']) !== '') {
+        $nombre = trim($_POST['nombre']);
 
-        if ($result == 1) {
-            header("location: ../view/universidadCampusColectivoView.php?success=restored");
+        if (!is_numeric($nombre)) {
+            $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+
+            $resultExist = $universidadCampusColectivoBusiness->exist($nombre);
+
+            if ($resultExist == 1) {
+                echo json_encode(['status' => 'error', 'code' => 'exist']);
+            } else {
+                $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, "1", 0);
+
+                $result = $universidadCampusColectivoBusiness->insertTbUniversidadCampusColectivo($universidadCampusColectivo);
+                
+                error_log("Resultado de la inserción del colectivo: " . json_encode($result));
+                
+                if ($result['result']) {
+                    echo json_encode(['status' => 'success', 'id' => $result['id']]);
+                } else {
+                    echo json_encode(['status' => 'error', 'code' => 'dbError']);
+                }
+            }
         } else {
-            header("location: ../view/universidadCampusColectivoView.php?error=dbError");
+            echo json_encode(['status' => 'error', 'code' => 'numberFormat']);
         }
     } else {
-        header("location: ../view/universidadCampusColectivoView.php?error=error");
+        echo json_encode(['status' => 'error', 'code' => 'emptyField']);
     }
 }

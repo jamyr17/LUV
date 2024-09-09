@@ -22,4 +22,8 @@ class PersonalProfileBusiness{
         return $this->personalProfileData->updateTbPerfilPersonal($criterio, $valor, $usuarioId);
     }
 
+    public function perfilPersonalByIdUsuario($usuarioId){
+        return $this->personalProfileData->perfilPersonalByIdUsuario($usuarioId);
+    }
+
 }
