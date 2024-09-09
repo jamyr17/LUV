@@ -208,6 +208,28 @@ class OrientacionSexualData extends Data
         
         return $count > 0;
     }
+
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tborientacionsexualnombre FROM tborientacionsexual WHERE tborientacionsexualnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tborientacionsexualnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
+    }
     
 }
 

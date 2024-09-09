@@ -90,24 +90,7 @@ class UniversidadCampusRegionData extends Data
 
         return $campusRegions;
     }
-/*
-    public function getAllDeletedTbUniversidadCampusRegion()
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionestado = 0;";
-        $result = mysqli_query($conn, $querySelect);
-        $campusRegions = [];
-        while ($row = mysqli_fetch_array($result)) {
-            $campusRegionActual = new UniversidadCampusRegion($row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusregionnombre'], $row['tbuniversidadcampusregiondescripcion'], $row['tbuniversidadcampusregionestado']);
-            array_push($campusRegions, $campusRegionActual);
-        }
-        mysqli_close($conn);
-
-        return $campusRegions;
-    }
-*/  
     public function getAllDeletedTbUniversidadCampusRegion() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
@@ -172,5 +155,26 @@ class UniversidadCampusRegionData extends Data
         return $count > 0;
     }
 
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbuniversidadcampusregionnombre FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbuniversidadcampusregionnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
+    }
 }
 ?>

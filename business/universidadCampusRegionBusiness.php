@@ -47,4 +47,7 @@ class UniversidadCampusRegionBusiness {
         return $this->universidadCampusRegionData->nameExists($nombre, $idCampusRegion);
     }
 
+    public function autocomplete($term) {
+        return $this->universidadCampusRegionData->autocomplete($term);
+    }
 }

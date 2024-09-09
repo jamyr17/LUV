@@ -30,9 +30,9 @@ class ValorBusiness {
         return $this->valorData->getAllTbValor();
     }
 
-    public function getAllTbValorByCriterioId($criterioId) {
-        return $this->valorData->getAllTbValorByCriterioId($criterioId);
-    }
+    // public function getAllTbValorByCriterioId($criterioId) {
+    //     return $this->valorData->getAllTbValorByCriterioId($criterioId);
+    // }
 
     public function getAllDeletedTbValor() {
         return $this->valorData->getAllDeletedTbValor();
@@ -51,5 +51,7 @@ class ValorBusiness {
         return $this->valorData->nameExists($nombre, $idValor);
     }
 
-
+    public function autocomplete($term) {
+        return $this->valorData->autocomplete($term);
+    }
 }

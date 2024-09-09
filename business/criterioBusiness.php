@@ -51,5 +51,7 @@ class CriterioBusiness {
         return $this->criterioData->getCriterioNombreById($idCriterio);
     }
 
-
+    public function autocomplete($term) {
+        return $this->criterioData->autocomplete($term);
+    }
 }

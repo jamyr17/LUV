@@ -52,4 +52,8 @@ class CampusBusiness {
         return $this->campusData->insertRequestTbCampus($campus);
     }
 
+    public function autocomplete($term) {
+        return $this->campusData->autocomplete($term);
+    }
+
 }

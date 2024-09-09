@@ -47,4 +47,8 @@ class universidadCampusColectivoBusiness {
     public function getColectivosByCampusId($campusId) {
         return $this->universidadCampusColectivoData->getColectivosByCampusId($campusId);
     }
+
+    public function autocomplete($term) {
+        return $this->universidadCampusColectivoData->autocomplete($term);
+    }
 }

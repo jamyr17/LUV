@@ -51,4 +51,8 @@ class GeneroBusiness {
         return $this->generoData->nameExists($nombre);
     }
 
+    public function autocomplete($term) {
+        return $this->generoData->autocomplete($term);
+    }
+
 }

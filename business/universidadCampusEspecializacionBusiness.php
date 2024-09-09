@@ -43,4 +43,7 @@ class universidadCampusEspecializacionBusiness{
         return $this->universidadCampusEspecializacionData->nameExists($nombre, $idUniversidadCampusEspecializacion);
     }
 
+    public function autocomplete($term) {
+        return $this->universidadCampusEspecializacionData->autocomplete($term);
+    }
 }
