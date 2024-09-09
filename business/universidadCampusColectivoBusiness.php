@@ -27,7 +27,13 @@ class universidadCampusColectivoBusiness {
     }
 
     public function getAllDeletedTbUniversidadCampusColectivo() {
+        //$universidadCampusColectivoData = new universidadCampusColectivoData();
         return $this->universidadCampusColectivoData->getAllDeletedTbUniversidadCampusColectivo();
+    }
+
+    public function restoreTbCampusColectivo($idUniversidadCampusColectivo) {
+        $universidadCampusColectivoData = new universidadCampusColectivoData();
+        return $universidadCampusColectivoData->restoreTbCampusColectivo($idUniversidadCampusColectivo);
     }
 
     public function exist($nombre) {

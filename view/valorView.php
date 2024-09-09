@@ -42,6 +42,14 @@ $criterioBusiness = new CriterioBusiness();
       return true;
     }
 
+    function toggleDeletedValores() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    }
 
     </script>
 </head>
@@ -71,6 +79,7 @@ $criterioBusiness = new CriterioBusiness();
                     "inserted" => "Valor creado correctamente.",
                     "updated" => "Valor actualizado correctamente.",
                     "deleted" => "Valor eliminado correctamente.",
+                    "restored" => "Valor restaurado correctamente.",
                     default => "Transacción realizada.",
                 };
             }
@@ -198,14 +207,60 @@ $criterioBusiness = new CriterioBusiness();
                 </tbody>
             </table>
         </section>
+
+      <section id="table-deleted" style="display: none;">
+    <div class="text-center mb-4">
+        <h3>Valores eliminados</h3>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Criterio</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+      $valoresEliminados = $valorBusiness->getAllDeletedTbValor();
+      $criterios = $criterioBusiness->getAllTbCriterio(); 
+
+      if ($valoresEliminados != null) {
+          foreach ($valoresEliminados as $valores) {
+              $criterioNombre = '';
+              foreach ($criterios as $criterio) {
+                  if ($criterio->getTbCriterioId() == $valores->getTbCriterioId()) {
+                      $criterioNombre = $criterio->getTbCriterioNombre();
+                      break;
+                  }
+              }
+
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valores->getTbValorId()) . '">';
+              echo '<td>' . htmlspecialchars($valores->getTbValorId()) . '</td>';
+              echo '<td><input type="text" class="form-control" name="criterioNombre" value="' . htmlspecialchars($criterioNombre) . '" readonly></td>';
+              echo '<td><input type="text" class="form-control" name="nombre" value="' . htmlspecialchars($valores->getTbValorNombre()) . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+          }
+      } else {
+          echo '<tr>';
+          echo '<td colspan="4">No hay valores eliminados</td>';
+          echo '</tr>';
+      }
+    ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedValores()" style="margin-top: 20px;">Ver/Ocultar Valores Eliminados</button>
+
     </div>
 
 </body>
 
-<footer>
-</footer>
-
-<?php 
-    eliminarFormData();
-?>
 </html>

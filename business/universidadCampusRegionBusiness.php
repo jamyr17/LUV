@@ -34,6 +34,11 @@ class UniversidadCampusRegionBusiness {
         return $this->universidadCampusRegionData->getAllDeletedTbUniversidadCampusRegion();
     }
 
+    public function restoreTbCampusRegion($idCampusRegion) {
+        $universidadCampusRegionData = new UniversidadCampusRegionData();
+        return $universidadCampusRegionData->restoreTbCampusRegion($idCampusRegion);
+    }
+
     public function exist($nombre) {
         return $this->universidadCampusRegionData->exist($nombre);
     }

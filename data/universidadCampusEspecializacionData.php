@@ -95,7 +95,7 @@ class UniversidadCampusEspecializacionData extends Data
 
         return $universidadCampusEspecializaciones;
     }
-
+/*
     public function getAllDeletedTbUniversidadCampusEspecializacion()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -111,6 +111,28 @@ class UniversidadCampusEspecializacionData extends Data
         mysqli_close($conn);
 
         return $universidadCampusEspecializaciones;
+    }
+*/  
+    public function getAllDeletedTbUniversidadCampusEspecializacion() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbuniversidadcampusespecializacion WHERE tbuniversidadcampusespecializacionestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $universidadCampusEspecializaciones = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $universidadCampusEspecializacionActual = new universidadCampusEspecializacion($row['tbuniversidadcampusespecializacionid'], $row['tbuniversidadcampusespecializacionnombre'], $row['tbuniversidadcampusespecializaciondescripcion'], $row['tbuniversidadcampusespecializacionestado']);
+            array_push($universidadCampusEspecializaciones, $universidadCampusEspecializacionActual);
+        }
+        return $universidadCampusEspecializaciones;
+    }
+
+    public function restoreTbCampusEspecializacion($universidadCampusEspecializacionId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $universidadCampusEspecializacionId = mysqli_real_escape_string($conn, $universidadCampusEspecializacionId);
+        $query = "UPDATE tbuniversidadcampusespecializacion SET tbuniversidadcampusespecializacionestado = 1 WHERE tbuniversidadcampusespecializacionid = '$universidadCampusEspecializacionId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)

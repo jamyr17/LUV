@@ -120,5 +120,20 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusRegionView.php?error=error");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idUniversidadCampusRegion'])) {
+        $idUniversidadCampusRegion = $_POST['idUniversidadCampusRegion'];
+        $campusRegionBusiness = new UniversidadCampusRegionBusiness();
+        $result = $campusRegionBusiness->restoreTbCampusRegion($idUniversidadCampusRegion);
+
+        if ($result == 1) {
+            header("location: ../view/universidadCampusRegionView.php?success=restored");
+        } else {
+            header("location: ../view/universidadCampusRegionView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/universidadCampusRegionView.php?error=error");
+    }
 }
 ?>

@@ -30,6 +30,11 @@ class AreaConocimientoBusiness {
         return $this->areaConocimientoData->getAllDeletedTbAreaConocimiento();
     }
 
+    public function restoreTbCampusAreaConocimiento($idAreaConocimiento) {
+        $areaConocimientoData = new AreaConocimientoData();
+        return $areaConocimientoData->restoreTbCampusAreaConocimiento($idAreaConocimiento);
+    }
+
     public function exist($nombre) {
         return $this->areaConocimientoData->exist($nombre);
     }

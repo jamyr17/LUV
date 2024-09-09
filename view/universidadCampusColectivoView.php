@@ -24,7 +24,6 @@
       alert(mensaje);
     }
 
-    
     function validateForm() {
       var nombre = document.getElementById("nombre").value;
       var descripcion = document.getElementById("descripcion").value;
@@ -42,6 +41,15 @@
       }
 
       return true;
+    }
+
+    function toggleDeletedCampusColectivos() {
+      var section = document.getElementById("table-deleted");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
     }
 
   </script>
@@ -75,6 +83,7 @@
               $_GET['success']=="inserted" => "Campus colectivo creado correctamente.",
               $_GET['success']=="updated" => "Campus colectivo actualizado correctamente.",
               $_GET['success']=="deleted" => "Campus colectivo eliminado correctamente.",
+              $_GET['success']=="restored" => "Colectivo restaurado correctamente.",
               default => "Transacción realizada.",
             };
         }
@@ -185,14 +194,48 @@
         </tbody>
       </table>
     </section>
+
+    <section id="table-deleted" style="display: none;">
+      <div class="text-center mb-4">
+        <h3>Colectivos eliminados</h3>
+      </div>
+
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $campusColectivosEliminados = $universidadCampusColectivoBusiness->getAllDeletedTbUniversidadCampusColectivo();
+
+          if ($campusColectivosEliminados != null) {
+            foreach ($campusColectivosEliminados as $colectivos) {
+              echo '<tr>';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusColectivoAction.php" onsubmit="return validateForm()">';
+              echo '<input type="hidden" name="idUniversidadCampusColectivo" value="' . htmlspecialchars($colectivos->getTbUniversidadCampusColectivoId()) . '">';
+              echo '<td>' . htmlspecialchars($colectivos->getTbUniversidadCampusColectivoId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $colectivos->getTbUniversidadCampusColectivoNombre() . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '</form>';
+              echo '</tr>';
+            }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay colectivos eliminados</td>';
+            echo '</tr>';
+          }
+          ?>
+        </tbody>
+      </table>
+    </section>
+
+     <button onclick="toggleDeletedCampusColectivos()" style="margin-top: 20px;">Ver/Ocultar Colectivos Eliminados</button>
+
   </div>
 
   </body>
-
-<footer>
-</footer>
-
-<?php 
-  eliminarFormData();
-?>
 </html>

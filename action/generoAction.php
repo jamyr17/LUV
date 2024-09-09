@@ -129,4 +129,19 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/generoView.php?error=error");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idGenero'])) {
+        $idGenero = $_POST['idGenero'];
+        $GeneroBusiness = new GeneroBusiness();
+        $result = $GeneroBusiness->restoreTbGenero($idGenero);
+
+        if ($result == 1) {
+            header("location: ../view/generoView.php?success=restored");
+        } else {
+            header("location: ../view/generoView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/generoView.php?error=error");
+    }
 }

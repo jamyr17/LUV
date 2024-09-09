@@ -133,4 +133,19 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/orientacionSexualView.php?error=error");
     }
+}else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idOrientacionSexual'])) {
+        $idOrientacionSexual = $_POST['idOrientacionSexual'];
+        $OrientacionSexualBusiness = new OrientacionSexualBusiness();
+        $result = $OrientacionSexualBusiness->restoreTbCampusOrientacionSexual($idOrientacionSexual);
+
+        if ($result == 1) {
+            header("location: ../view/orientacionSexualView.php?success=restored");
+        } else {
+            header("location: ../view/orientacionSexualView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/orientacionSexualView.php?error=error");
+    }
 }

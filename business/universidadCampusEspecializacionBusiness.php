@@ -30,6 +30,11 @@ class universidadCampusEspecializacionBusiness{
         return $this->universidadCampusEspecializacionData->getAllDeletedTbUniversidadCampusEspecializacion();
     }
 
+    public function restoreTbCampusEspecializacion($universidadCampusEspecializacionId) {
+        $universidadCampusEspecializacionData = new universidadCampusEspecializacionData();
+        return $universidadCampusEspecializacionData->restoreTbCampusEspecializacion($universidadCampusEspecializacionId);
+    }
+
     public function exist($nombre) {
         return $this->universidadCampusEspecializacionData->exist($nombre);
     }

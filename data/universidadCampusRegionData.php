@@ -90,7 +90,7 @@ class UniversidadCampusRegionData extends Data
 
         return $campusRegions;
     }
-
+/*
     public function getAllDeletedTbUniversidadCampusRegion()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -106,6 +106,28 @@ class UniversidadCampusRegionData extends Data
         mysqli_close($conn);
 
         return $campusRegions;
+    }
+*/  
+    public function getAllDeletedTbUniversidadCampusRegion() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $campusRegions = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $campusRegionActual = new UniversidadCampusRegion($row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusregionnombre'], $row['tbuniversidadcampusregiondescripcion'], $row['tbuniversidadcampusregionestado']);
+            array_push($campusRegions, $campusRegionActual);
+        }
+        return $campusRegions;
+    }
+
+    public function restoreTbCampusRegion($universidadCampusRegionId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $universidadCampusRegionId = mysqli_real_escape_string($conn, $universidadCampusRegionId);
+        $query = "UPDATE tbuniversidadcampusregion SET tbuniversidadcampusregionestado = 1 WHERE tbuniversidadcampusregionid = '$universidadCampusRegionId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)

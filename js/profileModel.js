@@ -184,87 +184,18 @@ async function loadInitialValuesData() {
     }
 }
 
-async function cargarPerfilPersonal(usuarioId) {
-    try {
-        const response = await fetch('../action/personalProfileAction.php', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            throw new Error('Error al obtener el perfil del usuario');
-        }
-
-        const data = await response.json(); // Asumiendo que devuelve un array de criterios y valores seleccionados
-
-        if (data && data.length > 0) {
-            agregarCombobox(data); // Aquí se agregan los combobox dinámicos con los criterios del perfil
-        } else {
-            console.error('No se encontraron datos de perfil.');
-        }
-    } catch (error) {
-        console.error('Error al cargar el perfil personal:', error);
-    }
-}
-
-function agregarCombobox(perfilData) {
-    console.log("Iniciando función agregarCombobox");
-
-    const criteriaSection = document.getElementById('criteriaSection');
-    criteriaSection.innerHTML = ''; // Limpia la sección antes de agregar nuevos elementos
-
-    perfilData.forEach((item, index) => {
-        const criteriaCount = index + 1;
-
-        //console.log(`Item Criterio ${index + 1}:`, item.criterio); // Verifica el contenido de cada objeto
-        //console.log(`Item Valor ${index + 1}:`, item.valor); // Verifica el contenido de cada objeto
-
-        const newCriterion = document.createElement('div');
-        newCriterion.className = 'criterion';
-
-        // Crear el HTML del nuevo criterio
-        newCriterion.innerHTML = `
-            <label for="criterion${criteriaCount}">Criterio:</label>
-            <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, 1)">
-                <!-- Opciones de criterios -->
-            </select>
-
-            <label for="value${criteriaCount}">Prefiero:</label>
-            <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, 1)">
-                <!-- Opciones de valores -->
-            </select>
-
-            <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-            <button type="button" onclick="removeCriterion(this)">Eliminar</button>
-        `;
-
-        criteriaSection.appendChild(newCriterion);
-
-        // Cargar criterios y valores seleccionados
-        //console.log(`Llamando a populateCriteria para el criterio ${item.criterio}`);
-        populateCriteria(`criterion${criteriaCount}`, item.criterio);  // Pasa el criterio seleccionado
-
-        //console.log(`Llamando a loadValues para el valor del criterio ${item.valor}`);
-        loadValues(document.getElementById(`criterion${criteriaCount}`), criteriaCount, item.valor); // Pasa el valor seleccionado
-    });
-
-    //console.log("Actualizando la tabla con los criterios seleccionados.");
-    actualizarTablaConCriterio();
-    //console.log("Función agregarCombobox finalizada.");
-}
-
-
-function populateCriteria(selectId, selectedCriterioId = null) {
+// Función para cargar el select de criterios con datos
+function populateCriteria(selectId) {
     const select = document.getElementById(selectId);
     if (!select) {
         console.error(`No se encontró el select con ID ${selectId}`);
         return;
     }
 
-    select.innerHTML = ''; // Limpiar opciones
+    select.innerHTML = '';
 
     if (criterios.length === 0) {
+        console.warn('No hay criterios disponibles para cargar.');
         const option = document.createElement('option');
         option.textContent = 'No hay criterios disponibles';
         select.appendChild(option);
@@ -275,22 +206,15 @@ function populateCriteria(selectId, selectedCriterioId = null) {
         const option = document.createElement('option');
         option.value = criterio.id;
         option.textContent = criterio.name;
-    
-        // Comparar con el ID o el nombre
-        if (criterio.id == selectedCriterioId || criterio.name == selectedCriterioId) { 
-            console.log(`Nombre Criterio ${selectedCriterioId}`); // Verifica el contenido de cada objeto
-    
-            option.selected = true;
-        }
-
+        option.setAttribute('data-nombre', criterio.name);
         select.appendChild(option);
     });
 
     select.disabled = false;
 }
 
-
-function loadValues(select, index, selectedValueId = null) {
+// Función para cargar los valores basados en el criterio seleccionado
+function loadValues(select, index) {
     const criterionId = select.value;
 
     const valueSelect = document.getElementById(`value${index}`);
@@ -299,10 +223,11 @@ function loadValues(select, index, selectedValueId = null) {
         return;
     }
 
-    valueSelect.innerHTML = ''; // Limpiar opciones
+    valueSelect.innerHTML = '';
 
-    //const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
-    const filteredValues = valores;
+    // Filtrar valores basados en el criterio seleccionado
+    const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
+
     if (filteredValues.length === 0) {
         const option = document.createElement('option');
         option.textContent = 'No hay valores disponibles';
@@ -314,20 +239,11 @@ function loadValues(select, index, selectedValueId = null) {
         const option = document.createElement('option');
         option.value = valor.id;
         option.textContent = valor.name;
-
-
-        if (valor.name == selectedValueId) { // Selecciona el valor si coincide
-            //console.log(`select ${select}`);
-            //console.log(`Index ${index}`);
-            console.log(`Nombre valor seleccionado ${valor.name}`);
-            //console.log(`Select  dentro de if valor en loadValue ${selectedValueId}`);
-            option.selected = true;
-        }
-
+        option.setAttribute('data-nombre', valor.name);
         valueSelect.appendChild(option);
     });
 
-    // Añadir la opción "Otro"
+    // Añadir la opción "Otro" al final
     const otherOption = document.createElement('option');
     otherOption.value = 'other';
     otherOption.textContent = 'Otro';
@@ -337,7 +253,6 @@ function loadValues(select, index, selectedValueId = null) {
 
     actualizarTablaConCriterio();
 }
-
 
 // Función para inicializar el autocompletado en el campo de texto "Otro"
 async function initializeAutocomplete(input, criterionName) {
@@ -437,11 +352,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadInitialCriteriaData();
     await loadInitialValuesData();
-
-    const usuarioId = 'nombreUsuario';  // Cambiar según tu lógica
-
-    // Intentar cargar el perfil personal si existe
-    await cargarPerfilPersonal(usuarioId);
 
     document.getElementById('criterion1').disabled = false;
     actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales

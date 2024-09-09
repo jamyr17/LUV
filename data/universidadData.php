@@ -114,7 +114,6 @@ class UniversidadData extends Data
         return $result;
     }
     
-
     public function exist($nombre)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);

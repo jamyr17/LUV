@@ -96,7 +96,7 @@ class OrientacionSexualData extends Data
 
         return $orientacionesSexuales;
     }
-
+/*
     public function getAllDeletedTbOrientacionSexual()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -113,6 +113,28 @@ class OrientacionSexualData extends Data
         }
 
         return $orientacionesSexuales;
+    }
+*/
+    public function getAllDeletedTbOrientacionSexual() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tborientacionsexual WHERE tborientacionsexualestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $orientacionesSexuales = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $orientacionSexualActual = new OrientacionSexual($row['tborientacionsexualid'], $row['tborientacionsexualnombre'], $row['tborientacionsexualdescripcion'], $row['tborientacionsexualestado']);
+            array_push($orientacionesSexuales, $orientacionSexualActual);
+        }
+        return $orientacionesSexuales;
+    }
+
+    public function restoreTbCampusOrientacionSexual($orientacionSexualId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $orientacionSexualId = mysqli_real_escape_string($conn, $orientacionSexualId);
+        $query = "UPDATE tborientacionsexual SET tborientacionsexualestado = 1 WHERE tborientacionsexualid = '$orientacionSexualId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)

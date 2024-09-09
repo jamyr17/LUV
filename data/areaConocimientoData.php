@@ -96,7 +96,7 @@ class AreaConocimientoData extends Data
 
         return $areasconocimiento;
     }
-
+/*
     public function getAllDeletedTbAreaConocimiento()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -113,6 +113,28 @@ class AreaConocimientoData extends Data
         }
 
         return $areasconocimiento;
+    }
+*/
+    public function getAllDeletedTbAreaConocimiento() {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbareaconocimiento WHERE tbareaconocimientoestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $areasconocimiento = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $areaConocimientoActual = new AreaConocimiento($row['tbareaconocimientoid'], $row['tbareaconocimientonombre'], $row['tbareaconocimientodescripcion'], $row['tbareaconocimientoestado']);
+            array_push($areasconocimiento, $areaConocimientoActual);
+        }
+        return $areasconocimiento;
+    }
+
+    public function restoreTbCampusAreaConocimiento($areaConocimientoId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $areaConocimientoId = mysqli_real_escape_string($conn, $areaConocimientoId);
+        $query = "UPDATE tbareaconocimiento SET tbareaconocimientoestado = 1 WHERE tbareaconocimientoid = '$areaConocimientoId';";
+        $result = mysqli_query($conn, $query);
+        return $result;
     }
 
     public function exist($nombre)
