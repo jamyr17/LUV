@@ -5,7 +5,6 @@ include 'functions.php';
 
 $maxLength = 255;
 
-$apiKey = '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';
 
 function createFolderIfNotExists($folderPath) {
     if (!file_exists($folderPath)) {
