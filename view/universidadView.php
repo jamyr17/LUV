@@ -1,6 +1,6 @@
 <?php
-  include "../action/sessionAdminAction.php";
-  include '../action/functions.php';
+include "../action/sessionAdminAction.php";
+include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -9,13 +9,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="../js/autocomplete.js" defer></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
   <title>LUV</title>
   <script>
-    function actionConfirmation(mensaje){
+    function actionConfirmation(mensaje) {
       return confirm(mensaje);
     }
 
-    function showMessage(mensaje){
+    function showMessage(mensaje) {
       alert(mensaje);
     }
 
@@ -23,7 +28,7 @@
       var nombre = document.getElementById("nombre").value;
       if (nombre.length > 150) {
         alert("El texto no puede exceder los 150 caracteres.");
-        return false; 
+        return false;
       }
       return true;
     }
@@ -49,29 +54,29 @@
   <div class="container mt-3">
     <section id="alerts">
       <?php
-        if (isset($_GET['error'])) {
-          $mensaje = "Ocurrió un error debido a ";
-          $mensaje .= match(true){
-            $_GET['error']=="emptyField" => "campo(s) vacío(s).",
-            $_GET['error']=="numberFormat" => "ingreso de valores númericos.",
-            $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "que dicha universidad ya existe.",
-            $_GET['error']=="longText" => "el nombre supera los 150 caracteres.",
-            default => "un problema inesperado.",
-          };
-        } else if (isset($_GET['success'])) {
-            $mensaje = match(true){
-              $_GET['success']=="inserted" => "Universidad creada correctamente.",
-              $_GET['success']=="updated" => "Universidad actualizada correctamente.",
-              $_GET['success']=="deleted" => "Universidad eliminada correctamente.",
-              $_GET['success']=="restored" => "Universidad restaurada correctamente.",
-              default => "Transacción realizada.",
-            };
-        }
+      if (isset($_GET['error'])) {
+        $mensaje = "Ocurrió un error debido a ";
+        $mensaje .= match (true) {
+          $_GET['error'] == "emptyField" => "campo(s) vacío(s).",
+          $_GET['error'] == "numberFormat" => "ingreso de valores númericos.",
+          $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
+          $_GET['error'] == "exist" => "que dicha universidad ya existe.",
+          $_GET['error'] == "longText" => "el nombre supera los 150 caracteres.",
+          default => "un problema inesperado.",
+        };
+      } else if (isset($_GET['success'])) {
+        $mensaje = match (true) {
+          $_GET['success'] == "inserted" => "Universidad creada correctamente.",
+          $_GET['success'] == "updated" => "Universidad actualizada correctamente.",
+          $_GET['success'] == "deleted" => "Universidad eliminada correctamente.",
+          $_GET['success'] == "restored" => "Universidad restaurada correctamente.",
+          default => "Transacción realizada.",
+        };
+      }
 
-        if(isset($mensaje)){
-          echo "<script>showMessage('$mensaje')</script>";
-        }
+      if (isset($mensaje)) {
+        echo "<script>showMessage('$mensaje')</script>";
+      }
       ?>
     </section>
 
@@ -90,6 +95,7 @@
         <div class="container d-flex justify-content-center">
           <form method="post" action="../action/universidadAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
             <input type="hidden" name="universidad" value="<?php echo htmlspecialchars($idUniversidad); ?>">
+            <input type="hidden" id="type" name="type" value="universidad"> <!-- Campo oculto para el tipo de objeto -->
 
             <div class="row">
               <div class="col">
@@ -97,7 +103,7 @@
                 <?php generarCampoTexto('nombre', 'formCrearData', 'Universidad Nacional', ''); ?>
               </div>
             </div>
-            
+
             <div>
               <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
             </div>
@@ -186,7 +192,7 @@
       </table>
     </section>
 
-     <button onclick="toggleDeletedUniversities()" style="margin-top: 20px;">Ver/Ocultar Universidades Eliminadas</button>
+    <button onclick="toggleDeletedUniversities()" style="margin-top: 20px;">Ver/Ocultar Universidades Eliminadas</button>
 
   </div>
 

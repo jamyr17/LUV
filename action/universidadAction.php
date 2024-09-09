@@ -122,5 +122,4 @@ if (isset($_POST['update'])) {
         header("location: ../view/universidadView.php?error=error");
     }
 }
-
 ?>

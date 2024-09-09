@@ -45,5 +45,7 @@ class UniversidadBusiness {
         return $universidadData->restoreTbUniversidad($idUniversidad);
     }
     
-
+    public function autocomplete($term) {
+        return $this->universidadData->autocomplete($term);
+    }
 }
