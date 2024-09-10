@@ -352,7 +352,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadInitialCriteriaData();
     await loadInitialValuesData();
+    
+    await cargarPerfilPersonal();
 
     document.getElementById('criterion1').disabled = false;
     actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales
 });
+
+
+// Nueva función para cargar el perfil personal del usuario
+async function cargarPerfilPersonal() {
+    try {
+        const response = await fetch('../action/personalProfileAction.php'); // Asegúrate de que la ruta sea correcta
+        const data = await response.json();
+
+        if (data.error) {
+            console.error('Error al cargar el perfil personal:', data.error);
+            return;
+        }
+
+        // Cargar los criterios y valores en los combobox
+        data.forEach((item, index) => {
+            if (index > 0) addCriterion(); // Agregar un nuevo criterio si es el segundo o más
+
+            const criterioSelect = document.getElementById(`criterion${index + 1}`);
+            const valorSelect = document.getElementById(`value${index + 1}`);
+
+            // Seleccionar el criterio en el combobox
+            const criterioOption = Array.from(criterioSelect.options).find(option => option.text === item.criterio);
+            if (criterioOption) criterioOption.selected = true;
+
+            // Cargar los valores basados en el criterio
+            loadValues(criterioSelect, index + 1);
+
+            // Revisar si el valor existe en el combobox de valores
+            let valorOption = Array.from(valorSelect.options).find(option => option.text === item.valor);
+
+            if (!valorOption) {
+                // Si el valor no existe, crearlo dinámicamente
+                valorOption = new Option(item.valor, item.valor);
+                valorSelect.add(valorOption);
+            }
+
+            // Seleccionar el valor en el combobox
+            valorOption.selected = true;
+        });
+
+        actualizarTablaConCriterio();
+    } catch (error) {
+        console.error('Error al cargar el perfil personal:', error);
+    }
+}
