@@ -110,8 +110,7 @@ function deleteUniversity(idUniversidad) {
 
     xhr.send("idUniversidad=" + idUniversidad + "&action=deleteConfirmed");
 }
-
-  </script>
+</script>
 
 </head>
 
@@ -145,9 +144,9 @@ function deleteUniversity(idUniversidad) {
         };
       }
 
-      if (isset($mensaje)) {
-        echo "<script>showMessage('$mensaje')</script>";
-      }
+        if(isset($mensaje)){
+          echo "<script>showMessage('$mensaje')</script>";
+        } 
       ?>
     </section>
 
