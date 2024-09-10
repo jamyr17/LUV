@@ -1,6 +1,6 @@
 - [x] Las imágenes subidas se formateen a web. (JAMYR)
-- [ ] Autocompletado en todos los campos de nombre de los CRUD. (JEYCOB)
-- [ ] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. (JEYCOB)
+- [x] Autocompletado en todos los campos de nombre de los CRUD. (JEYCOB)
+- [x] Algoritmo que compruebe si el nuevo nombre de un registro es parecido a uno ya registrado, mostrarlo como mensaje de advertencia. (JEYCOB)
 - [ ] Si la verificación de que ya existe un registro con el mismo nombre es porque es un registro eliminado, indicarlo en el mensaje. (JAMEL)
 - [x] En las vistas CRUD mostrar un botón que al ser presionado muestre los registros eliminados, con la opción de actividarlos nuevamente. (JAMEL) 
 - [ ] Al eliminar un registro (ej: universidad), que el mensaje de confirmación le indique si hay registros (ej: campus) asociados a éste y cuántos. (JAMEL)
@@ -14,8 +14,8 @@
 	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
 	- [ ] Si solo cambio el nombre, se carga la imagen en el directorio de action (no llegan valores de crud y registro).
 - [ ] Poder editar mi perfil.
-- [ ] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction
-	- [ ] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"
-- [ ] Que se muestre un mensaje cuando se crea un colectivo exclusivo en campus.
-- [ ] Eliminar los echos jason que estan en campusAction sin dañar la funcionalidad de colectivos que posee.
-- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres.
+- [x] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction(KEVIN)
+	- [x] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"(KEVIN)
+- [x] Que se muestre un mensaje cuando se crea un colectivo exclusivo en campus.(KEVIN)
+- [ ] Eliminar los echos jason que estan en campusAction sin dañar la funcionalidad de colectivos que posee.(KEVIN)
+- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres.(KEVIN)

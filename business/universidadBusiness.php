@@ -34,13 +34,20 @@ class UniversidadBusiness {
         return $this->universidadData->getAllTbUniversidad();
     }
 
+    public function getAllTbUniversidadNombres() {
+        return $this->universidadData->getAllTbUniversidadNombres();
+    }
+
     public function getAllDeletedTbUniversidad() {
-        $universidadData = new UniversidadData();
-        return $universidadData->getAllDeletedTbUniversidad();
+        return $this->universidadData->getAllDeletedTbUniversidad();
     }
     
     public function exist($nombre) {
         return $this->universidadData->exist($nombre);
+    }
+
+    public function getTbUniversidadById($idUniversidad) {
+        return $this->universidadData->getTbUniversidadById($idUniversidad);
     }
 
     public function insertRequestTbUniversidad($universidad) {
@@ -48,9 +55,10 @@ class UniversidadBusiness {
     }
 
     public function restoreTbUniversidad($idUniversidad) {
-        $universidadData = new UniversidadData();
-        return $universidadData->restoreTbUniversidad($idUniversidad);
+        return $this->universidadData->restoreTbUniversidad($idUniversidad);
     }
     
-
+    public function autocomplete($term) {
+        return $this->universidadData->autocomplete($term);
+    }
 }

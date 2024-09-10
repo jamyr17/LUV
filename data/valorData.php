@@ -101,6 +101,30 @@ class ValorData extends Data
 
         return $valores;
     }
+
+    public function getAllTbValorNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbvalornombre FROM tbvalor WHERE tbvalorestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbvalornombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
+
 /*
     public function getAllTbValorDeleted()
     {
@@ -191,5 +215,26 @@ class ValorData extends Data
         return $count > 0;
     }
 
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbvalornombre FROM tbvalor WHERE tbvalornombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbvalornombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
+    }
 }
 ?>

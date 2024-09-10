@@ -1,6 +1,6 @@
 <?php
-  include "../action/sessionAdminAction.php";
-  include '../action/functions.php';
+include "../action/sessionAdminAction.php";
+include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -9,25 +9,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="../js/autocomplete.js" defer></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <title>Criterios</title>
   <script>
-    function actionConfirmation(mensaje){
+    function actionConfirmation(mensaje) {
       var response = confirm(mensaje)
-      if(response==true){
+      if (response == true) {
         return true
-      }else{
+      } else {
         return false
       }
     }
 
-    function showMessage(mensaje){
+    function showMessage(mensaje) {
       alert(mensaje);
     }
 
-    
+
     function validateForm() {
       var nombre = document.getElementById("nombre").value;
-      
+
       var maxLength = 255;
 
       if (nombre.length > maxLength) {
@@ -46,7 +50,6 @@
         section.style.display = "none";
       }
     }
-
   </script>
 
 </head>
@@ -62,62 +65,64 @@
   <div class="container mt-3">
     <section id="alerts">
       <?php
-        if (isset($_GET['error'])) {
-          $mensaje = "Ocurrió un error debido a ";
-          $mensaje .= match(true){
-            $_GET['error']=="emptyField" => "campo(s) vacío(s).",
-            $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
-            $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "que dicho criterio ya existe.",
-            $_GET['error']=="nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
-            default => "un problema inesperado.",
-          };
-        } else if (isset($_GET['success'])) {
-            $mensaje = match(true){
-              $_GET['success']=="inserted" => "Criterio creado correctamente.",
-              $_GET['success']=="updated" => "Criterio actualizado correctamente.",
-              $_GET['success']=="deleted" => "Criterio eliminado correctamente.",
-              $_GET['success']=="restored" => "Criterio restaurado correctamente.",
-              default => "Transacción realizada.",
-            };
-        }
+      if (isset($_GET['error'])) {
+        $mensaje = "Ocurrió un error debido a ";
+        $mensaje .= match (true) {
+          $_GET['error'] == "emptyField" => "campo(s) vacío(s).",
+          $_GET['error'] == "numberFormat" => "ingreso de valores numéricos.",
+          $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
+          $_GET['error'] == "exist" => "que dicho criterio ya existe.",
+          $_GET['error'] == "alike" => "que el nombre es muy similar.",
+          $_GET['error'] == "nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
+          default => "un problema inesperado.",
+        };
+      } else if (isset($_GET['success'])) {
+        $mensaje = match (true) {
+          $_GET['success'] == "inserted" => "Criterio creado correctamente.",
+          $_GET['success'] == "updated" => "Criterio actualizado correctamente.",
+          $_GET['success'] == "deleted" => "Criterio eliminado correctamente.",
+          $_GET['success'] == "restored" => "Criterio restaurado correctamente.",
+          default => "Transacción realizada.",
+        };
+      }
 
-        if(isset($mensaje)){
-          echo "<script>showMessage('$mensaje')</script>";
-        }
+      if (isset($mensaje)) {
+        echo "<script>showMessage('$mensaje')</script>";
+      }
       ?>
     </section>
 
     <section id="form">
       <div class="container">
-        
+
         <button onclick="window.location.href='../indexView.php';">Volver</button>
         <form method="post" action="../action/sessionAdminAction.php">
           <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
         </form>
 
         <div class="text-center mb-4">
-            <h3>Agregar un nuevo criterio</h3>
-            <p class="text-muted">Complete el formulario para añadir un nuevo criterio</p>
+          <h3>Agregar un nuevo criterio</h3>
+          <p class="text-muted">Complete el formulario para añadir un nuevo criterio</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/criterioAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
-                <input type="hidden" name="criterio" value="<?php echo htmlspecialchars($idCriterio); ?>">
+          <form method="post" action="../action/criterioAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
+            <input type="hidden" name="criterio" value="<?php echo htmlspecialchars($idCriterio); ?>">
 
-                <div class="row">
-                    <div class="col">
+            <div class="row">
+              <div class="col">
+                <input type="hidden" id="type" name="type" value="criterio"> <!-- Campo oculto para el tipo de objeto -->
 
-                        <label for="nombre" class="form-label">Nombre: </label>
-                        <?php generarCampoTexto('nombre','formCrearData','Nombre del criterio','') ?>
+                <label for="nombre" class="form-label">Nombre: </label>
+                <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre del criterio', '') ?>
 
-                    </div>
-                </div>               
-                
-                <div>
-                    <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
-                </div>
-            </form>
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -149,12 +154,12 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/criterioAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($criterio->getTbCriterioId()) . '">';
               echo '<td>' . htmlspecialchars($criterio->getTbCriterioId()) . '</td>';
- 
+
               echo '<td>';
               if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCriterio'] == $criterio->getTbCriterioId()) {
-                  generarCampoTexto('nombre', 'formActualizarData', '', '');
+                generarCampoTexto('nombre', 'formActualizarData', '', '');
               } else {
-                  generarCampoTexto('nombre', '', '', $criterio->getTbCriterioNombre());
+                generarCampoTexto('nombre', '', '', $criterio->getTbCriterioNombre());
               }
               echo '</td>';
 
@@ -209,7 +214,7 @@
       </table>
     </section>
 
-     <button onclick="toggleDeletedCriterios()" style="margin-top: 20px;">Ver/Ocultar Criterios Eliminados</button>
+    <button onclick="toggleDeletedCriterios()" style="margin-top: 20px;">Ver/Ocultar Criterios Eliminados</button>
 
   </div>
 

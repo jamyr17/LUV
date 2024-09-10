@@ -1,13 +1,13 @@
 <?php
-include "../action/sessionAdminAction.php";
-include '../business/imagenBusiness.php';
-include '../business/universidadBusiness.php';
-include '../business/campusBusiness.php';
-include '../business/areaConocimientoBusiness.php';
-include '../business/generoBusiness.php';
-include '../business/orientacionSexualBusiness.php';
+include_once "../action/sessionAdminAction.php";
+include_once '../business/imagenBusiness.php';
+include_once '../business/universidadBusiness.php';
+include_once '../business/campusBusiness.php';
+include_once '../business/areaConocimientoBusiness.php';
+include_once '../business/generoBusiness.php';
+include_once '../business/orientacionSexualBusiness.php';
 include_once '../domain/imagenDomain.php';
-include 'functions.php';
+include_once 'functions.php';
 
 $imagenBusiness = new ImagenBusiness();
 $universidadBusiness = new UniversidadBusiness();

@@ -30,6 +30,10 @@ class CriterioBusiness {
         return $this->criterioData->getAllTbCriterio();
     }
 
+    public function getAllTbCriterioNombres() {
+        return $this->criterioData->getAllTbCriterioNombres();
+    }
+
     public function getAllDeletedTbCriterio() {
         return $this->criterioData->getAllDeletedTbCriterio();
     }
@@ -51,5 +55,7 @@ class CriterioBusiness {
         return $this->criterioData->getCriterioNombreById($idCriterio);
     }
 
-
+    public function autocomplete($term) {
+        return $this->criterioData->autocomplete($term);
+    }
 }

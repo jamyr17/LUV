@@ -96,6 +96,29 @@ class OrientacionSexualData extends Data
 
         return $orientacionesSexuales;
     }
+
+    public function getAllTbOrientacionSexualNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tborientacionsexualnombre FROM tborientacionsexual WHERE tborientacionsexualestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tborientacionsexualnombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
 /*
     public function getAllDeletedTbOrientacionSexual()
     {
@@ -207,6 +230,28 @@ class OrientacionSexualData extends Data
         mysqli_close($conn);
         
         return $count > 0;
+    }
+
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tborientacionsexualnombre FROM tborientacionsexual WHERE tborientacionsexualnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tborientacionsexualnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
     }
     
 }

@@ -26,6 +26,10 @@ class OrientacionSexualBusiness {
         return $this->orientacionSexualData->getAllTbOrientacionSexual();
     }
 
+    public function getAllTbOrientacionSexualNombres() {
+        return $this->orientacionSexualData->getAllTbOrientacionSexualNombres();
+    }
+
     public function getAllDeletedTbOrientacionSexual() {
         return $this->orientacionSexualData->getAllDeletedTbOrientacionSexual();
     }
@@ -44,6 +48,10 @@ class OrientacionSexualBusiness {
 
     public function nameExist($nombre, $idOrientacionSexual) {
         return $this->orientacionSexualData->nameExists($nombre, $idOrientacionSexual);
+    }
+
+    public function autocomplete($term) {
+        return $this->orientacionSexualData->autocomplete($term);
     }
 
 }

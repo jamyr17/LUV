@@ -22,8 +22,16 @@ class CampusBusiness {
         return $this->campusData->deleteTbCampus($idUniversidad);
     }
 
+    public function deleteTbCampusByUniversityId($idUniversidad) {
+        return $this->campusData->deleteTbCampusByUniversityId($idUniversidad);
+    }
+
     public function getAllTbCampus() {
         return $this->campusData->getAllTbCampus();
+    }
+
+    public function getAllTbCampusNombres() {
+        return $this->campusData->getAllTbCampusNombres();
     }
 
     public function getAllTbCampusByUniversidad($idU) {
@@ -31,13 +39,15 @@ class CampusBusiness {
     }
 
     public function getAllDeletedTbCampus() {
-        $campusData = new CampusData();
-        return $campusData->getAllDeletedTbCampus();
+        return $this->campusData->getAllDeletedTbCampus();
     }
 
     public function restoreTbCampus($idCampus) {
-        $campusData = new CampusData();
-        return $campusData->restoreTbCampus($idCampus);
+        return $this->campusData->restoreTbCampus($idCampus);
+    }
+
+    public function restoreTbCampusByUniversityId($idUniversidad) {
+        return $this->campusData->restoreTbCampusByUniversityId($idUniversidad);
     }
 
     public function exist($nombre) {
@@ -50,6 +60,10 @@ class CampusBusiness {
 
     public function insertRequestTbCampus($campus){
         return $this->campusData->insertRequestTbCampus($campus);
+    }
+
+    public function autocomplete($term) {
+        return $this->campusData->autocomplete($term);
     }
 
 }

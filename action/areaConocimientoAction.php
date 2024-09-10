@@ -108,6 +108,14 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/areaConocimientoView.php?error=exist");
+                    exit();
+                }
+
+                $nombresExistentes = $areaConocimientoBusiness->getAllTbAreaConocimientoNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/areaConocimientoView.php?error=alike");
+                    exit();
                 } else {
                     $areaConocimiento = new AreaConocimiento(0, $nombre, $descripcion, 1);
     
@@ -115,9 +123,11 @@ if (isset($_POST['update'])) {
     
                     if ($result == 1) {
                         header("location: ../view/areaConocimientoView.php?success=inserted");
+                        exit();
                     } else {
                         guardarFormData();
                         header("location: ../view/areaConocimientoView.php?error=dbError");
+                        exit();
                     }
 
                 }
@@ -125,6 +135,7 @@ if (isset($_POST['update'])) {
             } else {
                 guardarFormData();
                 header("location: ../view/areaConocimientoView.php?error=numberFormat");
+                exit();
             }
         } else {
             guardarFormData();
