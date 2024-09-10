@@ -1,9 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-include '../business/campusBusiness.php';
-include '../business/universidadCampusColectivoBusiness.php';
-include 'functions.php';
+include_once '../business/campusBusiness.php';
+include_once '../business/universidadBusiness.php';
+include_once '../business/universidadCampusColectivoBusiness.php';
+include_once 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -101,20 +102,31 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/campusView.php?error=exist");
+                    exit();
+                } 
+                
+                $nombresExistentes = $campusBusiness->getAllTbCampusNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/campusView.php?error=alike");
+                    exit();
                 } else {
                     $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $idEspecializacion, $colectivos);
                     $result = $campusBusiness->insertTbCampus($campus);
     
                     if ($result == 1) {
                         header("location: ../view/campusView.php?success=inserted");
+                        exit();
                     } else {
                         guardarFormData();
                         header("location: ../view/campusView.php?error=dbError");
+                        exit();
                     }
                 }
             } else {
                 guardarFormData();
                 header("location: ../view/campusView.php?error=numberFormat");
+                exit();
             }
         } else {
             guardarFormData();
@@ -131,16 +143,38 @@ if (isset($_POST['update'])) {
     
 }else if (isset($_POST['restore'])) {
 
-    if (isset($_POST['idCampus'])) {
+    if (isset($_POST['idCampus']) && isset($_POST['idUniversidad'])) {
         $idCampus = $_POST['idCampus'];
+        $idUniversidad = $_POST['idUniversidad'];
         $campusBusiness = new CampusBusiness();
-        $result = $campusBusiness->restoreTbCampus($idCampus);
+        $universidadBusiness = new UniversidadBusiness();
+        
+        $universidadAsociada = $universidadBusiness->getTbUniversidadById($idUniversidad);
 
-        if ($result == 1) {
-            header("location: ../view/campusView.php?success=restored");
-        } else {
-            header("location: ../view/campusView.php?error=dbError");
+        if(isset($universidadAsociada)){
+
+            if($universidadAsociada->getTbUniversidadEstado()==0){
+                header("location: ../view/campusView.php?error=requestRestoredDeclinedBcUniversityDeleted");
+                exit();
+            }
+
+            $result = $campusBusiness->restoreTbCampus($idCampus);
+
+            if ($result == 1) {
+                header("location: ../view/campusView.php?success=restored");
+                exit();
+            } else {
+                header("location: ../view/campusView.php?error=dbError");
+                exit();
+            }
+
+
+        }else{
+            header("location: ../view/campusView.php?error=requestRestoredDeclinedBcUniversityNotFound");
+            exit();
         }
+
+        
     } else {
         header("location: ../view/campusView.php?error=error");
     }

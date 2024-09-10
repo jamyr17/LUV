@@ -30,6 +30,10 @@ class GeneroBusiness {
         return $this->generoData->getAllTbGenero();
     }
 
+    public function getAllTbGeneroNombres() {
+        return $this->generoData->getAllTbGeneroNombres();
+    }
+
     public function getAllDeletedTbGenero() {
         return $this->generoData->getAllDeletedTbGenero();
     }
@@ -49,6 +53,10 @@ class GeneroBusiness {
 
     public function nameExist($nombre, $idGenero) {
         return $this->generoData->nameExists($nombre);
+    }
+
+    public function autocomplete($term) {
+        return $this->generoData->autocomplete($term);
     }
 
 }

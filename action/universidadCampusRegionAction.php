@@ -96,6 +96,13 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/universidadCampusRegionView.php?error=exist");
+                }
+
+                $nombresExistentes = $campusRegionBusiness->getAllTbUniversidadCampusRegionNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/universidadCampusRegionView.php?error=alike");
+                    exit();
                 } else {
                     $campusRegion = new UniversidadCampusRegion(0, $nombre, $descripcion, 1);
 

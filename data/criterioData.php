@@ -95,6 +95,29 @@ class CriterioData extends Data
 
         return $criterios;
     }
+
+    public function getAllTbCriterioNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbcriterionombre FROM tbcriterio WHERE tbcriterioestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbcriterionombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
 /*
     public function getAllDeletedTbCriterio()
     {
@@ -204,6 +227,28 @@ class CriterioData extends Data
         mysqli_close($conn);
         
         return $nombre;
+    }
+
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbcriterionombre FROM tbcriterio WHERE tbcriterionombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbcriterionombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
     }
 
 }

@@ -1,12 +1,10 @@
 <?php
 
-include '../business/universidadBusiness.php';
-include 'functions.php';
+include_once '../business/universidadBusiness.php';
+include_once 'functions.php';
 
 if (isset($_POST['update'])) {
-
     if (isset($_POST['nombre'])) {
-
         $idUniversidad = $_POST['idUniversidad'];
         $nombre = $_POST['nombre'];
         
@@ -16,98 +14,124 @@ if (isset($_POST['update'])) {
             exit();
         }
 
-        if (strlen($nombre) > 0) {
-            if (!is_numeric($nombre)) {
-                $universidadBusiness = new UniversidadBusiness();
-                $resultExist = $universidadBusiness->exist($nombre);
+        if (strlen($nombre) > 0 && !is_numeric($nombre)) {
+            $universidadBusiness = new UniversidadBusiness();
+            $resultExist = $universidadBusiness->exist($nombre);
 
-                if ($resultExist == 1) {
-                    guardarFormData();
-                    header("location: ../view/universidadView.php?error=exist");
-                } else {
-                    $universidad = new Universidad($idUniversidad, $nombre, 1);
-                    $result = $universidadBusiness->updateTbUniversidad($universidad);
-
-                    if ($result == 1) {
-                        header("location: ../view/universidadView.php?success=updated");
-                    } else {
-                        guardarFormData();
-                        header("location: ../view/universidadView.php?error=dbError");
-                    }
-                }
-
-            } else {
+            if ($resultExist == 1) {
                 guardarFormData();
-                header("location: ../view/universidadView.php?error=numberFormat");
+                header("location: ../view/universidadView.php?error=exist");
+            } else {
+                $universidad = new Universidad($idUniversidad, $nombre, 1);
+                $result = $universidadBusiness->updateTbUniversidad($universidad);
+
+                if ($result == 1) {
+                    header("location: ../view/universidadView.php?success=updated");
+                } else {
+                    guardarFormData();
+                    header("location: ../view/universidadView.php?error=dbError");
+                }
             }
         } else {
             guardarFormData();
             header("location: ../view/universidadView.php?error=emptyField");
         }
-    } else {
-        guardarFormData();
-        header("location: ../view/universidadView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
-
+} else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+    // Verificar si la universidad tiene campus asociados
     if (isset($_POST['idUniversidad'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $universidadBusiness = new UniversidadBusiness();
-        $result = $universidadBusiness->deleteTbUniversidad($idUniversidad);
+        $result = $universidadBusiness->checkAssociatedCampus($idUniversidad);
 
-        if ($result == 1) {
-            header("location: ../view/universidadView.php?success=deleted");
+        if ($result['status'] === 'confirm') {
+            // Si hay campus asociados, enviamos el mensaje para confirmación en el frontend
+            echo json_encode($result);
+            exit();
         } else {
-            header("location: ../view/universidadView.php?error=dbError");
+            // Si no hay campus asociados, procedemos a la eliminación directamente
+            $deleteResult = $universidadBusiness->deleteUniversityById($idUniversidad);
+            echo json_encode($deleteResult);
+            exit();
         }
     } else {
-        header("location: ../view/universidadView.php?error=error");
+        echo json_encode(['status' => 'error', 'message' => 'ID de universidad no especificado.']);
+        exit();
+    }
+} else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
+    // Eliminar definitivamente la universidad después de la confirmación
+    if (isset($_POST['idUniversidad'])) {
+        $idUniversidad = $_POST['idUniversidad'];
+        $universidadBusiness = new UniversidadBusiness();
+        $deleteResult = $universidadBusiness->deleteUniversityById($idUniversidad);
+        echo json_encode($deleteResult);
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'ID de universidad no especificado.']);
+        exit();
     }
 } else if (isset($_POST['create'])) {
-
+    // Crear universidad
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
 
+        // Verificar la longitud del nombre
         if (strlen($nombre) > 150) {
             guardarFormData();
-            header("location: ../view/universidadView.php?error=longText");
+            header("Location: ../view/universidadView.php?error=longText");
             exit();
         }
 
+        // Verificar si el nombre no está vacío y no es un número
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
                 $universidadBusiness = new UniversidadBusiness();
                 $resultExist = $universidadBusiness->exist($nombre);
 
+                // Comprobar si el nombre ya existe
                 if ($resultExist == 1) {
                     guardarFormData();
-                    header("location: ../view/universidadView.php?error=exist");
+                    header("Location: ../view/universidadView.php?error=exist");
+                    exit();
+                }
+
+                // Comprobar si el nombre es similar a alguno existente
+                $nombresExistentes = $universidadBusiness->getAllTbUniversidadNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("Location: ../view/universidadView.php?error=alike");
+                    exit();
                 } else {
                     $universidad = new Universidad(0, $nombre, 1);
                     $result = $universidadBusiness->insertTbUniversidad($universidad);
 
+                    // Verificar el resultado de la inserción
                     if ($result == 1) {
-                        header("location: ../view/universidadView.php?success=inserted");
+                        header("Location: ../view/universidadView.php?success=inserted");
+                        exit();
                     } else {
                         guardarFormData();
-                        header("location: ../view/universidadView.php?error=dbError");
+                        header("Location: ../view/universidadView.php?error=dbError");
+                        exit();
                     }
                 }
-
             } else {
                 guardarFormData();
-                header("location: ../view/universidadView.php?error=numberFormat");
+                header("Location: ../view/universidadView.php?error=numberFormat");
+                exit();
             }
         } else {
             guardarFormData();
-            header("location: ../view/universidadView.php?error=emptyField");
+            header("Location: ../view/universidadView.php?error=emptyField");
+            exit();
         }
     } else {
         guardarFormData();
-        header("location: ../view/universidadView.php?error=error");
+        header("Location: ../view/universidadView.php?error=error");
+        exit();
     }
 } else if (isset($_POST['restore'])) {
-
+    // Restaurar universidad
     if (isset($_POST['idUniversidad'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $universidadBusiness = new UniversidadBusiness();
@@ -118,9 +142,6 @@ if (isset($_POST['update'])) {
         } else {
             header("location: ../view/universidadView.php?error=dbError");
         }
-    } else {
-        header("location: ../view/universidadView.php?error=error");
     }
 }
-
 ?>

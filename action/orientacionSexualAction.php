@@ -107,6 +107,14 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/orientacionSexualView.php?error=exist");
+                    exit();
+                } 
+                
+                $nombresExistentes = $orientacionSexualBusiness->getAllTbOrientacionSexualNombres();
+                if(esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/orientacionSexualView.php?error=alike");
+                    exit();
                 } else {
                     $orientacionSexual = new OrientacionSexual(0, $nombre, $descripcion, 1);
     
@@ -114,9 +122,11 @@ if (isset($_POST['update'])) {
     
                     if ($result == 1) {
                         header("location: ../view/orientacionSexualView.php?success=inserted");
+                        exit();
                     } else {
                         guardarFormData();
                         header("location: ../view/orientacionSexualView.php?error=dbError");
+                        exit();
                     }
 
                 }

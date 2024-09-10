@@ -30,8 +30,8 @@ class ValorBusiness {
         return $this->valorData->getAllTbValor();
     }
 
-    public function getAllTbValorByCriterioId($criterioId) {
-        return $this->valorData->getAllTbValorByCriterioId($criterioId);
+    public function getAllTbValorNombres() {
+        return $this->valorData->getAllTbValorNombres();
     }
 
     public function getAllDeletedTbValor() {
@@ -51,5 +51,7 @@ class ValorBusiness {
         return $this->valorData->nameExists($nombre, $idValor);
     }
 
-
+    public function autocomplete($term) {
+        return $this->valorData->autocomplete($term);
+    }
 }

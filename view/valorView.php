@@ -14,43 +14,46 @@ $criterioBusiness = new CriterioBusiness();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../js/autocomplete.js" defer></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <title>LUV</title>
     <script>
-        function actionConfirmation(mensaje){
-      var response = confirm(mensaje)
-      if(response==true){
-        return true
-      }else{
-        return false
-      }
-    }
+        function actionConfirmation(mensaje) {
+            var response = confirm(mensaje)
+            if (response == true) {
+                return true
+            } else {
+                return false
+            }
+        }
 
         function showMessage(mensaje) {
             alert(mensaje);
         }
 
-    function validateForm() {
-      var nombre = document.getElementById("nombre").value;
-      
-      var maxLength = 255;
+        function validateForm() {
+            var nombre = document.getElementById("nombre").value;
 
-      if (nombre.length > maxLength) {
-        alert("El nombre no puede tener más de " + maxLength + " caracteres.");
-        return false;
-      }
+            var maxLength = 255;
 
-      return true;
-    }
+            if (nombre.length > maxLength) {
+                alert("El nombre no puede tener más de " + maxLength + " caracteres.");
+                return false;
+            }
 
-    function toggleDeletedValores() {
-      var section = document.getElementById("table-deleted");
-      if (section.style.display === "none") {
-        section.style.display = "block";
-      } else {
-        section.style.display = "none";
-      }
-    }
+            return true;
+        }
 
+        function toggleDeletedValores() {
+            var section = document.getElementById("table-deleted");
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
     </script>
 </head>
 
@@ -71,6 +74,7 @@ $criterioBusiness = new CriterioBusiness();
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho valor ya existe.",
+                    "alike" => "que el nombre es muy similar.",
                     "nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
                     default => "un problema inesperado.",
                 };
@@ -107,23 +111,24 @@ $criterioBusiness = new CriterioBusiness();
 
                         <label for="idCriterio">Criterio:</label>
                         <select name="idCriterio" id="idCriterio" onchange="updateCriterioNombre()">
-                        <?php
+                            <?php
                             $criterios = $criterioBusiness->getAllTbCriterio();
                             $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
-                            
+
                             if ($criterios != null) {
-                                foreach ($criterios as $criterio) {  
+                                foreach ($criterios as $criterio) {
                                     $selected = ($criterio->getTbCriterioId() == $valorSeleccionado) ? 'selected' : '';
                                     echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
                                 }
                             }
-                        ?>
+                            ?>
                         </select><br>
-                        
+
                         <input type="hidden" name="criterioNombre" id="criterioNombre" value="">
+                        <input type="hidden" id="type" name="type" value="valor"> <!-- Campo oculto para el tipo de objeto -->
 
                         <label for="nombre" class="form-label">Nombre: </label>
-                        <?php generarCampoTexto('nombre','formCrearData','Nombre de la opción','') ?>
+                        <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre de la opción', '') ?>
 
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
@@ -138,7 +143,7 @@ $criterioBusiness = new CriterioBusiness();
                         document.getElementById('criterioNombre').value = nombre;
                     }
 
-                    updateCriterioNombre(); 
+                    updateCriterioNombre();
                 </script>
             </div>
         </section>
@@ -158,106 +163,106 @@ $criterioBusiness = new CriterioBusiness();
                     </tr>
                 </thead>
                 <tbody>
-                <?php
-        $valores = $valorBusiness->getAllTbValor();
-        $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
-        $mensajeActualizar = "¿Desea actualizar este valor?";
-        $mensajeEliminar = "¿Desea eliminar este valor?";
+                    <?php
+                    $valores = $valorBusiness->getAllTbValor();
+                    $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
+                    $mensajeActualizar = "¿Desea actualizar este valor?";
+                    $mensajeEliminar = "¿Desea eliminar este valor?";
 
-        if ($valores != null) {
-            foreach ($valores as $valor) {
-                echo '<tr>';
-                echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
+                    if ($valores != null) {
+                        foreach ($valores as $valor) {
+                            echo '<tr>';
+                            echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
 
-                echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
-                echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
+                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
 
-                // Combo box para seleccionar el criterio
-                echo '<select name="idCriterio" class="form-select">';
-                foreach ($criterios as $criterio) {
-                    $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
-                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
-                    echo htmlspecialchars($criterio->getTbCriterioNombre());
-                    echo '</option>';
-                }
-                echo '</select>';
+                            // Combo box para seleccionar el criterio
+                            echo '<select name="idCriterio" class="form-select">';
+                            foreach ($criterios as $criterio) {
+                                $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
+                                echo htmlspecialchars($criterio->getTbCriterioNombre());
+                                echo '</option>';
+                            }
+                            echo '</select>';
 
-                echo '</td>';
+                            echo '</td>';
 
-                // Campo de texto para el nombre del valor
-                echo '<td>';
-                if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
-                    generarCampoTexto('nombre', 'formActualizarData', '', '');
-                } else {
-                    generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
-                }
-                echo '</td>';
+                            // Campo de texto para el nombre del valor
+                            echo '<td>';
+                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
+                                generarCampoTexto('nombre', 'formActualizarData', '', '');
+                            } else {
+                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
+                            }
+                            echo '</td>';
 
-                // Botones de acción
-                echo '<td>';
-                echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-                echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-                echo '</td>';
+                            // Botones de acción
+                            echo '<td>';
+                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                            echo '</td>';
 
-                echo '</form>';
-                echo '</tr>';
-            }
-        }
-        ?>
+                            echo '</form>';
+                            echo '</tr>';
+                        }
+                    }
+                    ?>
                 </tbody>
             </table>
         </section>
 
-      <section id="table-deleted" style="display: none;">
-    <div class="text-center mb-4">
-        <h3>Valores eliminados</h3>
-    </div>
+        <section id="table-deleted" style="display: none;">
+            <div class="text-center mb-4">
+                <h3>Valores eliminados</h3>
+            </div>
 
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Criterio</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-      $valoresEliminados = $valorBusiness->getAllDeletedTbValor();
-      $criterios = $criterioBusiness->getAllTbCriterio(); 
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Criterio</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $valoresEliminados = $valorBusiness->getAllDeletedTbValor();
+                    $criterios = $criterioBusiness->getAllTbCriterio();
 
-      if ($valoresEliminados != null) {
-          foreach ($valoresEliminados as $valores) {
-              $criterioNombre = '';
-              foreach ($criterios as $criterio) {
-                  if ($criterio->getTbCriterioId() == $valores->getTbCriterioId()) {
-                      $criterioNombre = $criterio->getTbCriterioNombre();
-                      break;
-                  }
-              }
+                    if ($valoresEliminados != null) {
+                        foreach ($valoresEliminados as $valores) {
+                            $criterioNombre = '';
+                            foreach ($criterios as $criterio) {
+                                if ($criterio->getTbCriterioId() == $valores->getTbCriterioId()) {
+                                    $criterioNombre = $criterio->getTbCriterioNombre();
+                                    break;
+                                }
+                            }
 
-              echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
-              echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valores->getTbValorId()) . '">';
-              echo '<td>' . htmlspecialchars($valores->getTbValorId()) . '</td>';
-              echo '<td><input type="text" class="form-control" name="criterioNombre" value="' . htmlspecialchars($criterioNombre) . '" readonly></td>';
-              echo '<td><input type="text" class="form-control" name="nombre" value="' . htmlspecialchars($valores->getTbValorNombre()) . '" readonly></td>';
-              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
-              echo '</form>';
-              echo '</tr>';
-          }
-      } else {
-          echo '<tr>';
-          echo '<td colspan="4">No hay valores eliminados</td>';
-          echo '</tr>';
-      }
-    ?>
-        </tbody>
-      </table>
-    </section>
+                            echo '<tr>';
+                            echo '<form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
+                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valores->getTbValorId()) . '">';
+                            echo '<td>' . htmlspecialchars($valores->getTbValorId()) . '</td>';
+                            echo '<td><input type="text" class="form-control" name="criterioNombre" value="' . htmlspecialchars($criterioNombre) . '" readonly></td>';
+                            echo '<td><input type="text" class="form-control" name="nombre" value="' . htmlspecialchars($valores->getTbValorNombre()) . '" readonly></td>';
+                            echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+                            echo '</form>';
+                            echo '</tr>';
+                        }
+                    } else {
+                        echo '<tr>';
+                        echo '<td colspan="4">No hay valores eliminados</td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </section>
 
-     <button onclick="toggleDeletedValores()" style="margin-top: 20px;">Ver/Ocultar Valores Eliminados</button>
+        <button onclick="toggleDeletedValores()" style="margin-top: 20px;">Ver/Ocultar Valores Eliminados</button>
 
     </div>
 
