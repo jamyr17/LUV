@@ -17,8 +17,18 @@
 
   <title>LUV</title>
   <script>
-    function actionConfirmation(mensaje) {
-      return confirm(mensaje);
+    function actionConfirmation(mensaje, idUniversidad) {
+
+      switch (mensaje){
+        case '¿Desea eliminar esta universidad?': 
+          if(confirm(mensaje)){
+            confirmDelete(idUniversidad);
+          }
+          break;
+
+        default: 
+        return confirm(mensaje);
+      }
     }
 
     function showMessage(mensaje) {
@@ -199,7 +209,7 @@ function deleteUniversity(idUniversidad) {
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $universidad->getTbUniversidadNombre() . '"></td>';
               echo '<td><input type="submit" name="update" id="update" value="Actualizar"></td>';
-              echo '<td><button type="button" name="delete" id="delete" onclick="confirmDelete(' . htmlspecialchars($universidad->getTbUniversidadId()) . ')">Eliminar</button></td>';
+              echo '<td><button type="button" name="delete" id="delete" onclick="actionConfirmation( \'¿Desea eliminar esta universidad?\', ' . htmlspecialchars($universidad->getTbUniversidadId()) . ')">Eliminar</button></td>';
               echo '</form>';
               echo '</tr>';
             }
