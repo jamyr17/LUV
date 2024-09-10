@@ -1,7 +1,8 @@
 <?php
 
 include_once 'data.php';
-include '../domain/universidadDomain.php';
+include_once '../domain/universidadDomain.php';
+include_once '../business/campusBusiness.php';
 
 class UniversidadData extends Data
 {
@@ -107,10 +108,14 @@ class UniversidadData extends Data
         // Eliminar la universidad
         $queryDelete = "UPDATE tbuniversidad SET tbuniversidadestado = '0' WHERE tbuniversidadid=$universidadId;";
         $resultDelete = mysqli_query($conn, $queryDelete);
+
+        // Eliminar campus asociados
+        $campusBusiness = new CampusBusiness();
+        $resultDeleteCampus =  $campusBusiness->deleteTbCampusByUniversityId($universidadId);
     
         mysqli_close($conn);
     
-        if ($resultDelete) {
+        if ($resultDelete && $resultDeleteCampus) {
             return ['status' => 'success', 'message' => 'Universidad eliminada correctamente.'];
         } else {
             return ['status' => 'error', 'message' => 'Error al eliminar la universidad.'];
@@ -164,6 +169,7 @@ class UniversidadData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "UPDATE tbuniversidad SET tbuniversidadestado = 1 WHERE tbuniversidadid = $idUniversidad;";
+
         $result = mysqli_query($conn, $query);
         return $result;
     }
@@ -187,6 +193,31 @@ class UniversidadData extends Data
         mysqli_close($conn);
         
         return $count > 0;
+    }
+
+    public function getTbUniversidadById($idUniversidad)
+    {
+        $conn = new mysqli($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $stmt = $conn->prepare("SELECT * FROM tbuniversidad WHERE tbuniversidadid = ?");
+        $stmt->bind_param('i', $idUniversidad);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $universidad = new Universidad(
+                $row['tbimagenid'],
+                $row['tbuniversidadnombre'],
+                $row['tbuniversidadestado']);
+        } else {
+            $universidad = null; // O maneja el caso en que no se encuentra la universidad
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $universidad;
     }
 
     public function insertRequestTbUniversidad($universidad)
@@ -218,5 +249,25 @@ class UniversidadData extends Data
         return $resultInsert;
     }
 
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbuniversidadnombre FROM tbuniversidad WHERE tbuniversidadnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbuniversidadnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
+    }
 }
-?>

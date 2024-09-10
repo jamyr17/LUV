@@ -43,4 +43,7 @@ class AreaConocimientoBusiness {
         return $this->areaConocimientoData->nameExists($nombre, $idAreaConocimiento);
     }
 
+    public function autocomplete($term) {
+        return $this->areaConocimientoData->autocomplete($term);
+    }
 }

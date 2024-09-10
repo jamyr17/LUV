@@ -1,7 +1,7 @@
 <?php
 
-include '../business/universidadBusiness.php';
-include 'functions.php';
+include_once '../business/universidadBusiness.php';
+include_once 'functions.php';
 
 if (isset($_POST['update'])) {
     if (isset($_POST['nombre'])) {
@@ -118,5 +118,4 @@ if (isset($_POST['update'])) {
         }
     }
 }
-
 ?>

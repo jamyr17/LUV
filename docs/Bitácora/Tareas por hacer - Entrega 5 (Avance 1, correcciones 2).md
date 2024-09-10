@@ -14,8 +14,8 @@
 	- [ ] No actualiza el cambio en combo box de las opciones y/o de registro.  
 	- [ ] Si solo cambio el nombre, se carga la imagen en el directorio de action (no llegan valores de crud y registro).
 - [ ] Poder editar mi perfil.
-- [ ] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction
-	- [ ] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"
-- [ ] Que se muestre un mensaje cuando se crea un colectivo exclusivo en campus.
-- [ ] Eliminar los echos jason que estan en campusAction sin dañar la funcionalidad de colectivos que posee.
-- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres.
+- [x] Revisar metodo para agregar colectivo al tbcolectivo (colectivoadd) que se ubica en campusAction para que tenga un correcto llamado e intentar que se agregue con la clase universidadcampuscolectivoaction(KEVIN)
+	- [x] Probar cambiar la descripcion "Exclusivo" cuando se crea a un número por "seguridad"(KEVIN)
+- [x] Que se muestre un mensaje cuando se crea un colectivo exclusivo en campus.(KEVIN)
+- [ ] Eliminar los echos jason que estan en campusAction sin dañar la funcionalidad de colectivos que posee.(KEVIN)
+- [ ] Revisar que todas las validaciones añadidas cumplan con no registrar muchos caracteres.(KEVIN)

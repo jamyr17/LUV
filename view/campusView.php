@@ -1,11 +1,11 @@
 <?php
-include "../action/sessionAdminAction.php";
-include '../business/universidadBusiness.php';
-include '../business/campusBusiness.php';
-include '../business/universidadCampusRegionBusiness.php';
-include '../business/universidadCampusColectivoBusiness.php';
-include '../business/universidadCampusEspecializacionBusiness.php';
-include '../action/functions.php';
+include_once "../action/sessionAdminAction.php";
+include_once '../business/universidadBusiness.php';
+include_once '../business/campusBusiness.php';
+include_once '../business/universidadCampusRegionBusiness.php';
+include_once '../business/universidadCampusColectivoBusiness.php';
+include_once '../business/universidadCampusEspecializacionBusiness.php';
+include_once '../action/functions.php';
 
 $universidadBusiness = new UniversidadBusiness();
 $campusBusiness = new CampusBusiness();
@@ -20,6 +20,11 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../js/autocomplete.js" defer></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <title>Campus</title>
     <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
     <script>
@@ -30,95 +35,96 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
         function showMessage(mensaje) {
             alert(mensaje);
         }
+
         function seleccionarColectivo() {
-    var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
+            var nombreColectivo = document.querySelector('input[name="colectivo"]').value.trim();
 
-    if (nombreColectivo === '') {
-        alert('Por favor, ingrese un nombre para el colectivo.');
-        return;
-    }
+            if (nombreColectivo === '') {
+                alert('Por favor, ingrese un nombre para el colectivo.');
+                return;
+            }
 
-    var select = document.getElementById('colectivos');
-    select.disabled = false;
+            var select = document.getElementById('colectivos');
+            select.disabled = false;
 
-    var options = select.options;
-    var encontrado = false;
+            var options = select.options;
+            var encontrado = false;
 
-    for (var i = 0; i < options.length; i++) {
-        if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
-            options[i].selected = true;
-            encontrado = true;
-            break;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].text.toLowerCase() === nombreColectivo.toLowerCase()) {
+                    options[i].selected = true;
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                var nuevaOpcion = document.createElement('option');
+                nuevaOpcion.text = nombreColectivo;
+                nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
+                nuevaOpcion.selected = true;
+                select.appendChild(nuevaOpcion);
+
+                var formData = new FormData();
+                formData.append('colectivoadd', true);
+                formData.append('nombre', nombreColectivo);
+
+                fetch('../action/universidadCampusColectivoAction.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            // Si la respuesta no es "ok", lanza un error
+                            return response.text().then(text => {
+                                throw new Error(text)
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            nuevaOpcion.value = data.id; // Actualiza con el ID real
+                            alert('Se a registrado un colectivo no registrado previamente');
+                        } else if (data.status === 'error') {
+                            manejarErrores(data);
+                            nuevaOpcion.remove(); // Elimina la opción en caso de error
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error capturado:', error.message);
+                        alert('Hubo un problema al añadir el colectivo. Respuesta del servidor: ' + error.message);
+                        nuevaOpcion.remove(); // Elimina la opción en caso de error
+                    })
+                    .finally(() => {
+                        select.disabled = true; // Deshabilitar el select después de manejar la petición
+                    });
+
+            } else {
+                select.disabled = true; // Deshabilitar si se encontró el colectivo
+            }
         }
-    }
-
-    if (!encontrado) {
-        var nuevaOpcion = document.createElement('option');
-        nuevaOpcion.text = nombreColectivo;
-        nuevaOpcion.value = "new_" + nombreColectivo.toLowerCase().replace(/\s+/g, '_');
-        nuevaOpcion.selected = true;
-        select.appendChild(nuevaOpcion);
-
-        var formData = new FormData();
-        formData.append('colectivoadd', true);
-        formData.append('nombre', nombreColectivo);
-
-fetch('../action/campusAction.php', { 
-    method: 'POST',
-    body: formData
-})
-.then(response => {
-    if (!response.ok) {
-        // Si la respuesta no es "ok", lanza un error
-        return response.text().then(text => { throw new Error(text) });
-    }
-    return response.json();
-})
-.then(data => {
-    if (data.status === 'success') {
-        nuevaOpcion.value = data.id; // Actualiza con el ID real
-        alert('Se a registrado un colectivo no registrado previamente');
-    } else if (data.status === 'error') {
-        manejarErrores(data);
-        nuevaOpcion.remove(); // Elimina la opción en caso de error
-    }
-})
-.catch(error => {
-    console.error('Error capturado:', error.message);
-    alert('Hubo un problema al añadir el colectivo. Respuesta del servidor: ' + error.message);
-    nuevaOpcion.remove(); // Elimina la opción en caso de error
-})
-.finally(() => {
-    select.disabled = true; // Deshabilitar el select después de manejar la petición
-});
-
-    } else {
-        select.disabled = true; // Deshabilitar si se encontró el colectivo
-    }
-}
 
         function activarYDesactivarSelectColectivos() {
             var select = document.getElementById('colectivos');
-            select.disabled = false; 
+            select.disabled = false;
             setTimeout(function() {
-                select.disabled = true; 
+                select.disabled = true;
             }, 0);
         }
 
         window.onload = function() {
-            document.getElementById('colectivos').disabled = true; 
+            document.getElementById('colectivos').disabled = true;
         };
 
         function toggleDeletedCampus() {
-    var section = document.getElementById('table-deleted');
-    if (section.style.display === "none") {
-        section.style.display = "block";
-    } else {
-        section.style.display = "none";
-    }
-}
-
-
+            var section = document.getElementById('table-deleted');
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
     </script>
 </head>
 
@@ -138,6 +144,8 @@ fetch('../action/campusAction.php', {
                     "numberFormat" => "ingreso de valores numéricos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho campus ya existe.",
+                    "requestRestoredDeclinedBcUniversityDeleted" => "que la universidad a la que pertenece el campus que está intentando restaurar está eliminada.",
+                    "requestRestoredDeclinedBcUniversityNotFound" => "que la universidad a la que pertenece el campus que está intentando restaurar no fue encontrada.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {
@@ -145,7 +153,7 @@ fetch('../action/campusAction.php', {
                     "inserted" => "Campus creado correctamente.",
                     "updated" => "Campus actualizado correctamente.",
                     "deleted" => "Campus eliminado correctamente.",
-                    "restored"=>"Campus restaurado correctamente.",
+                    "restored" => "Campus restaurado correctamente.",
                     default => "Transacción realizada.",
                 };
             }
@@ -190,9 +198,10 @@ fetch('../action/campusAction.php', {
 
                         <div class="row">
                             <div class="col">
+                                <input type="hidden" id="type" name="type" value="campus"> <!-- Campo oculto para el tipo de objeto -->
 
                                 <label for="nombre" class="form-label">Nombre: </label>
-                                <?php generarCampoTexto('nombre','formCrearData','Campus Omar Dengo','') ?>
+                                <?php generarCampoTexto('nombre', 'formCrearData', 'Campus Omar Dengo', '') ?>
 
                             </div>
                         </div>
@@ -201,10 +210,10 @@ fetch('../action/campusAction.php', {
                             <div class="col">
 
                                 <label for="direccion" class="form-label">Dirección: </label>
-                                <?php generarCampoTexto('direccion','formCrearData','Ingresa el nombre de una sede...','') ?>
+                                <?php generarCampoTexto('direccion', 'formCrearData', 'Ingresa el nombre de una sede...', '') ?>
 
-                                <input type="hidden" id="latitud" name="latitud"/>
-                                <input type="hidden" id="longitud" name="longitud"/>
+                                <input type="hidden" id="latitud" name="latitud" />
+                                <input type="hidden" id="longitud" name="longitud" />
                             </div>
                         </div>
 
@@ -221,28 +230,28 @@ fetch('../action/campusAction.php', {
                             }
                             ?>
                         </select><br>
-                        
 
-                            <label for="colectivos">Agregue los colectivos: </label>
 
-                            <?php generarCampoTexto('colectivo', 'formCrearData', 'Volleyball', '') ?>
-                            
-                            <button type="button" onclick="seleccionarColectivo()">Agregar Colectivo</button>
+                        <label for="colectivos">Agregue los colectivos: </label>
 
-                            <select name="colectivos[]" id="colectivos" multiple class="form-control" disabled>
-                                <?php
-                                $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
-                                $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
-                                if ($campusColectivos != null ) {
-                                    foreach ($campusColectivos as $campusColectivo) {
-                                        if ($campusColectivo->getTbUniversidadCampusColectivoEstado() == 1) {
-                                            $selected = in_array($campusColectivo->getTbUniversidadCampusColectivoId(), $valoresSeleccionados) ? 'selected' : '';
-                                            echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
-                                        }
+                        <?php generarCampoTexto('colectivo', 'formCrearData', 'Volleyball', '') ?>
+
+                        <button type="button" onclick="seleccionarColectivo()">Agregar Colectivo</button>
+
+                        <select name="colectivos[]" id="colectivos" multiple class="form-control" disabled>
+                            <?php
+                            $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
+                            $valoresSeleccionados = isset($_SESSION['formCrearData']['colectivos']) ? $_SESSION['formCrearData']['colectivos'] : [];
+                            if ($campusColectivos != null) {
+                                foreach ($campusColectivos as $campusColectivo) {
+                                    if ($campusColectivo->getTbUniversidadCampusColectivoEstado() == 1) {
+                                        $selected = in_array($campusColectivo->getTbUniversidadCampusColectivoId(), $valoresSeleccionados) ? 'selected' : '';
+                                        echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '" ' . $selected . '>' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
                                     }
                                 }
-                                ?>
-                            </select><br>
+                            }
+                            ?>
+                        </select><br>
 
                         <label for="idEspecializacion">Seleccione su especialización: </label>
                         <select name="idEspecializacion" id="idEspecializacion" class="form-control">
@@ -264,7 +273,7 @@ fetch('../action/campusAction.php', {
                 </div>
             </div>
         </section>
-        
+
         <section id="table">
             <div class="text-center mb-4">
                 <h3>Campus registrados</h3>
@@ -332,7 +341,7 @@ fetch('../action/campusAction.php', {
                             // Select box para 'Especialización'
                             echo '<td>';
                             echo '<select name="idEspecializacion" class="form-control">';
-                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();            
+                            $campusEspecializaciones = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
 
                             // Comprobar si hay datos de sesión para el campus actual
                             if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampus'] == $camp->getTbCampusId()) {
@@ -345,35 +354,34 @@ fetch('../action/campusAction.php', {
                                 $selected = ($campusEspecializacion->getTbUniversidadCampusEspecializacionId() == $idEspecializacionSeleccionada) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionId()) . '" ' . $selected . '>' . htmlspecialchars($campusEspecializacion->getTbUniversidadCampusEspecializacionNombre()) . '</option>';
                             }
-                            
+
                             echo '</select>';
                             echo '</td>';
 
                             echo '<td>';
                             $campusColectivos = $campusColectivoBusiness->getColectivosByCampusId($camp->getTbCampusId());
                             $allColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
-                            
-                            $colectivosSeleccionados = array_map(function($colectivo) {
+
+                            $colectivosSeleccionados = array_map(function ($colectivo) {
                                 return $colectivo->getTbUniversidadCampusColectivoId();
                             }, $campusColectivos);
-                            
+
                             echo '<select name="colectivos[]" id="colectivos" multiple class="form-control">';
                             foreach ($allColectivos as $colectivo) {
                                 $idColectivo = $colectivo->getTbUniversidadCampusColectivoId();
                                 $descripcion = $colectivo->getTbUniversidadCampusColectivoDescripcion();
                                 $estado = $colectivo->getTbUniversidadCampusColectivoEstado();
                                 $nombreColectivo = $colectivo->getTbUniversidadCampusColectivoNombre();
-                            
-                                if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "Exclusivo")) {
+
+                                if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "1")) {
                                     $selected = in_array($idColectivo, $colectivosSeleccionados) ? 'selected' : '';
                                     echo '<option value="' . htmlspecialchars($idColectivo) . '" ' . $selected . '>' . htmlspecialchars($nombreColectivo) . '</option>';
                                 }
-                                
                             }
-                            
+
                             echo '</select>';
                             echo '</td>';
-                            
+
 
 
                             // Acciones
@@ -381,7 +389,7 @@ fetch('../action/campusAction.php', {
                             echo '<button type="submit" name="update" onclick="return actionConfirmation(\'' . $mensajeActualizar . '\')" class="btn btn-primary">Actualizar</button>';
                             echo ' <button type="submit" name="delete" onclick="return actionConfirmation(\'' . $mensajeEliminar . '\')" class="btn btn-danger">Eliminar</button>';
                             echo '</td>';
-                            
+
                             echo '<td><input type="hidden" name="latitud" id="latitud" value="' . htmlspecialchars($camp->getTbCampusLatitud()) . '" class="form-control" /></td>';
                             echo '<td><input type="hidden" name="longitud" id="longitud" value="' . htmlspecialchars($camp->getTbCampusLongitud()) . '" class="form-control" /></td>';
 
@@ -397,50 +405,52 @@ fetch('../action/campusAction.php', {
 
 
         </section>
-    
-    <section id="table-deleted" style="display: none;">
-    <div class="text-center mb-4">
-        <h3>Campus eliminados</h3>
-      </div>
 
-      <table class="table mt-3">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $campusEliminados = $campusBusiness->getAllDeletedTbCampus();
+        <section id="table-deleted" style="display: none;">
+            <div class="text-center mb-4">
+                <h3>Campus eliminados</h3>
+            </div>
 
-          if ($campusEliminados != null) {
-            foreach ($campusEliminados as $campuss) {
-              echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/campusAction.php" onsubmit="return validateForm()">';
-              echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($campuss->getTbCampusId()) . '">';
-              echo '<td>' . htmlspecialchars($campuss->getTbCampusId()) . '</td>';
-              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $campuss->getTbCampusNombre() . '" readonly></td>';
-              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
-              echo '</form>';
-              echo '</tr>';
-            }
-          } else {
-            echo '<tr>';
-            echo '<td colspan="8">No hay campus eliminados</td>';
-            echo '</tr>';
-          }
-          ?>
-        </tbody>
-      </table>
-</section>
-<button onclick="toggleDeletedCampus()" style="margin-top: 20px;">Ver/Ocultar Campus Eliminados</button>
-  </div>
+            <table class="table mt-3">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $campusEliminados = $campusBusiness->getAllDeletedTbCampus();
+
+                    if ($campusEliminados != null) {
+                        foreach ($campusEliminados as $campuss) {
+                            echo '<tr>';
+                            echo '<form method="post" enctype="multipart/form-data" action="../action/campusAction.php" onsubmit="return validateForm()">';
+                            echo '<input type="hidden" name="idCampus" value="' . htmlspecialchars($campuss->getTbCampusId()) . '">';
+                            echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($campuss->getTbCampusUniversidadId()) . '">';
+                            echo '<td>' . htmlspecialchars($campuss->getTbCampusId()) . '</td>';
+                            echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $campuss->getTbCampusNombre() . '" readonly></td>';
+                            echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+                            echo '</form>';
+                            echo '</tr>';
+                        }
+                    } else {
+                        echo '<tr>';
+                        echo '<td colspan="8">No hay campus eliminados</td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </section>
+        <button onclick="toggleDeletedCampus()" style="margin-top: 20px;">Ver/Ocultar Campus Eliminados</button>
+    </div>
     </div>
 </body>
 
-<?php 
-    eliminarFormData();
+<?php
+eliminarFormData();
 ?>
+
 </html>

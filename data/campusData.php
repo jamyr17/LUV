@@ -154,6 +154,18 @@ class CampusData extends Data {
         return $result;
     }
 
+    public function deleteTbCampusByUniversityId($universidadId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $queryDelete = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadid=$universidadId;";
+        $result = mysqli_query($conn, $queryDelete);
+        mysqli_close($conn);
+
+        return $result;
+    }
+
     public function deleteForeverTbCampus($campusId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -163,6 +175,14 @@ class CampusData extends Data {
         $result = mysqli_query($conn, $queryDelete);
         mysqli_close($conn);
 
+        return $result;
+    }
+
+    public function restoreTbCampusByUniversityId($idUniversidad) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = 1 WHERE tbuniversidadid = $idUniversidad;";
+        $result = mysqli_query($conn, $query);
         return $result;
     }
 
@@ -354,5 +374,26 @@ class CampusData extends Data {
         return $resultInsert;
     }
 
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadcampusnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbuniversidadcampusnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
+    }
 } 
 

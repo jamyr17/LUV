@@ -96,26 +96,9 @@ class AreaConocimientoData extends Data
 
         return $areasconocimiento;
     }
-/*
+
     public function getAllDeletedTbAreaConocimiento()
     {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
-
-        $querySelect = "SELECT * FROM tbareaconocimiento;";
-        $result = mysqli_query($conn, $querySelect);
-        mysqli_close($conn);
-
-        $areasconocimiento = [];
-        while ($row = mysqli_fetch_array($result)) {
-            $areaConocimientoActual = new AreaConocimiento($row['tbareaconocimientoid'], $row['tbareaconocimientonombre'], $row['tbareaconocimientodescripcion'], $row['tbareaconocimientoestado']);
-            array_push($areasconocimiento, $areaConocimientoActual);
-        }
-
-        return $areasconocimiento;
-    }
-*/
-    public function getAllDeletedTbAreaConocimiento() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "SELECT * FROM tbareaconocimiento WHERE tbareaconocimientoestado = 0;";
@@ -128,7 +111,8 @@ class AreaConocimientoData extends Data
         return $areasconocimiento;
     }
 
-    public function restoreTbCampusAreaConocimiento($areaConocimientoId) {
+    public function restoreTbCampusAreaConocimiento($areaConocimientoId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $areaConocimientoId = mysqli_real_escape_string($conn, $areaConocimientoId);
@@ -143,18 +127,18 @@ class AreaConocimientoData extends Data
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbareaconocimiento WHERE tbareaconocimientonombre = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
@@ -162,23 +146,43 @@ class AreaConocimientoData extends Data
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $query = "SELECT COUNT(*) as count FROM tbareaconocimiento WHERE tbareaconocimientonombre = ? AND tbareaconocimientoid != ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 'si', $nombre, $idAreaConocimiento);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
+    public function autocomplete($term)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
 
+        $sql = "SELECT tbareaconocimientonombre FROM tbareaconocimiento WHERE tbareaconocimientonombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbareaconocimientonombre'];
+        }
+
+        $stmt->close();
+        $conn->close();
+
+        return $suggestions;
+    }
 }

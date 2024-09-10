@@ -46,4 +46,8 @@ class OrientacionSexualBusiness {
         return $this->orientacionSexualData->nameExists($nombre, $idOrientacionSexual);
     }
 
+    public function autocomplete($term) {
+        return $this->orientacionSexualData->autocomplete($term);
+    }
+
 }

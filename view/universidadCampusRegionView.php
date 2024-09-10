@@ -1,6 +1,6 @@
 <?php
-  include "../action/sessionAdminAction.php";
-  include '../action/functions.php';
+include "../action/sessionAdminAction.php";
+include '../action/functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +9,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="../js/autocomplete.js" defer></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <title>Regiones de Campus</title>
   <script>
     function actionConfirmation(mensaje) {
@@ -27,7 +31,7 @@
         alert("El nombre no puede exceder los 255 caracteres.");
         return false; // Evita que el formulario se envíe
       }
-      
+
       if (descripcion.length > 255) {
         alert("La descripción no puede exceder los 255 caracteres.");
         return false; // Evita que el formulario se envíe
@@ -58,30 +62,30 @@
   <div class="container mt-3">
     <section id="alerts">
       <?php
-        if (isset($_GET['error'])) {
-          $mensaje = "Ocurrió un error debido a ";
-          $mensaje .= match(true){
-            $_GET['error']=="emptyField" => "campo(s) vacío(s).",
-            $_GET['error']=="numberFormat" => "ingreso de valores numéricos.",
-            $_GET['error']=="dbError" => "un problema al procesar la transacción.",
-            $_GET['error']=="exist" => "que dicha región ya existe.",
-            $_GET['error']=="nombreTooLong" => "El nombre excede los 255 caracteres.",
-            $_GET['error']=="descripcionTooLong" => "La descripción excede los 255 caracteres.",
-            default => "un problema inesperado.",
-          };
-        } else if (isset($_GET['success'])) {
-            $mensaje = match(true){
-              $_GET['success']=="inserted" => "Región creada correctamente.",
-              $_GET['success']=="updated" => "Región actualizada correctamente.",
-              $_GET['success']=="deleted" => "Región eliminada correctamente.",
-              $_GET['success']=="restored" => "Región restaurada correctamente.",
-              default => "Transacción realizada.",
-            };
-        }
+      if (isset($_GET['error'])) {
+        $mensaje = "Ocurrió un error debido a ";
+        $mensaje .= match (true) {
+          $_GET['error'] == "emptyField" => "campo(s) vacío(s).",
+          $_GET['error'] == "numberFormat" => "ingreso de valores numéricos.",
+          $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
+          $_GET['error'] == "exist" => "que dicha región ya existe.",
+          $_GET['error'] == "nombreTooLong" => "El nombre excede los 255 caracteres.",
+          $_GET['error'] == "descripcionTooLong" => "La descripción excede los 255 caracteres.",
+          default => "un problema inesperado.",
+        };
+      } else if (isset($_GET['success'])) {
+        $mensaje = match (true) {
+          $_GET['success'] == "inserted" => "Región creada correctamente.",
+          $_GET['success'] == "updated" => "Región actualizada correctamente.",
+          $_GET['success'] == "deleted" => "Región eliminada correctamente.",
+          $_GET['success'] == "restored" => "Región restaurada correctamente.",
+          default => "Transacción realizada.",
+        };
+      }
 
-        if (isset($mensaje)) {
-          echo "<script>showMessage('$mensaje')</script>";
-        }
+      if (isset($mensaje)) {
+        echo "<script>showMessage('$mensaje')</script>";
+      }
       ?>
     </section>
 
@@ -94,36 +98,37 @@
         </form>
 
         <div class="text-center mb-4">
-            <h3>Agregar una nueva región</h3>
-            <p class="text-muted">Complete el formulario para añadir una nueva región</p>
+          <h3>Agregar una nueva región</h3>
+          <p class="text-muted">Complete el formulario para añadir una nueva región</p>
         </div>
 
         <div class="container d-flex justify-content-center">
-            <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
-                <input type="hidden" name="idUniversidadCampusRegion" value="0">
+          <form method="post" action="../action/universidadCampusRegionAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
+            <input type="hidden" name="idUniversidadCampusRegion" value="0">
 
-                <div class="row">
-                    <div class="col">
-                      <label for="nombre" class="form-label">Nombre: </label>
-                      <?php 
-                        generarCampoTexto('nombre', 'formCrearData', 'Nombre de la región', '', '255');
-                      ?>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col">
-                    <label for="descripcion" class="form-label">Descripción: </label>
-                    <?php 
-                      generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la región', '', '255');
-                    ?>
-                    </div>
-                </div>
-                
-                <div>
-                    <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
-                </div>
-            </form>
+            <div class="row">
+              <div class="col">
+                <input type="hidden" id="type" name="type" value="campusRegion"> <!-- Campo oculto para el tipo de objeto -->
+                <label for="nombre" class="form-label">Nombre: </label>
+                <?php
+                generarCampoTexto('nombre', 'formCrearData', 'Nombre de la región', '', '255');
+                ?>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <label for="descripcion" class="form-label">Descripción: </label>
+                <?php
+                generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la región', '', '255');
+                ?>
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -156,7 +161,7 @@
               echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusRegionAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '">';
               echo '<td>' . htmlspecialchars($campusRegion->getTbUniversidadCampusRegionId()) . '</td>';
-             
+
               echo '<td>';
               if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idUniversidadCampusRegion'] == $campusRegion->getTbUniversidadCampusRegionId()) {
                 generarCampoTexto('nombre', 'formActualizarData', '', '', '255');
@@ -223,7 +228,7 @@
       </table>
     </section>
 
-     <button onclick="toggleDeletedCampusRegiones()" style="margin-top: 20px;">Ver/Ocultar Regiones Eliminadas</button>
+    <button onclick="toggleDeletedCampusRegiones()" style="margin-top: 20px;">Ver/Ocultar Regiones Eliminadas</button>
 
   </div>
 
