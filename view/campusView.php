@@ -144,8 +144,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                     "numberFormat" => "ingreso de valores numéricos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho campus ya existe.",
-                    "requestRestoredDeclinedBcUniversityDeleted" => "que la universidad a la que pertenece el campus que está intentando restaurar está eliminada.",
-                    "requestRestoredDeclinedBcUniversityNotFound" => "que la universidad a la que pertenece el campus que está intentando restaurar no fue encontrada.",
+                    "alike" => "que el nombre es muy similar.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {

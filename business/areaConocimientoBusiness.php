@@ -26,6 +26,10 @@ class AreaConocimientoBusiness {
         return $this->areaConocimientoData->getAllTbAreaConocimiento();
     }
 
+    public function getAllTbAreaConocimientoNombres() {
+        return $this->areaConocimientoData->getAllTbAreaConocimientoNombres();
+    }
+
     public function getAllDeletedTbAreaConocimiento() {
         return $this->areaConocimientoData->getAllDeletedTbAreaConocimiento();
     }

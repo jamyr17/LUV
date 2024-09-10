@@ -102,20 +102,31 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/campusView.php?error=exist");
+                    exit();
+                } 
+                
+                $nombresExistentes = $campusBusiness->getAllTbCampusNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/campusView.php?error=alike");
+                    exit();
                 } else {
                     $campus = new Campus(0, $idUniversidad, $idRegion, $nombre, $direccion, $latitud, $longitud, 1, $idEspecializacion, $colectivos);
                     $result = $campusBusiness->insertTbCampus($campus);
     
                     if ($result == 1) {
                         header("location: ../view/campusView.php?success=inserted");
+                        exit();
                     } else {
                         guardarFormData();
                         header("location: ../view/campusView.php?error=dbError");
+                        exit();
                     }
                 }
             } else {
                 guardarFormData();
                 header("location: ../view/campusView.php?error=numberFormat");
+                exit();
             }
         } else {
             guardarFormData();

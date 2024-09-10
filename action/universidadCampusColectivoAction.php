@@ -107,6 +107,15 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("location: ../view/universidadCampusColectivoView.php?error=exist");
+                } 
+                
+                $nombresExistentes = $universidadCampusColectivoBusiness->getAllTbUniversidadCampusColectivoNombres();
+                
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/universidadCampusColectivoView.php?error=alike");
+                    exit();
+                    
                 } else {
                     $universidadCampusColectivo = new universidadCampusColectivo(0, $nombre, $descripcion, 1);
     

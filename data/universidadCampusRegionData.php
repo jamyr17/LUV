@@ -91,6 +91,29 @@ class UniversidadCampusRegionData extends Data
         return $campusRegions;
     }
 
+    public function getAllTbUniversidadCampusRegionNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbuniversidadcampusregionnombre FROM tbuniversidadcampusregion WHERE tbuniversidadcampusregionestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbuniversidadcampusregionnombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
+    
     public function getAllDeletedTbUniversidadCampusRegion() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');

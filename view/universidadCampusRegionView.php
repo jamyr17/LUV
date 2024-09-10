@@ -69,6 +69,7 @@ include '../action/functions.php';
           $_GET['error'] == "numberFormat" => "ingreso de valores numéricos.",
           $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
           $_GET['error'] == "exist" => "que dicha región ya existe.",
+          $_GET['error'] == "alike" => "que el nombre es muy similar.",
           $_GET['error'] == "nombreTooLong" => "El nombre excede los 255 caracteres.",
           $_GET['error'] == "descripcionTooLong" => "La descripción excede los 255 caracteres.",
           default => "un problema inesperado.",

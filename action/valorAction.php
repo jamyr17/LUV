@@ -117,6 +117,13 @@ if (isset($_POST['update'])) {
                 if ($resultExist == 1) {
                     guardarFormData();
                     header("Location: ../view/valorView.php?error=exist");
+                } 
+                
+                $nombresExistentes = $valorBusiness->getAllTbValorNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/valorView.php?error=alike");
+                    exit();
                 } else {
                     $mensaje = agregarValorSiNoExiste($criterioNombre, $nombre);
     

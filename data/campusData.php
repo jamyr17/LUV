@@ -216,6 +216,28 @@ class CampusData extends Data {
         return $campus;
     }
     
+    public function getAllTbCampusNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbuniversidadcampusnombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
 
     public function getAllTbCampusByUniversidad($idU)
     {
