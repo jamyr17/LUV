@@ -26,6 +26,10 @@ class universidadCampusEspecializacionBusiness{
         return $this->universidadCampusEspecializacionData->getAllTbUniversidadCampusEspecializacion();
     }
 
+    public function getAllTbUniversidadCampusEspecializacionNombres() {
+        return $this->universidadCampusEspecializacionData->getAllTbUniversidadCampusEspecializacionNombres();
+    }
+
     public function getAllDeletedTbUniversidadCampusEspecializacion() {
         return $this->universidadCampusEspecializacionData->getAllDeletedTbUniversidadCampusEspecializacion();
     }
@@ -43,4 +47,7 @@ class universidadCampusEspecializacionBusiness{
         return $this->universidadCampusEspecializacionData->nameExists($nombre, $idUniversidadCampusEspecializacion);
     }
 
+    public function autocomplete($term) {
+        return $this->universidadCampusEspecializacionData->autocomplete($term);
+    }
 }

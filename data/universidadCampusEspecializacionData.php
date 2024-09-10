@@ -95,6 +95,29 @@ class UniversidadCampusEspecializacionData extends Data
 
         return $universidadCampusEspecializaciones;
     }
+
+    public function getAllTbUniversidadCampusEspecializacionNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbuniversidadcampusespecializacionnombre FROM tbuniversidadcampusespecializacion WHERE tbuniversidadcampusespecializacionestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbuniversidadcampusespecializacionnombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
 /*
     public function getAllDeletedTbUniversidadCampusEspecializacion()
     {
@@ -175,6 +198,28 @@ class UniversidadCampusEspecializacionData extends Data
         mysqli_close($conn);
         
         return $count > 0;
+    }
+
+    public function autocomplete($term) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $sql = "SELECT tbuniversidadcampusespecializacionnombre FROM tbuniversidadcampusespecializacion WHERE tbuniversidadcampusespecializacionnombre LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%$term%";
+        $stmt->bind_param("s", $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $suggestions = [];
+        while ($row = $result->fetch_assoc()) {
+            $suggestions[] = $row['tbuniversidadcampusespecializacionnombre'];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $suggestions;
     }
 }
 ?>

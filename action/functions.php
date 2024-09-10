@@ -103,3 +103,55 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
         return false; 
     }
 }
+
+function levenshtein_algoritmo($str1, $str2) {
+    $len1 = strlen($str1);
+    $len2 = strlen($str2);
+
+    // Crear la matriz
+    $d = array();
+    for ($i = 0; $i <= $len1; $i++) {
+        $d[$i] = array();
+        $d[$i][0] = $i;
+    }
+    for ($j = 0; $j <= $len2; $j++) {
+        $d[0][$j] = $j;
+    }
+
+    // Rellenar la matriz
+    for ($i = 1; $i <= $len1; $i++) {
+        for ($j = 1; $j <= $len2; $j++) {
+            $cost = ($str1[$i - 1] == $str2[$j - 1]) ? 0 : 1;
+            $d[$i][$j] = min(
+                $d[$i - 1][$j] + 1,      // Eliminación
+                $d[$i][$j - 1] + 1,      // Inserción
+                $d[$i - 1][$j - 1] + $cost // Sustitución
+            );
+        }
+    }
+
+    // La distancia de Levenshtein está en la esquina inferior derecha
+    return $d[$len1][$len2];
+}
+
+// Función para comprobar si el nombre es similar a uno ya existente
+function esNombreSimilar($nombreNuevo, $nombresExistentes) {
+    $umbralSimilitud = 0.8;
+    
+    foreach ($nombresExistentes as $nombreExistente) {
+        // Calcula la distancia de Levenshtein entre el nuevo nombre y el existente
+        $distancia = levenshtein_algoritmo($nombreNuevo, $nombreExistente);
+        
+        // Calcula la longitud del nombre más largo para normalizar la distancia
+        $longitudMaxima = max(strlen($nombreNuevo), strlen($nombreExistente));
+        
+        // Calcula la similitud como un porcentaje (0 a 1)
+        $similitud = 1 - ($distancia / $longitudMaxima);
+
+        // Si la similitud es mayor o igual al umbral, considera los nombres como similares
+        if ($similitud >= $umbralSimilitud) {
+            return true; // Nombre similar encontrado
+        }
+    }
+    return false; // Ningún nombre similar encontrado
+}

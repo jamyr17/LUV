@@ -30,6 +30,10 @@ class UniversidadCampusRegionBusiness {
         return $this->universidadCampusRegionData->getAllTbUniversidadCampusRegion();
     }
 
+    public function getAllTbUniversidadCampusRegionNombres() {
+        return $this->universidadCampusRegionData->getAllTbUniversidadCampusRegionNombres();
+    }
+
     public function getAllDeletedTbUniversidadCampusRegion() {
         return $this->universidadCampusRegionData->getAllDeletedTbUniversidadCampusRegion();
     }
@@ -47,4 +51,7 @@ class UniversidadCampusRegionBusiness {
         return $this->universidadCampusRegionData->nameExists($nombre, $idCampusRegion);
     }
 
+    public function autocomplete($term) {
+        return $this->universidadCampusRegionData->autocomplete($term);
+    }
 }
