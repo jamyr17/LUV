@@ -37,40 +37,49 @@ if (isset($_POST['update'])) {
             header("location: ../view/universidadView.php?error=emptyField");
         }
     }
+    
 } else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
-    // Verificar si la universidad tiene campus asociados
     if (isset($_POST['idUniversidad'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $universidadBusiness = new UniversidadBusiness();
         $result = $universidadBusiness->checkAssociatedCampus($idUniversidad);
 
+        // Si hay campus asociados
         if ($result['status'] === 'confirm') {
-            // Si hay campus asociados, enviamos el mensaje para confirmación en el frontend
-            echo json_encode($result);
+            echo json_encode($result); // Respuesta JSON para confirmación
             exit();
         } else {
-            // Si no hay campus asociados, procedemos a la eliminación directamente
+            // Si no hay campus asociados
             $deleteResult = $universidadBusiness->deleteUniversityById($idUniversidad);
-            echo json_encode($deleteResult);
+            echo json_encode($deleteResult); // Procede con la eliminación
             exit();
         }
     } else {
         echo json_encode(['status' => 'error', 'message' => 'ID de universidad no especificado.']);
         exit();
     }
-} else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
-    // Eliminar definitivamente la universidad después de la confirmación
+}
+
+// Confirmación final de la eliminación
+else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
     if (isset($_POST['idUniversidad'])) {
         $idUniversidad = $_POST['idUniversidad'];
         $universidadBusiness = new UniversidadBusiness();
         $deleteResult = $universidadBusiness->deleteUniversityById($idUniversidad);
-        echo json_encode($deleteResult);
+
+        if ($deleteResult) {
+            echo json_encode(['status' => 'success', 'message' => 'Universidad eliminada correctamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar la universidad.']);
+        }
         exit();
     } else {
         echo json_encode(['status' => 'error', 'message' => 'ID de universidad no especificado.']);
         exit();
     }
-} else if (isset($_POST['create'])) {
+}
+
+ else if (isset($_POST['create'])) {
     // Crear universidad
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];

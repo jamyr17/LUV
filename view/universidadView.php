@@ -18,16 +18,8 @@
   <title>LUV</title>
   <script>
     function actionConfirmation(mensaje, idUniversidad) {
-
-      switch (mensaje){
-        case '¿Desea eliminar esta universidad?': 
-          if(confirm(mensaje)){
-            confirmDelete(idUniversidad);
-          }
-          break;
-
-        default: 
-        return confirm(mensaje);
+      if (confirm(mensaje)) {
+        confirmDelete(idUniversidad);
       }
     }
 
@@ -40,77 +32,85 @@
       if (nombre.length > 150) {
         alert("El texto no puede exceder los 150 caracteres.");
         return false;
-        return false;
       }
       return true;
     }
 
     function toggleDeletedUniversities() {
       var section = document.getElementById("table-deleted");
-      if (section.style.display === "none") {
-        section.style.display = "block";
-      } else {
-        section.style.display = "none";
-      }
+      section.style.display = (section.style.display === "none") ? "block" : "none";
     }
 
     function confirmDelete(idUniversidad) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../action/universidadAction.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+   var xhr = new XMLHttpRequest();
+   xhr.open("POST", "../action/universidadAction.php", true);
+   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            try {
-                var response = JSON.parse(xhr.responseText);
+   xhr.onreadystatechange = function() {
+     if (xhr.readyState == 4 && xhr.status == 200) {
+       try {
+           var response = JSON.parse(xhr.responseText); 
+           
+           // Si se requiere confirmación de campus asociados
+           if (response.status === 'confirm') {
+               var confirmed = confirm(response.message);
+               if (confirmed) {
+                   deleteUniversity(idUniversidad); // Confirmar eliminación
+               }
+           } 
+           // Si procede la eliminación
+           else if (response.status === 'proceed') {
+               deleteUniversity(idUniversidad); // Proceder con la eliminación
+           }
+           // Si la eliminación ya ocurrió con éxito
+           else if (response.status === 'success') {
+               window.location.href = "universidadView.php?success=deleted"; // Redirigir a la vista
+           } 
+           // Si hay algún error
+           else {
+               alert(response.message);
+           }
+       } catch (e) {
+           console.error("Error al procesar el JSON: ", e);
+           console.log("Respuesta del servidor: ", xhr.responseText);
+       }
+     } else if (xhr.status == 404) {
+       alert("Archivo no encontrado.");
+     } else {
+       console.error("Error en la solicitud: ", xhr.status);
+     }
+   };
 
-                if (response.status === 'confirm') {
-                    var confirmed = confirm(response.message);
-                    if (confirmed) {
-                        // Si el usuario confirma, llamamos a deleteUniversity
-                        deleteUniversity(idUniversidad);
-                    }
-                } else if (response.status === 'proceed') {
-                    deleteUniversity(idUniversidad); // Eliminar directamente si no hay campus
-                } else {
-                    alert(response.message); // Mostrar cualquier error
-                }
-            } catch (e) {
-                console.error("Error al procesar el JSON: " + e);
-                console.log("Respuesta del servidor: ", xhr.responseText);
-            }
-        }
-    };
-
-    xhr.send("idUniversidad=" + idUniversidad + "&action=delete");
+   xhr.send("idUniversidad=" + idUniversidad + "&action=delete");
 }
 
-// Función para eliminar la universidad después de la confirmación
 function deleteUniversity(idUniversidad) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../action/universidadAction.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "../action/universidadAction.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            try {
-                var response = JSON.parse(xhr.responseText);
-                if (response.status === 'success') {
-                    alert(response.message);
-                    window.location.reload(); // Recargar la página después de eliminar
-                } else {
-                    alert(response.message); // Mostrar cualquier error
-                }
-            } catch (e) {
-                console.error("Error al procesar el JSON: " + e);
-                console.log("Respuesta del servidor: ", xhr.responseText);
-            }
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      try {
+        var response = JSON.parse(xhr.responseText);
+        if (response.status === 'success') {
+          // Aquí ya no mostramos alert porque estamos redirigiendo
+          window.location.href = "universidadView.php?success=deleted"; // Redirigir a la vista
+        } else {
+          alert(response.message);
         }
-    };
+      } catch (e) {
+        console.error("Error al procesar el JSON: ", e);
+        console.log("Respuesta del servidor: ", xhr.responseText);
+      }
+    }
+  };
 
-    xhr.send("idUniversidad=" + idUniversidad + "&action=deleteConfirmed");
+  xhr.send("idUniversidad=" + idUniversidad + "&action=deleteConfirmed");
 }
-</script>
+
+
+  </script>
 
 </head>
 
@@ -144,9 +144,9 @@ function deleteUniversity(idUniversidad) {
         };
       }
 
-        if(isset($mensaje)){
-          echo "<script>showMessage('$mensaje')</script>";
-        } 
+      if (isset($mensaje)) {
+        echo "<script>showMessage('$mensaje')</script>";
+      }
       ?>
     </section>
 
@@ -165,8 +165,6 @@ function deleteUniversity(idUniversidad) {
         <div class="container d-flex justify-content-center">
           <form method="post" action="../action/universidadAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
             <input type="hidden" name="universidad" value="<?php echo htmlspecialchars($idUniversidad); ?>">
-            <input type="hidden" id="type" name="type" value="universidad"> <!-- Campo oculto para el tipo de objeto -->
-
             <div class="row">
               <div class="col">
                 <label for="nombre" class="form-label">Nombre: </label>
@@ -195,8 +193,9 @@ function deleteUniversity(idUniversidad) {
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="table-content">
           <?php
+          // Lógica para obtener la tabla de universidades al cargar la página
           $universidadBusiness = new UniversidadBusiness();
           $universidades = $universidadBusiness->getAllTbUniversidad();
 

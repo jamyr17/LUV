@@ -174,4 +174,19 @@ if (isset($_POST['update'])) {
     } else {
         echo json_encode(['status' => 'error', 'code' => 'emptyField']);
     }
+} else if (isset($_POST['restore'])) {
+
+    if (isset($_POST['idUniversidadCampusColectivo'])) {
+        $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
+        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $result = $universidadCampusColectivoBusiness->restoreTbCampusColectivo($idUniversidadCampusColectivo);
+
+        if ($result == 1) {
+            header("location: ../view/universidadCampusColectivoView.php?success=restored");
+        } else {
+            header("location: ../view/universidadCampusColectivoView.php?error=dbError");
+        }
+    } else {
+        header("location: ../view/universidadCampusColectivoView.php?error=error");
+    }
 }
