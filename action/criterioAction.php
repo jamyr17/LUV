@@ -6,13 +6,15 @@ include 'functions.php';
 $maxLength = 255;
 
 
-function createFolderIfNotExists($folderPath) {
+function createFolderIfNotExists($folderPath)
+{
     if (!file_exists($folderPath)) {
         mkdir($folderPath, 0777, true);
     }
 }
 
-function createDataFile($nombre, $data) {
+function createDataFile($nombre, $data)
+{
     $filePath = "../resources/criterios/{$nombre}.dat";
     $file = fopen($filePath, 'w');
     if ($file) {
@@ -29,7 +31,8 @@ function createDataFile($nombre, $data) {
     }
 }
 
-function obtenerDatosIA($nombre, $apiKey) {
+function obtenerDatosIA($nombre, $apiKey)
+{
     $headers = [
         'Authorization: Bearer ' . $apiKey,
         'Content-Type: application/json'
@@ -37,7 +40,7 @@ function obtenerDatosIA($nombre, $apiKey) {
 
     // Prompt dirigido y más claro
     $prompt = "Genera una lista de opciones claras y concisas para el criterio llamado '{$nombre}'. Cada opción debe estar relacionada directamente con el criterio y ser breve, por ejemplo, 'Gustos por el Arte': 'Pintura', 'Escultura', 'Música', 'Teatro', 'Literatura'.";
-    
+
     $postData = [
         "inputs" => $prompt,
         "options" => ["wait_for_model" => true]
@@ -59,7 +62,7 @@ function obtenerDatosIA($nombre, $apiKey) {
     if (isset($data[0]['generated_value'])) {
         $opciones = explode("\n", trim($data[0]['generated_value']));
         // Asegúrate de limpiar cualquier texto no deseado
-        $opcionesFiltradas = array_filter($opciones, function($opcion) {
+        $opcionesFiltradas = array_filter($opciones, function ($opcion) {
             return !empty($opcion) && strlen($opcion) < 50; // Filtro básico
         });
         return $opcionesFiltradas;
@@ -123,7 +126,7 @@ if (isset($_POST['update'])) {
         $idCriterio = $_POST['idCriterio'];
 
         $criterioBusiness = new CriterioBusiness();
-        
+
         $criterioNombre = $criterioBusiness->getCriterioNombreById($idCriterio);
 
         $result = $criterioBusiness->deleteTbCriterio($idCriterio);
@@ -140,11 +143,10 @@ if (isset($_POST['update'])) {
     } else {
         header("location: ../view/criterioView.php?error=error");
     }
-
 } else if (isset($_POST['create'])) {
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
-        
+
         if (strlen($nombre) > $maxLength) {
             guardarFormData();
             header("Location: ../view/criterioView.php?error=nameTooLong");
@@ -155,31 +157,43 @@ if (isset($_POST['update'])) {
             $criterioBusiness = new CriterioBusiness();
             $resultExist = $criterioBusiness->exist($nombre);
             if ($resultExist == 0) {
-                createFolderIfNotExists('../resources/criterios');
-                
-                // Obtener datos de la IA
-                $data = obtenerDatosIA($nombre, $apiKey);
-                
-                if ($data) {
-                    createDataFile($nombre, $data);
-                }
 
-                $criterio = new Criterio(0, $nombre, 1);
-                $criterioBusiness->insertTbCriterio($criterio);
-                header("location: ../view/criterioView.php?success=inserted");
+                $nombresExistentes = $criterioBusiness->getAllTbCriterioNombres();
+
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("Location: ../view/criterioView.php?error=alike");
+                    exit();
+                } else {
+                    createFolderIfNotExists('../resources/criterios');
+
+                    // Obtener datos de la IA
+                    $data = obtenerDatosIA($nombre, $apiKey);
+
+                    if ($data) {
+                        createDataFile($nombre, $data);
+                    }
+
+                    $criterio = new Criterio(0, $nombre, 1);
+                    $criterioBusiness->insertTbCriterio($criterio);
+                    header("location: ../view/criterioView.php?success=inserted");
+                    exit();
+                }
             } else {
                 guardarFormData();
                 header("location: ../view/criterioView.php?error=exist");
+                exit();
             }
         } else {
             guardarFormData();
             header("location: ../view/criterioView.php?error=numberFormat");
+            exit();
         }
     } else {
         guardarFormData();
         header("location: ../view/criterioView.php?error=emptyField");
     }
-}else if (isset($_POST['restore'])) {
+} else if (isset($_POST['restore'])) {
 
     if (isset($_POST['idCriterio'])) {
         $idCriterio = $_POST['idCriterio'];
@@ -195,4 +209,3 @@ if (isset($_POST['update'])) {
         header("location: ../view/criterioView.php?error=error");
     }
 }
-?>

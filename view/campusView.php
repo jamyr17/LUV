@@ -144,6 +144,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
                     "numberFormat" => "ingreso de valores numéricos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho campus ya existe.",
+                    "alike" => "que el nombre es muy similar.",
                     default => "un problema inesperado.",
                 };
             } else if (isset($_GET['success'])) {

@@ -26,6 +26,10 @@ class OrientacionSexualBusiness {
         return $this->orientacionSexualData->getAllTbOrientacionSexual();
     }
 
+    public function getAllTbOrientacionSexualNombres() {
+        return $this->orientacionSexualData->getAllTbOrientacionSexualNombres();
+    }
+
     public function getAllDeletedTbOrientacionSexual() {
         return $this->orientacionSexualData->getAllDeletedTbOrientacionSexual();
     }

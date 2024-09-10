@@ -26,6 +26,10 @@ class CampusBusiness {
         return $this->campusData->getAllTbCampus();
     }
 
+    public function getAllTbCampusNombres() {
+        return $this->campusData->getAllTbCampusNombres();
+    }
+
     public function getAllTbCampusByUniversidad($idU) {
         return $this->campusData->getAllTbCampusByUniversidad($idU);
     }

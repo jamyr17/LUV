@@ -103,6 +103,13 @@ if (isset($_POST['update'])) {
                 if ($resultExist) {
                     guardarFormData();
                     header("location: ../view/universidadCampusEspecializacionView.php?error=exist");
+                }
+                
+                $nombresExistentes = $campusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacionNombres();
+                if (esNombreSimilar($nombre, $nombresExistentes)) {
+                    guardarFormData();
+                    header("location: ../view/universidadCampusEspecializacionView.php?error=alike");
+                    exit();
                 } else {
                     $universidadCampusEspecializacion = new universidadCampusEspecializacion(0, $nombre, $descripcion, 1);
     

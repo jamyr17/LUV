@@ -30,6 +30,10 @@ class GeneroBusiness {
         return $this->generoData->getAllTbGenero();
     }
 
+    public function getAllTbGeneroNombres() {
+        return $this->generoData->getAllTbGeneroNombres();
+    }
+
     public function getAllDeletedTbGenero() {
         return $this->generoData->getAllDeletedTbGenero();
     }

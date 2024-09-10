@@ -26,6 +26,10 @@ class UniversidadBusiness {
         return $this->universidadData->getAllTbUniversidad();
     }
 
+    public function getAllTbUniversidadNombres() {
+        return $this->universidadData->getAllTbUniversidadNombres();
+    }
+
     public function getAllDeletedTbUniversidad() {
         $universidadData = new UniversidadData();
         return $universidadData->getAllDeletedTbUniversidad();

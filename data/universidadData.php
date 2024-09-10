@@ -93,7 +93,32 @@ class UniversidadData extends Data
         return $universidades;
     }
 
-    public function getAllDeletedTbUniversidad() {
+    public function getAllTbUniversidadNombres()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $querySelect = "SELECT tbuniversidadnombre FROM tbuniversidad WHERE tbuniversidadestado = 1;";
+        $result = mysqli_query($conn, $querySelect);
+
+        if (!$result) {
+            // Manejo de errores de consulta
+            die('Error en la consulta: ' . mysqli_error($conn));
+        }
+
+        $nombres = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $nombres[] = $row['tbuniversidadnombre'];
+        }
+
+        mysqli_close($conn);
+
+        return $nombres;
+    }
+
+
+    public function getAllDeletedTbUniversidad()
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "SELECT * FROM tbuniversidad WHERE tbuniversidadestado = 0;";
@@ -105,33 +130,34 @@ class UniversidadData extends Data
         }
         return $universidades;
     }
-    
-    public function restoreTbUniversidad($idUniversidad) {
+
+    public function restoreTbUniversidad($idUniversidad)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "UPDATE tbuniversidad SET tbuniversidadestado = 1 WHERE tbuniversidadid = $idUniversidad;";
         $result = mysqli_query($conn, $query);
         return $result;
     }
-    
+
     public function exist($nombre)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbuniversidad WHERE tbuniversidadnombre = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
@@ -164,25 +190,26 @@ class UniversidadData extends Data
         return $resultInsert;
     }
 
-    public function autocomplete($term) {
+    public function autocomplete($term)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $sql = "SELECT tbuniversidadnombre FROM tbuniversidad WHERE tbuniversidadnombre LIKE ?";
         $stmt = $conn->prepare($sql);
         $searchTerm = "%$term%";
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         $suggestions = [];
         while ($row = $result->fetch_assoc()) {
             $suggestions[] = $row['tbuniversidadnombre'];
         }
-    
+
         $stmt->close();
         $conn->close();
-    
+
         return $suggestions;
     }
 }

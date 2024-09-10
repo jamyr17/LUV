@@ -61,6 +61,7 @@ include '../action/functions.php';
           $_GET['error'] == "numberFormat" => "ingreso de valores númericos.",
           $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
           $_GET['error'] == "exist" => "que dicha universidad ya existe.",
+          $_GET['error'] == "alike" => "que el nombre es muy similar.",
           $_GET['error'] == "longText" => "el nombre supera los 150 caracteres.",
           default => "un problema inesperado.",
         };

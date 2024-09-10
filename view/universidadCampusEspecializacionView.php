@@ -93,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $_GET['error'] == "numberFormat" => "ingreso de valores numéricos.",
           $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
           $_GET['error'] == "exist" => "que dicha especialización de campus ya existe.",
+          $_GET['error'] == "alike" => "que el nombre es muy similar.",
           $_GET['error'] == "invalidName" => "que el nombre solo puede contener letras.",
           $_GET['error'] == "nameTooLong" => "que el nombre es demasiado largo.",
           $_GET['error'] == "descriptionTooLong" => "que la descripción es demasiado larga.",

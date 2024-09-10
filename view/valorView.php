@@ -74,6 +74,7 @@ $criterioBusiness = new CriterioBusiness();
                     "numberFormat" => "ingreso de valores númericos.",
                     "dbError" => "un problema al procesar la transacción.",
                     "exist" => "que dicho valor ya existe.",
+                    "alike" => "que el nombre es muy similar.",
                     "nameTooLong" => "que el nombre es demasiado largo, el limite es de 255 caracteres.",
                     default => "un problema inesperado.",
                 };

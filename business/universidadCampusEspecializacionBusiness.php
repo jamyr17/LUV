@@ -26,6 +26,10 @@ class universidadCampusEspecializacionBusiness{
         return $this->universidadCampusEspecializacionData->getAllTbUniversidadCampusEspecializacion();
     }
 
+    public function getAllTbUniversidadCampusEspecializacionNombres() {
+        return $this->universidadCampusEspecializacionData->getAllTbUniversidadCampusEspecializacionNombres();
+    }
+
     public function getAllDeletedTbUniversidadCampusEspecializacion() {
         return $this->universidadCampusEspecializacionData->getAllDeletedTbUniversidadCampusEspecializacion();
     }
