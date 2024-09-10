@@ -217,17 +217,16 @@ CREATE TABLE `tbperfilusuariodeseado` (
 --
 
 INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbusuarioid`, `tbperfilusuariodeseadoestado`) VALUES
-(1, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Pop,Introvertido,Ingeniería,Tenis,Activo', '20,20,20,20,20', 1, 1),
-(2, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Jazz,Extrovertido,Ciencias Sociales,Fútbol,Relajado', '15,25,30,15,15', 2, 1),
-(3, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Electrónica,Introvertido,Ciencias,Esgrima,Urbano', '25,25,20,10,20', 3, 1),
-(4, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Rock,Extrovertido,Artes,Baloncesto,Minimalista', '30,20,20,10,20', 4, 1),
-(5, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Clásica,Introvertido,Humanidades,Natación,Activo', '20,30,20,20,10', 5, 1),
-(6, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Hip-Hop,Extrovertido,Tecnología,Baloncesto,Urbano', '25,30,15,20,10', 6, 1),
-(7, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Indie,Introvertido,Ciencias Ambientales,Ciclismo,Minimalista', '20,25,20,15,20', 7, 1),
-(8, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Reggae,Extrovertido,Derecho,Fútbol,Relajado', '15,25,20,20,20', 8, 1),
-(9, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Metal,Introvertido,Filosofía,Boxeo,Activo', '30,20,25,10,15', 9, 1),
-(10, 'Gustos Musicales,Introversión/Extroversión,Intereses Académicos,Deportes Favoritos,Estilo de Vida', 'Blues,Extrovertido,Psicología,Tenis,Relajado', '20,25,20,15,20', 10, 1);
-
+(1, 'Gustos Musicales, Introversión/Extroversión, Intereses Académicos, Deportes Favoritos, Actividades Extracurriculares, Preferencias de Estudio', 'Rock, Introvertido, Ciencias, Fútbol, Teatro, Estudio en grupo', '20,20,20,15,15,10', 1, 1),
+(2, 'Gustos Musicales, Tipos de Comida Favorita, Hobbies, Estilo de Vida, Géneros de Películas Favoritos', 'Pop, Italiana, Pintura, Activo, Comedia', '25,15,15,20,25', 2, 1),
+(3, 'Gustos Musicales, Intereses Académicos, Géneros de Libros Favoritos, Deportes Favoritos, Estilo de Vida', 'Jazz, Literatura, Ficción, Natación, Relajado', '15,25,25,15,20', 3, 1),
+(4, 'Géneros de Series de TV Favoritas, Orientación Política, Frecuencia de Viajes, Relación con la Tecnología, Mascotas', 'Drama, Liberal, Frecuente, Apasionado, Perros', '15,25,20,20,20', 4, 1),
+(5, 'Actividades Extracurriculares, Hobbies, Voluntariado, Vida Nocturna, Uso de Redes Sociales', 'Música, Fotografía, Frecuente, Ocasional, Moderado', '20,20,20,20,20', 5, 1),
+(6, 'Gustos Musicales, Intereses Académicos, Preferencias de Clima, Tipos de Comida Favorita, Estilo de Vida', 'Electrónica, Ingeniería, Calor, Mexicana, Urbano', '20,25,15,20,20', 6, 1),
+(7, 'Introversión/Extroversión, Géneros de Películas Favoritos, Hobbies, Mascotas, Relación con la Tecnología', 'Extrovertido, Ciencia Ficción, Videojuegos, Gatos, Moderado', '25,25,20,15,15', 7, 1),
+(8, 'Intereses Académicos, Tipos de Comida Favorita, Preferencias de Estudio, Voluntariado, Uso de Redes Sociales', 'Economía, Japonesa, Individual, Ocasional, Frecuente', '25,20,20,15,20', 8, 1),
+(9, 'Géneros de Libros Favoritos, Frecuencia de Viajes, Actividades Extracurriculares, Relación con la Tecnología, Estilo de Vida', 'No ficción, Frecuente, Cine, Alta, Minimalista', '20,25,15,20,20', 9, 1),
+(10, 'Géneros de Series de TV Favoritas, Preferencias de Clima, Vida Nocturna, Tipos de Comida Favorita, Hobbies', 'Comedia, Frío, Frecuente, Tailandesa, Senderismo', '20,20,20,20,20', 10, 1);
 -- --------------------------------------------------------
 
 --

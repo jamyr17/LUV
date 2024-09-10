@@ -93,6 +93,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
+}else{
+    $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+    if (!$usuarioId) {
+        // Enviar error si no se encuentra el ID de usuario
+        header('Content-Type: application/json');
+        echo json_encode(["error" => "ID de usuario no encontrado"]);
+        exit();
+    }
+
+    $perfilDeseado = $wantedProfileBusiness->perfilDeseadoByIdUsuario($usuarioId);
+
+    if ($perfilDeseado) {
+        // Enviar el perfil personal si se encuentra
+        header('Content-Type: application/json');
+        echo json_encode(["perfil" => $perfilDeseado]);
+    } else {
+        // Enviar error si no se encuentra el perfil
+        header('Content-Type: application/json');
+        echo json_encode(["error" => "Perfil no encontrado"]);
+    }
+    exit();  // Asegura que no se ejecute más código después de enviar la respuesta
 }
 
 // Definir función para filtrar y ordenar perfiles

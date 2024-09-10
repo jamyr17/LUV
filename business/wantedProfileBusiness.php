@@ -26,4 +26,9 @@ class WantedProfileBusiness{
         return $this->wantedProfileData->getAllTbPerfiles();
     }
 
+    public function perfilDeseadoByIdUsuario($usuarioId){
+        return $this->wantedProfileData->perfilDeseadoByIdUsuario($usuarioId);
+    }
+
+
 }

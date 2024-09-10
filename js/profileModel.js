@@ -34,6 +34,7 @@ function addCriterion() {
         <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
+        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro criterio" oninput="actualizarTablaConCriterio()">
 
         <label for="value${criteriaCount}">Prefiero:</label>
         <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
@@ -201,7 +202,7 @@ function populateCriteria(selectId) {
         select.appendChild(option);
         return;
     }
-
+    
     criterios.forEach(criterio => {
         const option = document.createElement('option');
         option.value = criterio.id;
@@ -209,6 +210,13 @@ function populateCriteria(selectId) {
         option.setAttribute('data-nombre', criterio.name);
         select.appendChild(option);
     });
+
+
+    // Añadir la opción "Otro" al final
+    const otherOption = document.createElement('option');
+    otherOption.value = 'other';
+    otherOption.textContent = 'Otro';
+    select.appendChild(otherOption);
 
     select.disabled = false;
 }
@@ -352,8 +360,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadInitialCriteriaData();
     await loadInitialValuesData();
+
+    if (currentView === 'PersonalProfile'){
+        await cargarPerfilPersonal();
+    }
     
-    await cargarPerfilPersonal();
+    await cargarPerfilDeseado();
 
     document.getElementById('criterion1').disabled = false;
     actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales
@@ -362,6 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Nueva función para cargar el perfil personal del usuario
 async function cargarPerfilPersonal() {
+    if (currentView != 'PersonalProfile') return;
     try {
         const response = await fetch('../action/personalProfileAction.php'); // Asegúrate de que la ruta sea correcta
         const data = await response.json();
@@ -370,6 +383,7 @@ async function cargarPerfilPersonal() {
             console.error('Error al cargar el perfil personal:', data.error);
             return;
         }
+        
 
         // Cargar los criterios y valores en los combobox
         data.forEach((item, index) => {
@@ -401,5 +415,52 @@ async function cargarPerfilPersonal() {
         actualizarTablaConCriterio();
     } catch (error) {
         console.error('Error al cargar el perfil personal:', error);
+    }
+}
+
+
+async function cargarPerfilDeseado() {
+    if (currentView === 'PersonalProfile') return;
+    try {
+        const response = await fetch('../action/wantedProfileAction.php'); // Asegúrate de que la ruta sea correcta
+        const data = await response.json();
+
+        if (data.error) {
+            console.error('Error al cargar el perfil deseado:', data.error);
+            return;
+        }
+
+        console.log('Data:', data);
+
+        // Cargar los criterios y valores en los combobox
+        data.forEach((item, index) => {
+            if (index > 0) addCriterion(); // Agregar un nuevo criterio si es el segundo o más
+
+            const criterioSelect = document.getElementById(`criterion${index + 1}`);
+            const valorSelect = document.getElementById(`value${index + 1}`);
+
+            // Seleccionar el criterio en el combobox
+            const criterioOption = Array.from(criterioSelect.options).find(option => option.text === item.criterio);
+            if (criterioOption) criterioOption.selected = true;
+
+            // Cargar los valores basados en el criterio
+            loadValues(criterioSelect, index + 1);
+
+            // Revisar si el valor existe en el combobox de valores
+            let valorOption = Array.from(valorSelect.options).find(option => option.text === item.valor);
+
+            if (!valorOption) {
+                // Si el valor no existe, crearlo dinámicamente
+                valorOption = new Option(item.valor, item.valor);
+                valorSelect.add(valorOption);
+            }
+
+            // Seleccionar el valor en el combobox
+            valorOption.selected = true;
+        });
+
+        actualizarTablaConCriterio();
+    } catch (error) {
+        console.error('Error al cargar el perfil deseado:', error);
     }
 }
