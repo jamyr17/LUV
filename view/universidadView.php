@@ -1,6 +1,7 @@
 <?php
-  include "../action/sessionAdminAction.php";
-  include '../action/functions.php';
+  include_once "../action/sessionAdminAction.php";
+  include_once '../action/functions.php';
+  include_once '../business/universidadBusiness.php';
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +12,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LUV</title>
   <script>
-    function actionConfirmation(mensaje){
+    function actionConfirmation(mensaje) {
       return confirm(mensaje);
     }
 
-    function showMessage(mensaje){
+    function showMessage(mensaje) {
       alert(mensaje);
     }
 
@@ -23,7 +24,7 @@
       var nombre = document.getElementById("nombre").value;
       if (nombre.length > 150) {
         alert("El texto no puede exceder los 150 caracteres.");
-        return false; 
+        return false;
       }
       return true;
     }
@@ -36,6 +37,64 @@
         section.style.display = "none";
       }
     }
+
+    function confirmDelete(idUniversidad) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../action/universidadAction.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            try {
+                var response = JSON.parse(xhr.responseText);
+
+                if (response.status === 'confirm') {
+                    var confirmed = confirm(response.message);
+                    if (confirmed) {
+                        // Si el usuario confirma, llamamos a deleteUniversity
+                        deleteUniversity(idUniversidad);
+                    }
+                } else if (response.status === 'proceed') {
+                    deleteUniversity(idUniversidad); // Eliminar directamente si no hay campus
+                } else {
+                    alert(response.message); // Mostrar cualquier error
+                }
+            } catch (e) {
+                console.error("Error al procesar el JSON: " + e);
+                console.log("Respuesta del servidor: ", xhr.responseText);
+            }
+        }
+    };
+
+    xhr.send("idUniversidad=" + idUniversidad + "&action=delete");
+}
+
+// Función para eliminar la universidad después de la confirmación
+function deleteUniversity(idUniversidad) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "../action/universidadAction.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'success') {
+                    alert(response.message);
+                    window.location.reload(); // Recargar la página después de eliminar
+                } else {
+                    alert(response.message); // Mostrar cualquier error
+                }
+            } catch (e) {
+                console.error("Error al procesar el JSON: " + e);
+                console.log("Respuesta del servidor: ", xhr.responseText);
+            }
+        }
+    };
+
+    xhr.send("idUniversidad=" + idUniversidad + "&action=deleteConfirmed");
+}
+
   </script>
 
 </head>
@@ -121,7 +180,6 @@
         </thead>
         <tbody>
           <?php
-          include '../business/universidadBusiness.php';
           $universidadBusiness = new UniversidadBusiness();
           $universidades = $universidadBusiness->getAllTbUniversidad();
 
@@ -133,7 +191,7 @@
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $universidad->getTbUniversidadNombre() . '"></td>';
               echo '<td><input type="submit" name="update" id="update" value="Actualizar"></td>';
-              echo '<td><input type="submit" name="delete" id="delete" value="Eliminar" onclick="return actionConfirmation(\'¿Desea eliminar?\')"></td>';
+              echo '<td><button type="button" name="delete" id="delete" onclick="confirmDelete(' . htmlspecialchars($universidad->getTbUniversidadId()) . ')">Eliminar</button></td>';
               echo '</form>';
               echo '</tr>';
             }

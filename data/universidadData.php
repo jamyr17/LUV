@@ -50,7 +50,7 @@ class UniversidadData extends Data
 
         return $result;
     }
-
+/*
     public function deleteTbUniversidad($universidadId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -61,6 +61,60 @@ class UniversidadData extends Data
         mysqli_close($conn);
 
         return $result;
+    }
+*/
+    public function checkAssociatedCampus($universidadId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Paso 1: Verificar cuántos campus están asociados a la universidad
+        $queryCountCampus = "SELECT COUNT(*) as totalCampus FROM tbuniversidadcampus WHERE tbuniversidadid = $universidadId AND tbuniversidadcampusestado = 1;";
+        $resultCount = mysqli_query($conn, $queryCountCampus);
+
+        if ($row = mysqli_fetch_assoc($resultCount)) {
+            $totalCampus = $row['totalCampus'];
+
+            if ($totalCampus > 0) {
+                // Obtener los nombres de los campus asociados
+                $queryCampusDetails = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadid = $universidadId AND tbuniversidadcampusestado = 1;";
+                $resultCampus = mysqli_query($conn, $queryCampusDetails);
+                $campusNames = [];
+                while ($campusRow = mysqli_fetch_assoc($resultCampus)) {
+                    $campusNames[] = $campusRow['tbuniversidadcampusnombre'];
+                }
+                $campusList = implode(', ', $campusNames);
+
+                // Devolver el mensaje con la lista de campus asociados
+                mysqli_close($conn);
+                return [
+                    'status' => 'confirm',
+                    'message' => "La universidad tiene $totalCampus campus asociados: $campusList. ¿Está seguro de que desea eliminarla?",
+                    'totalCampus' => $totalCampus
+                ];
+            }
+        }
+
+        // Cierre de conexión
+        mysqli_close($conn);
+        return ['status' => 'proceed']; // No tiene campus asociados
+    }
+
+    public function deleteUniversityById($universidadId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Eliminar la universidad
+        $queryDelete = "UPDATE tbuniversidad SET tbuniversidadestado = '0' WHERE tbuniversidadid=$universidadId;";
+        $resultDelete = mysqli_query($conn, $queryDelete);
+    
+        mysqli_close($conn);
+    
+        if ($resultDelete) {
+            return ['status' => 'success', 'message' => 'Universidad eliminada correctamente.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Error al eliminar la universidad.'];
+        }
     }
 
     public function deleteForeverTbUniversidad($universidadId)
@@ -165,3 +219,4 @@ class UniversidadData extends Data
     }
 
 }
+?>

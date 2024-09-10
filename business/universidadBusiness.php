@@ -17,9 +17,17 @@ class UniversidadBusiness {
     public function updateTbUniversidad($universidad) {
         return $this->universidadData->updateTbUniversidad($universidad);
     }
-
+/*
     public function deleteTbUniversidad($idUniversidad) {
         return $this->universidadData->deleteTbUniversidad($idUniversidad);
+    }
+*/
+    public function checkAssociatedCampus($universidadId) {
+        return $this->universidadData->checkAssociatedCampus($universidadId);
+    }
+
+    public function deleteUniversityById($universidadId) {
+        return $this->universidadData->deleteUniversityById($universidadId);
     }
 
     public function getAllTbUniversidad() {
@@ -38,7 +46,6 @@ class UniversidadBusiness {
     public function insertRequestTbUniversidad($universidad) {
         return $this->universidadData->insertRequestTbUniversidad($universidad);
     }
-
 
     public function restoreTbUniversidad($idUniversidad) {
         $universidadData = new UniversidadData();
