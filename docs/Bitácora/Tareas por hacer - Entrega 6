@@ -1,0 +1,10 @@
+- [ ] Terminar tarea de que al eliminar un registro el mensaje de confirmación le indique si hay otros registros asociados a éste y cuántos.
+- [ ] Corregir bug que no carga los criterios en las vistas de Modelado.
+- [ ] Corregir redireccionamiento al login.
+- [ ] Añadir al registro de nuevo usuario el resto de preguntas necesarias (género, universidad, campus, orientación sexual, etc).
+- [ ] Poder editar la información del perfil personal. 
+- [ ] Actividades de agenda.
+    - [ ] Hacer modelado correspondiente. Ej: Actividad [tbactividadid, tbactividadfecha, tbactividadlugar (tal vez usar la API), tbactividad] etc
+    - [ ] Hacer las relaciones correspondientes. Ej: [N actividad : N agenda], [N actividad : N colectivo], etc
+    - [ ] Vista CRUD administrativo para gestionar actividades.
+    - [ ] Vista de usuario regular para visualizar y apuntarse a actividades.
