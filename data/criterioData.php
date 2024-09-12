@@ -54,7 +54,7 @@ class CriterioData extends Data
         return $result;
     }
     
-
+/*
     public function deleteTbCriterio($criterioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -65,6 +65,64 @@ class CriterioData extends Data
         mysqli_close($conn);
 
         return $result;
+    }
+*/  
+    public function checkAssociatedValues($criterioId){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Paso 1: Verificar cuántos valores están asociados al criterio
+        $queryCountValues = "SELECT COUNT(*) as totalValues FROM tbvalor WHERE tbcriterioid = $criterioId AND tbvalorestado = 1;";
+        $resultCount = mysqli_query($conn, $queryCountValues);
+
+        if ($row = mysqli_fetch_assoc($resultCount)) {
+            $totalValues = $row['totalValues'];
+
+            if ($totalValues > 0) {
+                // Obtener los nombres de los valores asociados
+                $queryValuesDetails = "SELECT tbvalornombre FROM tbvalor WHERE tbcriterioid = $criterioId AND tbvalorestado = 1;";
+                $resultValues = mysqli_query($conn, $queryValuesDetails);
+                $valueNames = [];
+                while ($valueRow = mysqli_fetch_assoc($resultValues)) {
+                    $valueNames[] = $valueRow['tbvalornombre'];
+                }
+                $valueList = implode(', ', $valueNames);
+
+                // Devolver el mensaje con la lista de valores asociados
+                mysqli_close($conn);
+                return [
+                    'status' => 'confirm',
+                    'message' => "El criterio tiene $totalValues valores asociados: $valueList. ¿Está seguro de que desea eliminarlo?",
+                    'totalValues' => $totalValues
+                ];
+            }
+        }
+
+        // Cierre de conexión
+        mysqli_close($conn);
+        return ['status' => 'proceed']; // No tiene valores asociados
+    }
+
+
+    public function deleteCriterioById($criterioId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        
+        // Eliminar el criterio
+        $queryDeleteCriterio = "UPDATE tbcriterio SET tbcriterioestado = '0' WHERE tbcriterioid=$criterioId;";
+        $resultDeleteCriterio = mysqli_query($conn, $queryDeleteCriterio);
+    
+        // Eliminar valores asociados
+        $queryDeleteValues = "UPDATE tbvalor SET tbvalorestado = '0' WHERE tbcriterioid=$criterioId;";
+        $resultDeleteValues = mysqli_query($conn, $queryDeleteValues);
+        
+        mysqli_close($conn);
+        
+        if ($resultDeleteCriterio && $resultDeleteValues) {
+            return ['status' => 'success', 'message' => 'Criterio y valores asociados eliminados correctamente.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Error al eliminar el criterio o los valores asociados.'];
+        }
     }
 
     public function deleteForeverTbCriterio($criterioId)

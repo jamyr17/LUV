@@ -17,9 +17,17 @@ class CriterioBusiness {
     public function updateTbCriterio($criterio) {
         return $this->criterioData->updateTbCriterio($criterio);
     }
-
+/*
     public function deleteTbCriterio($idCriterio) {
         return $this->criterioData->deleteTbCriterio($idCriterio);
+    }
+*/  
+    public function checkAssociatedValues($criterioId) {
+        return $this->criterioData->checkAssociatedValues($criterioId);
+    }
+
+    public function deleteCriterioById($criterioId) {
+        return $this->criterioData->deleteCriterioById($criterioId);
     }
 
     public function deleteForeverTbCriterio($idCriterio) {
