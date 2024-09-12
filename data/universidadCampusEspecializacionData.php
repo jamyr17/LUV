@@ -1,7 +1,8 @@
 <?php
 
 include_once 'data.php';
-include '../domain/universidadCampusEspecializacionDomain.php';
+include_once '../domain/universidadCampusEspecializacionDomain.php';
+include_once '../business/campusBusiness.php';
 
 class UniversidadCampusEspecializacionData extends Data
 {
@@ -54,7 +55,7 @@ class UniversidadCampusEspecializacionData extends Data
 
         return $result;
     }
-
+/*
     public function deleteTbUniversidadCampusEspecializacion($universidadCampusEspecializacionId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -65,6 +66,65 @@ class UniversidadCampusEspecializacionData extends Data
         mysqli_close($conn);
 
         return $result;
+    }
+*/  
+
+    public function checkAssociatedCampusSpecialization($specializationId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Paso 1: Verificar cuántos campus están asociados a la especialización
+        $queryCountCampus = "SELECT COUNT(*) as totalCampus FROM tbuniversidadcampus WHERE tbuniversidadcampusespecializacionid = $specializationId AND tbuniversidadcampusestado = 1;";
+        $resultCount = mysqli_query($conn, $queryCountCampus);
+
+        if ($row = mysqli_fetch_assoc($resultCount)) {
+            $totalCampus = $row['totalCampus'];
+
+            if ($totalCampus > 0) {
+                // Obtener los nombres de los campus asociados
+                $queryCampusDetails = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadcampusespecializacionid = $specializationId AND tbuniversidadcampusestado = 1;";
+                $resultCampus = mysqli_query($conn, $queryCampusDetails);
+                $campusNames = [];
+                while ($campusRow = mysqli_fetch_assoc($resultCampus)) {
+                    $campusNames[] = $campusRow['tbuniversidadcampusnombre'];
+                }
+                $campusList = implode(', ', $campusNames);
+
+                // Devolver el mensaje con la lista de campus asociados
+                mysqli_close($conn);
+                return [
+                    'status' => 'confirm',
+                    'message' => "La especialización tiene $totalCampus campus asociados: $campusList. ¿Está seguro de que desea eliminarla?",
+                    'totalCampus' => $totalCampus
+                ];
+            }
+        }
+
+        // Cierre de conexión
+        mysqli_close($conn);
+        return ['status' => 'proceed']; // No tiene campus asociados
+    }
+
+        public function deleteSpecializationById($specializationId){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Eliminar la especialización
+        $queryDelete = "UPDATE tbuniversidadcampusespecializacion SET tbuniversidadcampusespecializacionestado = '0' WHERE tbuniversidadcampusespecializacionid = $specializationId;";
+        $resultDelete = mysqli_query($conn, $queryDelete);
+
+        // Eliminar los campus asociados a la especialización
+        $campusBusiness = new CampusBusiness();
+        $resultDeleteCampus =  $campusBusiness->deleteTbCampusBySpecializationId($specializationId);
+
+        mysqli_close($conn);
+
+        if ($resultDelete && $resultDeleteCampus) {
+            return ['status' => 'success', 'message' => 'Especialización eliminada correctamente.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Error al eliminar la especialización.'];
+        }
     }
 
     public function deleteForeverTbUniversidadCampusEspecializacion($universidadCampusEspecializacionId)

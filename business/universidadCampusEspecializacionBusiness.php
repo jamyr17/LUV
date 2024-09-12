@@ -17,9 +17,16 @@ class universidadCampusEspecializacionBusiness{
     public function updateTbUniversidadCampusEspecializacion($universidadCampusEspecializacion) {
         return $this->universidadCampusEspecializacionData->updateTbUniversidadCampusEspecializacion($universidadCampusEspecializacion);
     }
-
+/*
     public function deleteTbUniversidadCampusEspecializacion($universidadCampusEspecializacionId) {
         return $this->universidadCampusEspecializacionData->deleteTbUniversidadCampusEspecializacion($universidadCampusEspecializacionId);
+    }
+*/  
+    public function checkAssociatedCampusSpecialization($universidadCampusEspecializacionId) {
+        return $this->universidadCampusEspecializacionData->checkAssociatedCampusSpecialization($universidadCampusEspecializacionId);
+    }
+    public function deleteSpecializationById($universidadCampusEspecializacionId) {
+        return $this->universidadCampusEspecializacionData->deleteSpecializationById($universidadCampusEspecializacionId);
     }
 
     public function getAllTbUniversidadCampusEspecializacion() {

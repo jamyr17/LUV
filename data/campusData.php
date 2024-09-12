@@ -178,6 +178,17 @@ class CampusData extends Data {
         return $result;
     }
 
+    public function deleteTbCampusBySpecializationId($universidadId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $queryDelete = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadcampusespecializacionid=$universidadId;";
+        $result = mysqli_query($conn, $queryDelete);
+        mysqli_close($conn);
+
+        return $result;
+    }
 
     public function deleteForeverTbCampus($campusId)
     {
