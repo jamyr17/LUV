@@ -26,6 +26,10 @@ class CampusBusiness {
         return $this->campusData->deleteTbCampusByUniversityId($idUniversidad);
     }
 
+    public function deleteTbCampusByRegionId($idUniversidad) {
+        return $this->campusData->deleteTbCampusByRegionId($idUniversidad);
+    }
+
     public function getAllTbCampus() {
         return $this->campusData->getAllTbCampus();
     }
