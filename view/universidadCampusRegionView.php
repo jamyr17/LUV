@@ -23,6 +23,10 @@ include_once '../business/universidadCampusRegionBusiness.php';
       }
     }
 
+    function actionConfirmationRestore(mensaje) {
+      return confirm(mensaje);
+    }
+
     function showMessage(mensaje) {
       alert(mensaje);
     }
@@ -249,7 +253,7 @@ function deleteRegion(idUniversidadCampusRegion) {
               echo '<input type="hidden" name="idUniversidadCampusRegion" value="' . htmlspecialchars($deletedRegion->getTbUniversidadCampusRegionId()) . '">';
               echo '<td>' . htmlspecialchars($deletedRegion->getTbUniversidadCampusRegionId()) . '</td>';
               echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . htmlspecialchars($deletedRegion->getTbUniversidadCampusRegionNombre()) . '" readonly></td>';
-              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar esta región?\')"></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmationRestore(\'¿Desea restaurar esta región?\')"></td>';
               echo '</form>';
               echo '</tr>';
             }

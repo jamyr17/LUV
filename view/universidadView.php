@@ -23,6 +23,10 @@
       }
     }
 
+    function actionConfirmationRestore(mensaje) {
+      return confirm(mensaje);
+    }
+
     function showMessage(mensaje) {
       alert(mensaje);
     }
@@ -246,7 +250,7 @@ function deleteUniversity(idUniversidad) {
               echo '<input type="hidden" name="idUniversidad" value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '">';
               echo '<td>' . htmlspecialchars($universidad->getTbUniversidadId()) . '</td>';
               echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $universidad->getTbUniversidadNombre() . '" readonly></td>';
-              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmationRestore(\'¿Desea restaurar?\')"></td>';
               echo '</form>';
               echo '</tr>';
             }
