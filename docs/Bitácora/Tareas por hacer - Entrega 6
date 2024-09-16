@@ -1,3 +1,7 @@
+- [X] Terminar de implementar en los otros CRUD la tarea de que al eliminar un registro el mensaje de confirmación le indique si hay otros registros asociados a éste y cuántos. (JAMEL)
+- [ ] Corregir bug que no carga los criterios en las vistas de Modelado.
+- [ ] Corregir redireccionamiento al login.
+- [ ] Añadir al registro de nuevo usuario el resto de preguntas necesarias (género, universidad, campus, orientación sexual, etc).
 - [ ] Terminar de implementar en los otros CRUD la tarea de que al eliminar un registro el mensaje de confirmación le indique si hay otros registros asociados a éste y cuántos. (JAMEL)
 - [ ] Corregir bug que no carga los criterios en las vistas de Modelado. (KEVIN)
 - [ ] Corregir redireccionamiento al login. (JEYCOB)

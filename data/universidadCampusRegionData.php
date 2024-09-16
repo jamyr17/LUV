@@ -1,7 +1,8 @@
 <?php
 
 include_once 'data.php';
-include '../domain/universidadCampusRegionDomain.php';
+include_once '../domain/universidadCampusRegionDomain.php';
+include_once '../business/campusBusiness.php';
 
 class UniversidadCampusRegionData extends Data
 {
@@ -49,7 +50,7 @@ class UniversidadCampusRegionData extends Data
 
         return $result;
     }
-
+/*
     public function deleteTbUniversidadCampusRegion($campusRegionId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -60,6 +61,64 @@ class UniversidadCampusRegionData extends Data
         mysqli_close($conn);
 
         return $result;
+    }
+*/
+    public function checkAssociatedCampus($campusRegionId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Paso 1: Verificar cuántos campus están asociados a la región
+        $queryCountCampus = "SELECT COUNT(*) as totalCampus FROM tbuniversidadcampus WHERE tbuniversidadcampusregionid = $campusRegionId AND tbuniversidadcampusestado = 1;";
+        $resultCount = mysqli_query($conn, $queryCountCampus);
+
+        if ($row = mysqli_fetch_assoc($resultCount)) {
+            $totalCampus = $row['totalCampus'];
+
+            if ($totalCampus > 0) {
+                // Obtener los nombres de los campus asociados
+                $queryCampusDetails = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadcampusregionid = $campusRegionId AND tbuniversidadcampusestado = 1;";
+                $resultCampus = mysqli_query($conn, $queryCampusDetails);
+                $campusNames = [];
+                while ($campusRow = mysqli_fetch_assoc($resultCampus)) {
+                    $campusNames[] = $campusRow['tbuniversidadcampusnombre'];
+                }
+                $campusList = implode(', ', $campusNames);
+
+                // Devolver el mensaje con la lista de campus asociados
+                mysqli_close($conn);
+                return [
+                    'status' => 'confirm',
+                    'message' => "La región tiene $totalCampus campus asociados: $campusList. ¿Está seguro de que desea eliminarla?",
+                    'totalCampus' => $totalCampus
+                ];
+            }
+        }
+
+        // Cierre de conexión
+        mysqli_close($conn);
+        return ['status' => 'proceed']; // No tiene campus asociados
+    }
+
+    public function deleteRegionById($campusRegionId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Eliminar la región
+        $queryDelete = "UPDATE tbuniversidadcampusregion SET tbuniversidadcampusregionestado = '0' WHERE tbuniversidadcampusregionid=$campusRegionId;";
+        $resultDelete = mysqli_query($conn, $queryDelete);
+
+        // Eliminar campus asociados
+        $campusBusiness = new CampusBusiness();
+        $resultDeleteCampus =  $campusBusiness->deleteTbCampusByRegionId($campusRegionId);
+    
+        mysqli_close($conn);
+    
+        if ($resultDelete && $resultDeleteCampus) {
+            return ['status' => 'success', 'message' => 'Región eliminada correctamente.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Error al eliminar la región.'];
+        }
     }
 
     public function deleteForeverTbUniversidadCampusRegion($campusRegionId)

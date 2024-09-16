@@ -1,7 +1,7 @@
 <?php
 
-include '../business/universidadCampusEspecializacionBusiness.php';
-include 'functions.php';
+include_once '../business/universidadCampusEspecializacionBusiness.php';
+include_once 'functions.php';
 
 $maxLength = 255;
 
@@ -58,22 +58,44 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusEspecializacionView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
-
+} else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     if (isset($_POST['idCampusEspecializacion'])) {
-
-        $idCampusEspecializacion = $_POST['idCampusEspecializacion'];
-
+        $idUniversidadCampusEspecializacion = $_POST['idCampusEspecializacion'];
         $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
-        $result = $campusEspecializacionBusiness->deleteTbUniversidadCampusEspecializacion($idCampusEspecializacion);
+        $result = $campusEspecializacionBusiness->checkAssociatedCampusSpecialization($idUniversidadCampusEspecializacion);
 
-        if ($result) {
-            header("location: ../view/universidadCampusEspecializacionView.php?success=deleted");
+        // Si hay campus asociados
+        if ($result['status'] === 'confirm') {
+            echo json_encode($result); // Respuesta JSON para confirmación
+            exit();
         } else {
-            header("location: ../view/universidadCampusEspecializacionView.php?error=dbError");
+            // Si no hay campus asociados
+            $deleteResult = $campusEspecializacionBusiness->deleteSpecializationById($idUniversidadCampusEspecializacion);
+            echo json_encode($deleteResult); // Procede con la eliminación
+            exit();
         }
     } else {
-        header("location: ../view/universidadCampusEspecializacionView.php?error=error");
+        echo json_encode(['status' => 'error', 'message' => 'ID de especialización no especificado.']);
+        exit();
+    }
+}
+
+// Confirmación final de la eliminación
+else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
+    if (isset($_POST['idCampusEspecializacion'])) {
+        $idUniversidadCampusEspecializacion = $_POST['idCampusEspecializacion'];
+        $campusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
+        $deleteResult = $campusEspecializacionBusiness->deleteSpecializationById($idUniversidadCampusEspecializacion);
+
+        if ($deleteResult) {
+            echo json_encode(['status' => 'success', 'message' => 'Especialización eliminada correctamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar la especialización.']);
+        }
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'ID de especialización no especificado.']);
+        exit();
     }
 } else if (isset($_POST['create'])) {
 

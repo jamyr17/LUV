@@ -17,9 +17,17 @@ class UniversidadCampusRegionBusiness {
     public function updateTbUniversidadCampusRegion($campusRegion) {
         return $this->universidadCampusRegionData->updateTbUniversidadCampusRegion($campusRegion);
     }
-
+/*
     public function deleteTbUniversidadCampusRegion($idCampusRegion) {
         return $this->universidadCampusRegionData->deleteTbUniversidadCampusRegion($idCampusRegion);
+    }
+*/  
+    public function checkAssociatedCampus($idCampusRegion) {
+        return $this->universidadCampusRegionData->checkAssociatedCampus($idCampusRegion);
+    }
+
+    public function deleteRegionById($idCampusRegion) {
+        return $this->universidadCampusRegionData->deleteRegionById($idCampusRegion);
     }
 
     public function deleteForeverTbUniversidadCampusRegion($idCampusRegion) {

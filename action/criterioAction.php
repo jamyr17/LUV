@@ -1,7 +1,7 @@
 <?php
 
-include '../business/criterioBusiness.php';
-include 'functions.php';
+include_once '../business/criterioBusiness.php';
+include_once 'functions.php';
 
 $maxLength = 255;
 
@@ -71,8 +71,6 @@ function obtenerDatosIA($nombre, $apiKey)
     return [""]; // Valor de fallback si la IA no generó nada útil
 }
 
-
-
 if (isset($_POST['update'])) {
     if (isset($_POST['nombre'])) {
         $idCriterio = $_POST['idCriterio'];
@@ -83,7 +81,6 @@ if (isset($_POST['update'])) {
             header("Location: ../view/criterioView.php?error=nameTooLong");
             exit();
         }
-
 
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
@@ -121,29 +118,48 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/criterioView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+
+} else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     if (isset($_POST['idCriterio'])) {
         $idCriterio = $_POST['idCriterio'];
-
         $criterioBusiness = new CriterioBusiness();
+        $result = $criterioBusiness->checkAssociatedValues($idCriterio);
 
-        $criterioNombre = $criterioBusiness->getCriterioNombreById($idCriterio);
-
-        $result = $criterioBusiness->deleteTbCriterio($idCriterio);
-
-        if ($result == 1) {
-            $criterioFile = "../resources/criterios/{$criterioNombre}.dat";
-            if (file_exists($criterioFile)) {
-                unlink($criterioFile);
-            }
-            header("location: ../view/criterioView.php?success=deleted");
+        // Si hay valores asociados
+        if ($result['status'] === 'confirm') {
+            echo json_encode($result); // Respuesta JSON para confirmación
+            exit();
         } else {
-            header("location: ../view/criterioView.php?error=dbError");
+            // Si no hay valores asociados
+            $deleteResult = $criterioBusiness->deleteCriterioById($idCriterio);
+            echo json_encode($deleteResult); // Procede con la eliminación
+            exit();
         }
     } else {
-        header("location: ../view/criterioView.php?error=error");
+        echo json_encode(['status' => 'error', 'message' => 'ID de criterio no especificado.']);
+        exit();
     }
-} else if (isset($_POST['create'])) {
+}
+
+// Confirmación final de la eliminación
+else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
+    if (isset($_POST['idCriterio'])) {
+        $idCriterio = $_POST['idCriterio'];
+        $criterioBusiness = new CriterioBusiness();
+        $deleteResult = $criterioBusiness->deleteCriterioById($idCriterio);
+
+        if ($deleteResult) {
+            echo json_encode(['status' => 'success', 'message' => 'Criterio eliminado correctamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar el criterio.']);
+        }
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'ID de criterio no especificado.']);
+        exit();
+    }
+}
+ else if (isset($_POST['create'])) {
     if (isset($_POST['nombre'])) {
         $nombre = $_POST['nombre'];
 

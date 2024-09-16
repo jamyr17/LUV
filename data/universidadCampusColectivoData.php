@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-include '../domain/universidadCampusColectivoDomain.php';
+include_once '../domain/universidadCampusColectivoDomain.php';
 
 class universidadCampusColectivoData extends Data
 {
@@ -54,7 +54,7 @@ class universidadCampusColectivoData extends Data
 
         return $result;
     }
-
+/*
     public function deleteTbUniversidadCampusColectivo($universidadCampusColectivoId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -65,8 +65,86 @@ class universidadCampusColectivoData extends Data
         mysqli_close($conn);
 
         return $result;
+        }
+*/  
+    public function checkAssociatedCampusColectivo($colectivoId){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Verificar cuántos campus activos están asociados al colectivo
+        $queryCountCampus = "SELECT COUNT(*) as totalCampus 
+                            FROM tbuniversidadcampusuniversidadcolectivo uc
+                            INNER JOIN tbuniversidadcampus c ON uc.tbuniversidadcampusid = c.tbuniversidadcampusid
+                            WHERE uc.tbuniversidadcolectivoid = $colectivoId
+                            AND c.tbuniversidadcampusestado = 1;";
+        $resultCount = mysqli_query($conn, $queryCountCampus);
+
+        if ($row = mysqli_fetch_assoc($resultCount)) {
+            $totalCampus = $row['totalCampus'];
+
+            if ($totalCampus > 0) {
+                // Obtener los nombres de los campus activos asociados
+                $queryCampusDetails = "SELECT c.tbuniversidadcampusnombre 
+                                    FROM tbuniversidadcampus c
+                                    INNER JOIN tbuniversidadcampusuniversidadcolectivo uc ON c.tbuniversidadcampusid = uc.tbuniversidadcampusid
+                                    WHERE uc.tbuniversidadcolectivoid = $colectivoId
+                                    AND c.tbuniversidadcampusestado = 1;";
+                $resultCampus = mysqli_query($conn, $queryCampusDetails);
+                $campusNames = [];
+                while ($campusRow = mysqli_fetch_assoc($resultCampus)) {
+                    $campusNames[] = $campusRow['tbuniversidadcampusnombre'];
+                }
+                $campusList = implode(', ', $campusNames);
+
+                // Devolver el mensaje con la lista de campus asociados
+                mysqli_close($conn);
+                return [
+                    'status' => 'confirm',
+                    'message' => "El colectivo tiene $totalCampus campus asociados: $campusList. ¿Está seguro de que desea eliminarlo?",
+                    'totalCampus' => $totalCampus
+                ];
+            }
+        }
+
+        // Cierre de conexión
+        mysqli_close($conn);
+        return ['status' => 'proceed']; // No tiene campus asociados
     }
 
+    public function deleteColectivoById($colectivoId){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        
+        // Primero, eliminar en la tabla de campus
+        $queryCampusDelete = "UPDATE tbuniversidadcampus 
+                              SET tbuniversidadcampusestado = '0'
+                              WHERE tbuniversidadcampusid IN (
+                                  SELECT tbuniversidadcampusid 
+                                  FROM tbuniversidadcampusuniversidadcolectivo 
+                                  WHERE tbuniversidadcolectivoid = $colectivoId
+                              )";
+        $resultCampusDelete = mysqli_query($conn, $queryCampusDelete);
+    
+        // Después, eliminar las asociaciones en la tabla de relación
+        $queryDeleteAssociations = "DELETE FROM tbuniversidadcampusuniversidadcolectivo 
+                                    WHERE tbuniversidadcolectivoid = $colectivoId;";
+        $resultDeleteAssociations = mysqli_query($conn, $queryDeleteAssociations);
+    
+        // Finalmente, marcar el colectivo como eliminado (cambiar su estado a '0')
+        $queryDeleteColectivo = "UPDATE tbuniversidadcampuscolectivo 
+                                SET tbuniversidadcampuscolectivoestado = '0' 
+                                WHERE tbuniversidadcampuscolectivoid = $colectivoId;";
+        $resultDeleteColectivo = mysqli_query($conn, $queryDeleteColectivo);
+    
+        mysqli_close($conn);
+    
+        if ($resultDeleteColectivo && $resultDeleteAssociations && $resultCampusDelete) {
+            return ['status' => 'success', 'message' => 'Colectivo eliminado correctamente.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Error al eliminar el colectivo.'];
+        }
+    }
+    
     public function deleteForeverTbUniversidadCampusColectivo($universidadCampusColectivoId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -137,7 +215,9 @@ class universidadCampusColectivoData extends Data
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $universidadCampusColectivoId = mysqli_real_escape_string($conn, $universidadCampusColectivoId);
-        $query = "UPDATE tbuniversidadcampuscolectivo SET tbuniversidadcampuscolectivoestado = 1 WHERE tbuniversidadcampuscolectivoid = '$universidadCampusColectivoId';";
+        $query = "UPDATE tbuniversidadcampuscolectivo 
+                              SET tbuniversidadcampuscolectivoestado = '1' 
+                              WHERE tbuniversidadcampuscolectivoid = $universidadCampusColectivoId;";
         $result = mysqli_query($conn, $query);
         return $result;
     }

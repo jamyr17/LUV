@@ -1,26 +1,7 @@
 <?php
-include "../action/sessionAdminAction.php";
-include '../action/functions.php';
-
-// Define los límites de longitud para los campos
-$maxLengthNombre = 255;
-$maxLengthDescripcion = 255;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $nombre = trim($_POST['nombre']);
-  $descripcion = trim($_POST['descripcion']);
-
-  if (strlen($nombre) > $maxLengthNombre) {
-    header("Location: ../view/universidadCampusEspecializacionView.php?error=nameTooLong");
-    exit();
-  }
-
-  if (strlen($descripcion) > $maxLengthDescripcion) {
-    header("Location: ../view/universidadCampusEspecializacionView.php?error=descriptionTooLong");
-    exit();
-  }
-}
-
+include_once "../action/sessionAdminAction.php";
+include_once '../action/functions.php';
+include_once '../business/universidadCampusEspecializacionBusiness.php';
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
   <title>Especializaciones de Campus</title>
   <script>
-    function actionConfirmation(mensaje) {
+    function actionConfirmation(mensaje, idEspecializacion) {
+      if (confirm(mensaje)) {
+        confirmDelete(idEspecializacion);
+      }
+    }
+
+    function actionConfirmationRestore(mensaje) {
       return confirm(mensaje);
     }
 
@@ -44,43 +31,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       alert(mensaje);
     }
 
-    function validarNombreEspecializacion() {
+    function validateForm() {
       var nombre = document.getElementById("nombre").value;
       var descripcion = document.getElementById("descripcion").value;
-
-      var maxLengthNombre = 255;
-      var maxLengthDescripcion = 255;
-
-      if (nombre.length > maxLengthNombre) {
-        alert("El nombre no puede tener más de " + maxLengthNombre + " caracteres.");
+      
+      if (nombre.length > 255) {
+        alert("El nombre no puede exceder los 255 caracteres.");
         return false;
       }
-
-      if (descripcion.length > maxLengthDescripcion) {
-        alert("La descripción no puede tener más de " + maxLengthDescripcion + " caracteres.");
+      
+      if (descripcion.length > 255) {
+        alert("La descripción no puede exceder los 255 caracteres.");
         return false;
       }
-
       return true;
     }
 
-    function toggleDeletedCampusEspecializaciones() {
+    function toggleDeletedEspecializaciones() {
       var section = document.getElementById("table-deleted");
-      if (section.style.display === "none") {
-        section.style.display = "block";
-      } else {
-        section.style.display = "none";
-      }
+      section.style.display = (section.style.display === "none") ? "block" : "none";
+    }
+
+    function confirmDelete(idCampusEspecializacion) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "../action/universidadCampusEspecializacionAction.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          try {
+            var response = JSON.parse(xhr.responseText); 
+            
+            if (response.status === 'confirm') {
+              var confirmed = confirm(response.message);
+              if (confirmed) {
+                deleteEspecializacion(idCampusEspecializacion);
+              }
+            } else if (response.status === 'proceed') {
+              deleteEspecializacion(idCampusEspecializacion);
+            } else if (response.status === 'success') {
+              window.location.href = "universidadCampusEspecializacionView.php?success=deleted";
+            } else {
+              alert(response.message);
+            }
+          } catch (e) {
+            console.error("Error al procesar el JSON: ", e);
+            console.log("Respuesta del servidor: ", xhr.responseText);
+          }
+        } else if (xhr.status == 404) {
+          alert("Archivo no encontrado.");
+        } else {
+          console.error("Error en la solicitud: ", xhr.status);
+        }
+      };
+
+      xhr.send("idCampusEspecializacion=" + idCampusEspecializacion + "&action=delete");
+    }
+
+    function deleteEspecializacion(idCampusEspecializacion) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "../action/universidadCampusEspecializacionAction.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          try {
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+              window.location.href = "universidadCampusEspecializacionView.php?success=deleted";
+            } else {
+              alert(response.message);
+            }
+          } catch (e) {
+            console.error("Error al procesar el JSON: ", e);
+            console.log("Respuesta del servidor: ", xhr.responseText);
+          }
+        }
+      };
+
+      xhr.send("idCampusEspecializacion=" + idCampusEspecializacion  + "&action=deleteConfirmed");
     }
   </script>
-
 </head>
 
 <body>
 
   <header>
-    <nav class="navbar bg-body-tertiary">
-    </nav>
+    <nav class="navbar bg-body-tertiary"></nav>
   </header>
 
   <div class="container mt-3">
@@ -92,18 +129,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $_GET['error'] == "emptyField" => "campo(s) vacío(s).",
           $_GET['error'] == "numberFormat" => "ingreso de valores numéricos.",
           $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
-          $_GET['error'] == "exist" => "que dicha especialización de campus ya existe.",
+          $_GET['error'] == "exist" => "que dicha especialización ya existe.",
           $_GET['error'] == "alike" => "que el nombre es muy similar.",
-          $_GET['error'] == "invalidName" => "que el nombre solo puede contener letras.",
-          $_GET['error'] == "nameTooLong" => "que el nombre es demasiado largo.",
-          $_GET['error'] == "descriptionTooLong" => "que la descripción es demasiado larga.",
+          $_GET['error'] == "nombreTooLong" => "El nombre excede los 255 caracteres.",
+          $_GET['error'] == "descripcionTooLong" => "La descripción excede los 255 caracteres.",
           default => "un problema inesperado.",
         };
       } else if (isset($_GET['success'])) {
         $mensaje = match (true) {
-          $_GET['success'] == "inserted" => "Especialización de campus creada correctamente.",
-          $_GET['success'] == "updated" => "Especialización de campus actualizada correctamente.",
-          $_GET['success'] == "deleted" => "Especialización de campus eliminada correctamente.",
+          $_GET['success'] == "inserted" => "Especialización creada correctamente.",
+          $_GET['success'] == "updated" => "Especialización actualizada correctamente.",
+          $_GET['success'] == "deleted" => "Especialización eliminada correctamente.",
           $_GET['success'] == "restored" => "Especialización restaurada correctamente.",
           default => "Transacción realizada.",
         };
@@ -117,7 +153,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <section id="form">
       <div class="container">
-
         <button onclick="window.location.href='../indexView.php';">Volver</button>
         <form method="post" action="../action/sessionAdminAction.php">
           <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
@@ -129,24 +164,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div class="container d-flex justify-content-center">
-          <form method="post" action="../action/universidadCampusEspecializacionAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validarNombreEspecializacion();">
-            <input type="hidden" name="universidadCampusEspecializacion" value="<?php echo htmlspecialchars($idCampusEspecializacion); ?>">
-
+          <form method="post" action="../action/universidadCampusEspecializacionAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
+            <input type="hidden" name="idEspecializacion" value="0">
             <div class="row">
               <div class="col">
-                <input type="hidden" id="type" name="type" value="campusEspecializacion"> <!-- Campo oculto para el tipo de objeto -->
                 <label for="nombre" class="form-label">Nombre: </label>
-                <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre de la especialización', '') ?>
+                <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre de la especialización', '', '255'); ?>
               </div>
             </div>
-
             <div class="row">
               <div class="col">
                 <label for="descripcion" class="form-label">Descripción: </label>
-                <?php generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la especialización', '') ?>
+                <?php generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la especialización', '', '255'); ?>
               </div>
             </div>
-
             <div>
               <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
             </div>
@@ -171,41 +202,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </thead>
         <tbody>
           <?php
-          include '../business/universidadCampusEspecializacionBusiness.php';
-          $universidadCampusEspecializacionBusiness = new universidadCampusEspecializacionBusiness();
-          $especializaciones = $universidadCampusEspecializacionBusiness->getAllTbUniversidadCampusEspecializacion();
-          $mensajeActualizar = "¿Desea actualizar esta especialización?";
-          $mensajeEliminar = "¿Desea eliminar esta especialización?";
+          $especializacionBusiness = new UniversidadCampusEspecializacionBusiness();
+          $especializaciones = $especializacionBusiness->getAllTbUniversidadCampusEspecializacion();
 
           if ($especializaciones != null) {
             foreach ($especializaciones as $especializacion) {
               echo '<tr>';
-              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php"onsubmit="return validarNombreEspecializacion()">';
+              echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php" onsubmit="return validateForm()">';
               echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
               echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
-
-              echo '<td>';
-              if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idCampusEspecializacion'] == $especializacion->getTbUniversidadCampusEspecializacionId()) {
-                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                echo '</td>';
-                echo '<td>';
-                generarCampoTexto('descripcion', 'formActualizarData', '', '');
-                echo '</td>';
-              } else {
-                generarCampoTexto('nombre', '', '', $especializacion->getTbUniversidadCampusEspecializacionNombre());
-                echo '</td>';
-                echo '<td>';
-                generarCampoTexto('descripcion', '', '', $especializacion->getTbUniversidadCampusEspecializacionDescripcion());
-                echo '</td>';
-              }
-
-              echo '<td>';
-              echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-              echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-              echo '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionNombre()) . '"></td>';
+              echo '<td><input required type="text" class="form-control" name="descripcion" id="descripcion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionDescripcion()) . '"></td>';
+              echo '<td><input type="submit" name="update" id="update" value="Actualizar"></td>';
+              echo '<td><button type="button" name="delete" id="delete" onclick="actionConfirmation( \'¿Desea eliminar esta especialización?\', ' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . ')">Eliminar</button></td>';
               echo '</form>';
               echo '</tr>';
             }
+          } else {
+            echo '<tr>';
+            echo '<td colspan="8">No hay especializaciones registradas</td>';
+            echo '</tr>';
           }
           ?>
         </tbody>
@@ -214,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <section id="table-deleted" style="display: none;">
       <div class="text-center mb-4">
-        <h3>Especializaciones eliminados</h3>
+        <h3>Especializaciones eliminadas</h3>
       </div>
 
       <table class="table mt-3">
@@ -227,16 +243,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </thead>
         <tbody>
           <?php
-          $campusEspecializacionesEliminados = $universidadCampusEspecializacionBusiness->getAllDeletedTbUniversidadCampusEspecializacion();
+          $deletedEspecializaciones = $especializacionBusiness->getAllDeletedTbUniversidadCampusEspecializacion();
 
-          if ($campusEspecializacionesEliminados != null) {
-            foreach ($campusEspecializacionesEliminados as $especializaciones) {
+          if ($deletedEspecializaciones != null) {
+            foreach ($deletedEspecializaciones as $especializacion) {
               echo '<tr>';
               echo '<form method="post" enctype="multipart/form-data" action="../action/universidadCampusEspecializacionAction.php" onsubmit="return validateForm()">';
-              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializaciones->getTbUniversidadCampusEspecializacionId()) . '">';
-              echo '<td>' . htmlspecialchars($especializaciones->getTbUniversidadCampusEspecializacionId()) . '</td>';
-              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $especializaciones->getTbUniversidadCampusEspecializacionNombre() . '" readonly></td>';
-              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmation(\'¿Desea restaurar?\')"></td>';
+              echo '<input type="hidden" name="idCampusEspecializacion" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '">';
+              echo '<td>' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionId()) . '</td>';
+              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . htmlspecialchars($especializacion->getTbUniversidadCampusEspecializacionNombre()) . '" readonly></td>';
+              echo '<td><input type="submit" name="restore" id="restore" value="Restaurar" onclick="return actionConfirmationRestore(\'¿Desea restaurar esta especialización?\')"></td>';
               echo '</form>';
               echo '</tr>';
             }
@@ -250,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </table>
     </section>
 
-    <button onclick="toggleDeletedCampusEspecializaciones()" style="margin-top: 20px;">Ver/Ocultar Especializaciones Eliminadas</button>
+    <button onclick="toggleDeletedEspecializaciones()" style="margin-top: 20px;">Ver/Ocultar Especializaciones Eliminadas</button>
 
   </div>
 

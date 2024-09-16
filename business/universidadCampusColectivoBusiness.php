@@ -40,6 +40,14 @@ class universidadCampusColectivoBusiness {
         return $universidadCampusColectivoData->restoreTbCampusColectivo($idUniversidadCampusColectivo);
     }
 
+    public function checkAssociatedCampusColectivo($idUniversidadCampusColectivo) {
+        return $this->universidadCampusColectivoData->checkAssociatedCampusColectivo($idUniversidadCampusColectivo);
+    }
+
+    public function deleteColectivoById($idUniversidadCampusColectivo) {
+        return $this->universidadCampusColectivoData->deleteColectivoById($idUniversidadCampusColectivo);
+    }
+
     public function exist($nombre) {
         return $this->universidadCampusColectivoData->exist($nombre);
     }

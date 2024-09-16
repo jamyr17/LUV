@@ -1,7 +1,7 @@
 <?php
 
-include '../business/universidadCampusColectivoBusiness.php';
-include 'functions.php';
+include_once '../business/universidadCampusColectivoBusiness.php';
+include_once 'functions.php';
 $maxLength = 255;
 
 if (isset($_POST['update'])) {
@@ -61,22 +61,44 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusColectivoView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+} else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+    if (isset($_POST['idCampusColectivo'])) {
+        $idCampusColectivo = $_POST['idCampusColectivo'];
+        $campusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $result = $campusColectivoBusiness->checkAssociatedCampusColectivo($idCampusColectivo);
 
-    if (isset($_POST['idUniversidadCampusColectivo'])) {
-
-        $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
-
-        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
-        $result = $universidadCampusColectivoBusiness->deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo);
-
-        if ($result == 1) {
-            header("location: ../view/universidadCampusColectivoView.php?success=deleted");
+        // Si hay campus asociados
+        if ($result['status'] === 'confirm') {
+            echo json_encode($result); // Respuesta JSON para confirmación
+            exit();
         } else {
-            header("location: ../view/universidadCampusColectivoView.php?error=dbError");
+            // Si no hay campus asociados
+            $deleteResult = $campusColectivoBusiness->deleteColectivoById($idCampusColectivo);
+            echo json_encode($deleteResult); // Procede con la eliminación
+            exit();
         }
     } else {
-        header("location: ../view/universidadCampusColectivoView.php?error=error");
+        echo json_encode(['status' => 'error', 'message' => 'ID de colectivo no especificado.']);
+        exit();
+    }
+}
+
+// Confirmación final de la eliminación
+else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
+    if (isset($_POST['idCampusColectivo'])) {
+        $idCampusColectivo = $_POST['idCampusColectivo'];
+        $campusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $deleteResult = $campusColectivoBusiness->deleteColectivoById($idCampusColectivo);
+
+        if ($deleteResult) {
+            echo json_encode(['status' => 'success', 'message' => 'Colectivo eliminado correctamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar el colectivo.']);
+        }
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'ID de colectivo no especificado.']);
+        exit();
     }
 } else if (isset($_POST['create'])) {
 
@@ -175,18 +197,19 @@ if (isset($_POST['update'])) {
         echo json_encode(['status' => 'error', 'code' => 'emptyField']);
     }
 } else if (isset($_POST['restore'])) {
+    if (isset($_POST['idColectivo'])) {
+        $idColectivo = $_POST['idColectivo'];
+        $campusColectivoBusiness = new universidadCampusColectivoBusiness();
+        $restoreResult = $campusColectivoBusiness->restoreTbCampusColectivo($idColectivo);
 
-    if (isset($_POST['idUniversidadCampusColectivo'])) {
-        $idUniversidadCampusColectivo = $_POST['idUniversidadCampusColectivo'];
-        $universidadCampusColectivoBusiness = new universidadCampusColectivoBusiness();
-        $result = $universidadCampusColectivoBusiness->restoreTbCampusColectivo($idUniversidadCampusColectivo);
-
-        if ($result == 1) {
-            header("location: ../view/universidadCampusColectivoView.php?success=restored");
+        if ($restoreResult) { // Verifica si la restauración fue exitosa
+            header("Location: ../view/universidadCampusColectivoView.php?success=restored");
         } else {
-            header("location: ../view/universidadCampusColectivoView.php?error=dbError");
+            header("Location: ../view/universidadCampusColectivoView.php?error=dbError");
         }
+        exit();
     } else {
-        header("location: ../view/universidadCampusColectivoView.php?error=error");
+        header("Location: ../view/universidadCampusColectivoView.php?error=error");
+        exit();
     }
 }

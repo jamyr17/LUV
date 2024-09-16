@@ -1,6 +1,6 @@
 <?php
-include '../business/universidadCampusRegionBusiness.php';
-include 'functions.php';
+include_once '../business/universidadCampusRegionBusiness.php';
+include_once 'functions.php';
 
 if (isset($_POST['update'])) {
 
@@ -53,24 +53,47 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/universidadCampusRegionView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
-
+} else if (isset($_POST['action']) && $_POST['action'] === 'delete') {
     if (isset($_POST['idUniversidadCampusRegion'])) {
-
         $idUniversidadCampusRegion = $_POST['idUniversidadCampusRegion'];
-
         $campusRegionBusiness = new UniversidadCampusRegionBusiness();
-        $result = $campusRegionBusiness->deleteTbUniversidadCampusRegion($idUniversidadCampusRegion);
+        $result = $campusRegionBusiness->checkAssociatedCampus($idUniversidadCampusRegion);
 
-        if ($result == 1) {
-            header("location: ../view/universidadCampusRegionView.php?success=deleted");
+        // Si hay campus asociados
+        if ($result['status'] === 'confirm') {
+            echo json_encode($result); // Respuesta JSON para confirmación
+            exit();
         } else {
-            header("location: ../view/universidadCampusRegionView.php?error=dbError");
+            // Si no hay campus asociados
+            $deleteResult = $campusRegionBusiness->deleteRegionById($idUniversidadCampusRegion);
+            echo json_encode($deleteResult); // Procede con la eliminación
+            exit();
         }
     } else {
-        header("location: ../view/universidadCampusRegionView.php?error=error");
+        echo json_encode(['status' => 'error', 'message' => 'ID de universidad no especificado.']);
+        exit();
     }
-} else if (isset($_POST['create'])) {
+}
+
+// Confirmación final de la eliminación
+else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
+    if (isset($_POST['idUniversidadCampusRegion'])) {
+        $idUniversidadCampusRegion = $_POST['idUniversidadCampusRegion'];
+        $campusRegionBusiness = new UniversidadCampusRegionBusiness();
+        $deleteResult = $campusRegionBusiness->deleteRegionById($idUniversidadCampusRegion);
+
+        if ($deleteResult) {
+            echo json_encode(['status' => 'success', 'message' => 'Región eliminada correctamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar la región.']);
+        }
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'ID de región no especificado.']);
+        exit();
+    }
+
+}else if (isset($_POST['create'])) {
 
     if (isset($_POST['nombre']) && isset($_POST['descripcion'])) {
 

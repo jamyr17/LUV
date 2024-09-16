@@ -66,6 +66,8 @@ class CampusData extends Data {
         return $resultInsert;
     }
 
+// -------------------------------------------------------------------------------    
+
     public function updateTbCampus($campus){
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
@@ -142,6 +144,8 @@ class CampusData extends Data {
         return $result;
     }
 
+ // -------------------------------------------------------------------------------   
+
     public function deleteTbCampus($campusId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -166,6 +170,30 @@ class CampusData extends Data {
         return $result;
     }
 
+    public function deleteTbCampusByRegionId($universidadId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $queryDelete = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadcampusregionid=$universidadId;";
+        $result = mysqli_query($conn, $queryDelete);
+        mysqli_close($conn);
+
+        return $result;
+    }
+
+    public function deleteTbCampusBySpecializationId($universidadId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $queryDelete = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = '0' WHERE tbuniversidadcampusespecializacionid=$universidadId;";
+        $result = mysqli_query($conn, $queryDelete);
+        mysqli_close($conn);
+
+        return $result;
+    }
+
     public function deleteForeverTbCampus($campusId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -177,6 +205,8 @@ class CampusData extends Data {
 
         return $result;
     }
+
+// -------------------------------------------------------------------------------
 
     public function restoreTbCampusByUniversityId($idUniversidad) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -269,25 +299,8 @@ class CampusData extends Data {
             echo '</tr>';
         }
     }
-/*
-    public function getAllDeletedTbCampus()
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
 
-        $querySelect = "SELECT * FROM tbuniversidadcampus;";
-        $result = mysqli_query($conn, $querySelect);
-        mysqli_close($conn);
-
-        $campus = [];
-        while ($row = mysqli_fetch_array($result)) {
-            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampuslatitud'], $row['tbuniversidadcampuslongitud'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusespecializacionid']);
-            array_push($campus, $campusActual);
-        }
-
-        return $campus;
-    }
-        */
+// -------------------------------------------------------------------------------
 
         public function getAllDeletedTbCampus() {
             $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
