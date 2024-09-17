@@ -34,7 +34,6 @@ function addCriterion() {
         <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
-        <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro criterio" oninput="actualizarTablaConCriterio()">
 
         <label for="value${criteriaCount}">Prefiero:</label>
         <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
@@ -202,7 +201,7 @@ function populateCriteria(selectId) {
         select.appendChild(option);
         return;
     }
-    
+
     criterios.forEach(criterio => {
         const option = document.createElement('option');
         option.value = criterio.id;
@@ -210,13 +209,6 @@ function populateCriteria(selectId) {
         option.setAttribute('data-nombre', criterio.name);
         select.appendChild(option);
     });
-
-
-    // Añadir la opción "Otro" al final
-    const otherOption = document.createElement('option');
-    otherOption.value = 'other';
-    otherOption.textContent = 'Otro';
-    select.appendChild(otherOption);
 
     select.disabled = false;
 }

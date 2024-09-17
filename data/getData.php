@@ -1,11 +1,11 @@
 <?php
-include '../business/universidadBusiness.php';
-include '../business/campusBusiness.php';
-include '../business/areaConocimientoBusiness.php';
-include '../business/generoBusiness.php';
-include '../business/orientacionSexualBusiness.php';
-include '../business/criterioBusiness.php';
-include '../business/valorBusiness.php';
+include_once '../business/universidadBusiness.php';
+include_once '../business/campusBusiness.php';
+include_once '../business/areaConocimientoBusiness.php';
+include_once '../business/generoBusiness.php';
+include_once '../business/orientacionSexualBusiness.php';
+include_once '../business/criterioBusiness.php';
+include_once '../business/valorBusiness.php';
 
 header('Content-Type: application/json');
 
