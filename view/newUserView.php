@@ -125,7 +125,7 @@
     </section>
 
     <section id="form">
-        <button onclick="window.location.href='../indexView.php';">Volver</button>
+        <button onclick="window.location.href='login.php';">Volver</button>
         <div>                                       <!--cambiar envio de form-->
             <form method="post" action="../action/universidadAction.php" style="width: 50vw; min-width:300px;">
                 <?php

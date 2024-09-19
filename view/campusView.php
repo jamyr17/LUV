@@ -167,7 +167,7 @@ $campusEspecializacionBusiness = new UniversidadCampusEspecializacionBusiness();
 
         <section id="form">
             <div class="container">
-                <button onclick="window.location.href='../indexView.php';">Volver</button>
+                <button onclick="window.location.href='../index.php';">Volver</button>
                 <form method="post" action="../action/sessionAdminAction.php">
                     <button type="submit" class="btn btn-success" name="logout" id="logout">Cerrar sesión</button>
                 </form>
