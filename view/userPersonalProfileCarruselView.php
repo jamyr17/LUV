@@ -26,6 +26,15 @@ include '../action/functions.php';
         }
     </style>
     <script>
+        const formData = {
+            genero: null,
+            orientacionSexual: null,
+            areaConocimiento: null,
+            universidad: null,
+            campus: null,
+            colectivos: null,
+        };
+
         function nextForm(formNumber) {
             // Ocultar todos los formularios
             const forms = document.querySelectorAll('.form-container');
@@ -36,10 +45,56 @@ include '../action/functions.php';
             document.getElementById('form' + formNumber).classList.add('active');
         }
 
-        function submitForms() {
-            const universidad = document.getElementById('universidad').value;
-            const campus = document.getElementById('campus').value;
-            console.log(`Universidad seleccionada: ${universidad}, Campus seleccionado: ${campus}`);
+
+        function saveData(formId, formNumber) {
+            const formElement = document.getElementById(formId);
+            const formValues = new FormData(formElement);
+
+            // Guardar los datos en el objeto
+            formValues.forEach((value, key) => {
+                if (key === 'colectivos[]') {
+                    if (!formData.colectivos) {
+                        formData.colectivos = [];
+                    }
+                    formData.colectivos.push(value);
+                    console.log(value);
+                } else {
+                    formData[key] = value;
+                    console.log(value);
+                }
+            });
+
+            // Pasar al siguiente formulario
+            nextForm(formNumber);
+        }
+
+        function submitAll() {
+            // Convertir el objeto en FormData para enviarlo
+            const finalFormData = new FormData();
+            for (const key in formData) {
+                if (Array.isArray(formData[key])) {
+                    finalFormData.append(key, JSON.stringify(formData[key]));
+                } else {
+                    finalFormData.append(key, formData[key]);
+                }
+            }
+
+            finalFormData.append('registrar', 'true');
+
+            fetch('../action/personalProfileAction.php', {
+                    method: 'POST',
+                    body: finalFormData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Datos enviados correctamente');
+                        // Redirigir o mostrar mensaje de éxito
+                    } else {
+                        console.error('Error al enviar los datos:', data.error);
+                    }
+                })
+                .catch(error => console.error('Error de red:', error));
         }
     </script>
 </head>
@@ -57,12 +112,12 @@ include '../action/functions.php';
                 $generos = $generoBusiness->getAllTbGenero();
                 if ($generos != null) {
                     foreach ($generos as $genero) {
-                        echo '<option value="' . htmlspecialchars($genero->getTbGeneroId()) . '" title="' . htmlspecialchars($genero->getTbGeneroDescripcion()) . '">' . htmlspecialchars($genero->getTbGeneroNombre()) . '</option>';
+                        echo '<option value="' . htmlspecialchars($genero->getTbGeneroNombre()) . '" title="' . htmlspecialchars($genero->getTbGeneroDescripcion()) . '">' . htmlspecialchars($genero->getTbGeneroNombre()) . '</option>';
                     }
                 }
                 ?>
             </select>
-            <button type="button" onclick="nextForm(2)">Siguiente</button>
+            <button type="button" onclick="saveData('generoForm',2)">Siguiente</button>
         </form>
     </div>
 
@@ -78,12 +133,12 @@ include '../action/functions.php';
 
                 if ($orientacionesSexuales != null) {
                     foreach ($orientacionesSexuales as $orientacionSexual) {
-                        echo '<option value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualId()) . '" title="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualDescripcion()) . '">' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '</option>';
+                        echo '<option value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '" title="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualDescripcion()) . '">' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '</option>';
                     }
                 }
                 ?>
             </select>
-            <button type="button" onclick="nextForm(3)">Siguiente</button>
+            <button type="button" onclick="saveData('orientacionSexualForm',3)">Siguiente</button>
         </form>
     </div>
 
@@ -99,12 +154,12 @@ include '../action/functions.php';
 
                 if ($areasConocimiento != null) {
                     foreach ($areasConocimiento as $areaConocimiento) {
-                        echo '<option value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoId()) . '" title="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoDescripcion()) . '">' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '</option>';
+                        echo '<option value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '" title="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoDescripcion()) . '">' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '</option>';
                     }
                 }
                 ?>
             </select>
-            <button type="button" onclick="nextForm(4)">Siguiente</button>
+            <button type="button" onclick="saveData('areaConocimientoForm',4)">Siguiente</button>
         </form>
     </div>
 
@@ -122,7 +177,7 @@ include '../action/functions.php';
 
                 if ($universidades != null) {
                     foreach ($universidades as $universidad) {
-                        echo '<option value="' . htmlspecialchars($universidad->getTbUniversidadId()) . '">' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '</option>';
+                        echo '<option value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '">' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '</option>';
                     }
                 }
                 ?>
@@ -137,7 +192,7 @@ include '../action/functions.php';
 
                 if ($campus != null) {
                     foreach ($campus as $camp) {
-                        echo '<option value="' . htmlspecialchars($camp->getTbCampusId()) . '">' . htmlspecialchars($camp->getTbCampusNombre()) . '</option>';
+                        echo '<option value="' . htmlspecialchars($camp->getTbCampusNombre()) . '">' . htmlspecialchars($camp->getTbCampusNombre()) . '</option>';
                     }
                 }
                 ?>
@@ -164,13 +219,13 @@ include '../action/functions.php';
 
                 if ($estado == 1 || ($estado == 0 && in_array($idColectivo, $colectivosSeleccionados) && $descripcion == "1")) {
                     $selected = in_array($idColectivo, $colectivosSeleccionados) ? 'selected' : '';
-                    echo '<option value="' . htmlspecialchars($idColectivo) . '" ' . $selected . '>' . htmlspecialchars($nombreColectivo) . '</option>';
+                    echo '<option value="' . htmlspecialchars($nombreColectivo) . '" ' . $selected . '>' . htmlspecialchars($nombreColectivo) . '</option>';
                 }
             }
             echo '</select>';
             ?>
             <br>
-            <button type="button" onclick="nextForm(5)">Siguiente</button>
+            <button type="button" onclick="saveData('instalacionesForm',5)">Siguiente</button>
         </form>
     </div>
 
@@ -223,8 +278,7 @@ include '../action/functions.php';
                         <!-- Las filas se cargarán aquí mediante JavaScript -->
                     </tbody>
                 </table>
-                <button type="submit" name="registrar">Enviar</button>
-                <button type="button" onclick="submitForms()">Enviar</button>
+                <button type="button" onclick="submitAll()">Enviar Todo</button>
             </form>
             <!-- Acá termina el ordenamiento tipo árbol -->
         </div>
