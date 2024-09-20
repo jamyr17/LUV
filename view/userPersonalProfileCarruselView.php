@@ -10,6 +10,7 @@ include '../action/functions.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <title>Carrusel de Formularios</title>
@@ -171,61 +172,61 @@ include '../action/functions.php';
             <br>
             <button type="button" onclick="nextForm(5)">Siguiente</button>
         </form>
+    </div>
 
-        <div id="form5" class="form-container">
-            <div id="container">
-                <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
-                <h3>Modela tu perfil</h3>
+    <div id="form5" class="form-container">
+        <div id="container">
+            <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
+            <h3>Modela tu perfil</h3>
 
-                <div id="loading" style="display:none;">Cargando...</div>
+            <div id="loading" style="display:none;">Cargando...</div>
 
-                <form id="criteriaForm" method="post" action="../action/personalProfileAction.php" onsubmit="return submitForm()">
-                    <div id="criteriaSection">
+            <form id="criteriaForm" method="post" action="../action/personalProfileAction.php" onsubmit="return submitForm()">
+                <div id="criteriaSection">
 
-                        <div class="criterion">
-                            <label for="criterion1">Criterio:</label>
-                            <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
-                                <!-- Las opciones de criterios se cargarán dinámicamente -->
-                            </select>
+                    <div class="criterion">
+                        <label for="criterion1">Criterio:</label>
+                        <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
+                            <!-- Las opciones de criterios se cargarán dinámicamente -->
+                        </select>
 
-                            <label for="value1">Prefiero:</label>
-                            <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
-                                <!-- Las opciones de valores se cargarán dinámicamente -->
-                            </select>
+                        <label for="value1">Prefiero:</label>
+                        <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
+                            <!-- Las opciones de valores se cargarán dinámicamente -->
+                        </select>
 
-                            <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-                            <button type="button" onclick="removeCriterion(this)">Eliminar</button>
-
-                        </div>
+                        <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
+                        <button type="button" onclick="removeCriterion(this)">Eliminar</button>
 
                     </div>
 
-                    <input type="hidden" id="criteriaString" name="criteriaString">
-                    <input type="hidden" id="valuesString" name="valuesString">
-                    <button type="button" onclick="addCriterion()">Agregar criterio</button>
+                </div>
 
-                </form>
+                <input type="hidden" id="criteriaString" name="criteriaString">
+                <input type="hidden" id="valuesString" name="valuesString">
+                <button type="button" onclick="addCriterion()">Agregar criterio</button>
 
-                <hr><br>
-                <!-- Acá empieza el ordenamiento tipo árbol -->
-                <h3>Define el orden de los criterios de búsqueda</h3>
-                <form id="ordenForm" method="post" action="../action/personalProfileAction.php" onsubmit="return submitOrden()">
-                    <table id="sortableTable">
-                        <thead>
-                            <tr>
-                                <th>Criterio</th>
-                                <th>Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Las filas se cargarán aquí mediante JavaScript -->
-                        </tbody>
-                    </table>
-                    <button type="submit" name="registrar">Enviar</button>
-                    <button type="button" onclick="submitForms()">Enviar</button>
-                </form>
-                <!-- Acá termina el ordenamiento tipo árbol -->
-            </div>
+            </form>
+
+            <hr><br>
+            <!-- Acá empieza el ordenamiento tipo árbol -->
+            <h3>Define el orden de los criterios de búsqueda</h3>
+            <form id="ordenForm" method="post" action="../action/personalProfileAction.php" onsubmit="return submitOrden()">
+                <table id="sortableTable">
+                    <thead>
+                        <tr>
+                            <th>Criterio</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se cargarán aquí mediante JavaScript -->
+                    </tbody>
+                </table>
+                <button type="submit" name="registrar">Enviar</button>
+                <button type="button" onclick="submitForms()">Enviar</button>
+            </form>
+            <!-- Acá termina el ordenamiento tipo árbol -->
         </div>
     </div>
     <script src="../js/profileModel.js"></script>
