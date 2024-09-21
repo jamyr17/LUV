@@ -10,16 +10,16 @@ class PersonalProfileBusiness{
         $this->personalProfileData = new PersonalProfileData();
     }
 
-    public function insertTbPerfilPersonal($criterio, $valor, $usuarioId){
-        return $this->personalProfileData->insertTbPerfilPersonal($criterio, $valor, $usuarioId);
+    public function insertTbPerfilPersonal($criterio, $valor,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId){
+        return $this->personalProfileData->insertTbPerfilPersonal($criterio, $valor, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
     }
 
     public function profileExists($usuarioId){
         return $this->personalProfileData->profileExists($usuarioId);
     }
 
-    public function updateTbPerfilPersonal($criterio, $valor, $usuarioId){
-        return $this->personalProfileData->updateTbPerfilPersonal($criterio, $valor, $usuarioId);
+    public function updateTbPerfilPersonal($criterio, $valor,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId){
+        return $this->personalProfileData->updateTbPerfilPersonal($criterio, $valor,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
     }
 
     public function perfilPersonalByIdUsuario($usuarioId){

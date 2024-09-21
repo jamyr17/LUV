@@ -30,8 +30,17 @@
     </div>
     
     <div>
-        <form method="get" action="">
-            <p><button type="submit" formaction="userPersonalProfileView.php">Modelar tu perfil</button></p>
+        <form method="get" action=""><!-- Acá empezaríamos con genero, orientacion sexual, area de conocimiento, 
+                                    Todo lo relacionado a la universidad va junto (misma vista):
+                                                                                   universidad, 
+                                                                                   campus,
+                                                                                   colectivos (si pertenece o le gustan varios).
+                                    Luego criterio y valor para el cierre.
+
+                                    Con respecto al campus me parece que ya debería de estar asociada su información de
+                                    especialización y región... Por eso no estarán presentes en el formulario. Además no son necesarios en BD...
+                                     -->
+            <p><button type="submit" formaction="userPersonalProfileCarruselView.php">Modelar tu perfil</button></p>
             <p><button type="submit" formaction="userWantedProfileView.php">Modelar tu búsqueda</button></p>
         </form>
     </div>

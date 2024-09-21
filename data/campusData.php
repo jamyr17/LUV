@@ -3,9 +3,11 @@
 include_once 'data.php';
 include '../domain/campusDomain.php';
 
-class CampusData extends Data {
+class CampusData extends Data
+{
 
-    public function insertTbCampus($campus){
+    public function insertTbCampus($campus)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -66,9 +68,10 @@ class CampusData extends Data {
         return $resultInsert;
     }
 
-// -------------------------------------------------------------------------------    
+    // -------------------------------------------------------------------------------    
 
-    public function updateTbCampus($campus){
+    public function updateTbCampus($campus)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -144,7 +147,7 @@ class CampusData extends Data {
         return $result;
     }
 
- // -------------------------------------------------------------------------------   
+    // -------------------------------------------------------------------------------   
 
     public function deleteTbCampus($campusId)
     {
@@ -206,9 +209,10 @@ class CampusData extends Data {
         return $result;
     }
 
-// -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------
 
-    public function restoreTbCampusByUniversityId($idUniversidad) {
+    public function restoreTbCampusByUniversityId($idUniversidad)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = 1 WHERE tbuniversidadid = $idUniversidad;";
@@ -220,11 +224,11 @@ class CampusData extends Data {
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $querySelect = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 1;";
         $result = mysqli_query($conn, $querySelect);
         mysqli_close($conn);
-    
+
         $campus = [];
         while ($row = mysqli_fetch_array($result)) {
 
@@ -237,15 +241,15 @@ class CampusData extends Data {
                 $row['tbuniversidadcampuslatitud'],
                 $row['tbuniversidadcampuslongitud'],
                 $row['tbuniversidadcampusestado'],
-                $row['tbuniversidadcampusespecializacionid'], 
-            
+                $row['tbuniversidadcampusespecializacionid'],
+
             );
             array_push($campus, $campusActual);
         }
-    
+
         return $campus;
     }
-    
+
     public function getAllTbCampusNombres()
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -300,42 +304,67 @@ class CampusData extends Data {
         }
     }
 
-// -------------------------------------------------------------------------------
+    public function getAllTbCampusByUniversidadByNombre($nombreUniversidad)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
 
-        public function getAllDeletedTbCampus() {
-            $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-            $conn->set_charset('utf8');
-            $query = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 0;";
-            $result = mysqli_query($conn, $query);
-            $campus = [];
-            while ($row = mysqli_fetch_array($result)) {
-                $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampuslatitud'], $row['tbuniversidadcampuslongitud'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusespecializacionid']);
-                array_push($campus, $campusActual); // Aquí se debe usar $campusActual
-            }
-            return $campus;
+        $querySelect = " SELECT tbuniversidadcampus.* 
+                        FROM tbuniversidadcampus 
+                        INNER JOIN tbuniversidad ON tbuniversidadcampus.tbuniversidadid = tbuniversidad.tbuniversidadid 
+                        WHERE tbuniversidadcampus.tbuniversidadcampusestado = 1 
+                        AND tbuniversidad.tbuniversidadnombre = '" . $nombreUniversidad . "';
+";
+        $result = mysqli_query($conn, $querySelect);
+
+        mysqli_close($conn);
+
+        $campus = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampuslatitud'], $row['tbuniversidadcampuslongitud'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusespecializacionid']);
+            array_push($campus, $campusActual);
         }
-        
-        
-        public function restoreTbCampus($idCampus) {
-            $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-            $conn->set_charset('utf8');
-        
-            // Escapar el ID del campus
-            $idCampus = mysqli_real_escape_string($conn, $idCampus);
-        
-            // Actualizar el estado en la base de datos
-            $query = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = 1 WHERE tbuniversidadcampusid = '$idCampus';";
-            $result = mysqli_query($conn, $query);
-        
-            if (!$result) {
-                // Mostrar un error si la consulta falla
-                echo "Error al actualizar el estado del campus: " . mysqli_error($conn);
-                return false;
-            }
-        
-            return true;
+        return $campus;
+    }
+
+    // -------------------------------------------------------------------------------
+
+    public function getAllDeletedTbCampus()
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+        $query = "SELECT * FROM tbuniversidadcampus WHERE tbuniversidadcampusestado = 0;";
+        $result = mysqli_query($conn, $query);
+        $campus = [];
+        while ($row = mysqli_fetch_array($result)) {
+            $campusActual = new Campus($row['tbuniversidadcampusid'], $row['tbuniversidadid'], $row['tbuniversidadcampusregionid'], $row['tbuniversidadcampusnombre'], $row['tbuniversidadcampusdireccion'], $row['tbuniversidadcampuslatitud'], $row['tbuniversidadcampuslongitud'], $row['tbuniversidadcampusestado'], $row['tbuniversidadcampusespecializacionid']);
+            array_push($campus, $campusActual); // Aquí se debe usar $campusActual
         }
-        
+        return $campus;
+    }
+
+
+    public function restoreTbCampus($idCampus)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Escapar el ID del campus
+        $idCampus = mysqli_real_escape_string($conn, $idCampus);
+
+        // Actualizar el estado en la base de datos
+        $query = "UPDATE tbuniversidadcampus SET tbuniversidadcampusestado = 1 WHERE tbuniversidadcampusid = '$idCampus';";
+        $result = mysqli_query($conn, $query);
+
+        if (!$result) {
+            // Mostrar un error si la consulta falla
+            echo "Error al actualizar el estado del campus: " . mysqli_error($conn);
+            return false;
+        }
+
+        return true;
+    }
+
 
     public function exist($nombre)
     {
@@ -362,20 +391,20 @@ class CampusData extends Data {
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $query = "SELECT COUNT(*) as count FROM tbuniversidadcampus WHERE tbuniversidadcampusnombre = ? AND tbuniversidadcampusid != ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 'si', $nombre, $idAreaConocimiento);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
@@ -409,26 +438,26 @@ class CampusData extends Data {
         return $resultInsert;
     }
 
-    public function autocomplete($term) {
+    public function autocomplete($term)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $sql = "SELECT tbuniversidadcampusnombre FROM tbuniversidadcampus WHERE tbuniversidadcampusnombre LIKE ?";
         $stmt = $conn->prepare($sql);
         $searchTerm = "%$term%";
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         $suggestions = [];
         while ($row = $result->fetch_assoc()) {
             $suggestions[] = $row['tbuniversidadcampusnombre'];
         }
-    
+
         $stmt->close();
         $conn->close();
-    
+
         return $suggestions;
     }
-} 
-
+}

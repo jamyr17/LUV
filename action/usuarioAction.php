@@ -19,7 +19,7 @@ if (isset($_POST['login'])){
 
         if($result['tbtipousuarioid']==1){ //Administrador   
             $_SESSION['tipoUsuario'] = 'Administrador';
-            header("location: ../indexView.php");
+            header("location: ../index.php");
         } else if($result['tbtipousuarioid']==2){ //Usuario
             $_SESSION['tipoUsuario'] = 'Usuario';
             header("location: ../view/userNavigateView.php");
