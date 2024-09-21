@@ -18,9 +18,9 @@ class universidadCampusColectivoBusiness {
         return $this->universidadCampusColectivoData->updateTbUniversidadCampusColectivo($universidadCampusColectivo);
     }
 
-    public function deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo) {
-        return $this->universidadCampusColectivoData->deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo);
-    }
+    // public function deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo) {
+    //     return $this->universidadCampusColectivoData->deleteTbUniversidadCampusColectivo($idUniversidadCampusColectivo);
+    // }
 
     public function getAllTbUniversidadCampusColectivo() {
         return $this->universidadCampusColectivoData->getAllTbUniversidadCampusColectivo();

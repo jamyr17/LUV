@@ -54,7 +54,7 @@ class universidadCampusColectivoData extends Data
 
         return $result;
     }
-/*
+    /*
     public function deleteTbUniversidadCampusColectivo($universidadCampusColectivoId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -66,8 +66,9 @@ class universidadCampusColectivoData extends Data
 
         return $result;
         }
-*/  
-    public function checkAssociatedCampusColectivo($colectivoId){
+*/
+    public function checkAssociatedCampusColectivo($colectivoId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -111,10 +112,11 @@ class universidadCampusColectivoData extends Data
         return ['status' => 'proceed']; // No tiene campus asociados
     }
 
-    public function deleteColectivoById($colectivoId){
+    public function deleteColectivoById($colectivoId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-        
+
         // Primero, eliminar en la tabla de campus
         $queryCampusDelete = "UPDATE tbuniversidadcampus 
                               SET tbuniversidadcampusestado = '0'
@@ -124,27 +126,27 @@ class universidadCampusColectivoData extends Data
                                   WHERE tbuniversidadcolectivoid = $colectivoId
                               )";
         $resultCampusDelete = mysqli_query($conn, $queryCampusDelete);
-    
+
         // Después, eliminar las asociaciones en la tabla de relación
         $queryDeleteAssociations = "DELETE FROM tbuniversidadcampusuniversidadcolectivo 
                                     WHERE tbuniversidadcolectivoid = $colectivoId;";
         $resultDeleteAssociations = mysqli_query($conn, $queryDeleteAssociations);
-    
+
         // Finalmente, marcar el colectivo como eliminado (cambiar su estado a '0')
         $queryDeleteColectivo = "UPDATE tbuniversidadcampuscolectivo 
                                 SET tbuniversidadcampuscolectivoestado = '0' 
                                 WHERE tbuniversidadcampuscolectivoid = $colectivoId;";
         $resultDeleteColectivo = mysqli_query($conn, $queryDeleteColectivo);
-    
+
         mysqli_close($conn);
-    
+
         if ($resultDeleteColectivo && $resultDeleteAssociations && $resultCampusDelete) {
             return ['status' => 'success', 'message' => 'Colectivo eliminado correctamente.'];
         } else {
             return ['status' => 'error', 'message' => 'Error al eliminar el colectivo.'];
         }
     }
-    
+
     public function deleteForeverTbUniversidadCampusColectivo($universidadCampusColectivoId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -198,7 +200,8 @@ class universidadCampusColectivoData extends Data
         return $nombres;
     }
 
-    public function getAllDeletedTbUniversidadCampusColectivo() {
+    public function getAllDeletedTbUniversidadCampusColectivo()
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $query = "SELECT * FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivoestado = 0;";
@@ -211,7 +214,8 @@ class universidadCampusColectivoData extends Data
         return $universidadCampusColectivos;
     }
 
-    public function restoreTbCampusColectivo($universidadCampusColectivoId) {
+    public function restoreTbCampusColectivo($universidadCampusColectivoId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
         $universidadCampusColectivoId = mysqli_real_escape_string($conn, $universidadCampusColectivoId);
@@ -221,28 +225,28 @@ class universidadCampusColectivoData extends Data
         $result = mysqli_query($conn, $query);
         return $result;
     }
-    
+
     public function exist($nombre)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivonombre = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombre);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
-    
+
 
     public function nameExists($nombre, $excludeId = null)
     {
@@ -250,18 +254,18 @@ class universidadCampusColectivoData extends Data
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivonombre = ? AND tbuniversidadcampuscolectivoid != ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 'si', $nombre, $excludeId);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
@@ -269,56 +273,55 @@ class universidadCampusColectivoData extends Data
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $query = "SELECT tbuniversidadcampuscolectivoid, tbuniversidadcampuscolectivonombre 
                   FROM tbuniversidadcampuscolectivo
                   INNER JOIN tbuniversidadcampusuniversidadcolectivo 
                   ON tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivoid = tbuniversidadcampusuniversidadcolectivo.tbuniversidadcolectivoid
                   WHERE tbuniversidadcampusuniversidadcolectivo.tbuniversidadcampusid = ?";
-    
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $campusId);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-    
+
         $colectivos = [];
         while ($row = mysqli_fetch_assoc($result)) {
             $colectivo = new universidadCampusColectivo(
                 $row['tbuniversidadcampuscolectivoid'],
                 $row['tbuniversidadcampuscolectivonombre'],
-                '', 
-                1  
+                '',
+                1
             );
             $colectivos[] = $colectivo;
         }
-    
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-    
+
         return $colectivos;
     }
 
-    public function autocomplete($term) {
+    public function autocomplete($term)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         $sql = "SELECT tbuniversidadcampuscolectivonombre FROM tbuniversidadcampuscolectivo WHERE tbuniversidadcampuscolectivonombre LIKE ?";
         $stmt = $conn->prepare($sql);
         $searchTerm = "%$term%";
         $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         $suggestions = [];
         while ($row = $result->fetch_assoc()) {
             $suggestions[] = $row['tbuniversidadcampuscolectivonombre'];
         }
-    
+
         $stmt->close();
         $conn->close();
-    
+
         return $suggestions;
     }
-
 }
-?>

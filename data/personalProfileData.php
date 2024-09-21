@@ -4,7 +4,7 @@ include_once 'data.php';
 
 class PersonalProfileData extends Data{
 
-    public function insertTbPerfilPersonal($criterio, $valor, $usuarioId)
+    public function insertTbPerfilPersonal($criterio, $valor,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
@@ -19,8 +19,8 @@ class PersonalProfileData extends Data{
             $nextId = 1;
         }
 
-        $queryInsert = "INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor, tbusuarioid, tbperfilusuariopersonalestado) 
-                        VALUES ($nextId, '$criterio', '$valor','$usuarioId', 1)";
+        $queryInsert = "INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor, tbareaconocimiento, tbgenero, tborientacionsexual, tbuniversidad, tbuniversidadcampus, tbuniversidadcampuscolectivo, tbusuarioid, tbperfilusuariopersonalestado) 
+                        VALUES ($nextId, '$criterio', '$valor', '$areaConocimiento', '$genero', '$orientacionSexual', '$universidad', '$campus', '$colectivosString', '$usuarioId', 1)";
 
         $resultInsert = mysqli_query($conn, $queryInsert);
         mysqli_close($conn);
@@ -41,13 +41,23 @@ class PersonalProfileData extends Data{
         return $exists;
     }
 
-    public function updateTbPerfilPersonal($criterio, $valor, $usuarioId) {
+    public function updateTbPerfilPersonal($criterio, $valor, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         $queryUpdate = "UPDATE tbperfilusuariopersonal 
-                        SET tbperfilusuariopersonalcriterio = '$criterio', tbperfilusuariopersonalvalor = '$valor'
-                        WHERE tbusuarioid = '$usuarioId' AND tbperfilusuariopersonalestado = 1";
+                        SET 
+                            tbperfilusuariopersonalcriterio = '$criterio',
+                            tbperfilusuariopersonalvalor = '$valor',
+                            tbareaconocimiento = '$areaConocimiento',
+                            tbgenero = '$genero',
+                            tborientacionsexual = '$orientacionSexual',
+                            tbuniversidad = '$universidad',
+                            tbuniversidadcampus = '$campus',
+                            tbuniversidadcampuscolectivo = '$colectivosString',
+                            tbusuarioid = '$usuarioId'
+                        WHERE 
+                            tbusuarioid = '$usuarioId' AND tbperfilusuariopersonalestado = 1";
 
         $resultUpdate = mysqli_query($conn, $queryUpdate);
         mysqli_close($conn);

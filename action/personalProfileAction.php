@@ -10,9 +10,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$response = ['success' => true];
-
-
 if (isset($_POST["registrar"])) {
     // Verificar que las variables de sesión existen y no están vacías
     if (
@@ -32,34 +29,17 @@ if (isset($_POST["registrar"])) {
         
         $colectivosString = implode(',', $colectivos); // Volleyball,Basketball,etc...
 
-        // Imprimir los valores para depuración
-        echo "<h2>Valores Extraídos para Depuración</h2>";
-        echo "<strong>ID de Usuario:</strong> " . htmlspecialchars($usuarioId) . "<br>";
-        echo "<strong>Género:</strong> " . htmlspecialchars($genero) . "<br>";
-        echo "<strong>Orientación Sexual:</strong> " . htmlspecialchars($orientacionSexual) . "<br>";
-        echo "<strong>Área de Conocimiento:</strong> " . htmlspecialchars($areaConocimiento) . "<br>";
-        echo "<strong>Universidad:</strong> " . htmlspecialchars($universidad) . "<br>";
-        echo "<strong>Campus:</strong> " . htmlspecialchars($campus) . "<br>";
-        echo "<strong>Colectivos:</strong> " . htmlspecialchars($colectivosString) . "<br>";
-        echo "<strong>Criterios:</strong> " . htmlspecialchars($criterioParam) . "<br>";
-        echo "<strong>Valores:</strong> " . htmlspecialchars($valorParam) . "<br>";
-
-        // Finaliza la ejecución aquí para depuración
-        exit;
-
-        // Queda pendiente el guardar los datos y la corrección de la BD
-
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
-            $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $usuarioId);
-            header("location: ../view/userPersonalProfileView.php?success=updated");
+            $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
+            echo json_encode(['success' => 'updated']); // Cambiado aquí
         } else {
-            $personalProfileBusiness->insertTbPerfilPersonal($criterioParam, $valorParam, $usuarioId);
-            header("location: ../view/userPersonalProfileView.php?success=inserted");
+            $personalProfileBusiness->insertTbPerfilPersonal($criterioParam, $valorParam,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
+            echo json_encode(['success' => 'inserted']); // Cambiado aquí
         }
     } else {
         // Redirigir si el formulario está incompleto
-        header("location: ../view/userPersonalProfileView.php?error=formIncomplete");
+        echo json_encode(['success' => false, 'error' => 'formIncomplete']);
     }
 } else {
     $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);

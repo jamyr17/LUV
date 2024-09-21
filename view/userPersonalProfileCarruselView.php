@@ -87,19 +87,84 @@ include '../action/functions.php';
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        console.log('Datos enviados correctamente');
-                        // Redirigir o mostrar mensaje de éxito
-                    } else {
-                        console.error('Error al enviar los datos:', data.error);
-                    }
-                })
-                .catch(error => console.error('Error de red:', error));
-        }
+                        if (data.success) {
+                                if (data.success === "updated") {
+                                    alert("Se ha actualizado su perfil personal.");
+                                } else {
+                                    alert("Se ha guardado el perfil personal.");
+                                }
+                                window.location.href = '../view/userWantedProfileView.php';
+                            } else {
+                                window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
+
+                            }
+                        })
+                    .catch(error => console.error('Error de red:', error));
+                }
+
+            $(document).ready(function() {
+                $('#universidad').change(function() {
+                    const universidadNombre = $(this).val();
+                    $.ajax({
+                        url: '../data/getData.php',
+                        method: 'GET',
+                        data: {
+                            universidadNombre: universidadNombre
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#campus').empty(); // Limpiar el select de campus
+                            data.forEach(function(camp) {
+                                $('#campus').append(new Option(camp.nombre, camp.id));
+                            });
+                        },
+                        error: function(err) {
+                            console.error('Error al cargar campus:', err);
+                        }
+                    });
+                });
+
+                $('#campus').change(function() {
+                    const campusId = $(this).val();
+                    $.ajax({
+                        url: '../data/getData.php',
+                        method: 'GET',
+                        data: {
+                            campusId: campusId
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#colectivos').empty(); // Limpiar el select de colectivos
+                            data.forEach(function(colectivo) {
+                                $('#colectivos').append(new Option(colectivo.nombre, colectivo.nombre));
+                            });
+                        },
+                        error: function(err) {
+                            console.error('Error al cargar colectivos:', err);
+                        }
+                    });
+                });
+            });
     </script>
 </head>
 
 <body>
+
+    <section id="alerts">
+        <?php
+        if (isset($_GET['error'])) {
+            $mensaje = "Ocurrió un error debido a ";
+            $mensaje .= match (true) {
+                $_GET['error'] == "formIncomplete" => "problemas en el procesamiento de su respuesta.",
+                default => "un problema inesperado.",
+            };
+        }
+
+        if (isset($mensaje) && !isset($_GET['success'])) {
+            echo "<script>alert('$mensaje')</script>";
+        }
+        ?>
+    </section>
 
     <div id="form1" class="form-container active">
         <h2>Selecciona tu Género</h2>

@@ -6,10 +6,11 @@ include_once '../business/generoBusiness.php';
 include_once '../business/orientacionSexualBusiness.php';
 include_once '../business/criterioBusiness.php';
 include_once '../business/valorBusiness.php';
+include_once '../business/universidadCampusColectivoBusiness.php';
 
 header('Content-Type: application/json');
 
-if(isset($_GET['type'])){
+if (isset($_GET['type'])) {
     $universidadBusiness = new UniversidadBusiness();
     $campusBusiness = new CampusBusiness();
     $areaConocimientoBusiness = new AreaConocimientoBusiness();
@@ -89,17 +90,49 @@ if(isset($_GET['type'])){
     }
 
     echo json_encode($data);
-}else if(isset($_GET['criterion'])){
+} else if (isset($_GET['criterion'])) {
     $criterion = $_GET['criterion'];
     $filePath = "../resources/criterios/{$criterion}.dat";
 
     if (file_exists($filePath)) {
         $data = file_get_contents($filePath);
-        $suggestions = explode(',', $data);  
+        $suggestions = explode(',', $data);
         echo json_encode($suggestions);
     } else {
-        echo json_encode([]); 
+        echo json_encode([]);
     }
+} else if (isset($_GET['universidadNombre'])) {
+
+    $universidadNombre = $_GET['universidadNombre']; 
+
+    $campusBusiness = new CampusBusiness();
+    $campus = $campusBusiness->getAllTbCampusByUniversidadByNombre($universidadNombre); // Implementa este método en tu clase
+
+    $response = [];
+    foreach ($campus as $camp) {
+        $response[] = [
+            'id' => htmlspecialchars($camp->getTbCampusId()),
+            'nombre' => htmlspecialchars($camp->getTbCampusNombre())
+        ];
+    }
+
+    echo json_encode($response);
+} else if (isset($_GET['campusId'])) {
+
+    $campusId = $_GET['campusId']; 
+
+    $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+    $colectivos = $campusColectivoBusiness->getColectivosByCampusId($campusId);
+
+    $response = [];
+    foreach ($colectivos as $colectivo) {
+        $response[] = [
+            'id' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoId()),
+            'nombre' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoNombre())
+        ];
+    }
+
+    echo json_encode($response);
 } else {
-    echo json_encode([]);  
+    echo json_encode([]);
 }
