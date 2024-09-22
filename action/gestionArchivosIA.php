@@ -24,6 +24,12 @@ function createDataFile($nombre, $data) {
 }
 
 function agregarValorSiNoExiste($nombreArchivo, $valor, $token, $asistenteId) {
+
+    $token = 'API'; // Tu API Key
+    $assistantId = 'ASIS';
+    $threadId = 'HILO';
+
+
     $filePath = "../resources/criterios/{$nombreArchivo}.dat";
     $contenidoActual = [];
 
@@ -101,7 +107,7 @@ function enviarMensaje($nombreCriterio, $token, $threadId) {
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
         curl_close($ch);
-        file_put_contents('log.txt', "Error de cURL: " . $error_msg . "\n", FILE_APPEND);
+        file_put_contents('../resource/log.dat', "Error de cURL: " . $error_msg . "\n", FILE_APPEND);
         return null;
     }
 
@@ -113,14 +119,14 @@ function enviarMensaje($nombreCriterio, $token, $threadId) {
 
     // Verificar si hubo un error en la respuesta
     if (isset($result['error'])) {
-        file_put_contents('log.txt', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
+        file_put_contents('../resource/log.dat', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
         return null;
     }
 
     // Verificar si se ha creado un mensaje exitosamente
     if (isset($result['id'])) {
         $messageId = $result['id'];
-        file_put_contents('log.txt', "ID del mensaje creado: " . $messageId . "\n", FILE_APPEND);
+        file_put_contents('../resource/log.dat', "ID del mensaje creado: " . $messageId . "\n", FILE_APPEND);
         return $messageId;
     }
 
@@ -153,21 +159,42 @@ function crearRun($threadId, $assistantId, $token) {
 
     // Ejecutar la solicitud
     $response = curl_exec($ch);
+
+    // Manejo de errores de cURL
+    if (curl_errno($ch)) {
+        $error_msg = curl_error($ch);
+        curl_close($ch);
+        file_put_contents('../resource/log.dat', "Error de cURL al crear el run: " . $error_msg . "\n", FILE_APPEND);
+        return null;
+    }
+
     curl_close($ch);
 
     // Decodificar la respuesta
     $result = json_decode($response, true);
 
+    // Guardar la respuesta completa en el log para depuración
+    file_put_contents('../resource/log.dat', "Respuesta de la API al crear el run: " . json_encode($result) . "\n", FILE_APPEND);
+
     // Verificar si se creó el run exitosamente
     if (isset($result['id'])) {
         return $result['id'];  // Devuelve el ID del run creado
     } else {
-        file_put_contents('../resource/log.dat', "Error al crear el run: " . $result['error']['message'] . "\n", FILE_APPEND);
+        // Si hay un error, escribir el error en el log
+        if (isset($result['error'])) {
+            file_put_contents('../resource/log.dat', "Error al crear el run: " . $result['error']['message'] . "\n", FILE_APPEND);
+        }
         return null;
     }
 }
 
-function obtenerDatosIA($nombreCriterio, $token, $threadId, $assistantId) {
+function obtenerDatosIA($nombreCriterio) {
+
+    $token = 'API'; // Tu API Key
+    $assistantId = 'ASIS';
+    $threadId = 'HILO';
+
+
     // 1. Enviar el mensaje al hilo
     $messageId = enviarMensaje($nombreCriterio, $token, $threadId);
     if (!$messageId) {
@@ -246,7 +273,7 @@ function obtenerMensajesDelThread($threadId, $token) {
 
     // Verificar si hubo un error en la respuesta
     if (isset($result['error'])) {
-        file_put_contents('log.dat', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
+        file_put_contents('../resource/log.dat', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
         return null;
     }
 
