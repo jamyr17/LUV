@@ -1,6 +1,7 @@
 <?php
 
 include '../data/valorData.php';
+include_once '../data/logicaArchivosDat.php';
 
 class ValorBusiness {
 
@@ -8,6 +9,7 @@ class ValorBusiness {
 
     public function __construct() {
         $this->valorData = new ValorData();
+        $this->logicaArchivosDat = new LogicaArchivosDat();
     }
 
     public function insertTbValor($valor) {
@@ -28,6 +30,10 @@ class ValorBusiness {
 
     public function getAllTbValor() {
         return $this->valorData->getAllTbValor();
+    }
+
+    public function getAllTbValorDat() {
+        return $this->logicaArchivosDat->obtenerValoresDeCriterio();
     }
 
     public function getAllTbValorNombres() {

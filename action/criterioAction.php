@@ -6,7 +6,6 @@ include_once 'gestionArchivosIA.php';
 
 $maxLength = 255;
 
-
 if (isset($_POST['update'])) {
     if (isset($_POST['nombre'])) {
         $idCriterio = $_POST['idCriterio'];

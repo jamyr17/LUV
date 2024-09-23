@@ -193,23 +193,25 @@ include_once '../business/criterioBusiness.php';
         <tbody id="table-content">
           <?php
           $criterioBusiness = new CriterioBusiness();
-          $criterios = $criterioBusiness->getAllTbCriterio();
+          $criterios = $criterioBusiness->getAllTbCriterioDat();
+          //$criterios = $criterioBusiness->getAllTbCriterio();
 
-          if ($criterios != null) {
+          if (!empty($criterios)) {
+            $contador = 1; // Inicializa el contador en 1
             foreach ($criterios as $criterio) {
               echo '<tr>';
               echo '<form method="post" enctype="multipart/form-data" action="../action/criterioAction.php" onsubmit="return validateForm()">';
-              echo '<input type="hidden" name="idCriterio" value="' . htmlspecialchars($criterio->getTbCriterioId()) . '">';
-              echo '<td>' . htmlspecialchars($criterio->getTbCriterioId()) . '</td>';
-              echo '<td><input required type="text" class="form-control" name="nombre" id="nombre" value="' . $criterio->getTbCriterioNombre() . '"></td>';
+              echo '<td>' . $contador . '</td>'; // Muestra el número de la fila
+              echo '<td><input type="text" name="nombreCriterio" class="form-control" value="' . htmlspecialchars($criterio) . '" required></td>'; // Campo de texto para el nombre del criterio
               echo '<td><input type="submit" name="update" id="update" value="Actualizar"></td>';
-              echo '<td><button type="button" name="delete" id="delete" onclick="actionConfirmation( \'¿Desea eliminar este criterio?\', ' . htmlspecialchars($criterio->getTbCriterioId()) . ')">Eliminar</button></td>';
+              echo '<td><button type="button" name="delete" id="delete" onclick="actionConfirmation(\'¿Desea eliminar este criterio?\', \'' . htmlspecialchars($criterio) . '\')">Eliminar</button></td>';
               echo '</form>';
               echo '</tr>';
+              $contador++; // Incrementa el contador en cada iteración
             }
           } else {
             echo '<tr>';
-            echo '<td colspan="8">No hay criterios registrados</td>';
+            echo '<td colspan="4">No hay criterios registrados</td>'; // Corrige el colspan
             echo '</tr>';
           }
           ?>

@@ -147,7 +147,6 @@ $criterioBusiness = new CriterioBusiness();
                 </script>
             </div>
         </section>
-
         <section id="table">
             <div class="text-center mb-4">
                 <h3>Valores registrados</h3>
@@ -164,54 +163,43 @@ $criterioBusiness = new CriterioBusiness();
                 </thead>
                 <tbody>
                     <?php
-                    $valores = $valorBusiness->getAllTbValor();
-                    $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
+                    $logicaArchivosDat = new LogicaArchivosDat();
+                    $criterios = $logicaArchivosDat->obtenerCriterios(); // Obtener todos los criterios
                     $mensajeActualizar = "¿Desea actualizar este valor?";
                     $mensajeEliminar = "¿Desea eliminar este valor?";
+                    $contador = 1; // Inicializamos el contador
 
-                    if ($valores != null) {
-                        foreach ($valores as $valor) {
-                            echo '<tr>';
-                            echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
+                    // Suponiendo que tienes un método para obtener todos los valores de un criterio específico
+                    foreach ($criterios as $criterio) {
+                        $valores = $logicaArchivosDat->obtenerValoresDeCriterio($criterio); // Obtener valores del archivo .dat
 
-                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
-                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+                        if ($valores != null) {
+                            foreach ($valores as $valor) {
+                                echo '<tr>';
+                                echo '<td>' . $contador . '</td>'; // Muestra el número de la fila
+                                echo '<td>' . htmlspecialchars($criterio) . '</td>'; // Mostrar el nombre del criterio
+                                echo '<td><input type="text" class="form-control" value="' . htmlspecialchars($valor) . '" readonly></td>'; // Mostrar el nombre del valor en un campo de texto
 
-                            // Combo box para seleccionar el criterio
-                            echo '<select name="idCriterio" class="form-select">';
-                            foreach ($criterios as $criterio) {
-                                $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
-                                echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
-                                echo htmlspecialchars($criterio->getTbCriterioNombre());
-                                echo '</option>';
+                                // Botones de acción (puedes adaptar la lógica según necesites)
+                                echo '<td>';
+                                echo "<form method='post' action='../action/valorAction.php' onsubmit='return validateForm()'>";
+                                echo "<input type='hidden' name='criterio' value='" . htmlspecialchars($criterio) . "'>"; // Añadir el criterio
+                                echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                                echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                                echo '</form>';
+                                echo '</td>';
+
+                                echo '</tr>';
+                                $contador++; // Incrementamos el contador en cada iteración
                             }
-                            echo '</select>';
-
-                            echo '</td>';
-
-                            // Campo de texto para el nombre del valor
-                            echo '<td>';
-                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
-                                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                            } else {
-                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
-                            }
-                            echo '</td>';
-
-                            // Botones de acción
-                            echo '<td>';
-                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-                            echo '</td>';
-
-                            echo '</form>';
-                            echo '</tr>';
                         }
                     }
+
                     ?>
                 </tbody>
             </table>
         </section>
+
 
         <section id="table-deleted" style="display: none;">
             <div class="text-center mb-4">

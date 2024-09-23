@@ -65,29 +65,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         if (json_last_error() === JSON_ERROR_NONE && isset($data['updateOrder'])) {
             $updateOrder = $data['updateOrder'];
 
+            // Inicializar strings
+            $criteria = '';
+            $values = '';
 
-        // Inicializar strings
-        $criteria = '';
-        $values = '';
+            foreach ($updateOrder as $item) {
+                $criteria .= $item['criterion'] . ',';
+                $values .= $item['value'] . ',';
+            }
 
-        foreach ($updateOrder as $item) {
-            $criteria .= $item['criterion'] . ',';
-            $values .= $item['value'] . ',';
-        }
+            // Guardar en la sesión
+            $_SESSION['criteriaString'] = rtrim($criteria, ',');
+            $_SESSION['valueString'] = rtrim($values, ',');
+            $_SESSION['cantCriteria'] = count($updateOrder);
 
-        // Guardar en la sesión
-        $_SESSION['criteriaString'] = rtrim($criteria, ',');
-        $_SESSION['valueString'] = rtrim($values, ',');
-        $_SESSION['cantCriteria'] = count($updateOrder);
-
-        // Responder con éxito
-        echo json_encode([
-        'status' => 'success',
-        'guardado' => [
-        'criteriaString' => $_SESSION['criteriaString'],
-        'valueString' => $_SESSION['valueString']
-            ]
-        ]);
+            // Responder con éxito
+            echo json_encode([
+            'status' => 'success',
+            'guardado' => [
+            'criteriaString' => $_SESSION['criteriaString'],
+            'valueString' => $_SESSION['valueString']
+                ]
+            ]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Datos no válidos o parámetro updateOrder no recibido']);
         }
