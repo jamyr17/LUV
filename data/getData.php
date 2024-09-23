@@ -69,24 +69,22 @@ if (isset($_GET['type'])) {
             }
             break;
         case "6":
-            $result = $criterioBusiness->getAllTbCriterioDat(); // Cambiado para obtener desde archivos .dat
+            $result = $criterioBusiness->getAllTbCriterio();
             foreach ($result as $item) {
                 $data[] = [
-                    'id' => $item,  // Aquí solo tenemos el nombre del criterio
-                    'name' => $item
+                    'id' => $item->getTbCriterioId(),
+                    'name' => $item->getTbCriterioNombre()
                 ];
             }
-            break;        
+            break;
         case "7":
-            // Obtener valores de un criterio desde archivos .dat
-            if (isset($_GET['criterion'])) {
-                $criterio = $_GET['criterion'];
-                $result = $valorBusiness->getAllTbValorDat($criterio);
-                foreach ($result as $item) {
-                    $data[] = [
-                        'name' => $item  // El valor del archivo .dat
-                    ];
-                }
+            $result = $valorBusiness->getAllTbValor();
+            foreach ($result as $item) {
+                $data[] = [
+                    'id' => $item->getTbValorId(),
+                    'name' => $item->getTbValorNombre(),
+                    'idCriterio' => $item->getTbCriterioId()
+                ];
             }
             break;
     }

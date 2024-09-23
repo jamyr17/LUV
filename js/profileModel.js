@@ -28,12 +28,12 @@ function addCriterion() {
     const newCriterion = document.createElement('div');
     newCriterion.className = 'criterion';
 
+    // Contenido HTML dependiendo de la vista actual
     newCriterion.innerHTML = `
         <label for="criterion${criteriaCount}">Criterio:</label>
-        <select name="criterion[]" id="criterion${criteriaCount}" onchange="toggleOtherCriterion(this, ${criteriaCount})">
+        <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
-        <input type="text" id="otherCriterion${criteriaCount}" name="otherCriterionValue[]" style="display: none;" placeholder="Especifique otro criterio" oninput="actualizarTablaConCriterio()">
 
         <label for="value${criteriaCount}">Prefiero:</label>
         <select name="value[]" id="value${criteriaCount}" onchange="toggleOtherField(this, ${criteriaCount})" disabled>
@@ -41,8 +41,10 @@ function addCriterion() {
         </select>
         <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
         
-        ${currentView === 'PersonalProfile' ? '' : `<!-- Porcentaje no necesario para perfil personal -->`}
-
+        ${currentView === 'PersonalProfile' ? '' : `
+        <!-- <label for="percent${criteriaCount}">Porcentaje:</label>-->
+        <!--<input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
+        -->`}
         <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
     criteriaSection.appendChild(newCriterion);
@@ -55,7 +57,6 @@ function addCriterion() {
     actualizarTablaConCriterio();
 }
 
-
 function actualizarTablaConCriterio() {
     const tbody = document.querySelector('#sortableTable tbody');
     tbody.innerHTML = ''; // Limpiar la tabla antes de llenarla nuevamente
@@ -63,18 +64,12 @@ function actualizarTablaConCriterio() {
     const criteriaSelects = document.querySelectorAll('select[name="criterion[]"]');
     const valuesSelects = document.querySelectorAll('select[name="value[]"]');
     const otherValues = document.querySelectorAll('input[name="otherValue[]"]');
-    const otherCriterions = document.querySelectorAll('input[name="otherCriterionValue[]"]');
 
     criteriaSelects.forEach((select, index) => {
-        let criterionValue = select.options[select.selectedIndex]?.text || 'Sin criterio';
-
-        // Revisar si el criterio es "Otro"
-        if (select.value === 'other') {
-            criterionValue = otherCriterions[index].value || 'Sin criterio especificado';
-        }
-
+        const criterionValue = select.options[select.selectedIndex]?.text || 'Sin criterio';
         const valueSelect = valuesSelects[index];
         const otherValueInput = otherValues[index];
+
         let valueValue = valueSelect.options[valueSelect.selectedIndex]?.text || 'Sin valor';
 
         if (valueSelect.value === 'other') {
@@ -93,17 +88,11 @@ function actualizarTablaConCriterio() {
 
 async function guardarNuevoOrden() {
     const rows = Array.from(document.querySelectorAll('#sortableTable tbody tr'));
-    const nuevoOrden = rows.map((row, index) => {
-        const criterionSelect = document.querySelector(`#criterion${index + 1}`);
-        const valueSelect = document.querySelector(`#value${index + 1}`);
-        const otherCriterionInput = document.querySelector(`#otherCriterion${index + 1}`);
-        const otherValueInput = document.querySelector(`#otherField${index + 1}`);
-
-        // Si el criterio es "Otro", el valor también será personalizado
-        let criterion = criterionSelect.value === 'other' ? otherCriterionInput.value : criterionSelect.options[criterionSelect.selectedIndex].text;
-        let value = criterionSelect.value === 'other' ? otherValueInput.value : valueSelect.options[valueSelect.selectedIndex].text;
-
-        return { criterion, value };
+    const nuevoOrden = rows.map(row => {
+        return {
+            criterion: row.children[0].textContent,
+            value: row.children[1].textContent
+        };
     });
 
     try {
@@ -131,7 +120,6 @@ async function guardarNuevoOrden() {
         console.error('Error de red:', error);
     }
 }
-
 
 // función parra poder eliminar criterios
 function removeCriterion(button) {
@@ -222,15 +210,8 @@ function populateCriteria(selectId) {
         select.appendChild(option);
     });
 
-    // Añadir la opción "Otro" al final
-    const otherOption = document.createElement('option');
-    otherOption.value = 'other';
-    otherOption.textContent = 'Otro'; // Agregamos la opción "Otro"
-    select.appendChild(otherOption);
-
     select.disabled = false;
 }
-
 
 // Función para cargar los valores basados en el criterio seleccionado
 function loadValues(select, index) {
@@ -304,28 +285,6 @@ function toggleOtherField(select, index) {
     } else {
         otherField.style.display = 'none';
         otherField.value = '';
-    }
-
-    actualizarTablaConCriterio();
-}
-
-function toggleOtherCriterion(select, index) {
-    const otherCriterionField = document.getElementById(`otherCriterion${index}`);
-    const valueSelect = document.getElementById(`value${index}`);
-    const otherValueField = document.getElementById(`otherField${index}`);
-
-    if (select.value === 'other') {
-        // Si se selecciona "Otro" en el criterio, mostrar ambos campos de texto
-        otherCriterionField.style.display = 'block';  // Mostrar campo de texto para el criterio
-        otherValueField.style.display = 'block';      // Mostrar campo de texto para el valor
-        valueSelect.style.display = 'none';           // Ocultar el select de valores
-    } else {
-        // Si no es "Otro", ocultar los campos de texto y mostrar el select de valores
-        otherCriterionField.style.display = 'none';
-        otherValueField.style.display = 'none';
-        otherValueField.value = '';  // Limpiar el valor del campo de texto
-        valueSelect.style.display = 'block';  // Mostrar el select de valores
-        loadValues(select, index);  // Cargar valores predefinidos si no es "Otro"
     }
 
     actualizarTablaConCriterio();
@@ -462,6 +421,8 @@ async function cargarPerfilDeseado() {
             console.error('Error al cargar el perfil deseado:', data.error);
             return;
         }
+
+        console.log('Data:', data);
 
         // Cargar los criterios y valores en los combobox
         data.forEach((item, index) => {
