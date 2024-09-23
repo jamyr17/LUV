@@ -270,4 +270,8 @@ function deleteUniversity(idUniversidad) {
 
 </body>
 
+<?php
+eliminarFormData();
+?>
+
 </html>

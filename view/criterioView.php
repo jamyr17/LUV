@@ -263,4 +263,8 @@ include_once '../business/criterioBusiness.php';
 
 </body>
 
+<?php
+eliminarFormData();
+?>
+
 </html>

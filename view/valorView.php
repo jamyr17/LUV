@@ -256,4 +256,8 @@ $criterioBusiness = new CriterioBusiness();
 
 </body>
 
+<?php
+eliminarFormData();
+?>
+
 </html>
