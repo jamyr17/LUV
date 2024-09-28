@@ -22,6 +22,9 @@ if (isset($_GET['type'])) {
     $type = $_GET['type'];
     $data = [];
 
+    // Depuración usando error_log() para ver el tipo de solicitud
+    error_log("Tipo de solicitud: " . $type);
+
     switch ($type) {
         case "1":
             $result = $universidadBusiness->getAllTbUniversidad();
@@ -72,12 +75,18 @@ if (isset($_GET['type'])) {
             $result = $criterioBusiness->getAllTbCriterio();
             foreach ($result as $item) {
                 $data[] = [
+<<<<<<< Updated upstream
                     'id' => $item->getTbCriterioId(),
                     'name' => $item->getTbCriterioNombre()
+=======
+                    'id' => $item,
+                    'name' => $item
+>>>>>>> Stashed changes
                 ];
             }
             break;
         case "7":
+<<<<<<< Updated upstream
             $result = $valorBusiness->getAllTbValor();
             foreach ($result as $item) {
                 $data[] = [
@@ -85,6 +94,31 @@ if (isset($_GET['type'])) {
                     'name' => $item->getTbValorNombre(),
                     'idCriterio' => $item->getTbCriterioId()
                 ];
+=======
+            if (isset($_GET['criterion'])) {
+                $criterion = $_GET['criterion'];
+
+                // Depuración usando error_log() para el criterio recibido
+                error_log("Criterio recibido: " . $criterion);
+
+                $filePath = "../resources/criterios/{$criterion}.dat";
+                error_log("Ruta del archivo: " . $filePath);  // Depuración de la ruta
+
+                if (file_exists($filePath)) {
+                    $data = file_get_contents($filePath);
+                    $valores = explode(',', $data);
+                    $response = array_map('trim', $valores);
+
+                    // Depuración usando error_log() para los valores leídos
+                    error_log("Valores leídos: " . print_r($response, true));
+
+                    echo json_encode($response);
+                } else {
+                    // Depuración en caso de que el archivo no exista
+                    error_log("Archivo no encontrado: " . $filePath);
+                    echo json_encode([]);
+                }
+>>>>>>> Stashed changes
             }
             break;
     }
@@ -94,16 +128,26 @@ if (isset($_GET['type'])) {
     $criterion = $_GET['criterion'];
     $filePath = "../resources/criterios/{$criterion}.dat";
 
+    // Depuración usando error_log() para el criterio y la ruta del archivo
+    error_log("Criterio recibido: " . $criterion);
+    error_log("Ruta del archivo: " . $filePath);
+
     if (file_exists($filePath)) {
         $data = file_get_contents($filePath);
-        $suggestions = explode(',', $data);
-        echo json_encode($suggestions);
+        $valores = explode(',', $data);
+        $response = array_map('trim', $valores);
+
+        // Depuración usando error_log() para los valores leídos
+        error_log("Valores leídos: " . print_r($response, true));
+
+        echo json_encode($response);
     } else {
+        // Depuración en caso de que el archivo no exista
+        error_log("Archivo no encontrado: " . $filePath);
         echo json_encode([]);
     }
 } else if (isset($_GET['universidadNombre'])) {
-
-    $universidadNombre = $_GET['universidadNombre']; 
+    $universidadNombre = $_GET['universidadNombre'];
 
     $campusBusiness = new CampusBusiness();
     $campus = $campusBusiness->getAllTbCampusByUniversidadByNombre($universidadNombre); // Implementa este método en tu clase
@@ -118,8 +162,7 @@ if (isset($_GET['type'])) {
 
     echo json_encode($response);
 } else if (isset($_GET['campusId'])) {
-
-    $campusId = $_GET['campusId']; 
+    $campusId = $_GET['campusId'];
 
     $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
     $colectivos = $campusColectivoBusiness->getColectivosByCampusId($campusId);

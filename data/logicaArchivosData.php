@@ -1,8 +1,8 @@
 <?php
-class LogicaArchivosDat{
+class logicaArchivosData{
 
     function obtenerCriterios() {
-        $ruta = 'C:/xampp/htdocs/LUV/resources/criterios';
+        $ruta = '../resources/criterios';
         $criterios = array();
         
         // Abre el directorio
@@ -22,9 +22,9 @@ class LogicaArchivosDat{
 
         return $criterios;
     }
-
+        
     function obtenerValoresDeCriterio($criterio) {
-        $ruta = 'C:/xampp/htdocs/LUV/resources/criterios';
+        $ruta = '../resources/criterios';
         $archivo = $ruta . '/' . $criterio . '.dat';
         
         if (file_exists($archivo)) {

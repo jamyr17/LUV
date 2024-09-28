@@ -148,7 +148,7 @@ CREATE TABLE `tbgenero` (
 --
 
 INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `tbgeneroestado`) VALUES
-(1, 'Masculino', 'se refiere a personas que se identifican con el género masculino, lo que suele estar asociado a hombres cisgénero (aquellos cuya identidad de género coincide con el sexo asignado al nacer).', 1),
+(1, 'Masculino', 'Se refiere a personas que se identifican con el género masculino, lo que suele estar asociado a hombres cisgénero (aquellos cuya identidad de género coincide con el sexo asignado al nacer).', 1),
 (2, 'Femenino', 'Se refiere a personas que se identifican con el género femenino, lo que usualmente incluye a mujeres cisgénero (aquellas cuya identidad de género coincide con el sexo asignado al nacer).', 1),
 (3, 'No binario', 'Este término abarca a personas cuya identidad de género no encaja estrictamente en las categorías de masculino o femenino. Puede incluir identidades como género fluido, agénero, bigénero, entre otros.', 1),
 (4, 'Género fluido', 'Se refiere a personas cuya identidad de género puede cambiar o variar con el tiempo entre diferentes géneros.', 1),
@@ -309,7 +309,7 @@ INSERT INTO `tbpersona` (`tbpersonaid`, `tbpersonacedula`, `tbpersonaprimernombr
 (2, '987654321', 'Jeycob', 'Brenes', 1),
 (3, '111111111', 'Christian', 'Mora', 1),
 (4, '222222222', 'Gerald', 'Vargas', 1),
-(5, '333333333', 'Kevin', 'Venegas', 1),
+(5, '703070997', 'Kevin', 'Venegas', 1),
 (6, '444444444', 'Jamel', 'Hernandez', 1),
 (7, '777777777', 'Josue', 'Perez', 1),
 (8, '121212121', 'Lucia', 'Mendez', 1),
@@ -579,7 +579,8 @@ INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbusuarionombre`, `tbusu
 (9, 9, 'fernanda', '123', 1, 2, ''),
 (10, 10, 'andres', '123', 1, 2, ''),
 (11, 1, 'admin', 'admin', 1, 1, ''),
-(12, 11, 'client', 'client', 1, 2, '../resources/img/profile/client.webp');
+(12, 11, 'client', 'client', 1, 2, '../resources/img/profile/client.webp'),
+(12, 11, 'user', 'user', 1, 2, '');
 
 -- --------------------------------------------------------
 

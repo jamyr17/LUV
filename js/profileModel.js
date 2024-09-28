@@ -31,7 +31,11 @@ function addCriterion() {
     // Contenido HTML dependiendo de la vista actual
     newCriterion.innerHTML = `
         <label for="criterion${criteriaCount}">Criterio:</label>
+<<<<<<< Updated upstream
         <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
+=======
+        <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})">
+>>>>>>> Stashed changes
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
 
@@ -40,21 +44,33 @@ function addCriterion() {
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
         <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
+<<<<<<< Updated upstream
         
         ${currentView === 'PersonalProfile' ? '' : `
         <!-- <label for="percent${criteriaCount}">Porcentaje:</label>-->
         <!--<input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
         -->`}
+=======
+
+>>>>>>> Stashed changes
         <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
+
     criteriaSection.appendChild(newCriterion);
 
+    // Llamar a la función para cargar los criterios en el nuevo select
     populateCriteria(`criterion${criteriaCount}`);
 
-    const select = document.getElementById(`criterion${criteriaCount}`);
-    loadValues(select, criteriaCount);
-
-    actualizarTablaConCriterio();
+    // Cargar automáticamente los valores del primer criterio
+    const nuevoCriterioSelect = document.getElementById(`criterion${criteriaCount}`);
+    
+    if (nuevoCriterioSelect && nuevoCriterioSelect.options.length > 0) {
+        // Asigna el primer criterio disponible y carga los valores correspondientes
+        nuevoCriterioSelect.selectedIndex = 0;
+        loadValues(nuevoCriterioSelect, criteriaCount);  // Cargar valores automáticamente para el criterio seleccionado
+    } else {
+        console.error(`Error: No se encontró el select para el criterio ${criteriaCount}`);
+    }
 }
 
 function actualizarTablaConCriterio() {
@@ -121,6 +137,62 @@ async function guardarNuevoOrden() {
     }
 }
 
+<<<<<<< Updated upstream
+=======
+// Función para cargar los valores basados en el criterio seleccionado desde un archivo .dat
+function loadValues(select, index) {
+    const criterionId = select.value;  // Obtén el criterio seleccionado en el combobox
+    const valueSelect = document.getElementById(`value${index}`);  // El select de valores correspondiente
+
+    console.log(`Cargando valores para el criterio: ${criterionId}, en el combobox de valores: value${index}`);
+
+    if (!valueSelect) {
+        console.error(`Elemento select de valores no encontrado para el índice ${index}`);
+        return;
+    }
+
+    // Limpiar el contenido del select antes de agregar nuevos valores
+    valueSelect.innerHTML = '';
+
+    // Si no hay criterio seleccionado, deshabilitar el select
+    if (!criterionId) {
+        valueSelect.disabled = true;
+        return;
+    }
+
+    // Realizar la solicitud para obtener los valores del criterio seleccionado
+    fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterionId}`)
+        .then(response => response.json())
+        .then(valoresData => {
+            console.log(`Valores recibidos para el criterio ${criterionId}:`, valoresData);
+
+            // Comprobar si los valores están disponibles
+            if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
+                const option = document.createElement('option');
+                option.textContent = 'No hay valores disponibles';
+                valueSelect.appendChild(option);
+                valueSelect.disabled = true;
+                return;
+            }
+
+            // Poblar el select de valores con los datos recibidos
+            valoresData.forEach(valor => {
+                const option = document.createElement('option');
+                option.value = valor;
+                option.textContent = valor;
+                valueSelect.appendChild(option);
+            });
+
+            // Seleccionar automáticamente el primer valor
+            valueSelect.selectedIndex = 0;
+            valueSelect.disabled = false;  // Habilitar el select de valores
+        })
+        .catch(error => {
+            console.error('Error al cargar los valores:', error);
+        });
+}
+
+>>>>>>> Stashed changes
 // función parra poder eliminar criterios
 function removeCriterion(button) {
     const criterionToRemove = button.parentNode;
@@ -156,12 +228,22 @@ function updateTotalPercentage() {
     document.getElementById('totalPercentageInp').value = total;
 }
 
-// Función para cargar criterios y valores una sola vez
+/// Función para cargar criterios desde archivos .dat a través de PHP
 async function loadInitialCriteriaData() {
     try {
-        criterios = await fetchDataWithRetry('../data/getData.php?type=6');
-        if (criterios.length > 0) {
-            populateCriteria('criterion1');
+        const response = await fetch('../action/getCriteriosValoresAction.php?type=criterios');
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+
+        const criteriosData = await response.json();
+        if (criteriosData.length > 0) {
+            criterios = criteriosData;  // Asignar los criterios obtenidos
+            populateCriteria('criterion1');  // Poblar el primer criterio
+
+            // Cargar los valores del primer criterio automáticamente al cargar los criterios
+            const primerCriterio = document.getElementById('criterion1');
+            if (primerCriterio) {
+                loadValues(primerCriterio, 1);  // Llamar a la función para cargar los valores
+            }
         } else {
             console.warn('No se recibieron criterios.');
         }
@@ -170,21 +252,44 @@ async function loadInitialCriteriaData() {
     }
 }
 
+
 async function loadInitialValuesData() {
     try {
-        valores = await fetchDataWithRetry('../data/getData.php?type=7');
-        if (valores.length > 0) {
-            const select = document.getElementById('criterion1');
-            loadValues(select, 1); // Cargar valores para el primer criterio
-        } else {
-            console.warn('No se recibieron valores.');
+        console.log("Iniciando la solicitud para obtener los valores...");  // Depuración
+        
+        const criterio = document.getElementById('criterion1').value;  // Obtener el valor del criterio
+        if (!criterio) {
+            console.error("Criterio no definido");
+            return;  // Salir si no hay criterio definido
         }
+
+        // Hacer la solicitud fetch con el criterio seleccionado
+        const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
+        console.log('Respuesta del servidor obtenida:', response);  // Verificar si la solicitud fetch devuelve algo
+
+        if (!response.ok) {
+            console.error('Error en la respuesta del servidor:', response.statusText);
+            return;
+        }
+
+        // Obtener los datos en formato JSON
+        const valoresData = await response.json();
+        console.log('Datos JSON obtenidos del servidor:', valoresData);  // Verificar los datos
+
+        // Comprobar si los valores recibidos son válidos
+        if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
+            console.warn('No se recibieron valores válidos. Datos de la respuesta:', valoresData);
+            return;
+        }
+
+        valores = valoresData;  // Asignar los valores recibidos
+        console.log('Valores cargados correctamente:', valores);
     } catch (error) {
         console.error('Error al cargar datos iniciales de valores:', error);
     }
 }
 
-// Función para cargar el select de criterios con datos
+// Función para cargar los criterios en el select
 function populateCriteria(selectId) {
     const select = document.getElementById(selectId);
     if (!select) {
@@ -202,57 +307,69 @@ function populateCriteria(selectId) {
         return;
     }
 
+    // Añadir criterios al select
     criterios.forEach(criterio => {
         const option = document.createElement('option');
-        option.value = criterio.id;
-        option.textContent = criterio.name;
-        option.setAttribute('data-nombre', criterio.name);
+        option.value = criterio;
+        option.textContent = criterio;
         select.appendChild(option);
     });
 
-    select.disabled = false;
-}
-
-// Función para cargar los valores basados en el criterio seleccionado
-function loadValues(select, index) {
-    const criterionId = select.value;
-
-    const valueSelect = document.getElementById(`value${index}`);
-    if (!valueSelect) {
-        console.error(`Elemento select de valores no encontrado para el índice ${index}`);
-        return;
-    }
-
-    valueSelect.innerHTML = '';
-
-    // Filtrar valores basados en el criterio seleccionado
-    const filteredValues = valores.filter(valor => valor.idCriterio == criterionId);
-
-    if (filteredValues.length === 0) {
-        const option = document.createElement('option');
-        option.textContent = 'No hay valores disponibles';
-        valueSelect.appendChild(option);
-        return;
-    }
-
-    filteredValues.forEach(valor => {
-        const option = document.createElement('option');
-        option.value = valor.id;
-        option.textContent = valor.name;
-        option.setAttribute('data-nombre', valor.name);
-        valueSelect.appendChild(option);
-    });
-
+<<<<<<< Updated upstream
+=======
     // Añadir la opción "Otro" al final
     const otherOption = document.createElement('option');
     otherOption.value = 'other';
     otherOption.textContent = 'Otro';
-    valueSelect.appendChild(otherOption);
+    select.appendChild(otherOption);
 
-    valueSelect.disabled = false;
+>>>>>>> Stashed changes
+    select.disabled = false;
 
-    actualizarTablaConCriterio();
+    // Llamar a loadValues() directamente después de que los criterios estén cargados
+    loadValues(select, selectId.replace('criterion', ''));
 }
+
+<<<<<<< Updated upstream
+// Función para cargar los valores basados en el criterio seleccionado
+function loadValues(select, index) {
+    const criterionId = select.value;
+=======
+// Función para cargar los valores basados en el criterio seleccionado desde un archivo .dat
+async function loadInitialValuesData() {
+    try {
+        console.log("Iniciando la solicitud para obtener los valores...");
+
+        const criterio = document.getElementById('criterion1').value;  // Asegúrate de obtener el criterio correcto
+        const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
+>>>>>>> Stashed changes
+
+        console.log('Respuesta del servidor obtenida:', response);
+
+        if (!response.ok) {
+            console.error('Error en la respuesta del servidor:', response.statusText);
+            return;
+        }
+
+        const valoresData = await response.json();
+        console.log('Datos JSON obtenidos del servidor:', valoresData);
+
+        if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
+            console.warn('No se recibieron valores válidos. Datos de la respuesta:', valoresData);
+            return;
+        }
+
+        valores = valoresData;  // Asigna los valores recibidos
+        console.log('Valores cargados correctamente:', valores);
+
+        // Aquí llamas a loadValues para cargar los valores en el combobox
+        loadValues(document.getElementById('criterion1'), 1);
+
+    } catch (error) {
+        console.error('Error al cargar datos iniciales de valores:', error);
+    }
+}
+
 
 // Función para inicializar el autocompletado en el campo de texto "Otro"
 async function initializeAutocomplete(input, criterionName) {
@@ -355,9 +472,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (currentView === 'PersonalProfile'){
         await cargarPerfilPersonal();
+    }else{
+        await cargarPerfilDeseado();
     }
     
-    await cargarPerfilDeseado();
 
     document.getElementById('criterion1').disabled = false;
     actualizarTablaConCriterio(); // Inicializa la tabla con los datos iniciales

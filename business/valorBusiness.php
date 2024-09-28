@@ -1,7 +1,7 @@
 <?php
 
-include '../data/valorData.php';
-include_once '../data/logicaArchivosDat.php';
+include_once '../data/valorData.php';
+include_once '../data/logicaArchivosData.php';
 
 class ValorBusiness {
 
@@ -9,7 +9,7 @@ class ValorBusiness {
 
     public function __construct() {
         $this->valorData = new ValorData();
-        $this->logicaArchivosDat = new LogicaArchivosDat();
+        $this->logicaArchivosData = new LogicaArchivosData();
     }
 
     public function insertTbValor($valor) {

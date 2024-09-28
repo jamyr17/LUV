@@ -2,7 +2,7 @@
 
 include_once '../business/criterioBusiness.php';
 include_once 'functions.php';
-include_once 'gestionArchivosIA.php';
+include_once 'gestionArchivosIAAction.php';
 
 $maxLength = 255;
 

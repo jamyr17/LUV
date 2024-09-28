@@ -6,6 +6,7 @@ include '../action/functions.php';
 
 $valorBusiness = new ValorBusiness();
 $criterioBusiness = new CriterioBusiness();
+$logicaArchivosData = new LogicaArchivosData();
 ?>
 
 <!DOCTYPE html>
@@ -111,25 +112,25 @@ $criterioBusiness = new CriterioBusiness();
 
                         <label for="idCriterio">Criterio:</label>
                         <select name="idCriterio" id="idCriterio" onchange="updateCriterioNombre()">
-                            <?php
-                            $criterios = $criterioBusiness->getAllTbCriterio();
-                            $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
 
-                            if ($criterios != null) {
-                                foreach ($criterios as $criterio) {
-                                    $selected = ($criterio->getTbCriterioId() == $valorSeleccionado) ? 'selected' : '';
-                                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
-                                }
-                            }
-                            ?>
+                        <?php
+                        // Obtener todos los criterios desde los archivos .dat
+                        $criterios = $logicaArchivosData->obtenerCriterios(); 
+
+                        foreach ($criterios as $criterio) {
+                            echo '<option value="' . htmlspecialchars($criterio) . '">' . htmlspecialchars($criterio) . '</option>';
+                        }
+                        ?>
                         </select><br>
 
+                        <!-- Campo oculto para el nombre del criterio seleccionado -->
                         <input type="hidden" name="criterioNombre" id="criterioNombre" value="">
-                        <input type="hidden" id="type" name="type" value="valor"> <!-- Campo oculto para el tipo de objeto -->
 
-                        <label for="nombre" class="form-label">Nombre: </label>
-                        <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre de la opción', '') ?>
+                        <!-- Campo para agregar un nuevo valor -->
+                        <label for="nombre" class="form-label">Valor: </label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese el valor" required><br>
 
+                        <!-- Botón para crear -->
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
                         </div>
@@ -137,12 +138,14 @@ $criterioBusiness = new CriterioBusiness();
                 </div>
 
                 <script>
+                    // Función para actualizar el campo oculto con el nombre del criterio seleccionado
                     function updateCriterioNombre() {
                         var select = document.getElementById('idCriterio');
                         var nombre = select.options[select.selectedIndex].text;
                         document.getElementById('criterioNombre').value = nombre;
                     }
 
+                    // Llamar a la función para actualizar el nombre del criterio al cargar la página
                     updateCriterioNombre();
                 </script>
             </div>
@@ -163,15 +166,14 @@ $criterioBusiness = new CriterioBusiness();
                 </thead>
                 <tbody>
                     <?php
-                    $logicaArchivosDat = new LogicaArchivosDat();
-                    $criterios = $logicaArchivosDat->obtenerCriterios(); // Obtener todos los criterios
+                    $criterios = $logicaArchivosData->obtenerCriterios(); // Obtener todos los criterios
                     $mensajeActualizar = "¿Desea actualizar este valor?";
                     $mensajeEliminar = "¿Desea eliminar este valor?";
                     $contador = 1; // Inicializamos el contador
 
                     // Suponiendo que tienes un método para obtener todos los valores de un criterio específico
                     foreach ($criterios as $criterio) {
-                        $valores = $logicaArchivosDat->obtenerValoresDeCriterio($criterio); // Obtener valores del archivo .dat
+                        $valores = $logicaArchivosData->obtenerValoresDeCriterio($criterio); // Obtener valores del archivo .dat
 
                         if ($valores != null) {
                             foreach ($valores as $valor) {

@@ -23,57 +23,56 @@ function createDataFile($nombre, $data) {
     }
 }
 
-function agregarValorSiNoExiste($nombreArchivo, $valor, $token, $asistenteId) {
-
-    $token = 'API'; // Tu API Key
-    $assistantId = 'ASIS';
-    $threadId = 'HILO';
-
-
+function agregarValorSiNoExiste($nombreArchivo, $valor) {
     $filePath = "../resources/criterios/{$nombreArchivo}.dat";
     $contenidoActual = [];
 
     // Verificar si el archivo ya existe
     if (file_exists($filePath)) {
-        // Leer el contenido actual del archivo
         $contenidoActual = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     } else {
         // Si el archivo no existe, obtener valores iniciales de la IA y crearlo
-        $valoresIA = obtenerDatosIA($nombreArchivo, $token, $asistenteId);
-        $valoresArray = explode(", ", $valoresIA);  // Convertir la respuesta en un array
-        createDataFile($nombreArchivo, $valoresArray);  // Crear el archivo con los valores iniciales
-        $contenidoActual = $valoresArray;  // Actualizar el contenido actual con los valores generados por la IA
+        $valoresIA = obtenerDatosIA($nombreArchivo);
+        $valoresArray = explode(", ", $valoresIA);
+        createDataFile($nombreArchivo, $valoresArray);
+        $contenidoActual = $valoresArray;
     }
 
-    // Verificar si el valor ya existe en el archivo
+    // Verificar si el valor ya existe
     if (!in_array($valor, $contenidoActual)) {
         // Si el valor no existe, agregarlo al archivo
         $file = fopen($filePath, 'a');
         if ($file) {
-            fwrite($file, $valor . PHP_EOL);
+            // Si ya hay contenido en el archivo, añadir una coma antes
+            if (count($contenidoActual) > 0) {
+                fwrite($file, ', ' . $valor);
+            } else {
+                fwrite($file, $valor);
+            }
             fclose($file);
 
-            // Obtener valores relacionados del asistente y agregarlos
-            $valoresRelacionados = obtenerDatosIA($valor, $token, $asistenteId);
+            // Obtener valores relacionados del asistente
+            $valoresRelacionados = obtenerDatosIA($valor);
             $valoresRelacionadosArray = explode(", ", $valoresRelacionados);
-            
-            // Escribir los valores relacionados en el archivo
+
+            // Escribir los valores relacionados
             $file = fopen($filePath, 'a');
             foreach ($valoresRelacionadosArray as $valorRelacionado) {
                 if (!in_array($valorRelacionado, $contenidoActual)) {
-                    fwrite($file, $valorRelacionado . PHP_EOL);
+                    fwrite($file, ', ' . $valorRelacionado);
                 }
             }
             fclose($file);
 
-            return "Valor '{$valor}' y valores relacionados agregados al archivo.";
+            return "Valor '{$valor}' y valores relacionados agregados.";
         } else {
-            return "Error: No se pudo abrir el archivo {$filePath} para escritura.";
+            return "Error: No se pudo abrir el archivo para escritura.";
         }
     } else {
-        return "El valor '{$valor}' ya existe en el archivo.";
+        return "El valor '{$valor}' ya existe.";
     }
 }
+
 
 function enviarMensaje($nombreCriterio, $token, $threadId) {
     // URL para enviar el mensaje al hilo
@@ -189,11 +188,9 @@ function crearRun($threadId, $assistantId, $token) {
 }
 
 function obtenerDatosIA($nombreCriterio) {
-
-    $token = 'API'; // Tu API Key
-    $assistantId = 'ASIS';
+    $token = 'TOKEN';
+    $assistantId =  'ASSIT';
     $threadId = 'HILO';
-
 
     // 1. Enviar el mensaje al hilo
     $messageId = enviarMensaje($nombreCriterio, $token, $threadId);
@@ -209,8 +206,8 @@ function obtenerDatosIA($nombreCriterio) {
 
     // 3. Esperar hasta que el run se complete
     $runCompletado = false;
-    $maxRetries = 10; // Número máximo de reintentos
-    $retryDelay = 2;  // Tiempo entre reintentos en segundos
+    $maxRetries = 10;
+    $retryDelay = 2;
 
     for ($i = 0; $i < $maxRetries; $i++) {
         $runStatus = verificarEstadoRun($threadId, $runId, $token);
@@ -230,12 +227,11 @@ function obtenerDatosIA($nombreCriterio) {
 
     // Verificar que haya mensajes
     if ($mensajes) {
-        // Filtrar mensajes que tengan un run_id igual al que creamos
         foreach ($mensajes as $mensaje) {
             if (isset($mensaje['run_id']) && $mensaje['run_id'] === $runId) {
                 if (isset($mensaje['content'][0]['text']['value'])) {
-                    $respuestaIA = $mensaje['content'][0]['text']['value'];
-                    file_put_contents('../resource/log.dat', "Contenido del mensaje: " . $respuestaIA . "\n", FILE_APPEND);
+                    // Eliminar el último carácter si es un punto o coma
+                    $respuestaIA = rtrim($mensaje['content'][0]['text']['value'], ',.'); 
                     return $respuestaIA;
                 }
             }
@@ -244,6 +240,7 @@ function obtenerDatosIA($nombreCriterio) {
 
     return 'Error: No se encontró un mensaje generado por la IA para el run especificado.';
 }
+
 
 
 
