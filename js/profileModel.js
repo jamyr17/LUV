@@ -31,11 +31,7 @@ function addCriterion() {
     // Contenido HTML dependiendo de la vista actual
     newCriterion.innerHTML = `
         <label for="criterion${criteriaCount}">Criterio:</label>
-<<<<<<< Updated upstream
-        <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})" disabled>
-=======
         <select name="criterion[]" id="criterion${criteriaCount}" onchange="loadValues(this, ${criteriaCount})">
->>>>>>> Stashed changes
             <!-- Las opciones de criterios se cargarán dinámicamente -->
         </select>
 
@@ -44,15 +40,6 @@ function addCriterion() {
             <!-- Las opciones de valores se cargarán dinámicamente -->
         </select>
         <input type="text" id="otherField${criteriaCount}" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
-<<<<<<< Updated upstream
-        
-        ${currentView === 'PersonalProfile' ? '' : `
-        <!-- <label for="percent${criteriaCount}">Porcentaje:</label>-->
-        <!--<input type="number" id="percent${criteriaCount}" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()">
-        -->`}
-=======
-
->>>>>>> Stashed changes
         <button type="button" onclick="removeCriterion(this)">Eliminar</button>
     `;
 
@@ -137,8 +124,6 @@ async function guardarNuevoOrden() {
     }
 }
 
-<<<<<<< Updated upstream
-=======
 // Función para cargar los valores basados en el criterio seleccionado desde un archivo .dat
 function loadValues(select, index) {
     const criterionId = select.value;  // Obtén el criterio seleccionado en el combobox
@@ -192,7 +177,6 @@ function loadValues(select, index) {
         });
 }
 
->>>>>>> Stashed changes
 // función parra poder eliminar criterios
 function removeCriterion(button) {
     const criterionToRemove = button.parentNode;
@@ -315,26 +299,18 @@ function populateCriteria(selectId) {
         select.appendChild(option);
     });
 
-<<<<<<< Updated upstream
-=======
     // Añadir la opción "Otro" al final
     const otherOption = document.createElement('option');
     otherOption.value = 'other';
     otherOption.textContent = 'Otro';
     select.appendChild(otherOption);
 
->>>>>>> Stashed changes
     select.disabled = false;
 
     // Llamar a loadValues() directamente después de que los criterios estén cargados
     loadValues(select, selectId.replace('criterion', ''));
 }
 
-<<<<<<< Updated upstream
-// Función para cargar los valores basados en el criterio seleccionado
-function loadValues(select, index) {
-    const criterionId = select.value;
-=======
 // Función para cargar los valores basados en el criterio seleccionado desde un archivo .dat
 async function loadInitialValuesData() {
     try {
@@ -342,7 +318,6 @@ async function loadInitialValuesData() {
 
         const criterio = document.getElementById('criterion1').value;  // Asegúrate de obtener el criterio correcto
         const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
->>>>>>> Stashed changes
 
         console.log('Respuesta del servidor obtenida:', response);
 
