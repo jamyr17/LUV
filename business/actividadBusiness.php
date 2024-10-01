@@ -46,8 +46,13 @@ class ActividadBusiness {
         return $this->actividadData->autocomplete($term);
     }
 
-    public function restoreTbActividad($idActividad) {
-        return $this->actividadData->restoreTbActividad($idActividad);
+    public function getAllDeletedTbActividad() {
+        return $this->actividadData->getAllDeletedTbActividad();
+    }
+
+    public function restoreTbActividad($actividadId) {
+        $actividadData = new ActividadData();
+        return $actividadData->restoreTbActividad($actividadId);
     }
 
 }

@@ -3,7 +3,6 @@
   include_once '../action/functions.php';
   include_once '../business/actividadBusiness.php';
   include_once '../business/universidadCampusColectivoBusiness.php';
-
   $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
 ?>
 
@@ -31,6 +30,15 @@
 
         function showMessage(mensaje) {
             alert(mensaje);
+        }
+
+        function toggleDeletedActivities() {
+            var section = document.getElementById("table-deleted");
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
         }
 
         function validateForm() {
@@ -265,10 +273,45 @@
       </table>  
     </div>
 
+    <!-- Botón para mostrar/ocultar actividades eliminadas -->
+    <div class="toggle-button-container">
+        <button onclick="toggleDeletedActivities()" class="btn btn-primary">Ver/Ocultar Actividades Eliminadas</button>
+    </div>
+
+    <section id="table-deleted" style="display: none;">
+        <div class="section-title">
+            <h3>Actividades eliminadas</h3>
+        </div>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Fecha y hora</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $actividadesEliminadas = $actividadBusiness->getAllDeletedTbActividad();
+                if ($actividadesEliminadas != null) {
+                    foreach ($actividadesEliminadas as $actividad) {
+                        echo '<tr>';
+                        echo '<form method="post" action="../action/actividadAction.php">';
+                        echo '<input type="hidden" name="idActividad" value="' . htmlspecialchars($actividad->getTbActividadId()) . '">';
+                        echo '<td>' . htmlspecialchars($actividad->getTbActividadId()) . '</td>';
+                        echo '<td>' . htmlspecialchars($actividad->getTbActividadTitulo()) . '</td>';
+                        echo '<td><input type="datetime-local" class="form-control" name="fecha" value="' . htmlspecialchars($actividad->getTbActividadFecha()) . '" readonly></td>';
+                        echo '<td><input type="submit" name="restore" value="Restaurar" class="btn btn-primary" onclick="return actionConfirmationRestore(\'¿Desea restaurar esta actividad?\')"></td>';
+                        echo '</form>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr><td colspan="4">No hay actividades eliminadas</td></tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </section>
 </body>
-
-<?php
-eliminarFormData();
-?>
-
 </html>
