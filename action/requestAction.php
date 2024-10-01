@@ -1,10 +1,10 @@
 <?php
 
 require '../vendor/autoload.php';
-include '../business/universidadBusiness.php';
-include '../business/orientacionSexualBusiness.php';
-include '../business/generoBusiness.php';
-include '../business/campusBusiness.php';
+include_once '../business/universidadBusiness.php';
+include_once '../business/orientacionSexualBusiness.php';
+include_once '../business/generoBusiness.php';
+include_once '../business/campusBusiness.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -103,14 +103,14 @@ function sendEmail(){
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'luvprojectuna@gmail.com';
-        $mail->Password = 'zesm bwge ddye oaoq';
-        $mail->SMTPSecure = 'tls';
+        $mail->Username = 'jeycobbarrientosgarcia@gmail.com'; // luvprojectuna
+        $mail->Password = 'ecxz onek xqgn vyaa'; // zesm bwge ddye oaoq | la mía ecxz onek xqgn vyaa
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
         // Remitente y destinatarios
-        $mail->setFrom('luvprojectuna@gmail.com', 'Your Name');
-        $mail->addAddress('luvprojectuna@gmail.com'); 
+        $mail->setFrom('jeycobbarrientosgarcia@gmail.com', 'Your Name');
+        $mail->addAddress('jeycobbarrientosgarcia@gmail.com'); 
 
         // Contenido del correo
         $mail->isHTML(true);
@@ -134,6 +134,6 @@ function sendEmail(){
         // Enviar el correo
         $mail->send();
     } catch (Exception $e) {
-        echo json_encode(['message' => "El correo no pudo enviarse. Mailer Error: {$mail->ErrorInfo}"]);
+        $response['message'] = "El correo no pudo enviarse. Mailer Error: {$mail->ErrorInfo}";
     }
 }
