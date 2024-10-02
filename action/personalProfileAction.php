@@ -18,24 +18,35 @@ if (isset($_POST["registrar"])) {
     ) {
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        $colectivos = isset($_POST['colectivos']) ? json_decode($_POST['colectivos'], true) : [];
+        $criterioParam = $_SESSION['criteriaString'];
+        $valorParam = $_SESSION['valueString'];
+
         $genero = isset($_POST['genero']) ? $_POST['genero'] : null;
         $orientacionSexual = isset($_POST['orientacionSexual']) ? $_POST['orientacionSexual'] : null;
         $areaConocimiento = isset($_POST['areaConocimiento']) ? $_POST['areaConocimiento'] : null;
         $universidad = isset($_POST['universidad']) ? $_POST['universidad'] : null;
         $campus = isset($_POST['campus']) ? $_POST['campus'] : null;
-        $colectivos = isset($_POST['colectivos']) ? json_decode($_POST['colectivos'], true) : [];
-        $criterioParam = $_SESSION['criteriaString'];
-        $valorParam = $_SESSION['valueString'];
-        
-        $colectivosString = implode(',', $colectivos); // Volleyball,Basketball,etc...
+// ----- Tomar los valores de los campos "otro / otra" --------------------------------------------------
+        $genero = isset($_POST['request-generoNombre']) ? $_POST['request-generoNombre'] : $genero;
+        $orientacionSexual = isset($_POST['request-orientacionSexualNombre']) ? $_POST['request-orientacionSexualNombre'] : $orientacionSexual;
+        $areaConocimiento = isset($_POST['request-areaConocimientoNombre']) ? $_POST['request-areaConocimientoNombre'] : $areaConocimiento;
+        $universidad = isset($_POST['request-universidadNombre']) ? $_POST['request-universidadNombre'] : $universidad;
+        $campus = isset($_POST['request-campusNombre']) ? $_POST['request-campusNombre'] : $campus;
 
+        $colectivosString = "";
+
+        if (is_array($colectivos)) {
+            $colectivosString = implode(',', $colectivos); // Salida: Volleyball,Basketball,etc...
+        }
+        
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
             $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
-            echo json_encode(['success' => 'updated']); // Cambiado aquí
+            echo json_encode(['success' => 'updated']);
         } else {
             $personalProfileBusiness->insertTbPerfilPersonal($criterioParam, $valorParam,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
-            echo json_encode(['success' => 'inserted']); // Cambiado aquí
+            echo json_encode(['success' => 'inserted']);
         }
     } else {
         // Redirigir si el formulario está incompleto

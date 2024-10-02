@@ -133,6 +133,22 @@ if (isset($_GET['type'])) {
     }
 
     echo json_encode($response);
+} else if (isset($_GET['campusNombre'])) {
+
+    $campusNombre = $_GET['campusNombre']; 
+
+    $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+    $colectivos = $campusColectivoBusiness->getColectivosByCampusName($campusNombre);
+
+    $response = [];
+    foreach ($colectivos as $colectivo) {
+        $response[] = [
+            'id' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoId()),
+            'nombre' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoNombre())
+        ];
+    }
+
+    echo json_encode($response);
 } else {
     echo json_encode([]);
 }

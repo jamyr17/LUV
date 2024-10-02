@@ -49,7 +49,6 @@ include '../action/functions.php';
         function saveData(formId, formNumber) {
             const formElement = document.getElementById(formId);
             const formValues = new FormData(formElement);
-
             // Guardar los datos en el objeto
             formValues.forEach((value, key) => {
                 if (key === 'colectivos[]') {
@@ -64,7 +63,9 @@ include '../action/functions.php';
                 }
             });
             // Pasar al siguiente formulario
-            nextForm(formNumber);
+            if (formNumber !== 10) {
+                nextForm(formNumber);
+            }
         }
 
         function submitAll() {
@@ -136,13 +137,13 @@ include '../action/functions.php';
                     success: function(data) {
                         $('#campus').empty(); // Limpiar el select de campus
                         data.forEach(function(camp) {
-                            $('#campus').append(new Option(camp.nombre, camp.id));
+                            $('#campus').append(new Option(camp.nombre, camp.nombre));
                         });
                         $('#campus').append(new Option('Otro', '0'));
 
                         if (data.length > 0) {
-                        $('#campus').val(data[0].id).change(); // Seleccionar el primer campus y disparar el evento
-                    }
+                            $('#campus').val(data[0].nombre).change(); // Seleccionar el primer campus y disparar el evento
+                        }
                     },
                     error: function(err) {
                         console.error('Error al cargar campus:', err);
@@ -151,24 +152,28 @@ include '../action/functions.php';
             });
 
             $('#campus').change(function() {
-                const campusId = $(this).val();
-                $.ajax({
-                    url: '../data/getData.php',
-                    method: 'GET',
-                    data: {
-                        campusId: campusId
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#colectivos').empty();
-                        data.forEach(function(colectivo) {
-                            $('#colectivos').append(new Option(colectivo.nombre, colectivo.nombre));
-                        });
-                    },
-                    error: function(err) {
-                        console.error('Error al cargar colectivos:', err);
-                    }
-                });
+                const campusNombre = $(this).val();
+                if (campusNombre === '0') {
+                    $('#colectivos').empty();
+                } else {
+                    $.ajax({
+                        url: '../data/getData.php',
+                        method: 'GET',
+                        data: {
+                            campusNombre: campusNombre
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#colectivos').empty();
+                            data.forEach(function(colectivo) {
+                                $('#colectivos').append(new Option(colectivo.nombre, colectivo.nombre));
+                            });
+                        },
+                        error: function(err) {
+                            console.error('Error al cargar colectivos:', err);
+                        }
+                    });
+                }
             });
         });
 
@@ -210,6 +215,85 @@ include '../action/functions.php';
                 otherField.style.display = 'none';
             }
         }
+
+        function hideFields(inputUniversidadId, inputCampusId, divUniversidadId, divCampusId, formOtherUniversidadId, formOtherCampusId, nextForm) {
+            const inputUniversidadElement = document.getElementById(inputUniversidadId);
+            const inputCampusElement = document.getElementById(inputCampusId);
+            const otherFieldUniversidad = document.getElementById(divUniversidadId);
+            const otherFieldCampus = document.getElementById(divCampusId);
+
+            // Función auxiliar para extraer y asignar valores
+            const assignValues = (formularioUniversidad, formularioCampus, universidadField, campusField) => {
+                if (universidadField) {
+                    saveData(formularioUniversidad, 10);
+                }
+                if (campusField) {
+                    saveData(formularioCampus, nextForm);
+                }
+
+            };
+
+            // Comprobar los valores de entrada
+            if (inputUniversidadElement.value !== '' && inputCampusElement.value !== '') {
+                assignValues(
+                    formOtherUniversidadId,
+                    formOtherCampusId, true, true
+                );
+                otherFieldUniversidad.style.display = 'none';
+                otherFieldCampus.style.display = 'none';
+            } else if (inputCampusElement.value !== '') {
+                assignValues(
+                    'instalacionesForm',
+                    formOtherCampusId, true, true
+                );
+                otherFieldCampus.style.display = 'none';
+            }
+        }
+
+
+        function validateAndProceed(inputId, esNuevaUniversidad, divId) {
+            let formulario = document.getElementById(divId);
+            let formularioCampus = document.getElementById('request-campus');
+
+            if (formulario.style.display === 'block') {
+
+                const input = document.getElementById(inputId);
+                const inputFields = [input];
+
+                if (esNuevaUniversidad) {
+                    const campusInput = document.getElementById('request-campusNombre');
+                    inputFields.push(campusInput);
+                }
+
+                for (const field of inputFields) {
+                    if (field.value.trim() === '') {
+                        field.style.borderColor = 'red';
+                        alert('Por favor, complete todos los campos requeridos.');
+                        return false;
+                    } else {
+                        field.style.borderColor = '';
+                    }
+                }
+
+                return true;
+            } else if (formularioCampus.style.display === 'block') {
+
+                let inputCampus = document.getElementById('request-campusNombre');
+
+                if (inputCampus.value.trim() === '') {
+                    inputCampus.style.borderColor = 'red';
+                    alert('Por favor, complete todos los campos requeridos.');
+                    return false;
+                } else {
+                    inputCampus.style.borderColor = '';
+                }
+
+                return true;
+            } else {
+                return true;
+            }
+        }
+
 
         function submitRequest(event, formId) {
             event.preventDefault(); // Evita el envío del formulario
@@ -273,7 +357,7 @@ include '../action/functions.php';
                 }
                 ?>
             </select>
-            <button type="button" onclick="hideField('request-generoNombre', 'request-genero', 'request-genero-form', 'generoForm', 2)">Siguiente</button>
+            <button type="button" onclick="if (validateAndProceed('request-generoNombre', false, 'request-genero')) hideField('request-generoNombre', 'request-genero', 'request-genero-form', 'generoForm', 2)">Siguiente</button>
         </form>
     </div>
 
@@ -295,7 +379,7 @@ include '../action/functions.php';
                 }
                 ?>
             </select>
-            <button type="button" onclick="hideField('request-orientacionSexualNombre', 'request-orientacionSexual', 'request-orientacionSexual-form', 'orientacionSexualForm', 3)">Siguiente</button>
+            <button type="button" onclick="if (validateAndProceed('request-orientacionSexualNombre', false, 'request-orientacionSexual')) hideField('request-orientacionSexualNombre', 'request-orientacionSexual', 'request-orientacionSexual-form', 'orientacionSexualForm', 3)">Siguiente</button>
         </form>
     </div>
 
@@ -317,7 +401,7 @@ include '../action/functions.php';
                 }
                 ?>
             </select>
-            <button type="button" onclick="hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 4)">Siguiente</button>
+            <button type="button" onclick="if (validateAndProceed('request-areaConocimientoNombre', false, 'request-areaConocimiento')) hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 4)">Siguiente</button>
         </form>
     </div>
 
@@ -385,7 +469,7 @@ include '../action/functions.php';
             echo '</select>';
             ?>
             <br>
-            <button type="button" onclick="saveData('instalacionesForm',5)">Siguiente</button>
+            <button type="button" onclick="if (validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 5)">Siguiente</button>
         </form>
     </div>
 
@@ -462,7 +546,7 @@ include '../action/functions.php';
 
     <div id="request-genero" style="display:none;">
         <form id="request-genero-form" onsubmit="submitRequest(event, 'request-genero-form')" style="width: 50vw; min-width:300px;">
-            <input type="text" name="request-generoNombre" id="request-generoNombre" placeholder="Especifique otro género">
+            <input type="text" name="request-generoNombre" id="request-generoNombre" placeholder="Especifique otro género" required>
             <button type="submit" class="btn btn-success" name="request-genero-btn" id="request-genero-btn">Solicitar</button>
         </form>
     </div>
