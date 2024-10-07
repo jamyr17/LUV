@@ -255,6 +255,48 @@ class ActividadData extends Data
         return $suggestions;
     }
 
+    public function getAllDeletedTbActividad() {
+        // Conexión a la base de datos
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Consulta para obtener las actividades eliminadas (tbactividadestado = 0)
+        $query = "SELECT * FROM tbactividad WHERE tbactividadestado = 0;";
+        $result = mysqli_query($conn, $query);
+    
+        $actividadesEliminadas = [];
+        
+       // Recorrer cada fila obtenida y crear una instancia de la clase Actividad
+while ($row = mysqli_fetch_array($result)) {
+    // Valor por defecto para colectivos
+    $colectivos = [];
+
+    // Crear la instancia de la actividad con los 11 parámetros
+    $actividadActual = new Actividad(
+        $row['tbactividadid'],
+        $row['tbactividadtitulo'],
+        $row['tbactividaddescripcion'],
+        $row['tbactividadfecha'],
+        $row['tbactividadduracionminutos'],
+        $row['tbactividaddireccion'],
+        $row['tbactividadlatitud'],
+        $row['tbactividadlongitud'],
+        $row['tbactividadestado'],
+        $row['tbactividadanonimo'],
+        $colectivos // Valor predeterminado para colectivos
+    );
+    
+            // Agregar la actividad a la lista de actividades eliminadas
+            array_push($actividadesEliminadas, $actividadActual);
+        }
+    
+        // Cerrar la conexión a la base de datos
+        mysqli_close($conn);
+    
+        // Retornar la lista de actividades eliminadas
+        return $actividadesEliminadas;
+    }
+
     public function restoreTbActividad($actividadId) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
