@@ -53,20 +53,14 @@ include "../action/sessionUserAction.php";
             <div id="criteriaSection">
                 <div class="criterion">
                     <label for="criterion1">Criterio:</label>
-                    <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
-
-                    </select>
+                    <input type="text" name="criterion[]" id="criterion1" placeholder="Especifique el criterio" oninput="actualizarTablaConCriterio()">
 
                     <label for="value1">Prefiero:</label>
-                    <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
-                        <!-- Las opciones de valores se cargarán dinámicamente -->
-                    </select>
-                    <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor" oninput="actualizarTablaConCriterio()">
+                    <input type="text" name="value[]" id="value1" placeholder="Especifique el valor" oninput="actualizarTablaConCriterio()">
 
-                    <!-- <label for="percent1">Porcentaje:</label> -->
-                    <!-- <input type="number" id="percent1" name="percentage[]" min="0" max="100" oninput="updateTotalPercentage()"> -->
                     <button type="button" onclick="removeCriterion(this)">Eliminar</button>
                 </div>
+
             </div>
 
             <button type="button" onclick="addCriterion()">Agregar criterio</button>

@@ -20,6 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $valorParam = $_SESSION['valueString'];
             $porcentajeParam = calculatePercentage(); // calcula y si hay algun error devuelve null
 
+
+            // Dividir criterios y valores en arrays
+            $criteriosArray = explode(',', $_SESSION['criteriaString']);
+            $valoresArray = explode(',', $_SESSION['valueString']);
+
+            foreach ($criteriosArray as $index => $criterioNombre) {
+                $valor = trim($valoresArray[$index]);
+                // Llamar a la función para agregar valor si no existe en el archivo .dat
+                $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
+            }
+
             if(isset($porcentajeParam)){
 
                 if ($wantedProfileBusiness->profileExists($usuarioId)) {
@@ -101,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         echo json_encode(["error" => "ID de usuario no encontrado"]);
         exit();
     }
+    
 
     $perfilDeseado = $wantedProfileBusiness->perfilDeseadoByIdUsuario($usuarioId);
 

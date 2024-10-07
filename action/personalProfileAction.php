@@ -29,6 +29,16 @@ if (isset($_POST["registrar"])) {
         
         $colectivosString = implode(',', $colectivos); // Volleyball,Basketball,etc...
 
+        // Dividir criterios y valores en arrays
+        $criteriosArray = explode(',', $_SESSION['criteriaString']);
+        $valoresArray = explode(',', $_SESSION['valueString']);
+
+        foreach ($criteriosArray as $index => $criterioNombre) {
+            $valor = trim($valoresArray[$index]);
+            // Llamar a la función para agregar valor si no existe en el archivo .dat
+            $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
+        }
+
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
             $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
