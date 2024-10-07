@@ -1,5 +1,12 @@
 <?php
-    include_once 'action/sessionAdminAction.php';
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if ($_SESSION["tipoUsuario"] == "Usuario" || empty($_SESSION["tipoUsuario"])) {
+        header("location: view/login.php?error=accessDenied");
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>

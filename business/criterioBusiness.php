@@ -1,6 +1,7 @@
 <?php
 
-include '../data/criterioData.php';
+include_once '../data/criterioData.php';
+include_once '../data/logicaArchivosData.php';
 
 class CriterioBusiness {
 
@@ -8,6 +9,7 @@ class CriterioBusiness {
 
     public function __construct() {
         $this->criterioData = new CriterioData();
+        $this->logicaArchivosData = new logicaArchivosData();
     }
 
     public function insertTbCriterio($criterio) {
@@ -36,6 +38,10 @@ class CriterioBusiness {
 
     public function getAllTbCriterio() {
         return $this->criterioData->getAllTbCriterio();
+    }
+
+    public function getAllTbCriterioDat() {
+        return $this->logicaArchivosData->obtenerCriterios();
     }
 
     public function getAllTbCriterioNombres() {

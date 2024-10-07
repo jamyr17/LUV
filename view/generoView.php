@@ -242,4 +242,8 @@ include '../action/functions.php';
 
 </body>
 
+<?php
+eliminarFormData();
+?>
+
 </html>

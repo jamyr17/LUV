@@ -1,35 +1,10 @@
 <?php
 
 include_once '../business/valorBusiness.php'; 
-include 'functions.php';
+include_once 'functions.php';
+include_once 'gestionArchivosIAAction.php';
 
 $maxLength = 255;
-
-function agregarValorSiNoExiste($nombreArchivo, $valor) {
-    $filePath = "../resources/criterios/{$nombreArchivo}.dat";
-
-    // Leer el archivo y obtener los contenidos
-    $contenidoActual = [];
-    if (file_exists($filePath)) {
-        $contenidoActual = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    }
-
-    // Verificar si el valor ya existe en el archivo
-    if (!in_array($valor, $contenidoActual)) {
-        // Si el valor no existe, agregarlo al archivo
-        $file = fopen($filePath, 'a');
-        if ($file) {
-            fwrite($file, ",". $valor . PHP_EOL);
-            fclose($file);
-            return "Valor '{$valor}' agregado al archivo.";
-        } else {
-            return "Error: No se pudo abrir el archivo {$filePath} para escritura.";
-        }
-    } else {
-        return "El valor '{$valor}' ya existe en el archivo.";
-    }
-}
-
 
 
 if (isset($_POST['update'])) {
@@ -125,9 +100,13 @@ if (isset($_POST['update'])) {
                     header("location: ../view/valorView.php?error=alike");
                     exit();
                 } else {
+
+
+
                     $mensaje = agregarValorSiNoExiste($criterioNombre, $nombre);
     
                     $valor = new Valor(0, $nombre, $idCriterio, 1);
+
                     $result = $valorBusiness->insertTbValor($valor);
     
                     if ($result == 1) {

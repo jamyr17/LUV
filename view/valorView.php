@@ -6,6 +6,7 @@ include '../action/functions.php';
 
 $valorBusiness = new ValorBusiness();
 $criterioBusiness = new CriterioBusiness();
+$logicaArchivosData = new LogicaArchivosData();
 ?>
 
 <!DOCTYPE html>
@@ -111,25 +112,25 @@ $criterioBusiness = new CriterioBusiness();
 
                         <label for="idCriterio">Criterio:</label>
                         <select name="idCriterio" id="idCriterio" onchange="updateCriterioNombre()">
-                            <?php
-                            $criterios = $criterioBusiness->getAllTbCriterio();
-                            $valorSeleccionado = isset($_SESSION['formCrearData']['idCriterio']) ? $_SESSION['formCrearData']['idCriterio'] : '';
 
-                            if ($criterios != null) {
-                                foreach ($criterios as $criterio) {
-                                    $selected = ($criterio->getTbCriterioId() == $valorSeleccionado) ? 'selected' : '';
-                                    echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>' . htmlspecialchars($criterio->getTbCriterioNombre()) . '</option>';
-                                }
-                            }
-                            ?>
+                        <?php
+                        // Obtener todos los criterios desde los archivos .dat
+                        $criterios = $logicaArchivosData->obtenerCriterios(); 
+
+                        foreach ($criterios as $criterio) {
+                            echo '<option value="' . htmlspecialchars($criterio) . '">' . htmlspecialchars($criterio) . '</option>';
+                        }
+                        ?>
                         </select><br>
 
+                        <!-- Campo oculto para el nombre del criterio seleccionado -->
                         <input type="hidden" name="criterioNombre" id="criterioNombre" value="">
-                        <input type="hidden" id="type" name="type" value="valor"> <!-- Campo oculto para el tipo de objeto -->
 
-                        <label for="nombre" class="form-label">Nombre: </label>
-                        <?php generarCampoTexto('nombre', 'formCrearData', 'Nombre de la opción', '') ?>
+                        <!-- Campo para agregar un nuevo valor -->
+                        <label for="nombre" class="form-label">Valor: </label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese el valor" required><br>
 
+                        <!-- Botón para crear -->
                         <div>
                             <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
                         </div>
@@ -137,17 +138,18 @@ $criterioBusiness = new CriterioBusiness();
                 </div>
 
                 <script>
+                    // Función para actualizar el campo oculto con el nombre del criterio seleccionado
                     function updateCriterioNombre() {
                         var select = document.getElementById('idCriterio');
                         var nombre = select.options[select.selectedIndex].text;
                         document.getElementById('criterioNombre').value = nombre;
                     }
 
+                    // Llamar a la función para actualizar el nombre del criterio al cargar la página
                     updateCriterioNombre();
                 </script>
             </div>
         </section>
-
         <section id="table">
             <div class="text-center mb-4">
                 <h3>Valores registrados</h3>
@@ -164,54 +166,42 @@ $criterioBusiness = new CriterioBusiness();
                 </thead>
                 <tbody>
                     <?php
-                    $valores = $valorBusiness->getAllTbValor();
-                    $criterios = $criterioBusiness->getAllTbCriterio(); // Obtenemos todos los criterios disponibles
+                    $criterios = $logicaArchivosData->obtenerCriterios(); // Obtener todos los criterios
                     $mensajeActualizar = "¿Desea actualizar este valor?";
                     $mensajeEliminar = "¿Desea eliminar este valor?";
+                    $contador = 1; // Inicializamos el contador
 
-                    if ($valores != null) {
-                        foreach ($valores as $valor) {
-                            echo '<tr>';
-                            echo '<td>' . htmlspecialchars($valor->getTbValorId()) . '</td>';
+                    // Suponiendo que tienes un método para obtener todos los valores de un criterio específico
+                    foreach ($criterios as $criterio) {
+                        $valores = $logicaArchivosData->obtenerValoresDeCriterio($criterio); // Obtener valores del archivo .dat
 
-                            echo '<td><form method="post" enctype="multipart/form-data" action="../action/valorAction.php" onsubmit="return validateForm()">';
-                            echo '<input type="hidden" name="idValor" value="' . htmlspecialchars($valor->getTbValorId()) . '">';
+                        if ($valores != null) {
+                            foreach ($valores as $valor) {
+                                echo '<tr>';
+                                echo '<td>' . $contador . '</td>'; // Muestra el número de la fila
+                                echo '<td>' . htmlspecialchars($criterio) . '</td>'; // Mostrar el nombre del criterio
+                                echo '<td><input type="text" class="form-control" value="' . htmlspecialchars($valor) . '" readonly></td>'; // Mostrar el nombre del valor en un campo de texto
 
-                            // Combo box para seleccionar el criterio
-                            echo '<select name="idCriterio" class="form-select">';
-                            foreach ($criterios as $criterio) {
-                                $selected = $criterio->getTbCriterioId() == $valor->getTbCriterioId() ? 'selected' : '';
-                                echo '<option value="' . htmlspecialchars($criterio->getTbCriterioId()) . '" ' . $selected . '>';
-                                echo htmlspecialchars($criterio->getTbCriterioNombre());
-                                echo '</option>';
+                                // Botones de acción (puedes adaptar la lógica según necesites)
+                                echo '<td>';
+                                echo "<form method='post' action='../action/valorAction.php' onsubmit='return validateForm()'>";
+                                echo "<input type='hidden' name='criterio' value='" . htmlspecialchars($criterio) . "'>"; // Añadir el criterio
+                                echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
+                                echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
+                                echo '</form>';
+                                echo '</td>';
+
+                                echo '</tr>';
+                                $contador++; // Incrementamos el contador en cada iteración
                             }
-                            echo '</select>';
-
-                            echo '</td>';
-
-                            // Campo de texto para el nombre del valor
-                            echo '<td>';
-                            if (isset($_SESSION['formActualizarData']) && $_SESSION['formActualizarData']['idValor'] == $valor->getTbValorId()) {
-                                generarCampoTexto('nombre', 'formActualizarData', '', '');
-                            } else {
-                                generarCampoTexto('nombre', '', '', $valor->getTbValorNombre());
-                            }
-                            echo '</td>';
-
-                            // Botones de acción
-                            echo '<td>';
-                            echo "<button type='submit' class='btn btn-warning me-2' name='update' id='update' onclick='return actionConfirmation(\"$mensajeActualizar\")'>Actualizar</button>";
-                            echo "<button type='submit' class='btn btn-danger' name='delete' id='delete' onclick='return actionConfirmation(\"$mensajeEliminar\")'>Eliminar</button>";
-                            echo '</td>';
-
-                            echo '</form>';
-                            echo '</tr>';
                         }
                     }
+
                     ?>
                 </tbody>
             </table>
         </section>
+
 
         <section id="table-deleted" style="display: none;">
             <div class="text-center mb-4">
@@ -267,5 +257,9 @@ $criterioBusiness = new CriterioBusiness();
     </div>
 
 </body>
+
+<?php
+eliminarFormData();
+?>
 
 </html>

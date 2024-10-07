@@ -272,4 +272,8 @@ include_once '../business/universidadCampusEspecializacionBusiness.php';
 
 </body>
 
+<?php
+eliminarFormData();
+?>
+
 </html>
