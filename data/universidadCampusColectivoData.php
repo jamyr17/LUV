@@ -302,6 +302,7 @@ class universidadCampusColectivoData extends Data
         return $colectivos;
     }
 
+        <<<<<<<<< Temporary merge branch 1
 
     public function getColectivosByCampusName($campusNombre)
     {

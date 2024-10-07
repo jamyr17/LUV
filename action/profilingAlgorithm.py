@@ -1,4 +1,4 @@
-# Definición de géneros y orientaciones sexuales (hechos)
+# Declaración de hechos (géneros y orientaciones)
 generos = [
     'Masculino', 'Femenino', 'No binario', 'Género fluido', 
     'Agénero', 'Bigénero', 'Género queer', 'Demigénero', 
@@ -13,51 +13,46 @@ orientacionesSexuales = [
     'Grisexual', 'Fraysexual'
 ]
 
-# Reglas de afinidad como diccionario
+# Reglas declarativas de afinidades
 afinidades = {
     'Heterosexual': {
-        'Masculino': ['Femenino'],
-        'Femenino': ['Masculino']
+        'Masculino': {'busca': ['Femenino']},
+        'Femenino': {'busca': ['Masculino']}
     },
     'Homosexual': {
-        'Masculino': ['Masculino'],
-        'Femenino': ['Femenino']
+        'Masculino': {'busca': ['Masculino']},
+        'Femenino': {'busca': ['Femenino']}
     },
-    'Bisexual': generos,
-    'Pansexual': generos,
-    'Polisexual': generos,
-    'Omnisexual': generos,
-    'Fraysexual': generos,
-    'Asexual': ['Amistad'],
-    'Demisexual': ['Amistad'],
-    'Grisexual': ['Amistad'],
-    'Autosexual': generos,
-    'Androsexual': ['Masculino'],
-    'Ginesexual': ['Femenino'],
-    'Skoliosexual': ['No binario']
+    'Bisexual': {'busca': generos},
+    'Pansexual': {'busca': generos},
+    'Polisexual': {'busca': generos},
+    'Omnisexual': {'busca': generos},
+    'Fraysexual': {'busca': generos},
+    'Asexual': {'busca': ['Amistad']},
+    'Demisexual': {'busca': ['Amistad']},
+    'Grisexual': {'busca': ['Amistad']},
+    'Autosexual': {'busca': generos},
+    'Androsexual': {'busca': ['Masculino']},
+    'Ginesexual': {'busca': ['Femenino']},
+    'Skoliosexual': {'busca': ['No binario']}
 }
 
-# Función para obtener afinidades
+# Función que interpreta reglas de afinidad
 def obtenerAfinidad(genero, orientacion):
-    if orientacion not in orientacionesSexuales:
-        return ['Indefinido']
-
-    # Obtener las afinidades para la orientación
-    if orientacion in afinidades:
-        if isinstance(afinidades[orientacion], dict):
-            return afinidades[orientacion].get(genero, ['Indefinido'])
-        else:
-            return afinidades[orientacion]
+    regla = afinidades.get(orientacion, {})
+    afinidades_genero = regla.get('busca', ['Indefinido'])
     
-    return ['Indefinido']
+    if isinstance(afinidades_genero, dict):  # Si hay reglas específicas para el género
+        return afinidades_genero.get(genero, ['Indefinido'])
+    return afinidades_genero
 
-# Ejemplo de uso
+# Ejemplo de uso con salida declarativa
 def perfilBusqueda(nombre, genero, orientacion):
     afinidades_resultantes = obtenerAfinidad(genero, orientacion)
     return f"{nombre} busca personas de género(s): {', '.join(afinidades_resultantes)}."
 
 # Pruebas
-print(perfilBusqueda("Chris", "Masculino", "Heterosexual"))  # Busca Femenino
-print(perfilBusqueda("Alex", "No binario", "Skoliosexual"))  # Busca No binario
-print(perfilBusqueda("Jamie", "Femenino", "Bisexual"))       # Busca a todos los géneros
-print(perfilBusqueda("Taylor", "Masculino", "Homosexual"))   # Busca Masculino
+print(perfilBusqueda("Chris", "Masculino", "Heterosexual")) 
+print(perfilBusqueda("Alex", "No binario", "Skoliosexual")) 
+print(perfilBusqueda("Jamie", "Femenino", "Bisexual"))      
+print(perfilBusqueda("Taylor", "Masculino", "Homosexual"))  

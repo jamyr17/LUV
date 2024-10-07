@@ -38,35 +38,6 @@ class AreaConocimientoData extends Data
         return $resultInsert;
     }
 
-    public function insertRequestTbAreaConocimiento($areaConocimiento)
-    {
-        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-        $conn->set_charset('utf8');
-
-        // Consulta para obtener el ID máximo
-        $queryGetLastId = "SELECT MAX(tbsolicitudareaconocimientoid) AS max_id FROM tbsolicitudareaconocimiento";
-        $result = mysqli_query($conn, $queryGetLastId);
-
-        if ($row = mysqli_fetch_assoc($result)) {
-            $maxId = $row['max_id'];
-            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
-        } else {
-            $nextId = 1;
-        }
-
-        $nombre = mysqli_real_escape_string($conn, $areaConocimiento->getTbAreaConocimientoNombre());
-        $estado = 0;
-
-        // Consulta para insertar un nuevo registro de solicitud
-        $queryInsert = "INSERT INTO tbsolicitudareaconocimiento (tbsolicitudareaconocimientoid, tbsolicitudareaconocimientonombre, tbsolicitudareaconocimientoestado) 
-                        VALUES ($nextId, '$nombre', $estado)";
-
-        $resultInsert = mysqli_query($conn, $queryInsert);
-        mysqli_close($conn);
-
-        return $resultInsert;
-    }
-
     public function updateTbAreaConocimiento($areaConocimiento)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);

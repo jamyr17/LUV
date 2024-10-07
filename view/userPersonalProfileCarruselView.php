@@ -49,6 +49,7 @@ include '../action/functions.php';
         function saveData(formId, formNumber) {
             const formElement = document.getElementById(formId);
             const formValues = new FormData(formElement);
+
             // Guardar los datos en el objeto
             formValues.forEach((value, key) => {
                 if (key === 'colectivos[]') {
@@ -62,10 +63,9 @@ include '../action/functions.php';
                     console.log(value);
                 }
             });
+
             // Pasar al siguiente formulario
-            if (formNumber !== 10) {
-                nextForm(formNumber);
-            }
+            nextForm(formNumber);
         }
 
         function submitAll() {
@@ -87,84 +87,54 @@ include '../action/functions.php';
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        if (data.success === "updated") {
-                            alert("Se ha actualizado su perfil personal.");
-                        } else {
-                            alert("Se ha guardado el perfil personal.");
-                        }
-                        window.location.href = '../view/userWantedProfileView.php';
-                    } else {
-                        window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
+                        if (data.success) {
+                                if (data.success === "updated") {
+                                    alert("Se ha actualizado su perfil personal.");
+                                } else {
+                                    alert("Se ha guardado el perfil personal.");
+                                }
+                                window.location.href = '../view/userWantedProfileView.php';
+                            } else {
+                                window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
 
-                    }
-                })
-                .catch(error => console.error('Error de red:', error));
-        }
+                            }
+                        })
+                    .catch(error => console.error('Error de red:', error));
+                }
 
-        $(document).ready(function() {
-
-
-            fetch('../data/getData.php?type=1')
-                .then(response => response.json())
-                .then(data => {
-                    const universidadSelect = document.getElementById('universidad');
-                    universidadSelect.innerHTML = ''; // Limpiar el select de universidades
-
-                    data.forEach(function(univ) {
-                        const option = new Option(univ.name, univ.name);
-                        universidadSelect.appendChild(option);
-                    });
-                    $('#universidad').append(new Option('Otro', '0'));
-
-                    if (data.length > 0) {
-                        $('#universidad').val(data[0].name).change(); // Seleccionar la primera universidad y disparar el evento
-                    }
-                })
-                .catch(err => console.error('Error al cargar universidades:', err));
-
-
-
-            $('#universidad').change(function() {
-                const universidadNombre = $(this).val();
-                $.ajax({
-                    url: '../data/getData.php',
-                    method: 'GET',
-                    data: {
-                        universidadNombre: universidadNombre
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        $('#campus').empty(); // Limpiar el select de campus
-                        data.forEach(function(camp) {
-                            $('#campus').append(new Option(camp.nombre, camp.nombre));
-                        });
-                        $('#campus').append(new Option('Otro', '0'));
-
-                        if (data.length > 0) {
-                            $('#campus').val(data[0].nombre).change(); // Seleccionar el primer campus y disparar el evento
-                        }
-                    },
-                    error: function(err) {
-                        console.error('Error al cargar campus:', err);
-                    }
-                });
-            });
-
-            $('#campus').change(function() {
-                const campusNombre = $(this).val();
-                if (campusNombre === '0') {
-                    $('#colectivos').empty();
-                } else {
+            $(document).ready(function() {
+                $('#universidad').change(function() {
+                    const universidadNombre = $(this).val();
                     $.ajax({
                         url: '../data/getData.php',
                         method: 'GET',
                         data: {
-                            campusNombre: campusNombre
+                            universidadNombre: universidadNombre
                         },
                         dataType: 'json',
                         success: function(data) {
-                            $('#colectivos').empty();
+                            $('#campus').empty(); // Limpiar el select de campus
+                            data.forEach(function(camp) {
+                                $('#campus').append(new Option(camp.nombre, camp.id));
+                            });
+                        },
+                        error: function(err) {
+                            console.error('Error al cargar campus:', err);
+                        }
+                    });
+                });
+
+                $('#campus').change(function() {
+                    const campusId = $(this).val();
+                    $.ajax({
+                        url: '../data/getData.php',
+                        method: 'GET',
+                        data: {
+                            campusId: campusId
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#colectivos').empty(); // Limpiar el select de colectivos
                             data.forEach(function(colectivo) {
                                 $('#colectivos').append(new Option(colectivo.nombre, colectivo.nombre));
                             });
@@ -173,156 +143,12 @@ include '../action/functions.php';
                             console.error('Error al cargar colectivos:', err);
                         }
                     });
-                }
-            });
-        });
-
-        function showMessage(mensaje) {
-            alert(mensaje);
-        }
-
-        function showOtherField(selectId, divId, esNuevaUniversidad) {
-            var selectElement = document.getElementById(selectId);
-            var otherField = document.getElementById(divId);
-
-            if (!esNuevaUniversidad) {
-                if (selectElement.value === '0') {
-                    otherField.style.display = 'block';
-                } else {
-                    otherField.style.display = 'none';
-                }
-            } else {
-                var campusField = document.getElementById('request-campus');
-                if (selectElement.value === '0') {
-                    otherField.style.display = 'block';
-                    campusField.style.display = 'block';
-                    $('#colectivos').empty();
-                } else {
-                    otherField.style.display = 'none';
-                }
-            }
-        }
-
-        function hideField(inputId, divId, formOtherId, formId, nextForm) {
-            var inputElement = document.getElementById(inputId);
-            var otherField = document.getElementById(divId);
-
-            if (inputElement.value !== '') {
-                saveData(formOtherId, nextForm);
-                otherField.style.display = 'none';
-            } else {
-                saveData(formId, nextForm);
-                otherField.style.display = 'none';
-            }
-        }
-
-        function hideFields(inputUniversidadId, inputCampusId, divUniversidadId, divCampusId, formOtherUniversidadId, formOtherCampusId, nextForm) {
-            const inputUniversidadElement = document.getElementById(inputUniversidadId);
-            const inputCampusElement = document.getElementById(inputCampusId);
-            const otherFieldUniversidad = document.getElementById(divUniversidadId);
-            const otherFieldCampus = document.getElementById(divCampusId);
-
-            // Función auxiliar para extraer y asignar valores
-            const assignValues = (formularioUniversidad, formularioCampus, universidadField, campusField) => {
-                if (universidadField) {
-                    saveData(formularioUniversidad, 10);
-                }
-                if (campusField) {
-                    saveData(formularioCampus, nextForm);
-                }
-
-            };
-
-            // Comprobar los valores de entrada
-            if (inputUniversidadElement.value !== '' && inputCampusElement.value !== '') {
-                assignValues(
-                    formOtherUniversidadId,
-                    formOtherCampusId, true, true
-                );
-                otherFieldUniversidad.style.display = 'none';
-                otherFieldCampus.style.display = 'none';
-            } else if (inputCampusElement.value !== '') {
-                assignValues(
-                    'instalacionesForm',
-                    formOtherCampusId, true, true
-                );
-                otherFieldCampus.style.display = 'none';
-            }
-        }
-
-
-        function validateAndProceed(inputId, esNuevaUniversidad, divId) {
-            let formulario = document.getElementById(divId);
-            let formularioCampus = document.getElementById('request-campus');
-
-            if (formulario.style.display === 'block') {
-
-                const input = document.getElementById(inputId);
-                const inputFields = [input];
-
-                if (esNuevaUniversidad) {
-                    const campusInput = document.getElementById('request-campusNombre');
-                    inputFields.push(campusInput);
-                }
-
-                for (const field of inputFields) {
-                    if (field.value.trim() === '') {
-                        field.style.borderColor = 'red';
-                        alert('Por favor, complete todos los campos requeridos.');
-                        return false;
-                    } else {
-                        field.style.borderColor = '';
-                    }
-                }
-
-                return true;
-            } else if (formularioCampus.style.display === 'block') {
-
-                let inputCampus = document.getElementById('request-campusNombre');
-
-                if (inputCampus.value.trim() === '') {
-                    inputCampus.style.borderColor = 'red';
-                    alert('Por favor, complete todos los campos requeridos.');
-                    return false;
-                } else {
-                    inputCampus.style.borderColor = '';
-                }
-
-                return true;
-            } else {
-                return true;
-            }
-        }
-
-
-        function submitRequest(event, formId) {
-            event.preventDefault(); // Evita el envío del formulario
-
-            var requestForm = document.getElementById(formId);
-            var formData = new FormData(requestForm);
-
-            fetch('../action/requestAction.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    showMessage(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showMessage('Error al procesar la respuesta del servidor.');
                 });
-        }
+            });
     </script>
 </head>
 
-<body data-view="PersonalProfile">
+<body>
 
     <section id="alerts">
         <?php
@@ -344,7 +170,7 @@ include '../action/functions.php';
         <h2>Selecciona tu Género</h2>
         <form id="generoForm">
             <label for="genero">Género:</label>
-            <select name="genero" id="genero" onchange="showOtherField('genero', 'request-genero', false)">
+            <select name="genero" id="genero">
                 <?php
                 include '../business/generoBusiness.php';
                 $generoBusiness = new GeneroBusiness();
@@ -353,11 +179,10 @@ include '../action/functions.php';
                     foreach ($generos as $genero) {
                         echo '<option value="' . htmlspecialchars($genero->getTbGeneroNombre()) . '" title="' . htmlspecialchars($genero->getTbGeneroDescripcion()) . '">' . htmlspecialchars($genero->getTbGeneroNombre()) . '</option>';
                     }
-                    echo '<option value="0" title="Solicitar otro género a los administradores">Otro</option>';
                 }
                 ?>
             </select>
-            <button type="button" onclick="if (validateAndProceed('request-generoNombre', false, 'request-genero')) hideField('request-generoNombre', 'request-genero', 'request-genero-form', 'generoForm', 2)">Siguiente</button>
+            <button type="button" onclick="saveData('generoForm',2)">Siguiente</button>
         </form>
     </div>
 
@@ -365,7 +190,7 @@ include '../action/functions.php';
         <h2>Selecciona tu Orientación Sexual</h2>
         <form id="orientacionSexualForm">
             <label for="orientacionSexual">Orientación Sexual:</label>
-            <select name="orientacionSexual" id="orientacionSexual" onchange="showOtherField('orientacionSexual', 'request-orientacionSexual', false)">
+            <select name="orientacionSexual" id="orientacionSexual">
                 <?php
                 include '../business/orientacionSexualBusiness.php';
                 $orientacionSexualBusiness = new OrientacionSexualBusiness();
@@ -375,11 +200,10 @@ include '../action/functions.php';
                     foreach ($orientacionesSexuales as $orientacionSexual) {
                         echo '<option value="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '" title="' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualDescripcion()) . '">' . htmlspecialchars($orientacionSexual->getTbOrientacionSexualNombre()) . '</option>';
                     }
-                    echo '<option value="0" title="Solicitar otra orientación sexual a los administradores">Otra</option>';
                 }
                 ?>
             </select>
-            <button type="button" onclick="if (validateAndProceed('request-orientacionSexualNombre', false, 'request-orientacionSexual')) hideField('request-orientacionSexualNombre', 'request-orientacionSexual', 'request-orientacionSexual-form', 'orientacionSexualForm', 3)">Siguiente</button>
+            <button type="button" onclick="saveData('orientacionSexualForm',3)">Siguiente</button>
         </form>
     </div>
 
@@ -387,7 +211,7 @@ include '../action/functions.php';
         <h2>Selecciona tu área de conocimiento</h2>
         <form id="areaConocimientoForm">
             <label for="areaConocimiento">Área de conocimiento:</label>
-            <select name="areaConocimiento" id="areaConocimiento" onchange="showOtherField('areaConocimiento', 'request-areaConocimiento', false)">
+            <select name="areaConocimiento" id="areaConocimiento">
                 <?php
                 include '../business/areaConocimientoBusiness.php';
                 $areaConocimientoBusiness = new AreaConocimientoBusiness();
@@ -397,11 +221,10 @@ include '../action/functions.php';
                     foreach ($areasConocimiento as $areaConocimiento) {
                         echo '<option value="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '" title="' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoDescripcion()) . '">' . htmlspecialchars($areaConocimiento->getTbAreaConocimientoNombre()) . '</option>';
                     }
-                    echo '<option value="0" title="Solicitar otra área de conocimiento a los administradores">Otra</option>';
                 }
                 ?>
             </select>
-            <button type="button" onclick="if (validateAndProceed('request-areaConocimientoNombre', false, 'request-areaConocimiento')) hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 4)">Siguiente</button>
+            <button type="button" onclick="saveData('areaConocimientoForm',4)">Siguiente</button>
         </form>
     </div>
 
@@ -411,7 +234,7 @@ include '../action/functions.php';
 
         <form id="instalacionesForm">
             <label for="universidad">Universidad:</label>
-            <select name="universidad" id="universidad" onchange="showOtherField('universidad', 'request-universidad', true)">
+            <select name="universidad" id="universidad">
                 <?php
                 include '../business/universidadBusiness.php';
                 $universidadBusiness = new UniversidadBusiness();
@@ -421,13 +244,12 @@ include '../action/functions.php';
                     foreach ($universidades as $universidad) {
                         echo '<option value="' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '">' . htmlspecialchars($universidad->getTbUniversidadNombre()) . '</option>';
                     }
-                    echo '<option value="0" title="Solicitar otra universidad a los administradores">Otra</option>';
                 }
                 ?>
             </select>
             <br>
             <label for="campus">Campus:</label>
-            <select name="campus" id="campus" onchange="showOtherField('campus', 'request-campus', false)">
+            <select name="campus" id="campus">
                 <?php
                 include_once '../business/campusBusiness.php';
                 $campusBusiness = new CampusBusiness();
@@ -437,7 +259,6 @@ include '../action/functions.php';
                     foreach ($campus as $camp) {
                         echo '<option value="' . htmlspecialchars($camp->getTbCampusNombre()) . '">' . htmlspecialchars($camp->getTbCampusNombre()) . '</option>';
                     }
-                    echo '<option value="0" title="Solicitar otro campus a los administradores">Otro</option>';
                 }
                 ?>
             </select>
@@ -469,7 +290,7 @@ include '../action/functions.php';
             echo '</select>';
             ?>
             <br>
-            <button type="button" onclick="if (validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 5)">Siguiente</button>
+            <button type="button" onclick="saveData('instalacionesForm',5)">Siguiente</button>
         </form>
     </div>
 
@@ -527,44 +348,6 @@ include '../action/functions.php';
             <!-- Acá termina el ordenamiento tipo árbol -->
         </div>
     </div>
-
-
-    <div id="request-universidad" style="display:none;">
-        <form id="request-universidad-form" onsubmit="submitRequest(event, 'request-universidad-form')" style="width: 50vw; min-width:300px;">
-            <input type="text" id="request-universidadNombre" name="request-universidadNombre" placeholder="Especifique otra universidad">
-            <button type="submit" class="btn btn-success" name="request-universidad-btn" id="request-universidad-btn">Solicitar</button>
-        </form>
-    </div>
-
-    <div id="request-campus" style="display:none;">
-        <form id="request-campus-form" onsubmit="submitRequest(event, 'request-campus-form')" style="width: 50vw; min-width:300px;">
-            <input type="hidden" name="idUniversidad" id="idUniversidad">
-            <input type="text" id="request-campusNombre" name="request-campusNombre" placeholder="Especifique otro campus">
-            <button type="submit" class="btn btn-success" name="request-campus-btn" id="request-campus-btn">Solicitar</button>
-        </form>
-    </div>
-
-    <div id="request-genero" style="display:none;">
-        <form id="request-genero-form" onsubmit="submitRequest(event, 'request-genero-form')" style="width: 50vw; min-width:300px;">
-            <input type="text" name="request-generoNombre" id="request-generoNombre" placeholder="Especifique otro género" required>
-            <button type="submit" class="btn btn-success" name="request-genero-btn" id="request-genero-btn">Solicitar</button>
-        </form>
-    </div>
-
-    <div id="request-orientacionSexual" style="display:none;">
-        <form id="request-orientacionSexual-form" onsubmit="submitRequest(event, 'request-orientacionSexual-form')" style="width: 50vw; min-width:300px;">
-            <input type="text" id="request-orientacionSexualNombre" name="request-orientacionSexualNombre" placeholder="Especifique otra orientación sexual">
-            <button type="submit" class="btn btn-success" name="request-orientacionSexual-btn" id="request-orientacionSexual-btn">Solicitar</button>
-        </form>
-    </div>
-
-    <div id="request-areaConocimiento" style="display:none;">
-        <form id="request-areaConocimiento-form" onsubmit="submitRequest(event, 'request-areaConocimiento-form')" style="width: 50vw; min-width:300px;">
-            <input type="text" id="request-areaConocimientoNombre" name="request-areaConocimientoNombre" placeholder="Especifique otra área de conocimiento">
-            <button type="submit" class="btn btn-success" name="request-areaConocimiento-btn" id="request-areaConocimiento-btn">Solicitar</button>
-        </form>
-    </div>
-
     <script src="../js/profileModel.js"></script>
 </body>
 
