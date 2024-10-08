@@ -75,18 +75,12 @@ if (isset($_GET['type'])) {
             $result = $criterioBusiness->getAllTbCriterio();
             foreach ($result as $item) {
                 $data[] = [
-<<<<<<< Updated upstream
                     'id' => $item->getTbCriterioId(),
                     'name' => $item->getTbCriterioNombre()
-=======
-                    'id' => $item,
-                    'name' => $item
->>>>>>> Stashed changes
                 ];
             }
             break;
         case "7":
-<<<<<<< Updated upstream
             $result = $valorBusiness->getAllTbValor();
             foreach ($result as $item) {
                 $data[] = [
@@ -94,31 +88,30 @@ if (isset($_GET['type'])) {
                     'name' => $item->getTbValorNombre(),
                     'idCriterio' => $item->getTbCriterioId()
                 ];
-=======
-            if (isset($_GET['criterion'])) {
-                $criterion = $_GET['criterion'];
+                if (isset($_GET['criterion'])) {
+                    $criterion = $_GET['criterion'];
 
-                // Depuración usando error_log() para el criterio recibido
-                error_log("Criterio recibido: " . $criterion);
+                    // Depuración usando error_log() para el criterio recibido
+                    error_log("Criterio recibido: " . $criterion);
 
-                $filePath = "../resources/criterios/{$criterion}.dat";
-                error_log("Ruta del archivo: " . $filePath);  // Depuración de la ruta
+                    $filePath = "../resources/criterios/{$criterion}.dat";
+                    error_log("Ruta del archivo: " . $filePath);  // Depuración de la ruta
 
-                if (file_exists($filePath)) {
-                    $data = file_get_contents($filePath);
-                    $valores = explode(',', $data);
-                    $response = array_map('trim', $valores);
+                    if (file_exists($filePath)) {
+                        $data = file_get_contents($filePath);
+                        $valores = explode(',', $data);
+                        $response = array_map('trim', $valores);
 
-                    // Depuración usando error_log() para los valores leídos
-                    error_log("Valores leídos: " . print_r($response, true));
+                        // Depuración usando error_log() para los valores leídos
+                        error_log("Valores leídos: " . print_r($response, true));
 
-                    echo json_encode($response);
-                } else {
-                    // Depuración en caso de que el archivo no exista
-                    error_log("Archivo no encontrado: " . $filePath);
-                    echo json_encode([]);
+                        echo json_encode($response);
+                    } else {
+                        // Depuración en caso de que el archivo no exista
+                        error_log("Archivo no encontrado: " . $filePath);
+                        echo json_encode([]);
+                    }
                 }
->>>>>>> Stashed changes
             }
             break;
     }
