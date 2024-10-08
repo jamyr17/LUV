@@ -92,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
             $("#actividadActualizarModalView").modal();
         }
 
-
     });
     calendar.render();
 });
