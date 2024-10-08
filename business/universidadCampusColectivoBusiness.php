@@ -68,10 +68,6 @@ class universidadCampusColectivoBusiness {
         return $this->universidadCampusColectivoData->getColectivosByActividadId($actividadId);
     }
 
-    public function getColectivosByCampusName($campusNombre) {
-        return $this->universidadCampusColectivoData->getColectivosByCampusName($campusNombre);
-    }
-
     public function autocomplete($term) {
         return $this->universidadCampusColectivoData->autocomplete($term);
     }
