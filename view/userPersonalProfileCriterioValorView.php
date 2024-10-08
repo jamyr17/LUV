@@ -59,20 +59,15 @@ include "../action/sessionUserAction.php";
             <div id="criteriaSection">
                 
                 <div class="criterion">
-                        <label for="criterion1">Criterio:</label>
-                        <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
-                            <!-- Las opciones de criterios se cargarán dinámicamente -->
-                        </select>
+                    <label for="criterion1">Criterio:</label>
+                    <input type="text" name="criterion[]" id="criterion1" placeholder="Especifique el criterio" oninput="actualizarTablaConCriterio()">
 
-                        <label for="value1">Prefiero:</label>
-                        <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
-                            <!-- Las opciones de valores se cargarán dinámicamente -->
-                        </select>
+                    <label for="value1">Prefiero:</label>
+                    <input type="text" name="value[]" id="value1" placeholder="Especifique el valor" oninput="actualizarTablaConCriterio()">
 
-                        <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
-                        <button type="button" onclick="removeCriterion(this)">Eliminar</button>
-
+                    <button type="button" onclick="removeCriterion(this)">Eliminar</button>
                 </div>
+
 
             </div>
 

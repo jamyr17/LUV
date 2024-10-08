@@ -18,6 +18,10 @@ if (isset($_POST["registrar"])) {
     ) {
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        $colectivos = isset($_POST['colectivos']) ? json_decode($_POST['colectivos'], true) : [];
+        $criterioParam = $_SESSION['criteriaString'];
+        $valorParam = $_SESSION['valueString'];
+
         $genero = isset($_POST['genero']) ? $_POST['genero'] : null;
         $orientacionSexual = isset($_POST['orientacionSexual']) ? $_POST['orientacionSexual'] : null;
         $areaConocimiento = isset($_POST['areaConocimiento']) ? $_POST['areaConocimiento'] : null;
@@ -29,13 +33,23 @@ if (isset($_POST["registrar"])) {
         
         $colectivosString = implode(',', $colectivos); // Volleyball,Basketball,etc...
 
+        // Dividir criterios y valores en arrays
+        $criteriosArray = explode(',', $_SESSION['criteriaString']);
+        $valoresArray = explode(',', $_SESSION['valueString']);
+
+        foreach ($criteriosArray as $index => $criterioNombre) {
+            $valor = trim($valoresArray[$index]);
+            // Llamar a la función para agregar valor si no existe en el archivo .dat
+            $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
+        }
+
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
             $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
-            echo json_encode(['success' => 'updated']); // Cambiado aquí
+            echo json_encode(['success' => 'updated']);
         } else {
             $personalProfileBusiness->insertTbPerfilPersonal($criterioParam, $valorParam,  $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);
-            echo json_encode(['success' => 'inserted']); // Cambiado aquí
+            echo json_encode(['success' => 'inserted']);
         }
     } else {
         // Redirigir si el formulario está incompleto

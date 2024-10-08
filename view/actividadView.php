@@ -14,91 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>LUV | Actividades</title>
-    <script>
-        function actionConfirmation(mensaje, idCriterio) {
-            if (confirm(mensaje)) {
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-
-        function actionConfirmationRestore(mensaje) {
-            return confirm(mensaje);
-        }
-
-        function showMessage(mensaje) {
-            alert(mensaje);
-        }
-
-        function toggleDeletedActivities() {
-            var section = document.getElementById("table-deleted");
-            if (section.style.display === "none") {
-                section.style.display = "block";
-            } else {
-                section.style.display = "none";
-            }
-        }
-
-        function validateForm() {
-            var titulo = document.getElementById("titulo").value;
-            var descripcion = document.getElementById("descripcion").value;
-            var direccion = document.getElementById("direccion").value;
-
-            if (titulo.length > 63) {
-                alert("El titulo no puede tener más de " + 63 + " caracteres.");
-                return false;
-            }
-
-            if (descripcion.length > 255) {
-                alert("La descripción no puede tener más de " + 255 + " caracteres.");
-                return false;
-            }
-
-            if (direccion.length > 255) {
-                alert("La direccion no puede tener más de " + 255 + " caracteres.");
-                return false;
-            }
-
-            return true;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInput = document.getElementById('fechaInput');
-            const valueDate = dateInput.value;
-
-            const today = new Date();
-            const formattedToday = today.toISOString().split('T')[0]; 
-            dateInput.value = formattedToday;
-
-            const minDate = formattedToday; 
-            const maxDate = new Date();
-            maxDate.setFullYear(today.getFullYear() +50);
-            const formattedMaxDate = maxDate.toISOString().split('T')[0]; 
-
-            dateInput.min = minDate; 
-            dateInput.max = formattedMaxDate; 
-
-            if(valueDate!=null){
-                dateInput.value = valueDate;
-            }
-
-            function updateDisplayedDate() {
-                const selectedDate = new Date(dateInput.value);
-                const day = String(selectedDate.getDate()).padStart(2, '0');
-                const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); 
-                const year = selectedDate.getFullYear();
-                fechaMostrar.textContent = `${day}/${month}/${year}`;
-            }
-
-            updateDisplayedDate();
-
-            dateInput.addEventListener('input', updateDisplayedDate);
-        });
-
-    </script>
-    
+    <script src='../js/activitiesValidations.js'></script>
 </head>
 
 <body>
@@ -145,28 +61,28 @@
         <h3>Agregar una nueva actividad</h3>
         <p class="text-muted">Complete el formulario para añadir una nueva actividad</p>
 
-        <form method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;" onsubmit="return validateForm()">
+        <form id="formCrear" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;">
             
-            <label for="nombre" class="form-label">Título: </label>
+            <label for="titulo" class="form-label">Título: </label>
             <?php generarCampoTexto('titulo', 'formCrearData', 'Nombre de la actividad', '') ?><br>
 
             <label for="descripcion" class="form-label">Descripción: </label>
             <?php generarCampoTexto('descripcion', 'formCrearData', 'Descripción de la actividad', '') ?><br>
 
-            <label for="fechaInput" class="form-label">Fecha y hora: </label>
+            <label for="fechaInicioInput" class="form-label">Fecha y hora de inicio: </label>
             <?php 
-            $fechaValue = isset($_SESSION['formCrearData']['fechaInput']) ? htmlspecialchars($_SESSION['formCrearData']['fechaInput']) : '';
+            $fechaInicioValue = isset($_SESSION['formCrearData']['fechaInicioInput']) ? htmlspecialchars($_SESSION['formCrearData']['fechaInicioInput']) : '';
             ?>
 
-            <input required type="datetime-local" name="fechaInput" id="fechaInput" value="<?php echo $fechaValue; ?>" />
+            <input required type="datetime-local" name="fechaInicioInput" id="fechaInicioInput" value="<?php echo $fechaInicioValue; ?>" />
             <br>
 
-            <label for="duracion" class="form-label">Duración (en minutos): </label>
+            <label for="fechaTerminaInput" class="form-label">Fecha y hora de final: </label>
             <?php 
-            $duracionValue = isset($_SESSION['formCrearData']['duracion']) ? htmlspecialchars($_SESSION['formCrearData']['duracion']) : '';
+            $fechaTerminaValue = isset($_SESSION['formCrearData']['fechaTerminaInput']) ? htmlspecialchars($_SESSION['formCrearData']['fechaTerminaInput']) : '';
             ?>
 
-            <input required type="number" name="duracion" id="duracion" max="999" value="<?php echo $duracionValue; ?>" />
+            <input required type="datetime-local" name="fechaTerminaInput" id="fechaTerminaInput" value="<?php echo $fechaTerminaValue; ?>" />
             <br>
 
             <label for="direccion" class="form-label">Dirección: </label>
@@ -205,8 +121,8 @@
                 <th>ID</th>
                 <th>Título</th>
                 <th>Descripción</th>
-                <th>Fecha y hora</th>
-                <th>Duración (en min)</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Termina</th>
                 <th>Dirección</th>
                 <th>Anónimo</th>
                 <th>Colectivos</th>
@@ -222,13 +138,13 @@
             if ($actividades != null) {
                 foreach ($actividades as $actividad) {
                 echo '<tr>';
-                echo '<form method="post" enctype="multipart/form-data" action="../action/actividadAction.php" onsubmit="return validateForm()">';
+                echo '<form id="formActualizar" method="post" enctype="multipart/form-data" action="../action/actividadAction.php" onsubmit="return validateForm()">';
                 echo '<input type="hidden" name="idActividad" value="' . htmlspecialchars($actividad->getTbActividadId()) . '">';
                 echo '<td>' . htmlspecialchars($actividad->getTbActividadId()) . '</td>';
                 echo '<td><input type="text" class="form-control" name="titulo" id="titulo" value="' . $actividad->getTbActividadTitulo() . '"></td>';
                 echo '<td><input type="text" class="form-control" name="descripcion" id="descripcion" value="' . $actividad->getTbActividadDescripcion() . '"></td>';
-                echo '<td><input type="datetime-local" class="form-control" name="fecha" id="fecha" value="' . $actividad->getTbActividadFecha() . '"></td>';
-                echo '<td><input type="number" class="form-control" name="duracion" id="duracion" value="' . $actividad->getTbActividadDuracion() . '"></td>';
+                echo '<td><input type="datetime-local" class="form-control" name="fechaInicioInput" id="fechaInicio" value="' . $actividad->getTbActividadFechaInicio() . '"></td>';
+                echo '<td><input type="datetime-local" class="form-control" name="fechaTerminaInput" id="fechaTermina" value="' . $actividad->getTbActividadFechaTermina() . '"></td>';
                 echo '<td><input type="text" class="form-control" name="direccion" id="direccion" value="' . $actividad->getTbActividadDireccion() . '"></td>';
                 echo ($actividad->getTbActividadAnonimo()==1) ? 
                     '<td><input type="radio" class="form-control" name="anonimo" id="anonimo" checked "></td>' :
@@ -301,7 +217,7 @@
                         echo '<input type="hidden" name="idActividad" value="' . htmlspecialchars($actividad->getTbActividadId()) . '">';
                         echo '<td>' . htmlspecialchars($actividad->getTbActividadId()) . '</td>';
                         echo '<td>' . htmlspecialchars($actividad->getTbActividadTitulo()) . '</td>';
-                        echo '<td><input type="datetime-local" class="form-control" name="fecha" value="' . htmlspecialchars($actividad->getTbActividadFecha()) . '" readonly></td>';
+                        echo '<td><input type="datetime-local" class="form-control" name="fechaInicioInput" value="' . htmlspecialchars($actividad->getTbActividadFechaInicio()) . '" readonly></td>';
                         echo '<td><input type="submit" name="restore" value="Restaurar" class="btn btn-primary" onclick="return actionConfirmationRestore(\'¿Desea restaurar esta actividad?\')"></td>';
                         echo '</form>';
                         echo '</tr>';
@@ -314,4 +230,31 @@
         </table>
     </section>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejo de validaciones en formularios
+        const formCrear = document.getElementById('formCrear');
+        const formActualizar = document.getElementById('formActualizar');
+
+        // Aplicar el evento 'submit' para validar el formulario de Crear
+        if (formCrear) {
+            formCrear.onsubmit = function() {
+                return validateForm('formCrear');
+            };
+        }
+
+        // Aplicar el evento 'submit' para validar el formulario de Actualizar
+        if (formActualizar) {
+            formActualizar.onsubmit = function() {
+                return validateForm('formActualizar');
+            };
+        }
+    })
+</script>
+
+<?php
+eliminarFormData();
+?>
+
 </html>
