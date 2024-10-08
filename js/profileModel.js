@@ -226,7 +226,6 @@ async function loadInitialCriteriaData() {
 
 async function loadInitialValuesData() {
     try {
-        console.log("Iniciando la solicitud para obtener los valores...");  // Depuración
         
         const criterio = document.getElementById('criterion1').value;  // Obtener el valor del criterio
         if (!criterio) {
@@ -236,7 +235,6 @@ async function loadInitialValuesData() {
 
         // Hacer la solicitud fetch con el criterio seleccionado
         const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
-        console.log('Respuesta del servidor obtenida:', response);  // Verificar si la solicitud fetch devuelve algo
 
         if (!response.ok) {
             console.error('Error en la respuesta del servidor:', response.statusText);
@@ -245,7 +243,6 @@ async function loadInitialValuesData() {
 
         // Obtener los datos en formato JSON
         const valoresData = await response.json();
-        console.log('Datos JSON obtenidos del servidor:', valoresData);  // Verificar los datos
 
         // Comprobar si los valores recibidos son válidos
         if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
@@ -254,7 +251,6 @@ async function loadInitialValuesData() {
         }
 
         valores = valoresData;  // Asignar los valores recibidos
-        console.log('Valores cargados correctamente:', valores);
     } catch (error) {
         console.error('Error al cargar datos iniciales de valores:', error);
     }
@@ -301,12 +297,10 @@ function populateCriteria(selectId) {
 // Función para cargar los valores basados en el criterio seleccionado desde un archivo .dat
 async function loadInitialValuesData() {
     try {
-        console.log("Iniciando la solicitud para obtener los valores...");
 
         const criterio = document.getElementById('criterion1').value;  // Asegúrate de obtener el criterio correcto
         const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
 
-        console.log('Respuesta del servidor obtenida:', response);
 
         if (!response.ok) {
             console.error('Error en la respuesta del servidor:', response.statusText);
@@ -314,7 +308,6 @@ async function loadInitialValuesData() {
         }
 
         const valoresData = await response.json();
-        console.log('Datos JSON obtenidos del servidor:', valoresData);
 
         if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
             console.warn('No se recibieron valores válidos. Datos de la respuesta:', valoresData);
@@ -322,7 +315,6 @@ async function loadInitialValuesData() {
         }
 
         valores = valoresData;  // Asigna los valores recibidos
-        console.log('Valores cargados correctamente:', valores);
 
         // Aquí llamas a loadValues para cargar los valores en el combobox
         loadValues(document.getElementById('criterion1'), 1);

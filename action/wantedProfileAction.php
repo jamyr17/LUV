@@ -4,6 +4,7 @@ include_once "../business/wantedProfileBusiness.php";
 $wantedProfileBusiness = new WantedProfileBusiness();
 include_once "../business/usuarioBusiness.php";
 $usuarioBusiness = new UsuarioBusiness();
+include_once "../action/gestionArchivosIAAction.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -27,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
-                // Llamar a la función para agregar valor si no existe en el archivo .dat
                 $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
             }
 

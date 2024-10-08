@@ -31,8 +31,8 @@ CREATE TABLE `tbactividad` (
   `tbactividadid` int(11) NOT NULL,
   `tbactividadtitulo` varchar(63) NOT NULL,
   `tbactividaddescripcion` varchar(255) NOT NULL,
-  `tbactividadfecha` datetime NOT NULL,
-  `tbactividadduracionminutos` int(11) NOT NULL,
+  `tbactividadfechainicio` datetime NOT NULL,
+  `tbactividadfechatermina` datetime NOT NULL,
   `tbactividaddireccion` varchar(255) NOT NULL,
   `tbactividadlatitud` int(11) NOT NULL,
   `tbactividadlongitud` int(11) NOT NULL,
@@ -41,20 +41,16 @@ CREATE TABLE `tbactividad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbactividad`
 --
 
--- Insertar actividades para el colectivo de Volleyball
 INSERT INTO `tbactividad` 
-(`tbactividadid`, `tbactividadtitulo`, `tbactividaddescripcion`, `tbactividadfecha`, `tbactividadduracionminutos`, `tbactividaddireccion`, `tbactividadlatitud`, `tbactividadlongitud`, `tbactividadestado`, `tbactividadanonimo`) VALUES
-(1, 'Torneo Interuniversitario Volleyball', 'Competencia de volleyball contra otros equipos universitarios', '2024-10-15 10:00:00', 180, 'Coliseo Deportivo, San José', 0, 0, 1, 0),
-(2, 'Partido Amistoso Fútbol', 'Partido amistoso contra otro equipo universitario', '2024-10-20 14:00:00', 90, 'Estadio Universitario', 0, 0, 1, 0),
-(3, 'Torneo Regional Basketball', 'Torneo regional con equipos universitarios de la zona', '2024-10-18 09:00:00', 240, 'Coliseo de Basketball, Heredia', 0, 0, 1, 0),
-(4, 'Torneo Ping Pong', 'Competencia amistosa de ping pong entre miembros del colectivo', '2024-10-10 14:00:00', 60, 'Sala de Deportes, Campus Norte', 0, 0, 1, 1),
-(5, 'Sesión de Práctica Ping Pong', 'Práctica general para todos los miembros del club', '2024-10-24 16:00:00', 90, 'Sala de Deportes, Campus Norte', 0, 0, 1, 0),
-(6, 'Presentación de Danza', 'Presentación artística durante el evento cultural del campus', '2024-10-30 19:00:00', 180, 'Auditorio Principal, Campus Central', 0, 0, 1, 0);
-
--- --------------------------------------------------------
+(`tbactividadid`, `tbactividadtitulo`, `tbactividaddescripcion`, `tbactividadfechainicio`, `tbactividadfechatermina`, `tbactividaddireccion`, `tbactividadlatitud`, `tbactividadlongitud`, `tbactividadestado`, `tbactividadanonimo`) VALUES
+(1, 'Torneo Interuniversitario Volleyball', 'Competencia de volleyball contra otros equipos universitarios', '2024-10-15 10:00:00', '2024-10-15 18:00:00', 'Coliseo Deportivo, San José', 0, 0, 1, 0),
+(2, 'Partido Amistoso Fútbol', 'Partido amistoso contra otro equipo universitario', '2024-10-20 14:00:00', '2024-10-20 16:00:00', 'Estadio Universitario', 0, 0, 1, 0),
+(3, 'Torneo Regional Basketball', 'Torneo regional con equipos universitarios de la zona', '2024-10-18 09:00:00', '2024-10-18 19:00:00', 'Coliseo de Basketball, Heredia', 0, 0, 1, 0),
+(4, 'Torneo Ping Pong', 'Competencia amistosa de ping pong entre miembros del colectivo', '2024-10-10 14:00:00', '2024-10-10 15:00:00', 'Sala de Deportes, Campus Norte', 0, 0, 1, 1),
+(5, 'Sesión de Práctica Ping Pong', 'Práctica general para todos los miembros del club', '2024-10-24 16:00:00', '2024-10-24 17:30:00', 'Sala de Deportes, Campus Norte', 0, 0, 1, 0),
+(6, 'Presentación de Danza', 'Presentación artística durante el evento cultural del campus', '2024-10-30 19:00:00', '2024-10-30 22:00:00', 'Auditorio Principal, Campus Central', 0, 0, 1, 0);
 
 --
 -- Table structure for table `tbactividaduniversidadcampuscolectivo`
@@ -201,6 +197,12 @@ CREATE TABLE `tbperfilusuariodeseado` (
   `tbperfilusuariodeseadoestado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `tbperfilusuariodeseado` 
+(`tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbusuarioid`, `tbperfilusuariodeseadoestado`) 
+VALUES
+(1,'Empleos,Gustos Musicales', 'médico,samba', '30', 1, 1),
+(2,'Gustos Musicales', 'samba', '50', 2, 1);
+
 --
 --
 -- Table structure for table `tbperfilusuariopersonal`
@@ -214,11 +216,18 @@ CREATE TABLE `tbperfilusuariopersonal` (
   `tbgenero` varchar(50) NOT NULL,
   `tborientacionsexual` varchar(50) NOT NULL,
   `tbuniversidad` varchar(50) NOT NULL,
-  `tbuniversidadcampus` int(11) NOT NULL,
+  `tbuniversidadcampus` varchar(100) NOT NULL,
   `tbuniversidadcampuscolectivo` varchar(100) DEFAULT NULL,
   `tbusuarioid` int(11) NOT NULL,
   `tbperfilusuariopersonalestado` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `tbperfilusuariopersonal` 
+(`tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbareaconocimiento`, `tbgenero`, `tborientacionsexual`, `tbuniversidad`, `tbuniversidadcampus`, `tbuniversidadcampuscolectivo`, `tbusuarioid`, `tbperfilusuariopersonalestado`) 
+VALUES
+(1,'Gustos Musicales', 'samba', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 1', 'Campus 1', 'Colectivo 1', 1, 1),
+(2,'Empleos,Gustos Musicales', 'médico,samba', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 3, 1);
+
 
 
 -- --------------------------------------------------------
