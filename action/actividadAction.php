@@ -5,15 +5,15 @@ include '../action/functions.php';
 
 if (isset($_POST['update'])) {
 
-    if (isset($_POST['idActividad']) && isset($_POST['titulo']) && isset($_POST['descripcion']) && isset($_POST['descripcion']) 
-         && isset( $_POST['fecha']) && isset($_POST['duracion']) && isset($_POST['direccion'])
+    if (isset($_POST['idActividad']) && isset($_POST['titulo']) && isset($_POST['descripcion'])
+         && isset( $_POST['fechaInicioInput']) && isset($_POST['fechaTerminaInput']) && isset($_POST['direccion'])
     ) {
         
         $idActividad = $_POST['idActividad'];
         $titulo = $_POST['titulo'];
         $descripcion = $_POST['descripcion'];
-        $fecha = $_POST['fecha'];
-        $duracion = $_POST['duracion'];
+        $fechaInicio = $_POST['fechaInicioInput'];
+        $fechaTermina = $_POST['fechaTerminaInput'];
         $direccion = $_POST['direccion'];
         $anonimo = isset($_POST['anonimo']) ? true : false;
         $colectivos = $_POST['colectivos'];
@@ -46,7 +46,7 @@ if (isset($_POST['update'])) {
                     guardarFormData();
                     header("location: ../view/actividadView.php?error=exist");
                 } else {
-                    $actividad = new Actividad($idActividad, $titulo, $descripcion, $fecha, $duracion, $direccion, 0, 0, true, $anonimo, $colectivos);
+                    $actividad = new Actividad($idActividad, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
 
                     $result = $actividadBusiness->updateTbActividad($actividad);
 
@@ -69,7 +69,68 @@ if (isset($_POST['update'])) {
         guardarFormData();
         header("location: ../view/actividadView.php?error=error");
     }
-} else if (isset($_POST['delete'])) {
+}else if (isset($_POST['userUpdate'])) {
+
+    if (isset($_POST['idActividad']) && isset($_POST['titulo']) && isset($_POST['descripcion'])
+         && isset( $_POST['fechaInicioInput']) && isset($_POST['fechaTerminaInput']) && isset($_POST['direccion'])
+    ) {
+        
+        $idActividad = $_POST['idActividad'];
+        $titulo = $_POST['titulo'];
+        $descripcion = $_POST['descripcion'];
+        $fechaInicio = $_POST['fechaInicioInput'];
+        $fechaTermina = $_POST['fechaTerminaInput'];
+        $direccion = $_POST['direccion'];
+        $anonimo = isset($_POST['anonimo']) ? true : false;
+        $colectivos = $_POST['colectivos'];
+
+        if (strlen($titulo) > 63) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=nameTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > 255) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=descriptionTooLong");
+            exit();
+        }
+
+        if (strlen($direccion) > 255) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=directionTooLong");
+            exit();
+        }
+
+        if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
+            if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
+                $actividadBusiness = new ActividadBusiness();
+
+                    $actividad = new Actividad($idActividad, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
+
+                    $result = $actividadBusiness->updateTbActividad($actividad);
+
+                    if ($result == 1) {
+                        header("location: ../view/activitiesCalendarView.php?success=updated");
+                    } else {
+                        guardarFormData();
+                        header("location: ../view/activitiesCalendarView.php?error=dbError");
+                    }
+                
+            } else {
+                guardarFormData();
+                header("location: ../view/activitiesCalendarView.php?error=numberFormat");
+            }
+        } else {
+            guardarFormData();
+            header("location: ../view/activitiesCalendarView.php?error=emptyField");
+        }
+    } else {
+        guardarFormData();
+        header("location: ../view/activitiesCalendarView.php?error=error");
+    }
+} 
+else if (isset($_POST['delete'])) {
 
     if (isset($_POST['idActividad'])) {
 
@@ -88,14 +149,14 @@ if (isset($_POST['update'])) {
     }
 } else if (isset($_POST['create'])) {
 
-    if (isset($_POST['titulo']) && isset($_POST['descripcion']) && isset($_POST['descripcion']) 
-         && isset( $_POST['fecha']) && isset($_POST['duracion']) && isset($_POST['direccion'])
+    if (isset($_POST['titulo']) && isset($_POST['descripcion'])
+         && isset( $_POST['fechaInicioInput']) && isset($_POST['fechaTerminaInput']) && isset($_POST['direccion'])
     ) {
 
         $titulo = $_POST['titulo'];
         $descripcion = $_POST['descripcion'];
-        $fecha = $_POST['fecha'];
-        $duracion = $_POST['duracion'];
+        $fechaInicio = $_POST['fechaInicioInput'];
+        $fechaTermina = $_POST['fechaTerminaInput'];
         $direccion = $_POST['direccion'];
         $anonimo = isset($_POST['anonimo']) ? true : false;
         $colectivos = $_POST['colectivos'];
@@ -137,7 +198,7 @@ if (isset($_POST['update'])) {
                     header("Location: ../view/actividadView.php?error=alike");
                     exit();
                 } else {
-                    $actividad = new Actividad(0, $titulo, $descripcion, $fecha, $duracion, $direccion, 0, 0, true, $anonimo, $colectivos);
+                    $actividad = new Actividad(0, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
 
                     $result = $actividadBusiness->insertTbActividad($actividad);
 

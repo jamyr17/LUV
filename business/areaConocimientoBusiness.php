@@ -14,6 +14,10 @@ class AreaConocimientoBusiness {
         return $this->areaConocimientoData->insertTbAreaConocimiento($areaConocimiento);
     }
 
+    public function insertRequestTbAreaConocimiento($areaConocimiento) {
+        return $this->areaConocimientoData->insertRequestTbAreaConocimiento($areaConocimiento);
+    }
+
     public function updateTbAreaConocimiento($areaConocimiento) {
         return $this->areaConocimientoData->updateTbAreaConocimiento($areaConocimiento);
     }

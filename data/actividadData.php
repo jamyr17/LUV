@@ -22,15 +22,15 @@ class ActividadData extends Data
         }
     
         $queryInsert = "INSERT INTO tbactividad (
-            tbactividadid, tbactividadtitulo, tbactividaddescripcion, tbactividadfecha,
-            tbactividadduracionminutos, tbactividaddireccion, tbactividadlatitud,
+            tbactividadid, tbactividadtitulo, tbactividaddescripcion, tbactividadfechainicio,
+            tbactividadfechatermina, tbactividaddireccion, tbactividadlatitud,
             tbactividadlongitud, tbactividadestado, tbactividadanonimo
         ) VALUES (
             $nextId, 
             '{$actividad->getTbActividadTitulo()}', 
             '{$actividad->getTbActividadDescripcion()}', 
-            '{$actividad->getTbActividadFecha()}', 
-            '{$actividad->getTbActividadDuracion()}', 
+            '{$actividad->getTbActividadFechaInicio()}', 
+            '{$actividad->getTbActividadFechaTermina()}', 
             '{$actividad->getTbActividadDireccion()}', 
             '{$actividad->getTbActividadLatitud()}', 
             '{$actividad->getTbActividadLongitud()}', 
@@ -77,7 +77,7 @@ class ActividadData extends Data
         $actividades = [];
         while ($row = mysqli_fetch_array($result)) {
             $actividadNueva = new Actividad($row['tbactividadid'], $row['tbactividadtitulo'], 
-            $row['tbactividaddescripcion'], $row['tbactividadfecha'], $row['tbactividadduracionminutos'], 
+            $row['tbactividaddescripcion'], $row['tbactividadfechainicio'], $row['tbactividadfechatermina'], 
             $row['tbactividaddireccion'], $row['tbactividadlatitud'], $row['tbactividadlongitud'],
             $row['tbactividadestado'], $row['tbactividadanonimo'], 1
         );
@@ -95,7 +95,7 @@ class ActividadData extends Data
         $id = intval($actividad->getTbActividadId()); 
 
         $queryUpdate = "UPDATE tbactividad SET tbactividadtitulo='{$actividad->getTbActividadTitulo()}', tbactividaddescripcion='{$actividad->getTbActividadDescripcion()}', 
-        tbactividadfecha='{$actividad->getTbActividadFecha()}', tbactividadduracionminutos='{$actividad->getTbActividadDuracion()}', 
+        tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}', 
         tbactividaddireccion='{$actividad->getTbActividadDireccion()}', tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
         WHERE tbactividadid=$id;";
 
@@ -110,10 +110,7 @@ class ActividadData extends Data
         }
 
         // Insertar los nuevos colectivos
-        $colectivos = $actividad->getTbActividadColectivos();
-        if (!is_array($colectivos)) {
-            throw new Exception('El método getColectivos debe devolver un array.');
-        }
+        $colectivos = $actividad->getTbActividadColectivos();        
 
         // Obtener el ID máximo actual para los colectivos
         $queryGetLastIdAux = "SELECT MAX(tbactividaduniversidadcampuscolectivoid) AS max_id FROM tbactividaduniversidadcampuscolectivo";
@@ -276,8 +273,8 @@ while ($row = mysqli_fetch_array($result)) {
         $row['tbactividadid'],
         $row['tbactividadtitulo'],
         $row['tbactividaddescripcion'],
-        $row['tbactividadfecha'],
-        $row['tbactividadduracionminutos'],
+        $row['tbactividadfechainicio'],
+        $row['tbactividadfechatermina'],
         $row['tbactividaddireccion'],
         $row['tbactividadlatitud'],
         $row['tbactividadlongitud'],
