@@ -225,6 +225,7 @@ include '../action/functions.php';
             // Función auxiliar para extraer y asignar valores
             const assignValues = (formularioUniversidad, formularioCampus, universidadField, campusField) => {
                 if (universidadField) {
+                    console.log('esta aquí entrando');
                     saveData(formularioUniversidad, 10);
                 }
                 if (campusField) {
@@ -247,6 +248,8 @@ include '../action/functions.php';
                     formOtherCampusId, true, true
                 );
                 otherFieldCampus.style.display = 'none';
+            } else {
+                saveData('instalacionesForm', nextForm);
             }
         }
 
@@ -290,6 +293,7 @@ include '../action/functions.php';
 
                 return true;
             } else {
+                console.log('paso por aqui');
                 return true;
             }
         }
@@ -413,7 +417,7 @@ include '../action/functions.php';
             <label for="universidad">Universidad:</label>
             <select name="universidad" id="universidad" onchange="showOtherField('universidad', 'request-universidad', true)">
                 <?php
-                include '../business/universidadBusiness.php';
+                include_once '../business/universidadBusiness.php';
                 $universidadBusiness = new UniversidadBusiness();
                 $universidades = $universidadBusiness->getAllTbUniversidad();
 
@@ -469,7 +473,7 @@ include '../action/functions.php';
             echo '</select>';
             ?>
             <br>
-            <button type="button" onclick="if (validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 5)">Siguiente</button>
+            <button type="button" onclick="if(validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 5)">Siguiente</button>
         </form>
     </div>
 

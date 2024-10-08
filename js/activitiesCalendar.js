@@ -5,20 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Iniciar el objeto calendario
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        header: {
-            left: "prev, next today",
-            center: "title",
-            right: "month,agendaWeek,agendaDay"
-          },
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: 'timeGridWeek,timeGridDay'
+        },
       
-          locale: 'es',
-      
-          defaultView: "month",
-          navLinks: true, 
-          editable: true,
-          eventLimit: true, 
-          selectable: true,
-          selectHelper: false,
+        locale: 'es',
+        navLinks: true, 
+        editable: true,
+        selectable: true,
 
         events:function(info, successCallback, failureCallback){ // Recuperar las actividades
             fetch(requestActivies)
@@ -70,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         // Se debe validar que esto solo sea posible si el usuario que está logeado es el creado del evento
-        eventClick:function(event){
+        eventClick: function(event) {
             console.log(event);
             var inputIdActividad = document.getElementById('idActividad');
             var inputTitulo = document.getElementById('titulo');
@@ -80,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var inputDireccion = document.getElementById('direccion');
             var inputAnonimo = document.getElementById('anonimo');
             var inputColectivos = document.getElementById('colectivos');
-
+        
             inputIdActividad.value = event.event.id;
             inputTitulo.value = event.event.title;
             inputDescripcion.value = event.event.extendedProps.description;
@@ -88,10 +84,17 @@ document.addEventListener('DOMContentLoaded', function() {
             inputFechaTermina.value = toDateTimeLocalFormat(event.event.end);
             inputDireccion.value = event.event.extendedProps.direction;
             inputAnonimo.checked = (parseInt(event.event.extendedProps.anonymn) === 1);
-
+        
+            // Manejar los colectivos seleccionados
+            var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
+            for (var i = 0; i < inputColectivos.options.length; i++) {
+                var option = inputColectivos.options[i];
+                option.selected = colectivosSeleccionados.includes(parseInt(option.value));
+            }
+        
             $("#actividadActualizarModalView").modal();
         }
-
+        
     });
     calendar.render();
 });
