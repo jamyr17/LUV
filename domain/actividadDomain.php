@@ -4,8 +4,8 @@ class Actividad {
     private $tbActividadId;
     private $tbActividadTitulo;
     private $tbActividadDescripcion;
-    private $tbActividadFecha;
-    private $tbActividadDuracion;
+    private $tbActividadFechaInicio;
+    private $tbActividadFechaTermina;
     private $tbActividadDireccion;
     private $tbActividadLatitud;
     private $tbActividadLongitud; 
@@ -13,12 +13,12 @@ class Actividad {
     private $tbActividadAnonimo;
     private $tbActividadColectivos;
 
-    public function __construct($tbActividadId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadFecha, $tbActividadDuracion, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
+    public function __construct($tbActividadId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadFechaInicio, $tbActividadFechaTermina, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
         $this->tbActividadId = $tbActividadId;
         $this->tbActividadTitulo = $tbActividadTitulo;
         $this->tbActividadDescripcion = $tbActividadDescripcion;
-        $this->tbActividadFecha = $tbActividadFecha;
-        $this->tbActividadDuracion = $tbActividadDuracion;
+        $this->tbActividadFechaInicio = $tbActividadFechaInicio;
+        $this->tbActividadFechaTermina = $tbActividadFechaTermina;
         $this->tbActividadDireccion = $tbActividadDireccion;
         $this->tbActividadLatitud = $tbActividadLatitud;
         $this->tbActividadLongitud = $tbActividadLongitud;
@@ -39,12 +39,12 @@ class Actividad {
         return $this->tbActividadDescripcion;
     }
 
-    public function getTbActividadFecha() {
-        return $this->tbActividadFecha;
+    public function getTbActividadFechaInicio() {
+        return $this->tbActividadFechaInicio;
     }
 
-    public function getTbActividadDuracion() {
-        return $this->tbActividadDuracion;
+    public function getTbActividadFechaTermina() {
+        return $this->tbActividadFechaTermina;
     }
 
     public function getTbActividadDireccion() {
@@ -83,12 +83,12 @@ class Actividad {
         $this->tbActividadDescripcion = $tbActividadDescripcion;
     }
 
-    public function setTbActividadFecha($tbActividadFecha) {
-        $this->tbActividadFecha = $tbActividadFecha;
+    public function setTbActividadFechaInicio($tbActividadFechaInicio) {
+        $this->tbActividadFechaInicio = $tbActividadFechaInicio;
     }
 
-    public function setTbActividadDuracion($tbActividadDuracion) {
-        $this->tbActividadDuracion = $tbActividadDuracion;
+    public function setTbActividadFechaTermina($tbActividadFechaTermina) {
+        $this->tbActividadFechaTermina = $tbActividadFechaTermina;
     }
 
     public function setTbActividadDireccion($tbActividadDireccion) {

@@ -84,19 +84,19 @@ if (isset($_GET['type'])) {
             if (isset($_GET['criterion'])) {
                 $criterion = $_GET['criterion'];
 
-                // Depuración usando error_log() para el criterio recibido
-                error_log("Criterio recibido: " . $criterion);
+                    // Depuración usando error_log() para el criterio recibido
+                    error_log("Criterio recibido: " . $criterion);
 
-                $filePath = "../resources/criterios/{$criterion}.dat";
-                error_log("Ruta del archivo: " . $filePath);  // Depuración de la ruta
+                    $filePath = "../resources/criterios/{$criterion}.dat";
+                    error_log("Ruta del archivo: " . $filePath);  // Depuración de la ruta
 
-                if (file_exists($filePath)) {
-                    $data = file_get_contents($filePath);
-                    $valores = explode(',', $data);
-                    $response = array_map('trim', $valores);
+                    if (file_exists($filePath)) {
+                        $data = file_get_contents($filePath);
+                        $valores = explode(',', $data);
+                        $response = array_map('trim', $valores);
 
-                    // Depuración usando error_log() para los valores leídos
-                    error_log("Valores leídos: " . print_r($response, true));
+                        // Depuración usando error_log() para los valores leídos
+                        error_log("Valores leídos: " . print_r($response, true));
 
                     echo json_encode($response);
                 } else {
@@ -161,6 +161,23 @@ if (isset($_GET['type'])) {
     }
 
     echo json_encode($response);
+} else if (isset($_GET['campusNombre'])) {
+
+    $campusNombre = $_GET['campusNombre']; 
+
+    $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+    $colectivos = $campusColectivoBusiness->getColectivosByCampusName($campusNombre);
+
+    $response = [];
+    foreach ($colectivos as $colectivo) {
+        $response[] = [
+            'id' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoId()),
+            'nombre' => htmlspecialchars($colectivo->getTbUniversidadCampusColectivoNombre())
+        ];
+    }
+
+    echo json_encode($response);
 } else {
     echo json_encode([]);
 }
+

@@ -335,6 +335,42 @@ class universidadCampusColectivoData extends Data
         return $colectivos;
     }
 
+    public function getColectivosByCampusName($campusNombre)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        $query = "SELECT DISTINCT tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivoid, 
+                tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivonombre 
+                FROM tbuniversidadcampuscolectivo 
+                INNER JOIN tbuniversidadcampusuniversidadcolectivo 
+                ON tbuniversidadcampuscolectivo.tbuniversidadcampuscolectivoid = tbuniversidadcampusuniversidadcolectivo.tbuniversidadcolectivoid
+                INNER JOIN tbuniversidadcampus 
+                ON tbuniversidadcampus.tbuniversidadcampusid = tbuniversidadcampusuniversidadcolectivo.tbuniversidadcampusid
+                WHERE tbuniversidadcampus.tbuniversidadcampusnombre = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $campusNombre);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $colectivos = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $colectivo = new universidadCampusColectivo(
+                $row['tbuniversidadcampuscolectivoid'],
+                $row['tbuniversidadcampuscolectivonombre'],
+                '',
+                1
+            );
+            $colectivos[] = $colectivo;
+        }
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        return $colectivos;
+    }
+
     public function autocomplete($term) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
