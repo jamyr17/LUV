@@ -72,29 +72,15 @@ if (isset($_GET['type'])) {
             }
             break;
         case "6":
-            $result = $criterioBusiness->getAllTbCriterio();
+            $result = $criterioBusiness->getAllTbCriterioDat(); // Cambiado para obtener desde archivos .dat
             foreach ($result as $item) {
                 $data[] = [
-<<<<<<< Updated upstream
-                    'id' => $item->getTbCriterioId(),
-                    'name' => $item->getTbCriterioNombre()
-=======
                     'id' => $item,
                     'name' => $item
->>>>>>> Stashed changes
                 ];
             }
             break;
         case "7":
-<<<<<<< Updated upstream
-            $result = $valorBusiness->getAllTbValor();
-            foreach ($result as $item) {
-                $data[] = [
-                    'id' => $item->getTbValorId(),
-                    'name' => $item->getTbValorNombre(),
-                    'idCriterio' => $item->getTbCriterioId()
-                ];
-=======
             if (isset($_GET['criterion'])) {
                 $criterion = $_GET['criterion'];
 
@@ -118,7 +104,6 @@ if (isset($_GET['type'])) {
                     error_log("Archivo no encontrado: " . $filePath);
                     echo json_encode([]);
                 }
->>>>>>> Stashed changes
             }
             break;
     }
