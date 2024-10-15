@@ -54,7 +54,7 @@
 <body>
     <div class="container">
         <button class="back-button" onclick="goBack()">Back</button>
-        <img src="https://images.unsplash.com/photo-1640785120527-da00de6e4d40?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Ym9zcXVlJTIwZGUlMjBhbmltYWxlc3xlbnwwfHwwfHx8MA%3D%3D" 
+        <img src="https://faunacr.com/wp-content/uploads/2022/04/shutterstock_1249664152-1-scaled.jpg" 
              alt="Zoomable Image" class="image" id="image">
         <div class="grid-overlay" id="grid-overlay">
             <!-- Divs for the 4x4 grid will be rendered here -->
@@ -107,25 +107,6 @@
             }
         }
 
-        // Track region and zoom time
-        gridOverlay.addEventListener('mouseenter', (event) => {
-            if (event.target.matches('div')) {
-                activeRegion = event.target.dataset.region;
-                zoomStart = Date.now();
-                console.log(`Entering region: ${activeRegion}`);
-            }
-        });
-
-        gridOverlay.addEventListener('mouseleave', (event) => {
-            if (activeRegion) {
-                const zoomDuration = Date.now() - zoomStart;
-                console.log(`Left region: ${activeRegion} after ${zoomDuration}ms`);
-                sendDataToBackend(activeRegion, zoomDuration, zoomScale);
-                activeRegion = null;
-                zoomStart = 0;
-            }
-        });
-
         // Send data to the backend
         function sendDataToBackend(region, duration, zoomScale) {
             const data = {
@@ -134,7 +115,7 @@
                 zoomScale: zoomScale
             };
 
-            fetch('../action/imagenZoomAction.php', {
+            fetch('../action/guardarSegmentacion.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
