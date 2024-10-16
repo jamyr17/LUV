@@ -1,9 +1,0 @@
-Región: 1,3, Duración: 475 ms, ZoomScale: 1
-Región: 1,2, Duración: 2022 ms, ZoomScale: 1
-Región: 1,1, Duración: 1699 ms, ZoomScale: 1
-Región: 2,1, Duración: 554 ms, ZoomScale: 1
-Región: 2,2, Duración: 3969 ms, ZoomScale: 1
-Región: 2,3, Duración: 756 ms, ZoomScale: 1
-Región: 3,3, Duración: 224 ms, ZoomScale: 1
-Región: 3,2, Duración: 293 ms, ZoomScale: 1
-Región: 3,1, Duración: 297 ms, ZoomScale: 1

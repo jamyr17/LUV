@@ -54,12 +54,9 @@
 <body>
     <div class="container">
         <button class="back-button" onclick="goBack()">Back</button>
-        <img src="https://faunacr.com/wp-content/uploads/2022/04/shutterstock_1249664152-1-scaled.jpg" 
+        <img src="https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg" 
              alt="Zoomable Image" class="image" id="image">
-        <div class="grid-overlay" id="grid-overlay">
-            <!-- Divs for the 4x4 grid will be rendered here -->
-        </div>
-
+        <div class="grid-overlay" id="grid-overlay"></div>
     </div>
     <button type="button" onclick="analizarAfinidades()">Analizar Afinidades</button>
 
@@ -86,7 +83,7 @@
             image.style.transform = `scale(${zoomScale})`;
         });
 
-        // Initialize the 4x4 grid
+        // Initialize the 3x3 grid
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
                 const cell = document.createElement('div');
@@ -117,7 +114,7 @@
                 zoomScale: zoomScale
             };
 
-            fetch('../action/guardarSegmentacion.php', {
+            fetch('../action/afinidadImagenAction.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,9 +128,9 @@
             .catch(error => console.error('Error:', error));
         }
 
-        
+        // Function to calculate affinities
         function analizarAfinidades() {
-            fetch('../action/calcularAfinidades.php', {
+            fetch('../action/afinidadImagenAction.php', {
                 method: 'GET'
             })
             .then(response => response.json())
@@ -150,7 +147,6 @@
                 console.error("Error en la solicitud:", error);
             });
         }
-        
     </script>
 </body>
 </html>

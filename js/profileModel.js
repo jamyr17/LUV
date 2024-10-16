@@ -471,44 +471,55 @@ async function cargarPerfilPersonal() {
         console.error('Error al cargar el perfil personal:', error);
     }
 }
-
-async function cargarPerfilDeseado() {
+async function cargarCriteriosYValores() {
     try {
-        const response = await fetch('../action/wantedProfileAction.php');
+        const response = await fetch('../action/obtenerCriteriosYValores.php');  // Llama a un nuevo script que devuelve los criterios y valores
         const data = await response.json();
 
         if (data.error) {
-            console.error('Error al cargar el perfil deseado:', data.error);
+            console.error('Error al cargar los criterios y valores:', data.error);
             return;
         }
 
-        console.log('Data:', data);
+        console.log('Criterios y valores:', data);
+        return data; // Devolvemos los criterios y sus valores para su uso
+    } catch (error) {
+        console.error('Error al cargar los criterios y valores:', error);
+    }
+}
 
-        // Cargar los criterios y valores en los combobox
-        data.forEach((item, index) => {
+// Función para cargar el perfil deseado
+async function cargarPerfilDeseado() {
+    try {
+        const criteriosYValores = await cargarCriteriosYValores(); // Obtener criterios y valores desde los archivos
+        
+        // Aquí se supone que 'criteriosYValores' será un objeto en el formato { criterio: [valores] }
+        if (!criteriosYValores) {
+            console.error('No se obtuvieron criterios y valores.');
+            return;
+        }
+
+        Object.entries(criteriosYValores).forEach(([criterio, valores], index) => {
             if (index > 0) addCriterion(); // Agregar un nuevo criterio si es el segundo o más
 
             const criterioSelect = document.getElementById(`criterion${index + 1}`);
             const valorSelect = document.getElementById(`value${index + 1}`);
 
             // Seleccionar el criterio en el combobox
-            const criterioOption = Array.from(criterioSelect.options).find(option => option.text === item.criterio);
+            const criterioOption = Array.from(criterioSelect.options).find(option => option.text === criterio);
             if (criterioOption) criterioOption.selected = true;
 
-            // Cargar los valores basados en el criterio
-            loadValues(criterioSelect, index + 1);
+            // Limpiar los valores anteriores del combobox
+            valorSelect.innerHTML = '';
 
-            // Revisar si el valor existe en el combobox de valores
-            let valorOption = Array.from(valorSelect.options).find(option => option.text === item.valor);
-
-            if (!valorOption) {
-                // Si el valor no existe, crearlo dinámicamente
-                valorOption = new Option(item.valor, item.valor);
+            // Cargar los valores en el combobox correspondiente
+            valores.forEach(valor => {
+                let valorOption = new Option(valor, valor);
                 valorSelect.add(valorOption);
-            }
+            });
 
-            // Seleccionar el valor en el combobox
-            valorOption.selected = true;
+            // Seleccionar el valor en el combobox si es necesario
+            // valorOption.selected = true; (Si tienes algún valor a seleccionar, puedes hacerlo aquí)
         });
 
         actualizarTablaConCriterio();
