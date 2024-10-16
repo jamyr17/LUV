@@ -132,9 +132,12 @@ function obtenerMensajesDelThread($threadId, $token) {
 function procesarImagen($urlImagen) {
 
     // Configuración inicial
-    $token = 'api'; // Tu API Key
-    $assistantId = 'assit';
-    $threadId = 'thread';
+
+    $token = 't'; // Tu API Key
+
+    $assistantId = 'a';
+
+    $threadId = 't';
 
     // Enviar la imagen al hilo
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
