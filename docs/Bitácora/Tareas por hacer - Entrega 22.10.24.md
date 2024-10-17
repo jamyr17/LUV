@@ -1,5 +1,5 @@
-- [ ] Los criterios y valores en las vistas de modelados (personal o deseado) se precarguen en caso de ya tener registros en BD.
-- [ ] En las vistas de modelados se muestre un pequeño apartado de "ejemplo" de a qué nos referimos con el llenado de "Criterio" y "Valor".
+- [ ] Los criterios y valores en las vistas de modelados (personal o deseado) se precarguen en caso de ya tener registros en BD.(KEVIN)
+- [ ] En las vistas de modelados se muestre un pequeño apartado de "ejemplo" de a qué nos referimos con el llenado de "Criterio" y "Valor".(GERALD)
 - [ ] En el modelado de perfil personal, cuando se pregunta la Universidad y Campus, los colectivos que se deben poder seleccionar deben ser los que están asociados al campus que está siendo seleccionado. Ahorita se puede marcar colectivos a los cuales el campus no está asociado.
 - [ ] Trabajar el algoritmo que recibe el género y orientación sexual de una persona y devuelve la afinidad de en lo que estaría interesado el usuario.
 - [ ] En el modelado de perfil personal, añadir un nuevo "paso", previo al de los Criterios y Valores, en el cual se trabaje el algoritmo de segmentación de imágenes. Sólo es de decir "Analice esta imagen" y se calculan las afinidades cuando el usuario le dé siguiente. Debe agregar o actualizar las afinidades (según corresponda) en la siguiente tbusuarioafinidad.

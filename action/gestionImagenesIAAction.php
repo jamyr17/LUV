@@ -133,12 +133,8 @@ function procesarImagen($urlImagen) {
 
     // Configuración inicial
 
-    $token = 't'; // Tu API Key
 
-    $assistantId = 'a';
-
-    $threadId = 't';
-
+    
     // Enviar la imagen al hilo
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
     if (!isset($mensaje['id'])) {

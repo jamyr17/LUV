@@ -1,22 +1,17 @@
 <?php
-// Requiere la lógica de IA y segmentación
 require_once 'gestionImagenesIAAction.php';
 
-// Archivos utilizados
 $segmentacionFile = '../action/segmentacion.txt';
 $afinidadesFile = '../action/afinidades.txt';
-$logFile = 'debug.log'; // Archivo de log para depuración
+$logFile = 'debug.log';
 
 // Obtener el método de la solicitud
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if ($requestMethod === 'POST') {
-    // Guardar Segmentación (POST)
 
-    // Obtener los datos enviados en formato JSON
     $input = json_decode(file_get_contents('php://input'), true);
 
-    // Verificar que los datos estén presentes
     if (isset($input['region']) && isset($input['duration']) && isset($input['zoomScale'])) {
         $region = $input['region'];
         $duration = $input['duration'];
@@ -26,10 +21,8 @@ if ($requestMethod === 'POST') {
         $existingData = [];
 
         if (file_exists($segmentacionFile)) {
-            // Leer el archivo línea por línea y almacenar los datos
             $lines = file($segmentacionFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             foreach ($lines as $line) {
-                // Extraer la región, duración y zoomScale de cada línea
                 if (preg_match('/Región: (\d+,\d+), Duración: (\d+) ms, ZoomScale: (\d+)/', $line, $matches)) {
                     $existingData[$matches[1]] = [
                         'duration' => (int) $matches[2],
@@ -39,46 +32,36 @@ if ($requestMethod === 'POST') {
             }
         }
 
-        // Actualizar o agregar la duración de la región
         if (isset($existingData[$region])) {
-            // Si la región ya existe, sumar la duración
             $existingData[$region]['duration'] += $duration;
         } else {
-            // Si la región no existe, agregarla
             $existingData[$region] = [
                 'duration' => $duration,
                 'zoomScale' => $zoomScale,
             ];
         }
 
-        // Formatear los datos y volver a escribir el archivo
         $newContent = '';
         foreach ($existingData as $regionKey => $data) {
             $newContent .= "Región: $regionKey, Duración: {$data['duration']} ms, ZoomScale: {$data['zoomScale']}" . PHP_EOL;
         }
 
-        // Guardar los datos actualizados en el archivo
         file_put_contents($segmentacionFile, $newContent);
 
-        // Depuración
         file_put_contents($logFile, "Segmentación guardada para la región $region\n", FILE_APPEND);
 
-        // Responder con éxito
         echo json_encode(['status' => 'success', 'message' => 'Datos de segmentación guardados correctamente.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Datos incompletos']);
     }
 
 } elseif ($requestMethod === 'GET') {
-    // Calcular Afinidades (GET)
 
-    // Verificar si el archivo de segmentación existe
     if (!file_exists($segmentacionFile)) {
         echo json_encode(['status' => 'error', 'message' => 'Archivo de segmentación no encontrado']);
         exit();
     }
 
-    // Leer los datos de segmentación y encontrar la duración máxima
     $lines = file($segmentacionFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $segmentacionData = [];
     $duracionMaxima = 0;
@@ -103,7 +86,6 @@ if ($requestMethod === 'POST') {
     // Depuración: Guardar segmentación procesada
     file_put_contents($logFile, "Datos de segmentación procesados: " . print_r($segmentacionData, true), FILE_APPEND);
 
-    // Obtener criterios desde la IA
     $urlImagen = 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg';
     $criteriosIA = procesarImagen($urlImagen);
 

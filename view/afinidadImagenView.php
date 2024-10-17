@@ -47,7 +47,7 @@
         }
         .grid-overlay div {
             border: 1px solid rgba(0, 0, 0, 0.1);
-            pointer-events: auto; /* Habilitar eventos en la cuadrícula */
+            pointer-events: auto;
         }
     </style>
 </head>
@@ -66,6 +66,7 @@
         let zoomScale = 1;
         let zoomStart = 0;
         let activeRegion = null;
+        const segmentacionData = [];  // Array para almacenar los datos de segmentación temporalmente
 
         function goBack() {
             window.history.back();
@@ -97,7 +98,7 @@
                     if (activeRegion) {
                         const zoomDuration = Date.now() - zoomStart;
                         console.log(`Left region: ${activeRegion} after ${zoomDuration}ms`);
-                        sendDataToBackend(activeRegion, zoomDuration, zoomScale);
+                        saveSegmentacionData(activeRegion, zoomDuration, zoomScale);
                         activeRegion = null;
                         zoomStart = 0;
                     }
@@ -106,29 +107,16 @@
             }
         }
 
-        // Send data to the backend
-        function sendDataToBackend(region, duration, zoomScale) {
-            const data = {
+        // Function to temporarily store segmentación data in an array
+        function saveSegmentacionData(region, duration, zoomScale) {
+            segmentacionData.push({
                 region: region,
                 duration: duration,
                 zoomScale: zoomScale
-            };
-
-            fetch('../action/afinidadImagenAction.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => console.error('Error:', error));
+            });
+            console.log('Segmentación data saved:', segmentacionData);
         }
 
-        // Function to calculate affinities
         function analizarAfinidades() {
             fetch('../action/afinidadImagenAction.php', {
                 method: 'GET'
@@ -145,8 +133,15 @@
             })
             .catch(error => {
                 console.error("Error en la solicitud:", error);
+                // Mostrar más detalles de la respuesta en caso de error
+                fetch('../action/afinidadImagenAction.php')
+                .then(response => response.text())
+                .then(text => {
+                    console.error("Respuesta del servidor (HTML):", text);
+                });
             });
         }
+
     </script>
 </body>
 </html>
