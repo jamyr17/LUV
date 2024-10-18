@@ -47,7 +47,7 @@
         }
         .grid-overlay div {
             border: 1px solid rgba(0, 0, 0, 0.1);
-            pointer-events: auto;
+            pointer-events: auto; /* Habilitar eventos en la cuadrícula */
         }
     </style>
 </head>
@@ -66,7 +66,6 @@
         let zoomScale = 1;
         let zoomStart = 0;
         let activeRegion = null;
-        const segmentacionData = [];  // Array para almacenar los datos de segmentación temporalmente
 
         function goBack() {
             window.history.back();
@@ -81,6 +80,7 @@
             } else {
                 zoomScale = Math.max(1, zoomScale - zoomFactor);
             }
+            // Usar plantilla de cadena correcta
             image.style.transform = `scale(${zoomScale})`;
         });
 
@@ -88,17 +88,20 @@
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
                 const cell = document.createElement('div');
+                // Usar plantilla de cadena correcta
                 cell.dataset.region = `${row + 1},${col + 1}`;
                 cell.addEventListener('mouseenter', (event) => {
                     activeRegion = event.target.dataset.region;
                     zoomStart = Date.now();
+                    // Usar plantilla de cadena correcta
                     console.log(`Entering region: ${activeRegion}`);
                 });
                 cell.addEventListener('mouseleave', (event) => {
                     if (activeRegion) {
                         const zoomDuration = Date.now() - zoomStart;
+                        // Usar plantilla de cadena correcta
                         console.log(`Left region: ${activeRegion} after ${zoomDuration}ms`);
-                        saveSegmentacionData(activeRegion, zoomDuration, zoomScale);
+                        sendDataToBackend(activeRegion, zoomDuration, zoomScale);
                         activeRegion = null;
                         zoomStart = 0;
                     }
@@ -107,38 +110,49 @@
             }
         }
 
-        // Function to temporarily store segmentación data in an array
-        function saveSegmentacionData(region, duration, zoomScale) {
-            segmentacionData.push({
+        // Send data to the backend
+        function sendDataToBackend(region, duration, zoomScale) {
+            const data = {
                 region: region,
                 duration: duration,
                 zoomScale: zoomScale
-            });
-            console.log('Segmentación data saved:', segmentacionData);
-        }
+            };
 
-        function analizarAfinidades() {
-            fetch('../action/afinidadImagenAction.php', {
-                method: 'GET'
+            fetch('../action/userAffinityAction.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success') {
-                    console.log(data.message);
-                    console.log(data.afinidades);
-                    alert("Afinidades calculadas y guardadas correctamente.");
-                } else {
-                    console.error("Error:", data.message);
+                console.log('Success:', data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to calculate affinities
+        function analizarAfinidades() {
+            fetch('../action/userAffinityAction.php', {
+                method: 'GET'
+            })
+            .then(response => response.text()) // Cambiar a text() para ver la respuesta completa
+            .then(data => {
+                console.log("Respuesta completa:", data); // Depura la respuesta completa
+                try {
+                    const jsonData = JSON.parse(data); // Intenta analizar el JSON
+                    if (jsonData.status === 'success') {
+                        console.log(jsonData.message);
+                    } else {
+                        console.error("Error en el servidor:", jsonData.message);
+                    }
+                } catch (error) {
+                    console.error("Error al analizar el JSON:", error);
                 }
             })
             .catch(error => {
                 console.error("Error en la solicitud:", error);
-                // Mostrar más detalles de la respuesta en caso de error
-                fetch('../action/afinidadImagenAction.php')
-                .then(response => response.text())
-                .then(text => {
-                    console.error("Respuesta del servidor (HTML):", text);
-                });
             });
         }
 
