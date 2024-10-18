@@ -139,22 +139,27 @@
             })
             .then(response => response.text()) // Cambiar a text() para ver la respuesta completa
             .then(data => {
-                console.log("Respuesta completa:", data); // Depura la respuesta completa
+              //  console.log("Respuesta completa:", data); // Depura la respuesta completa
                 try {
                     const jsonData = JSON.parse(data); // Intenta analizar el JSON
                     if (jsonData.status === 'success') {
                         console.log(jsonData.message);
+                        alert("Afinidad calculada correctamente: " + jsonData.message); // Mostrar mensaje de éxito
                     } else {
                         console.error("Error en el servidor:", jsonData.message);
+                        alert("Error al calcular afinidades: " + jsonData.message); // Mostrar mensaje de error
                     }
                 } catch (error) {
                     console.error("Error al analizar el JSON:", error);
+                    alert("Error en la respuesta del servidor."); // Mensaje en caso de error de JSON
                 }
             })
             .catch(error => {
                 console.error("Error en la solicitud:", error);
+                alert("Error en la solicitud al servidor."); // Mensaje de error de solicitud
             });
         }
+
 
     </script>
 </body>

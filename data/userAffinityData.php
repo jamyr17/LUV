@@ -53,15 +53,13 @@ class UserAffinityData extends Data {
         return $resultInsert;
     }
     
-    
-    
     public function checkIfExists($imagenUrl, $idUsuario) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         $queryCheck = "SELECT tbafinidadusuarioid, tbafinidadusuarioduracion FROM tbafinidadusuario WHERE tbafinidadusuarioimagenurl = ? AND tbusuarioid = ?";
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmtCheck, 'ssi', $imagenUrl, $idUsuario);
+        mysqli_stmt_bind_param($stmtCheck, 'si', $imagenUrl, $idUsuario);
         mysqli_stmt_execute($stmtCheck);
         mysqli_stmt_bind_result($stmtCheck, $id, $existingDuracion);
         mysqli_stmt_fetch($stmtCheck);
@@ -77,24 +75,48 @@ class UserAffinityData extends Data {
         mysqli_stmt_close($stmtCheck);
         mysqli_close($conn);
 
-        return $data;
+        // Retornar los datos o false si no existe
+        return $data ? $data : false;
     }
 
-    public function updateSegmentacion($id, $duracion, $zoomScale, $criterio, $idUsuario) {
+    public function updateSegmentacion($imagenUrl, $duracion, $zoomScale, $criterio, $afinidad, $idUsuario) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+    
+        if (!$conn) {
+            die("Error al conectar a la base de datos: " . mysqli_connect_error());
+        }
+    
         $conn->set_charset('utf8');
-
-        $queryUpdate = "UPDATE tbafinidadusuario SET tbafinidadusuarioduracion = tbafinidadusuarioduracion + ?, tbafinidadusuariozoomscale = ?, tbafinidadusuariocriterio = ? 
-                        WHERE tbafinidadusuarioimagenurl = ? AND tbusuarioid = ?";
+    
+        // Escapar las entradas para evitar inyección SQL
+        $duracion = mysqli_real_escape_string($conn, $duracion);
+        $zoomScale = mysqli_real_escape_string($conn, $zoomScale);
+        $criterio = mysqli_real_escape_string($conn, $criterio);
+        $afinidad = mysqli_real_escape_string($conn, $afinidad);
+        $imagenUrl = mysqli_real_escape_string($conn, $imagenUrl);
+    
+        // Actualizar la segmentación existente según imagen y usuario
+        $queryUpdate = "UPDATE tbafinidadusuario 
+                        SET tbafinidadusuarioduracion = ?, 
+                            tbafinidadusuariozoomscale = ?, 
+                            tbafinidadusuariocriterio = ?, 
+                            tbafinidadusuarioafinidad = ? 
+                        WHERE tbafinidadusuarioimagenurl = ? 
+                        AND tbusuarioid = ?";
+    
         $stmtUpdate = mysqli_prepare($conn, $queryUpdate);
-        mysqli_stmt_bind_param($stmtUpdate, 'dssii', $duracion, $zoomScale, $criterio, $id, $idUsuario);
-
+        mysqli_stmt_bind_param($stmtUpdate, 'dssdsi', $duracion, $zoomScale, $criterio, $afinidad, $imagenUrl, $idUsuario);
+    
         $result = mysqli_stmt_execute($stmtUpdate);
+        if (!$result) {
+            die("Error en la actualización de datos: " . mysqli_error($conn));
+        }
+    
         mysqli_stmt_close($stmtUpdate);
         mysqli_close($conn);
-
+    
         return $result;
-    }
+    }    
 
     public function getSegmentacionesByUsuarioAndUrl($idUsuario, $imagenUrl) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
