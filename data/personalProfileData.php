@@ -76,23 +76,16 @@ class PersonalProfileData extends Data{
         }
     
         $conn->set_charset('utf8');
-    
-        // Evitar inyección SQL
-        $usuarioId = mysqli_real_escape_string($conn, $usuarioId);
-    
+
+        // Consulta parametrizada para evitar inyección SQL
         $query = "SELECT tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor 
                   FROM tbperfilusuariopersonal 
-                  WHERE tbusuarioid = '$usuarioId' AND tbperfilusuariopersonalestado = 1";
+                  WHERE tbusuarioid = ? AND tbperfilusuariopersonalestado = 1";
     
-        $result = mysqli_query($conn, $query);
-    
-        if (!$result) {
-            // Error en la consulta SQL
-            header('HTTP/1.1 500 Internal Server Error');
-            echo json_encode(['error' => 'Error en la consulta SQL']);
-            mysqli_close($conn);
-            exit();  // Asegura que el script se detiene después de enviar la respuesta
-        }
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $usuarioId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
     
         $data = [];
     
@@ -103,28 +96,25 @@ class PersonalProfileData extends Data{
             for ($i = 0; $i < count($criterios); $i++) {
                 $data[] = [
                     'criterio' => $criterios[$i],
-                    'valor' => $valores[$i] ?? null
+                    'valor' => $valores[$i] ?? null  // Manejar valores faltantes
                 ];
             }
         }
     
+        mysqli_stmt_close($stmt);
         mysqli_close($conn);
     
         // Verificar si hay datos
         if (empty($data)) {
-            // No se encontraron datos para el usuario
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['error' => 'No se encontraron datos para el usuario']);
-            exit();  // Asegura que el script se detiene después de enviar la respuesta
+            exit();
         }
     
-        // Si hay datos, enviarlos en formato JSON
+        // Enviar los datos en formato JSON
         header('Content-Type: application/json');
         echo json_encode($data);
-        exit();  // Asegura que no se ejecuta ningún código adicional después de la respuesta
+        exit();
     }
-    
-    
-    
-    
+
 }

@@ -1,4 +1,4 @@
-- [ ] Los criterios y valores en las vistas de modelados (personal o deseado) se precarguen en caso de ya tener registros en BD.(KEVIN)
+- [x] Los criterios y valores en las vistas de modelados (personal o deseado) se precarguen en caso de ya tener registros en BD.(KEVIN)
 - [ ] En las vistas de modelados se muestre un pequeño apartado de "ejemplo" de a qué nos referimos con el llenado de "Criterio" y "Valor".(GERALD)
 - [ ] En el modelado de perfil personal, cuando se pregunta la Universidad y Campus, los colectivos que se deben poder seleccionar deben ser los que están asociados al campus que está siendo seleccionado. Ahorita se puede marcar colectivos a los cuales el campus no está asociado.
 - [ ] Trabajar el algoritmo que recibe el género y orientación sexual de una persona y devuelve la afinidad de en lo que estaría interesado el usuario.

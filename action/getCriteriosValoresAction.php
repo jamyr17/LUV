@@ -1,27 +1,31 @@
 <?php
-include_once '../data/logicaArchivosData.php';
+require_once '../data/logicaArchivosData.php';
 
-$logicaArchivos = new LogicaArchivosData();
+$logicaArchivos = new logicaArchivosData();
 
-if (isset($_GET['type'])) {
-    $type = $_GET['type'];
-    error_log("Tipo de solicitud: " . $type);  // Depuración
-    $data = [];
-
-    if ($type == 'criterios') {
-        // Obtener criterios desde los archivos .dat
-        $data = $logicaArchivos->obtenerCriterios();
-    } elseif ($type == 'valores' && isset($_GET['criterio'])) {
-        $criterio = $_GET['criterio'];
-        error_log("Criterio recibido: " . $criterio);  // Depuración
-
-        // Obtener valores para el criterio específico
-        $data = $logicaArchivos->obtenerValoresDeCriterio($criterio);
-        error_log("Valores obtenidos para el criterio $criterio: " . print_r($data, true));  // Depuración
+try {
+    // Obtener todos los criterios
+    $criterios = $logicaArchivos->obtenerCriterios();
+    
+    if (empty($criterios)) {
+        echo json_encode(['error' => 'No se encontraron criterios.']);
+        exit();
     }
 
-    // Devolver los datos como JSON
-    header('Content-Type: application/json');
-    echo json_encode($data);
+    $result = [];
+    // Obtener valores para cada criterio encontrado
+    foreach ($criterios as $criterio) {
+        $valores = $logicaArchivos->obtenerValoresDeCriterio($criterio);
+        if ($valores !== null) {
+            $result[$criterio] = $valores;
+        } else {
+            $result[$criterio] = []; // Devolver un array vacío si no se encuentran valores
+        }
+    }
+
+    // Devolver el resultado en formato JSON
+    echo json_encode($result);
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Error al obtener criterios y valores: ' . $e->getMessage()]);
 }
-?>
