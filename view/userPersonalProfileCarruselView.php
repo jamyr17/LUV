@@ -413,6 +413,7 @@ include '../action/functions.php';
         <h2>Tus instalaciones</h2>
         <h3>Cuéntale a otros sobre tu lugar de estudio!</h3>
 
+
         <form id="instalacionesForm">
             <label for="universidad">Universidad:</label>
             <select name="universidad" id="universidad" onchange="showOtherField('universidad', 'request-universidad', true)">
@@ -444,6 +445,7 @@ include '../action/functions.php';
                     echo '<option value="0" title="Solicitar otro campus a los administradores">Otro</option>';
                 }
                 ?>
+
             </select>
             <br>
             <label for="colectivos">Colectivos:</label>
@@ -457,6 +459,7 @@ include '../action/functions.php';
             $colectivosSeleccionados = array_map(function ($colectivo) {
                 return $colectivo->getTbUniversidadCampusColectivoId();
             }, $campusColectivos);
+
 
             echo '<select name="colectivos[]" id="colectivos" multiple class="form-control">';
             foreach ($allColectivos as $colectivo) {

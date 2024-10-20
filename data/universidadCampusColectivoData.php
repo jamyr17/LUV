@@ -350,7 +350,7 @@ class universidadCampusColectivoData extends Data
                 WHERE tbuniversidadcampus.tbuniversidadcampusnombre = ?";
 
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "i", $campusNombre);
+        mysqli_stmt_bind_param($stmt, "s", $campusNombre);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
 
