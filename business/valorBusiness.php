@@ -60,4 +60,9 @@ class ValorBusiness {
     public function autocomplete($term) {
         return $this->valorData->autocomplete($term);
     }
+    
+    public function existeValorEnCriterio($criterio, $valor) {
+        return $this->logicaArchivosData->existeValorEnCriterio($criterio, $valor);
+    }
+
 }

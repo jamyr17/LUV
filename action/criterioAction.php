@@ -105,17 +105,18 @@ else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
  
          if (strlen($nombre) > 0 && !is_numeric($nombre)) {
              $criterioBusiness = new CriterioBusiness();
-             $resultExist = $criterioBusiness->exist($nombre);
+             
+             $resultExist = $criterioBusiness->existeCriterio($nombre);
  
-             if ($resultExist == 0) {
+             if (!$resultExist) {
  
-                 $nombresExistentes = $criterioBusiness->getAllTbCriterioNombres();
- 
+                 //$nombresExistentes = $criterioBusiness->getAllTbCriterioNombres();
+ /*
                  if (esNombreSimilar($nombre, $nombresExistentes)) {
                      guardarFormData();
                      header("Location: ../view/criterioView.php?error=alike");
                      exit();
-                 } else {
+                 } else {*/
                      createFolderIfNotExists('../resources/criterios'); // Crear carpeta si no existe.
  
                      // Obtener datos relacionados al criterio desde la IA.
@@ -126,12 +127,12 @@ else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
                      }
  
                      // Crear el nuevo criterio en la base de datos.
-                     $criterio = new Criterio(0, $nombre, 1);
-                     $criterioBusiness->insertTbCriterio($criterio);
+                    // $criterio = new Criterio(0, $nombre, 1);
+                     //$criterioBusiness->insertTbCriterio($criterio);
  
                      header("location: ../view/criterioView.php?success=inserted");
                      exit();
-                 }
+              //   }
              } else {
                  guardarFormData();
                  header("location: ../view/criterioView.php?error=exist");
