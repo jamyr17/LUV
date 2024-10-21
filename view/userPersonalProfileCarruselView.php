@@ -413,6 +413,7 @@ include '../action/functions.php';
         <h2>Tus instalaciones</h2>
         <h3>Cuéntale a otros sobre tu lugar de estudio!</h3>
 
+
         <form id="instalacionesForm">
             <label for="universidad">Universidad:</label>
             <select name="universidad" id="universidad" onchange="showOtherField('universidad', 'request-universidad', true)">
@@ -444,6 +445,7 @@ include '../action/functions.php';
                     echo '<option value="0" title="Solicitar otro campus a los administradores">Otro</option>';
                 }
                 ?>
+
             </select>
             <br>
             <label for="colectivos">Colectivos:</label>
@@ -457,6 +459,7 @@ include '../action/functions.php';
             $colectivosSeleccionados = array_map(function ($colectivo) {
                 return $colectivo->getTbUniversidadCampusColectivoId();
             }, $campusColectivos);
+
 
             echo '<select name="colectivos[]" id="colectivos" multiple class="form-control">';
             foreach ($allColectivos as $colectivo) {
@@ -489,18 +492,12 @@ include '../action/functions.php';
 
                     <div class="criterion">
                         <label for="criterion1">Criterio:</label>
-                        <select name="criterion[]" id="criterion1" onchange="loadValues(this, 1)">
-                            <!-- Las opciones de criterios se cargarán dinámicamente -->
-                        </select>
+                        <input type="text" name="criterion[]" id="criterion1" placeholder="Especifique el criterio" oninput="actualizarTablaConCriterio()">
 
                         <label for="value1">Prefiero:</label>
-                        <select name="value[]" id="value1" onchange="toggleOtherField(this, 1)">
-                            <!-- Las opciones de valores se cargarán dinámicamente -->
-                        </select>
+                        <input type="text" name="value[]" id="value1" placeholder="Especifique el valor" oninput="actualizarTablaConCriterio()">
 
-                        <input type="text" id="otherField1" name="otherValue[]" style="display: none;" placeholder="Especifique otro valor">
                         <button type="button" onclick="removeCriterion(this)">Eliminar</button>
-
                     </div>
 
                 </div>

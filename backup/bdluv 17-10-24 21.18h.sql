@@ -224,7 +224,8 @@ CREATE TABLE `tbperfilusuariodeseado` (
 INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbusuarioid`, `tbperfilusuariodeseadoestado`) VALUES
 (1, 'Empleos,Gustos Musicales', 'médico,samba', '30', 1, 1),
 (2, 'Gustos Musicales', 'samba', '50', 2, 1),
-(12, 'Gustos Musicales', 'samba', '50', 12, 1);
+(11, 'Gustos Musicales,Empleos,', 'samba,ingeniero', '50', 11, 1),
+(12, 'Gustos Musicales,Gustos Musicales,Empleos', 'samba,jazz,ingeniero', '50', 12, 1);
 
 -- --------------------------------------------------------
 
