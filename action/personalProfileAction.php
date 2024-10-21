@@ -37,11 +37,32 @@ if (isset($_POST["registrar"])) {
         $criteriosArray = explode(',', $_SESSION['criteriaString']);
         $valoresArray = explode(',', $_SESSION['valueString']);
 
-        foreach ($criteriosArray as $index => $criterioNombre) {
-            $valor = trim($valoresArray[$index]);
-            // Llamar a la función para agregar valor si no existe en el archivo .dat
-            $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
-        }
+
+            // Asegurarse de que los criterios y valores existan
+            foreach ($criteriosArray as $index => $criterioNombre) {
+                $valor = trim($valoresArray[$index]);
+
+                if($criterioBusiness->existeCriterio()){
+
+                    if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
+                        agregarValorSiNoExiste($criterioNombre, $valor);
+                    }
+
+                }else{
+
+                    $data = obtenerDatosIA($nombre);
+ 
+                    if ($data) {
+                        createDataFile($nombre, $data);  // Guardar los datos en un archivo .dat.
+                    }
+
+                    if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
+                        agregarValorSiNoExiste($criterioNombre, $valor);
+                    }
+
+                }
+
+            }
 
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
