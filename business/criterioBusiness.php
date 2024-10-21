@@ -19,11 +19,7 @@ class CriterioBusiness {
     public function updateTbCriterio($criterio) {
         return $this->criterioData->updateTbCriterio($criterio);
     }
-/*
-    public function deleteTbCriterio($idCriterio) {
-        return $this->criterioData->deleteTbCriterio($idCriterio);
-    }
-*/  
+
     public function checkAssociatedValues($criterioId) {
         return $this->criterioData->checkAssociatedValues($criterioId);
     }
@@ -38,10 +34,6 @@ class CriterioBusiness {
 
     public function getAllTbCriterio() {
         return $this->criterioData->getAllTbCriterio();
-    }
-
-    public function getAllTbCriterioDat() {
-        return $this->logicaArchivosData->obtenerCriterios();
     }
 
     public function getAllTbCriterioNombres() {
@@ -72,4 +64,15 @@ class CriterioBusiness {
     public function autocomplete($term) {
         return $this->criterioData->autocomplete($term);
     }
+
+    ////////////DATA
+
+    public function getAllTbCriterioDat() {
+        return $this->logicaArchivosData->obtenerCriterios();
+    }
+
+    public function existeCriterio($criterio) {
+        return $this->logicaArchivosData->existeCriterio($criterio);
+    }
+
 }

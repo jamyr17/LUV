@@ -4,8 +4,7 @@ include_once '../business/valorBusiness.php';
 include_once 'functions.php';
 include_once 'gestionArchivosIAAction.php';
 
-$maxLength = 255;
-
+$maxLength = 50;
 
 if (isset($_POST['update'])) {
 
@@ -85,8 +84,8 @@ if (isset($_POST['update'])) {
 
         if (strlen($nombre) > 0) {
             if (!is_numeric($nombre)) {
-                $valorBusiness = new ValorBusiness();
-    
+               $valorBusiness = new ValorBusiness();
+    /* 
                 $resultExist = $valorBusiness->exist($nombre);
     
                 if ($resultExist == 1) {
@@ -94,14 +93,13 @@ if (isset($_POST['update'])) {
                     header("Location: ../view/valorView.php?error=exist");
                 } 
                 
-                $nombresExistentes = $valorBusiness->getAllTbValorNombres();
+               // $nombresExistentes = $valorBusiness->getAllTbValorNombres();
+
                 if (esNombreSimilar($nombre, $nombresExistentes)) {
                     guardarFormData();
                     header("location: ../view/valorView.php?error=alike");
                     exit();
                 } else {
-
-
 
                     $mensaje = agregarValorSiNoExiste($criterioNombre, $nombre);
     
@@ -116,6 +114,17 @@ if (isset($_POST['update'])) {
                         header("Location: ../view/valorView.php?error=dbError");
                     }
                 }
+            */
+            
+                if($valorBusiness->existeValorEnCriterio($criterioNombre, $nombre)){
+                    guardarFormData();
+                    header("Location: ../view/valorView.php?error=exist");
+                }else{
+
+                    agregarValorSiNoExiste($criterioNombre, $nombre);
+                    header("Location: ../view/valorView.php?success=inserted");
+                }
+
             } else {
                 guardarFormData();
                 header("Location: ../view/valorView.php?error=numberFormat");

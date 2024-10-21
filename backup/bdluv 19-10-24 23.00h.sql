@@ -222,13 +222,12 @@ CREATE TABLE `tbperfilusuariodeseado` (
 --
 
 INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbusuarioid`, `tbperfilusuariodeseadoestado`) VALUES
-(1, 'Empleos,Gustos Musicales', 'médico,samba', '30', 1, 1),
+(1, 'Empleos,Gustos Musicales,Comida rápida', 'médico,jazz,tacos', '30', 1, 1),
 (2, 'Gustos Musicales', 'samba', '50', 2, 1),
-(11, 'Gustos Musicales,Empleos,', 'samba,ingeniero', '50', 11, 1),
-(12, 'Gustos Musicales,Gustos Musicales,Empleos', 'samba,jazz,ingeniero', '50', 12, 1);
+(11, 'Gustos Musicales,Empleos,Mascotas', 'samba,ingeniero,perros', '50', 11, 1),
+(12, 'Empleos,Gustos Musicales,Empleos,Estilo de Vida,Mascotas', 'médico,jazz,ingeniero,saludable,gatos', '50', 12, 1);
 
 -- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `tbperfilusuariopersonal`
 --
@@ -253,8 +252,11 @@ CREATE TABLE `tbperfilusuariopersonal` (
 
 INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbareaconocimiento`, `tbgenero`, `tborientacionsexual`, `tbuniversidad`, `tbuniversidadcampus`, `tbuniversidadcampuscolectivo`, `tbusuarioid`, `tbperfilusuariopersonalestado`) VALUES
 (1, 'Gustos Musicales', 'samba', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 1', 'Campus 1', 'Colectivo 1', 1, 1),
-(2, 'Empleos,Gustos Musicales', 'médico,samba', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 3, 1),
-(12, 'Empleos,Gustos Musicales', 'médico,samba', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 12, 1);
+(2, 'Empleos,Gustos Musicales,Comida rápida', 'médico,samba,tacos', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 2, 1),
+(3, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 3, 1),
+(4, 'Empleos,Gustos Musicales', 'médico,jazz', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 1', 4, 1),
+(5, 'Empleos,Gustos Musicales', 'médico,samba', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 5, 1),
+(12, 'Empleos,Gustos Musicales,Comida rápida,Estilo de Vida,Mascotas', 'médico,samba,papas fritas,saludable,gatos', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 12, 1);
 
 -- --------------------------------------------------------
 

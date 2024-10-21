@@ -6,6 +6,11 @@ include_once "../business/usuarioBusiness.php";
 $usuarioBusiness = new UsuarioBusiness();
 include_once "../action/gestionArchivosIAAction.php";
 
+include_once "../business/valorBusiness.php";
+$valorBusiness = new ValorBusiness();
+include_once "../business/criterioBusiness.php";
+$criterioBusiness = new CriterioBusiness();
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -28,7 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             // Asegurarse de que los criterios y valores existan
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
-                $mensaje = agregarValorSiNoExiste($criterioNombre, $valor);
+
+                if($criterioBusiness->existeCriterio()){
+
+                    if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
+                        agregarValorSiNoExiste($criterioNombre, $valor);
+                    }
+
+                }else{
+
+                    $data = obtenerDatosIA($nombre);
+ 
+                    if ($data) {
+                        createDataFile($nombre, $data);  // Guardar los datos en un archivo .dat.
+                    }
+
+                    if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
+                        agregarValorSiNoExiste($criterioNombre, $valor);
+                    }
+
+                }
+
             }
 
             if(isset($porcentajeParam)){
