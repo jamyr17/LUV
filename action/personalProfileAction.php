@@ -2,7 +2,12 @@
 
 include_once "../business/personalProfileBusiness.php";
 include_once "../business/usuarioBusiness.php";
+include_once '../business/criterioBusiness.php';
+include_once '../business/valorBusiness.php';
+include_once '../util/postRequest.php';
 
+$criterioBusiness = new CriterioBusiness();
+$valorBusiness = new ValorBusiness();
 $personalProfileBusiness = new PersonalProfileBusiness();
 $usuarioBusiness = new UsuarioBusiness();
 
@@ -18,7 +23,6 @@ if (isset($_POST["registrar"])) {
     ) {
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
-        $colectivos = isset($_POST['colectivos']) ? json_decode($_POST['colectivos'], true) : [];
         $criterioParam = $_SESSION['criteriaString'];
         $valorParam = $_SESSION['valueString'];
 
@@ -37,12 +41,21 @@ if (isset($_POST["registrar"])) {
         $criteriosArray = explode(',', $_SESSION['criteriaString']);
         $valoresArray = explode(',', $_SESSION['valueString']);
 
+        // Hacer solicitud al algoritmo de perfilación según género y orientación sexual del usuario:
+        $datos = [
+            'genero' => $genero,
+            'orientacion' => $orientacionSexual
+        ];
+        $respuestaAfinidad = postRequest('', $datos);
+        echo $respuestaAfinidad;
+        die();
+        exit();
 
             // Asegurarse de que los criterios y valores existan
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
 
-                if($criterioBusiness->existeCriterio()){
+                if($criterioBusiness->existeCriterio($criterioNombre)){
 
                     if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
                         agregarValorSiNoExiste($criterioNombre, $valor);
