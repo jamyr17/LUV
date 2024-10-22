@@ -1,0 +1,9 @@
+Criterio: Sin criterio, Región: 1,3, Afinidad: 16.15%
+Criterio: Sin criterio, Región: 1,2, Afinidad: 13.71%
+Criterio: Sin criterio, Región: 1,1, Afinidad: 10.86%
+Criterio: Sin criterio, Región: 2,1, Afinidad: 23.57%
+Criterio: Sin criterio, Región: 2,2, Afinidad: 24.71%
+Criterio: Sin criterio, Región: 2,3, Afinidad: 100%
+Criterio: Sin criterio, Región: 3,3, Afinidad: 35.64%
+Criterio: Sin criterio, Región: 3,2, Afinidad: 45.21%
+Criterio: Sin criterio, Región: 3,1, Afinidad: 76.76%
