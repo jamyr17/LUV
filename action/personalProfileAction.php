@@ -46,10 +46,21 @@ if (isset($_POST["registrar"])) {
             'genero' => $genero,
             'orientacion' => $orientacionSexual
         ];
-        $respuestaAfinidad = postRequest('', $datos);
-        echo $respuestaAfinidad;
-        die();
-        exit();
+        $respuestaAfinidad = postRequest('http://localhost/LUV/algorithm/profilingAlgorithm.php', $datos);
+        $data = json_decode($respuestaAfinidad, true);
+
+        $generos = [];
+        $orientaciones = [];
+
+        foreach ($data as $afinidad) {
+            $generos[] = $afinidad['Genero'];
+            $orientaciones[] = $afinidad['Orientacion'];
+        }
+
+        // Se unan los géneros y orientaciones en un string separado por comas
+        $generosStr = implode(',', array_unique($generos)); 
+        $orientacionesStr = implode(',', array_unique($orientaciones));
+
 
             // Asegurarse de que los criterios y valores existan
             foreach ($criteriosArray as $index => $criterioNombre) {
