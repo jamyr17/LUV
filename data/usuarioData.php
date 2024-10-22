@@ -3,9 +3,11 @@
 include_once 'data.php';
 session_start();
 
-class UsuarioData extends Data{
+class UsuarioData extends Data
+{
 
-    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena, $rutaImagen){
+    public function insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena, $rutaImagen)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -25,15 +27,15 @@ class UsuarioData extends Data{
                         VALUES ($nextPersonaId, '$cedula', '$primerNombre', '$primerApellido', 1)";
         $resultInsert = mysqli_query($conn, $queryInsert);
 
-         // Consulta para obtener el ID máximo de tbusuario
+        // Consulta para obtener el ID máximo de tbusuario
         $queryGetLastId = "SELECT MAX(tbusuarioid) AS max_id FROM tbusuario";
         $resultUsuarioId = mysqli_query($conn, $queryGetLastId);
- 
+
         if ($row = mysqli_fetch_assoc($resultUsuarioId)) {
-             $maxId = $row['max_id'];
-             $nexUsuariotId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+            $maxId = $row['max_id'];
+            $nexUsuariotId = ($maxId !== null) ? (int)$maxId + 1 : 1;
         } else {
-             $nexUsuariotId = 1;
+            $nexUsuariotId = 1;
         }
 
         // Consulta para insertar un nuevo registro en tbusuario
@@ -46,7 +48,8 @@ class UsuarioData extends Data{
         return $resultInsert;
     }
 
-    public function validation($nombreUsuario, $contrasena){
+    public function validation($nombreUsuario, $contrasena)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -56,7 +59,8 @@ class UsuarioData extends Data{
         return $data = mysqli_fetch_array($result);
     }
 
-    public function getUsuarioId($nombreUsuario) {
+    public function getUsuarioId($nombreUsuario)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -66,30 +70,30 @@ class UsuarioData extends Data{
         $result = mysqli_query($conn, $query);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            return $row['tbusuarioid'];  
+            return $row['tbusuarioid'];
         } else {
-            return null; 
+            return null;
         }
     }
-    
+
     public function existPerson($cedula,)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbpersona WHERE tbpersonacedula = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $cedula);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
@@ -99,18 +103,18 @@ class UsuarioData extends Data{
         $conn->set_charset('utf8');
 
         $query = "SELECT COUNT(*) as count FROM tbusuario WHERE tbusuarionombre = ?";
-        
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 's', $nombreUsuario);
-        
+
         mysqli_stmt_execute($stmt);
-        
+
         mysqli_stmt_bind_result($stmt, $count);
         mysqli_stmt_fetch($stmt);
-        
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-        
+
         return $count > 0;
     }
 
