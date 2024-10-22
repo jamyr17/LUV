@@ -135,7 +135,7 @@ if ($requestMethod === 'POST') {
         $jsonResponse = ['status' => '', 'message' => '', 'afinidades' => $afinidadesData];
 
         if ($userAffinityData->checkIfExists($dataImagenUrlToDB, $usuarioId)) {
-            if ($userAffinityData->updateSegmentacion($dataImagenUrlToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
+            if ($userAffinityData->updateSegmentacionsingeneroorientacion($dataImagenUrlToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
                 $jsonResponse['status'] = 'success';
                 $jsonResponse['message'] = 'Afinidad actualizada de manera correcta.';
             } else {
@@ -144,7 +144,7 @@ if ($requestMethod === 'POST') {
             }
         } else {
             // Guardar los datos en la base de datos
-            if ($userAffinityData->insertSegmentacion($dataImagenUrlToDB, $dataSegmentosToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
+            if ($userAffinityData->insertSegmentacionwithoutGeneroOrientacion($dataImagenUrlToDB, $dataSegmentosToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
                 $jsonResponse['status'] = 'success';
                 $jsonResponse['message'] = 'Afinidad registrada de manera correcta.';
             } else {

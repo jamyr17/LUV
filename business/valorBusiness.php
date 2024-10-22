@@ -6,6 +6,7 @@ include_once '../data/logicaArchivosData.php';
 class ValorBusiness {
 
     private $valorData;
+    private $logicaArchivosData;
 
     public function __construct() {
         $this->valorData = new ValorData();
@@ -33,7 +34,7 @@ class ValorBusiness {
     }
 
     public function getAllTbValorDat() {
-        return $this->logicaArchivosDat->obtenerValoresDeCriterio();
+        return $this->logicaArchivosData->obtenerValoresDeCriterio();
     }
 
     public function getAllTbValorNombres() {

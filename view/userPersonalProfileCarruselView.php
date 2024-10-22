@@ -82,11 +82,16 @@ include '../action/functions.php';
             finalFormData.append('registrar', 'true');
 
             fetch('../action/personalProfileAction.php', {
-                    method: 'POST',
-                    body: finalFormData
-                })
-                .then(response => response.json())
-                .then(data => {
+                method: 'POST',
+                body: finalFormData
+            })
+            .then(response => response.text()) // Cambia a .text() para ver la respuesta completa
+            .then(textData => {
+                console.log('Texto de respuesta:', textData); // Ver qué está devolviendo el servidor
+
+                // Intenta convertir el texto a JSON
+                try {
+                    const data = JSON.parse(textData);
                     if (data.success) {
                         if (data.success === "updated") {
                             alert("Se ha actualizado su perfil personal.");
@@ -96,11 +101,15 @@ include '../action/functions.php';
                         window.location.href = '../view/userWantedProfileView.php';
                     } else {
                         window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
-
                     }
-                })
-                .catch(error => console.error('Error de red:', error));
+                } catch (error) {
+                    console.error('Error al analizar el JSON:', error);
+                    console.log('Datos recibidos (no válidos):', textData);
+                }
+            })
+            .catch(error => console.error('Error de red:', error));
         }
+
 
         $(document).ready(function() {
 
@@ -401,11 +410,11 @@ include '../action/functions.php';
                 }
                 ?>
             </select>
-            <button type="button" onclick="if (validateAndProceed('request-areaConocimientoNombre', false, 'request-areaConocimiento')) hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 4)">Siguiente</button>
+            <button type="button" onclick="if (validateAndProceed('request-areaConocimientoNombre', false, 'request-areaConocimiento')) hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 6)">Siguiente</button>
         </form>
     </div>
 
-    <div id="form4" class="form-container">
+    <div id="form6" class="form-container">
         <form id="imagenForm">
 
             <title>Análisis de Imagen con Zoom y Regiones</title>
@@ -454,7 +463,9 @@ include '../action/functions.php';
             </div>
             <button type="button" onclick="analizarAfinidades()">Analizar Afinidades</button>
 
-            <button type="button" id="siguienteBtn" style="display:none;" onclick="nextForm(5)">Siguiente</button>
+            <!-- Botón de siguiente que aparece después de analizar la imagen -->
+            <button type="button" id="siguienteBtn" style="display:none;" onclick="nextForm(4)">Siguiente</button>
+
 
             <script>
                 const image = document.getElementById('image');
@@ -463,101 +474,105 @@ include '../action/functions.php';
                 let zoomStart = 0;
                 let activeRegion = null;
 
-                // Funcionalidad de zoom
-                image.addEventListener('wheel', (event) => {
-                    event.preventDefault();
-                    const zoomFactor = 0.1;
-                    if (event.deltaY < 0) {
-                        zoomScale += zoomFactor;
-                    } else {
-                        zoomScale = Math.max(1, zoomScale - zoomFactor);
-                    }
-                    image.style.transform = `scale(${zoomScale})`;
+
+
+        // Zoom functionality
+        image.addEventListener('wheel', (event) => {
+            event.preventDefault();
+            const zoomFactor = 0.1;
+            if (event.deltaY < 0) {
+                zoomScale += zoomFactor;
+            } else {
+                zoomScale = Math.max(1, zoomScale - zoomFactor);
+            }
+            // Usar plantilla de cadena correcta
+            image.style.transform = `scale(${zoomScale})`;
+        });
+
+        // Initialize the 3x3 grid
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < 3; col++) {
+                const cell = document.createElement('div');
+                // Usar plantilla de cadena correcta
+                cell.dataset.region = `${row + 1},${col + 1}`;
+                cell.addEventListener('mouseenter', (event) => {
+                    activeRegion = event.target.dataset.region;
+                    zoomStart = Date.now();
+                    // Usar plantilla de cadena correcta
+                    console.log(`Entering region: ${activeRegion}`);
                 });
-
-                // Inicializar la cuadrícula 3x3
-                for (let row = 0; row < 3; row++) {
-                    for (let col = 0; col < 3; col++) {
-                        const cell = document.createElement('div');
-                        cell.dataset.region = `${row + 1},${col + 1}`;
-
-                        cell.addEventListener('mouseenter', (event) => {
-                            activeRegion = event.target.dataset.region;
-                            zoomStart = Date.now();
-                            console.log(`Entrando en la región: ${activeRegion}`);
-                        });
-
-                        cell.addEventListener('mouseleave', (event) => {
-                            if (activeRegion) {
-                                const zoomDuration = Date.now() - zoomStart;
-                                console.log(`Saliendo de la región: ${activeRegion} después de ${zoomDuration}ms`);
-                                sendDataToBackend(activeRegion, zoomDuration, zoomScale);
-                                activeRegion = null;
-                                zoomStart = 0;
-                            }
-                        });
-
-                        gridOverlay.appendChild(cell);
+                cell.addEventListener('mouseleave', (event) => {
+                    if (activeRegion) {
+                        const zoomDuration = Date.now() - zoomStart;
+                        // Usar plantilla de cadena correcta
+                        console.log(`Left region: ${activeRegion} after ${zoomDuration}ms`);
+                        sendDataToBackend(activeRegion, zoomDuration, zoomScale);
+                        activeRegion = null;
+                        zoomStart = 0;
                     }
-                }
+                });
+                gridOverlay.appendChild(cell);
+            }
+        }
 
-                // Enviar datos al servidor
-                function sendDataToBackend(region, duration, zoomScale) {
-                    const data = {
-                        region: region,
-                        duration: duration,
-                        zoomScale: zoomScale
-                    };
+        // Send data to the backend
+        function sendDataToBackend(region, duration, zoomScale) {
+            const data = {
+                region: region,
+                duration: duration,
+                zoomScale: zoomScale
+            };
 
-                    fetch('../action/userAffinityAction.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Éxito:', data);
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
+            fetch('../action/userAffinityAction.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
 
-                // Función para analizar afinidades
-                function analizarAfinidades() {
-                    fetch('../action/userAffinityAction.php', {
-                        method: 'GET'
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        try {
-                            const jsonData = JSON.parse(data);
-                            if (jsonData.status === 'success') {
-                                console.log(jsonData.message);
-                                alert("Afinidad calculada correctamente: " + jsonData.message);
-                                // Mostrar el botón de siguiente al completar el análisis
-                                document.getElementById('siguienteBtn').style.display = 'block';
-                            } else {
-                                console.error("Error en el servidor:", jsonData.message);
-                                alert("Error al calcular afinidades: " + jsonData.message);
-                            }
-                        } catch (error) {
-                            console.error("Error al analizar el JSON:", error);
-                            alert("Error en la respuesta del servidor.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error en la solicitud:", error);
-                        alert("Error en la solicitud al servidor.");
-                    });
+        // Function to calculate affinities
+        function analizarAfinidades() {
+            fetch('../action/userAffinityAction.php', {
+                method: 'GET'
+            })
+            .then(response => response.text()) 
+            .then(data => {
+                console.log("Respuesta completa:", data); // Ver el contenido exacto
+              //  console.log("Respuesta completa:", data); // Depura la respuesta completa
+                try {
+                    const jsonData = JSON.parse(data); // Intenta analizar el JSON
+                    if (jsonData.status === 'success') {
+                        console.log(jsonData.message);
+                        alert("Afinidad calculada correctamente: " + jsonData.message); // Mostrar mensaje de éxito
+                        document.getElementById('siguienteBtn').style.display = 'block';
+                    } else {
+                        console.error("Error en el servidor:", jsonData.message);
+                        alert("Error al calcular afinidades: " + jsonData.message); // Mostrar mensaje de error
+                    }
+                } catch (error) {
+                    console.error("Error al analizar el JSON:", error);
+                    alert("Error en la respuesta del servidor."); // Mensaje en caso de error de JSON
                 }
+            })
+            .catch(error => {
+                console.error("Error en la solicitud:", error);
+                alert("Error en la solicitud al servidor."); // Mensaje de error de solicitud
+            });
+        }
 
             </script>
         </form>
     </div>
 
     
-    <div id="form5" class="form-container">
+    <div id="form4" class="form-container">
         <h2>Tus instalaciones</h2>
         <h3>Cuéntale a otros sobre tu lugar de estudio!</h3>
 
@@ -624,11 +639,11 @@ include '../action/functions.php';
             echo '</select>';
             ?>
             <br>
-            <button type="button" onclick="if(validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 6)">Siguiente</button>
+            <button type="button" onclick="if(validateAndProceed('request-universidadNombre', true, 'request-universidad')) hideFields('request-universidadNombre', 'request-campusNombre', 'request-universidad', 'request-campus', 'request-universidad-form', 'request-campus-form', 5)">Siguiente</button>
         </form>
     </div>
 
-    <div id="form6" class="form-container">
+    <div id="form5" class="form-container">
         <div id="container">
             <button onclick="window.location.href='../view/userNavigateView.php';">Volver</button>
             <h3>Modela tu perfil</h3>
