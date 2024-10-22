@@ -2,7 +2,16 @@
 
 include_once "../business/personalProfileBusiness.php";
 include_once "../business/usuarioBusiness.php";
+include_once '../business/criterioBusiness.php';
+include_once '../business/valorBusiness.php';
+include_once '../util/postRequest.php';
 
+require_once '../data/userAffinityData.php';
+$userAffinityData = new UserAffinityData();
+
+
+$criterioBusiness = new CriterioBusiness();
+$valorBusiness = new ValorBusiness();
 $personalProfileBusiness = new PersonalProfileBusiness();
 $usuarioBusiness = new UsuarioBusiness();
 
@@ -18,7 +27,6 @@ if (isset($_POST["registrar"])) {
     ) {
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
-        $colectivos = isset($_POST['colectivos']) ? json_decode($_POST['colectivos'], true) : [];
         $criterioParam = $_SESSION['criteriaString'];
         $valorParam = $_SESSION['valueString'];
 
@@ -38,11 +46,48 @@ if (isset($_POST["registrar"])) {
         $valoresArray = explode(',', $_SESSION['valueString']);
 
 
+
+        // Hacer solicitud al algoritmo de perfilación según género y orientación sexual del usuario:
+        $datos = [
+            'genero' => $genero,
+            'orientacion' => $orientacionSexual
+        ];
+        $respuestaAfinidad = postRequest('http://localhost/LUV/algorithm/profilingAlgorithm.php', $datos);
+        $data = json_decode($respuestaAfinidad, true);
+
+        $generos = [];
+        $orientaciones = [];
+
+        foreach ($data as $afinidad) {
+            $generos[] = $afinidad['Genero'];
+            $orientaciones[] = $afinidad['Orientacion'];
+        }
+
+        // Se unan los géneros y orientaciones en un string separado por comas
+        $generosStr = implode(',', array_unique($generos)); 
+        $orientacionesStr = implode(',', array_unique($orientaciones));
+
+        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+
+        // Insertar o actualizar afinidad por género y orientación sexual
+        $urlImagen = 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg'; // URL de prueba
+
+        $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        if ($userAffinityData->insertAfinidadGeneroOrientacion($urlImagen, $generosStr, $orientacionesStr, $usuarioId)) {
+            $jsonResponse['status'] = 'success';
+            $jsonResponse['message'] = 'Afinidad de género y orientación sexual registrada correctamente.';
+        } else {
+            $jsonResponse['status'] = 'error';
+            $jsonResponse['message'] = 'Error al registrar afinidad de género y orientación sexual.';
+        }
+
+
             // Asegurarse de que los criterios y valores existan
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
 
-                if($criterioBusiness->existeCriterio()){
+                if($criterioBusiness->existeCriterio($criterioNombre)){
 
                     if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
                         agregarValorSiNoExiste($criterioNombre, $valor);

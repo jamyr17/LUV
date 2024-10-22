@@ -6,6 +6,7 @@ include_once '../data/logicaArchivosData.php';
 class CriterioBusiness {
 
     private $criterioData;
+    private $logicaArchivosData;
 
     public function __construct() {
         $this->criterioData = new CriterioData();
