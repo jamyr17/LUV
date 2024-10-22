@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
 
-                if($criterioBusiness->existeCriterio()){
+                if($criterioBusiness->existeCriterio($criterioNombre)){
 
                     if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
                         agregarValorSiNoExiste($criterioNombre, $valor);
