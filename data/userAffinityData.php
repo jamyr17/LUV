@@ -3,7 +3,7 @@ include_once 'data.php';
 
 class UserAffinityData extends Data {
 
-    public function insertSegmentacion($imagenUrl, $region, $duracion, $zoomScale, $criterio, $afinidad, $idUsuario) {
+    public function insertSegmentacion($imagenUrl, $region, $duracion, $zoomScale, $criterio, $afinidad, $afinidadGenero, $afinidadOrientacionSexual, $idUsuario) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         
         if (!$conn) {
@@ -38,8 +38,9 @@ class UserAffinityData extends Data {
         // Crear la consulta INSERT con los valores concatenados
         $queryInsert = "INSERT INTO tbafinidadusuario 
                         (tbafinidadusuarioid, tbafinidadusuarioimagenurl, tbafinidadusuarioregion, tbafinidadusuarioduracion, 
-                        tbafinidadusuariozoomscale, tbafinidadusuariocriterio, tbafinidadusuarioafinidad, tbusuarioid, tbafinidadusuarioestado) 
-                        VALUES ($nextId, '$imagenUrl', '$region', '$duracion', '$zoomScale', '$criterio', '$afinidad', $idUsuario, 1)";
+                        tbafinidadusuariozoomscale, tbafinidadusuariocriterio, tbafinidadusuarioafinidad, tbafinidadusuario, tbafinidadusuariogenero,
+                        tbafinidadusuarioorientacionsexual, tbusuarioid, tbafinidadusuarioestado) 
+                        VALUES ($nextId, '$imagenUrl', '$region', '$duracion', '$zoomScale', '$criterio', '$afinidad', '$afinidadGenero', '$afinidadOrientacionSexual' $idUsuario, 1)";
     
         // Ejecutar la consulta
         $resultInsert = mysqli_query($conn, $queryInsert);
@@ -79,7 +80,7 @@ class UserAffinityData extends Data {
         return $data ? $data : false;
     }
 
-    public function updateSegmentacion($imagenUrl, $duracion, $zoomScale, $criterio, $afinidad, $idUsuario) {
+    public function updateSegmentacion($imagenUrl, $duracion, $zoomScale, $criterio, $afinidad, $afinidadGenero, $afinidadOrientacionSexual, $idUsuario) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
     
         if (!$conn) {
@@ -101,11 +102,13 @@ class UserAffinityData extends Data {
                             tbafinidadusuariozoomscale = ?, 
                             tbafinidadusuariocriterio = ?, 
                             tbafinidadusuarioafinidad = ? 
+                            tbafinidadusuariogenero = ? 
+                            tbafinidadusuarioorientacionsexual = ? 
                         WHERE tbafinidadusuarioimagenurl = ? 
                         AND tbusuarioid = ?";
     
         $stmtUpdate = mysqli_prepare($conn, $queryUpdate);
-        mysqli_stmt_bind_param($stmtUpdate, 'dssdsi', $duracion, $zoomScale, $criterio, $afinidad, $imagenUrl, $idUsuario);
+        mysqli_stmt_bind_param($stmtUpdate, 'dssdsi', $duracion, $zoomScale, $criterio, $afinidad, $imagenUrl, $afinidadGenero, $afinidadOrientacionSexual, $idUsuario);
     
         $result = mysqli_stmt_execute($stmtUpdate);
         if (!$result) {
