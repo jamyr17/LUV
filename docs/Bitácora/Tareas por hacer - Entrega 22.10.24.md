@@ -3,7 +3,7 @@
 - [ ] En el modelado de perfil personal, cuando se pregunta la Universidad y Campus, los colectivos que se deben poder seleccionar deben ser los que están asociados al campus que está siendo seleccionado. Ahorita se puede marcar colectivos a los cuales el campus no está asociado. (JAMEL)
 - [ ] Trabajar el algoritmo que recibe el género y orientación sexual de una persona y devuelve la afinidad de en lo que estaría interesado el usuario. (JAMYR)
 - [ ] En el modelado de perfil personal, añadir un nuevo "paso", previo al de los Criterios y Valores, en el cual se trabaje el algoritmo de segmentación de imágenes. Sólo es de decir "Analice esta imagen" y se calculan las afinidades cuando el usuario le dé siguiente. Debe agregar o actualizar las afinidades (según corresponda) en la siguiente tbusuarioafinidad. (GERALD)
-- [ ] Crear una tbusuarioafinidad que va a guardar el idusuario y las afinidades sacadas tanto a partir del algoritmo que trabaja el género y orientación sexual, como el algoritmo de las imágenes. (KEVIN)
+- [x] Crear una tbusuarioafinidad que va a guardar el idusuario y las afinidades sacadas tanto a partir del algoritmo que trabaja el género y orientación sexual, como el algoritmo de las imágenes. (KEVIN)
 - [ ] Añadir un apartado de "Buscar conexiones" u otro nombre más comercial, en el cual primero se valida que el usuario en sesión sí tiene registros de modelado personal, deseado y afinidades. Este apartado la idea es que vaya viendo información de perfiles recomendados y tenga la opción de confirmar su interés o descartarlo. (JEYCOB)
 - [ ] Avanzar en lo que se quedó de Ver Actividades: (JAMYR)
     - Como usuario se debe poder agregar una nueva actividad asociado a MIS colectivos. 
