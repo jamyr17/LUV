@@ -8,7 +8,7 @@ public function getAllTbPerfiles() {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
     
-        // Modifica la consulta para hacer un JOIN con las tablas necesarias
+        
         $querySelect = "
             SELECT 
                 p.tbperfilusuariopersonalid AS id,
