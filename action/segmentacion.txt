@@ -1,9 +1,9 @@
-Región: 1,3, Duración: 6723 ms, ZoomScale: 1
-Región: 1,2, Duración: 5215 ms, ZoomScale: 1
-Región: 1,1, Duración: 3373 ms, ZoomScale: 1
-Región: 2,1, Duración: 19814 ms, ZoomScale: 1
-Región: 2,2, Duración: 8659 ms, ZoomScale: 1
-Región: 2,3, Duración: 36772 ms, ZoomScale: 1
-Región: 3,3, Duración: 11241 ms, ZoomScale: 1
-Región: 3,2, Duración: 14417 ms, ZoomScale: 1
+Región: 1,3, Duración: 7072 ms, ZoomScale: 1
+Región: 1,2, Duración: 5780 ms, ZoomScale: 1
+Región: 1,1, Duración: 5352 ms, ZoomScale: 1
+Región: 2,1, Duración: 20178 ms, ZoomScale: 1
+Región: 2,2, Duración: 8675 ms, ZoomScale: 1
+Región: 2,3, Duración: 37019 ms, ZoomScale: 1
+Región: 3,3, Duración: 11904 ms, ZoomScale: 1
+Región: 3,2, Duración: 14448 ms, ZoomScale: 1
 Región: 3,1, Duración: 36847 ms, ZoomScale: 1

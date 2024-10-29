@@ -30,7 +30,12 @@ include "../action/sessionUserAction.php";
                         console.log("No se pudieron cargar los perfiles");
                     }
                 })
-                .catch(error => console.error('Error de red:', error));
+                .catch(error => {
+                    console.error('Error de red:', error);
+                    // Redirigir a una vista de error si hay un problema de red
+                    alert("Ha ocurrido un error inesperado, será redirigido a la página de inicio");
+                    window.location.href = '../view/userNavigateView.php'; // Cambia esta línea según sea necesario
+                });
         });
     </script>
     <style>
@@ -86,7 +91,29 @@ include "../action/sessionUserAction.php";
 </head>
 
 <body>
+    <section id="alerts">
 
+        <?php
+
+        if (isset($_GET['error'])) {
+            $mensaje = "Ocurrió un error debido a ";
+            $mensaje .= match (true) {
+                $_GET['error'] == "datosNulos" => "El usuario no tiene información necesaria para la busqueda.",
+                default => "un problema inesperado.",
+            };
+        } else if (isset($_GET['success'])) {
+            $mensaje = match (true) {
+                $_GET['success'] == "inserted" => "Se ha guardado el modelo de persona que buscas.",
+                default => "Transacción realizada.",
+            };
+        }
+
+        if (isset($mensaje)) {
+            echo "<script>alert('$mensaje')</script>";
+        }
+        ?>
+
+    </section>
     <div id="posts">
         <?php
 
@@ -96,11 +123,11 @@ include "../action/sessionUserAction.php";
             foreach ($perfiles as $perfil) {
                 echo '<div class="container">';
                 echo '    <div class="header">';
-                echo '        <img src="' . htmlspecialchars($perfil['pfp']) . '" alt="Foto de usuario" class="profile-picture">';
-                echo '        <span class="username">' . htmlspecialchars($perfil['nombreUsuario']) . '</span>';
+                echo '        <img src="' . htmlspecialchars($perfil['UsuarioID']) . '" alt="Foto de usuario" class="profile-picture">';
+                echo '        <span class="username">' . htmlspecialchars($perfil['Genero']) . '</span>';
                 echo '    </div>';
                 echo '    <div class="image-container">';
-                echo '        <img src="' . htmlspecialchars($perfil['pfp']) . '" alt="Imagen de publicación" class="post-image">';
+                echo '        <img src="' . htmlspecialchars($perfil['OrientacionSexual']) . '" alt="Imagen de publicación" class="post-image">';
                 echo '    </div>';
                 echo '</div>';
             }

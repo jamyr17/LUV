@@ -1,29 +1,31 @@
-<?php 
+<?php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-function guardarFormData(){
- 
+function guardarFormData()
+{
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        
-        if(isset($_POST['create']) ||  isset($_POST['newUser'])){
+
+        if (isset($_POST['create']) ||  isset($_POST['newUser'])) {
             $_SESSION['formCrearData'] = $_POST;
-        }else if(isset($_POST['update'])){
+        } else if (isset($_POST['update'])) {
             $_SESSION['formActualizarData'] = $_POST;
         }
     }
-
 }
 
-function eliminarFormData(){
+function eliminarFormData()
+{
     unset($_SESSION['formCrearData']);
     unset($_SESSION['formActualizarData']);
 }
 
 // generar input de texto para poder aplicar logica de si hay data que debe ser cargada o no
-function generarCampoTexto($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '') {
+function generarCampoTexto($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '')
+{
     $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
     $autofocusAttr = isset($_SESSION[$tipoForm][$nombreCampo]) ? 'autofocus' : '';
 
@@ -31,7 +33,8 @@ function generarCampoTexto($nombreCampo, $tipoForm, $placeholder, $valorPorDefec
 }
 
 // generar input de texto para poder aplicar logica de si hay data que debe ser cargada o no
-function generarCampoTextoSinRequired($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '') {
+function generarCampoTextoSinRequired($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '')
+{
     $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
     $autofocusAttr = isset($_SESSION[$tipoForm][$nombreCampo]) ? 'autofocus' : '';
 
@@ -40,7 +43,8 @@ function generarCampoTextoSinRequired($nombreCampo, $tipoForm, $placeholder, $va
 
 
 // generar input de textarea para poder aplicar logica de si hay data que debe ser cargada o no
-function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '', $filas = 3, $columnas = 30, $autofocus = true) {
+function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '', $filas = 3, $columnas = 30, $autofocus = true)
+{
     $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
     $autofocusAttr = (!isset($_SESSION[$tipoForm][$nombreCampo]) && $autofocus) ? 'autofocus' : '';
 
@@ -50,21 +54,23 @@ function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto
 
 
 // generar input de password para poder aplicar logica de si hay data que debe ser cargada o no
-function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '') {
+function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '')
+{
     $valor = isset($_SESSION[$tipoForm][$nombreCampo]) ? htmlspecialchars($_SESSION[$tipoForm][$nombreCampo]) : htmlspecialchars($valorPorDefecto);
     $autofocusAttr = isset($_SESSION[$tipoForm][$nombreCampo]) ? 'autofocus' : '';
 
     echo "<input required type='password' name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' value='$valor' $autofocusAttr />";
 }
 
-function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
+function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
+{
     if (isset($_FILES[$nombreVariableForm])) {
-        
+
         if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
-            
+
             $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
             $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
-            
+
             // Cargar la imagen según su tipo
             switch ($fileExtension) {
                 case 'jpg':
@@ -94,17 +100,18 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo) {
                 return $destination;
             } else {
                 imagedestroy($image); // Liberar la memoria
-                return false; 
+                return false;
             }
         } else {
-            return false; 
+            return false;
         }
     } else {
-        return false; 
+        return false;
     }
 }
 
-function levenshtein_algoritmo($str1, $str2) {
+function levenshtein_algoritmo($str1, $str2)
+{
     $len1 = strlen($str1);
     $len2 = strlen($str2);
 
@@ -135,16 +142,17 @@ function levenshtein_algoritmo($str1, $str2) {
 }
 
 // Función para comprobar si el nombre es similar a uno ya existente
-function esNombreSimilar($nombreNuevo, $nombresExistentes) {
+function esNombreSimilar($nombreNuevo, $nombresExistentes)
+{
     $umbralSimilitud = 0.8;
-    
+
     foreach ($nombresExistentes as $nombreExistente) {
         // Calcula la distancia de Levenshtein entre el nuevo nombre y el existente
         $distancia = levenshtein_algoritmo($nombreNuevo, $nombreExistente);
-        
+
         // Calcula la longitud del nombre más largo para normalizar la distancia
         $longitudMaxima = max(strlen($nombreNuevo), strlen($nombreExistente));
-        
+
         // Calcula la similitud como un porcentaje (0 a 1)
         $similitud = 1 - ($distancia / $longitudMaxima);
 
