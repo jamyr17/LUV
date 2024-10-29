@@ -1,7 +1,9 @@
 <?php
 
 include_once 'data.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class UsuarioData extends Data
 {

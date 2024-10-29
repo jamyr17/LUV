@@ -20,6 +20,7 @@
         
         $data[] = [
             'id' => $actividad->getTbActividadId(),
+            'usuarioId' => $actividad->getTbUsuarioId(),
             'title' => $actividad->getTbActividadTitulo(),
             'description' => $actividad->getTbActividadDescripcion(),
             'dateStart' => $actividad->getTbActividadFechaInicio(),

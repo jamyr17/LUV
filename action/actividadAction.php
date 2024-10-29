@@ -46,7 +46,7 @@ if (isset($_POST['update'])) {
                     guardarFormData();
                     header("location: ../view/actividadView.php?error=exist");
                 } else {
-                    $actividad = new Actividad($idActividad, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
+                    $actividad = new Actividad($idActividad, null, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
 
                     $result = $actividadBusiness->updateTbActividad($actividad);
 
@@ -106,7 +106,7 @@ if (isset($_POST['update'])) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
                 $actividadBusiness = new ActividadBusiness();
 
-                    $actividad = new Actividad($idActividad, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
+                    $actividad = new Actividad($idActividad, null, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
 
                     $result = $actividadBusiness->updateTbActividad($actividad);
 
@@ -153,6 +153,7 @@ else if (isset($_POST['delete'])) {
          && isset( $_POST['fechaInicioInput']) && isset($_POST['fechaTerminaInput']) && isset($_POST['direccion'])
     ) {
 
+        $idUsuario = $_POST['idUsuario'] ? $_POST['idUsuario'] : 0;
         $titulo = $_POST['titulo'];
         $descripcion = $_POST['descripcion'];
         $fechaInicio = $_POST['fechaInicioInput'];
@@ -198,7 +199,7 @@ else if (isset($_POST['delete'])) {
                     header("Location: ../view/actividadView.php?error=alike");
                     exit();
                 } else {
-                    $actividad = new Actividad(0, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
+                    $actividad = new Actividad(0, $idUsuario, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
 
                     $result = $actividadBusiness->insertTbActividad($actividad);
 
@@ -223,6 +224,84 @@ else if (isset($_POST['delete'])) {
     } else {
         guardarFormData();
         header("location: ../view/actividadView.php?error=error");
+    }
+}else if (isset($_POST['createUser'])) {
+
+    if (isset($_POST['titulo']) && isset($_POST['descripcion'])
+         && isset( $_POST['fechaInicioInput']) && isset($_POST['fechaTerminaInput']) && isset($_POST['direccion'])
+    ) {
+
+        $idUsuario = $_POST['idUsuario'] ? $_POST['idUsuario'] : 0;
+        $titulo = $_POST['titulo'];
+        $descripcion = $_POST['descripcion'];
+        $fechaInicio = $_POST['fechaInicioInput'];
+        $fechaTermina = $_POST['fechaTerminaInput'];
+        $direccion = $_POST['direccion'];
+        $anonimo = isset($_POST['anonimo']) ? true : false;
+        $colectivos = $_POST['colectivos'];
+
+        if (strlen($titulo) > 63) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=titleTooLong");
+            exit();
+        }
+
+        if (strlen($descripcion) > 255) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=descriptionTooLong");
+            exit();
+        }
+
+        if (strlen($direccion) > 255) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=directionTooLong");
+            exit();
+        }
+
+        if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
+            if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
+                $actividadBusiness = new ActividadBusiness();
+
+                $resultExist = $actividadBusiness->exist($titulo);
+
+                if ($resultExist == 1) {
+                    guardarFormData();
+                    header("location: ../view/activitiesCalendarView.php?error=exist");
+                    exit();
+                } 
+                
+                $titulosExistentes = $actividadBusiness->getAllTbActividadTitulos();
+
+                if (esNombreSimilar($titulo, $titulosExistentes)) { 
+                    guardarFormData();
+                    header("Location: ../view/activitiesCalendarView.php?error=alike");
+                    exit();
+                } else {
+                    $actividad = new Actividad(0, $idUsuario, $titulo, $descripcion, $fechaInicio, $fechaTermina, $direccion, 0, 0, true, $anonimo, $colectivos);
+
+                    $result = $actividadBusiness->insertTbActividad($actividad);
+
+                    if ($result == 1) {
+                        header("location: ../view/activitiesCalendarView.php?success=inserted");
+                        exit();
+                    } else {
+                        guardarFormData();
+                        header("location: ../view/activitiesCalendarView.php?error=dbError");
+                        exit();
+                    }
+                }
+            } else {
+                guardarFormData();
+                header("location: ../view/activitiesCalendarView.php?error=numberFormat");
+                exit();
+            }
+        } else {
+            guardarFormData();
+            header("location: ../view/activitiesCalendarView.php?error=emptyField");
+        }
+    } else {
+        guardarFormData();
+        header("location: ../view/activitiesCalendarView.php?error=error");
     }
 }else if (isset($_POST['restore'])) {
 

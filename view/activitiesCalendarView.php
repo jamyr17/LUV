@@ -1,8 +1,15 @@
 <?php
+  if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+  }
+
   include_once "../action/sessionUserAction.php";
   include_once '../action/functions.php';
   include_once '../business/universidadCampusColectivoBusiness.php';
+  include_once '../business/usuarioBusiness.php';
   $campusColectivoBusiness = new UniversidadCampusColectivoBusiness();
+  $usuarioBusiness = new UsuarioBusiness();
+  $_SESSION['idUsuario'] = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +29,7 @@
   <body>
     <div id="actions">
         <button onclick="window.location.href='./userNavigateView.php';">Volver</button>
-
+        <button id="add-event-button">Agregar Evento</button>
     </div>
 
     <div id="alerts">
@@ -58,7 +65,63 @@
 
     <div id='calendar' style="max-width: 1000px; margin: auto"></div>
 
-    <!-- Modal para editar actividades:-->
+    <div>
+          <!-- Modal para Crear Actividad -->
+    <div class="modal" id="actividadCrearModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Actividad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formCrear" method="post" action="../action/actividadAction.php">
+                    <input type="hidden" name="idUsuario" value="<?php echo $_SESSION['idUsuario']; ?>">
+                    
+                    <label for="titulo">Título:</label>
+                    <input type="text" name="titulo" required><br>
+                    
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" name="descripcion" required><br>
+
+                    <label for="fechaInicio">Fecha de inicio:</label>
+                    <input type="datetime-local" name="fechaInicioInput" required><br>
+
+                    <label for="fechaTermina">Fecha de fin:</label>
+                    <input type="datetime-local" name="fechaTerminaInput" required><br>
+
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" name="direccion" required><br>
+
+                    <label>Anónimo:</label>
+                    <input type="radio" name="anonimo" value="true"> Sí
+                    <input type="radio" name="anonimo" value="false" checked> No<br>
+
+                    <label for="colectivos">Colectivos:</label>
+                    <select name="colectivos[]" multiple>
+                        <?php
+                        $campusColectivos = $campusColectivoBusiness->getAllTbUniversidadCampusColectivo();
+                        foreach ($campusColectivos as $campusColectivo) {
+                          echo '<option value="' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoId()) . '">' . htmlspecialchars($campusColectivo->getTbUniversidadCampusColectivoNombre()) . '</option>';
+                        }
+                        
+                        ?>
+                    </select><br>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-success" name="createUser" value="createUser">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    
+    <div>
+         <!-- Modal para editar actividades:-->
     <div class="modal" id="actividadActualizarModalView"  tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -70,6 +133,7 @@
                 </div>
                 <form id="formActualizar" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;">
                     <input type="hidden" class="form-control" name="idActividad" id="idActividad">      
+                    <input type="hidden" id="idUsuarioLogeado" name="idUsuarioLogeado" value="<?php echo $_SESSION['idUsuario']; ?>">
 
                     <label for="titulo" class="form-label">Título: </label>  
                     <?php generarCampoTexto('titulo', 'formCrearData', 'Nombre de la actividad', '') ?><br> 
@@ -117,14 +181,16 @@
                     </select><br>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" name="userUpdate" id="userUpdate">Actualizar</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                        <button type="submit" class="btn btn-success" name="userUpdate" id="userUpdate">Guardar</button>
                     </div>
 
                 </form>
             </div>
         </div>
+    </div>                   
     </div>
+    
     
   </body>
 

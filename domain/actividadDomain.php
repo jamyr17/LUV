@@ -2,6 +2,7 @@
 
 class Actividad {
     private $tbActividadId;
+    private $tbUsuarioId;
     private $tbActividadTitulo;
     private $tbActividadDescripcion;
     private $tbActividadFechaInicio;
@@ -13,8 +14,9 @@ class Actividad {
     private $tbActividadAnonimo;
     private $tbActividadColectivos;
 
-    public function __construct($tbActividadId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadFechaInicio, $tbActividadFechaTermina, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
+    public function __construct($tbActividadId, $tbUsuarioId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadFechaInicio, $tbActividadFechaTermina, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
         $this->tbActividadId = $tbActividadId;
+        $this->tbUsuarioId = $tbUsuarioId;
         $this->tbActividadTitulo = $tbActividadTitulo;
         $this->tbActividadDescripcion = $tbActividadDescripcion;
         $this->tbActividadFechaInicio = $tbActividadFechaInicio;
@@ -29,6 +31,10 @@ class Actividad {
 
     public function getTbActividadId() {
         return $this->tbActividadId;
+    }
+
+    public function getTbUsuarioId() {
+        return $this->tbUsuarioId;
     }
 
     public function getTbActividadTitulo() {
@@ -73,6 +79,10 @@ class Actividad {
 
     public function setTbActividadId($tbActividadId) {
         $this->tbActividadId = $tbActividadId;
+    }
+
+    public function setTbUsuarioId($tbUsuarioId) {
+        $this->tbUsuarioId = $tbUsuarioId;
     }
 
     public function setTbActividadTitulo($tbActividadTitulo) {

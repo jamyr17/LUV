@@ -22,11 +22,12 @@ class ActividadData extends Data
         }
     
         $queryInsert = "INSERT INTO tbactividad (
-            tbactividadid, tbactividadtitulo, tbactividaddescripcion, tbactividadfechainicio,
+            tbactividadid, tbusuarioid, tbactividadtitulo, tbactividaddescripcion, tbactividadfechainicio,
             tbactividadfechatermina, tbactividaddireccion, tbactividadlatitud,
             tbactividadlongitud, tbactividadestado, tbactividadanonimo
         ) VALUES (
             $nextId, 
+            '{$actividad->getTbUsuarioId()}',
             '{$actividad->getTbActividadTitulo()}', 
             '{$actividad->getTbActividadDescripcion()}', 
             '{$actividad->getTbActividadFechaInicio()}', 
@@ -76,7 +77,7 @@ class ActividadData extends Data
 
         $actividades = [];
         while ($row = mysqli_fetch_array($result)) {
-            $actividadNueva = new Actividad($row['tbactividadid'], $row['tbactividadtitulo'], 
+            $actividadNueva = new Actividad($row['tbactividadid'], $row['tbusuarioid'], $row['tbactividadtitulo'], 
             $row['tbactividaddescripcion'], $row['tbactividadfechainicio'], $row['tbactividadfechatermina'], 
             $row['tbactividaddireccion'], $row['tbactividadlatitud'], $row['tbactividadlongitud'],
             $row['tbactividadestado'], $row['tbactividadanonimo'], 1
@@ -271,6 +272,7 @@ while ($row = mysqli_fetch_array($result)) {
     // Crear la instancia de la actividad con los 11 parámetros
     $actividadActual = new Actividad(
         $row['tbactividadid'],
+        $row['tbusuarioid'],
         $row['tbactividadtitulo'],
         $row['tbactividaddescripcion'],
         $row['tbactividadfechainicio'],

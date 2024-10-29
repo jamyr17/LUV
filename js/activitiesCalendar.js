@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Dirección para recuperar todas las actividades de la base de datos:
-    let requestActivies = '../data/getActivitiesData.php';    
+    let requestActivities = '../data/getActivitiesData.php';    
     
     // Iniciar el objeto calendario
     var calendarEl = document.getElementById('calendar');
@@ -17,13 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
         selectable: true,
 
         events:function(info, successCallback, failureCallback){ // Recuperar las actividades
-            fetch(requestActivies)
+            fetch(requestActivities)
             .then(function(response){
                 return response.json()
             }).then(function(data){
                 let events = data.map(function(event){ // Formatear los objetos de actividades
                     return {
                         id: event.id,
+                        usuarioId: event.usuarioId,
                         title: event.title,
                         description: event.description,
                         direction: event.direction,
@@ -65,38 +66,47 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
 
-        // Se debe validar que esto solo sea posible si el usuario que está logeado es el creado del evento
         eventClick: function(event) {
             console.log(event);
-            var inputIdActividad = document.getElementById('idActividad');
-            var inputTitulo = document.getElementById('titulo');
-            var inputDescripcion = document.getElementById('descripcion');
-            var inputFechaInicio = document.getElementById('fechaInicioInput');
-            var inputFechaTermina = document.getElementById('fechaTerminaInput');
-            var inputDireccion = document.getElementById('direccion');
-            var inputAnonimo = document.getElementById('anonimo');
-            var inputColectivos = document.getElementById('colectivos');
-        
-            inputIdActividad.value = event.event.id;
-            inputTitulo.value = event.event.title;
-            inputDescripcion.value = event.event.extendedProps.description;
-            inputFechaInicio.value = toDateTimeLocalFormat(event.event.start);
-            inputFechaTermina.value = toDateTimeLocalFormat(event.event.end);
-            inputDireccion.value = event.event.extendedProps.direction;
-            inputAnonimo.checked = (parseInt(event.event.extendedProps.anonymn) === 1);
-        
-            // Manejar los colectivos seleccionados
-            var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
-            for (var i = 0; i < inputColectivos.options.length; i++) {
-                var option = inputColectivos.options[i];
-                option.selected = colectivosSeleccionados.includes(parseInt(option.value));
+
+            // Se debe validar que esto solo sea posible si el usuario que está logeado es el creador del evento, si no lo es, validar si es evento anonimo no y si no lo es se puede apuntar a la asistencia
+            if(validateLoggedUser(event.event.extendedProps.usuarioId)){
+                var inputIdActividad = document.getElementById('idActividad');
+                var inputTitulo = document.getElementById('titulo');
+                var inputDescripcion = document.getElementById('descripcion');
+                var inputFechaInicio = document.getElementById('fechaInicioInput');
+                var inputFechaTermina = document.getElementById('fechaTerminaInput');
+                var inputDireccion = document.getElementById('direccion');
+                var inputAnonimo = document.getElementById('anonimo');
+                var inputColectivos = document.getElementById('colectivos');
+            
+                inputIdActividad.value = event.event.id;
+                inputTitulo.value = event.event.title;
+                inputDescripcion.value = event.event.extendedProps.description;
+                inputFechaInicio.value = toDateTimeLocalFormat(event.event.start);
+                inputFechaTermina.value = toDateTimeLocalFormat(event.event.end);
+                inputDireccion.value = event.event.extendedProps.direction;
+                inputAnonimo.checked = (parseInt(event.event.extendedProps.anonymn) === 1);
+            
+                // Manejar los colectivos seleccionados
+                var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
+                for (var i = 0; i < inputColectivos.options.length; i++) {
+                    var option = inputColectivos.options[i];
+                    option.selected = colectivosSeleccionados.includes(parseInt(option.value));
+                }
+            
+                $("#actividadActualizarModalView").modal();
             }
-        
-            $("#actividadActualizarModalView").modal();
+
         }
         
     });
     calendar.render();
+
+    // Abrir el modal al hacer clic en el botón "Agregar Evento"
+    document.getElementById('add-event-button').addEventListener('click', function () {
+        $('#actividadCrearModal').modal();
+    });
 });
 
 // El formato de las fechas en el objeto se guardan de una forma que es necesaria reformatear
@@ -111,3 +121,13 @@ function toDateTimeLocalFormat(dateStr) {
     return localISOTime;
 }
 
+function validateLoggedUser(eventUsuarioId){
+    const usuarioId = document.getElementById('idUsuarioLogeado').value;
+
+    if(usuarioId===null){
+        return false;
+    }else{
+        return (eventUsuarioId===usuarioId);
+    }
+
+}

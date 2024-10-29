@@ -1,6 +1,8 @@
 <?php
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 //Validar permiso para entrar a esta pagina
 if (empty($_SESSION["tipoUsuario"])) {
