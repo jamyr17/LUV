@@ -125,13 +125,10 @@ if ($requestMethod === 'POST') {
             $dataZoomToDB .= "$zoomScale,";     // Concatenar los zoom scales
         }
 
-        // Limpiar la cadena de criterios para quitar el último separador ','
         $dataCriteriosToDB = rtrim($dataCriteriosToDB, ',');
 
-        // Guardar las afinidades en el archivo
         file_put_contents($afinidadesFile, $afinidadesData);
 
-        // Evita múltiples respuestas JSON
         $jsonResponse = ['status' => '', 'message' => '', 'afinidades' => $afinidadesData];
 
         if ($userAffinityData->checkIfExists($dataImagenUrlToDB, $usuarioId)) {
@@ -158,92 +155,4 @@ if ($requestMethod === 'POST') {
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
-} else if ($_POST['leerDAT']) {
-    /*
-    La ESTRUCTURA del ARCHIVO DAT será la siguiente
-
-    ID: 1|UsuarioID: 12|ImagenURL: https://www.travelexcellence.com/wp-content/upload...|Region: 1,3;1,2;1,1;2,1;2,2;2,3;3,3;3,2;3,1|Duracion: 6368|ZoomScale: 1,1,1,1,1,1,1,1,1,|Criterio: Sin criterio,Sin criterio,Sin criterio,Sin criterio...|Afinidad: 17.41|Genero: Femenino|OrientacionSexual: Heterosexual|Estado: 1    
-    */
-    
-    $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
-    $ruta = '../resources/afinidadesUsuarios';
-    $archivos = obtenerArchivosDesdeRuta($ruta);
-    $datosTotales = []; // Array para almacenar todos los datos leídos
-
-    // Leer todos los archivos .dat
-    foreach ($archivos as $archivo) {
-        $datosTotales['archivo' . count($datosTotales)] = leerDatosDesdeArchivo($ruta . '/' . $archivo);
-    }
-
-    // Verificar si el archivo personal existe
-    $archivoPersonalPath = $ruta . '/' . $usuarioId . '.dat';
-    if (file_exists($archivoPersonalPath)) {
-        $archivoPersonal = leerDatosDesdeArchivo($archivoPersonalPath);
-    } else {
-        // Manejar el caso en que no existe el archivo personal
-        $archivoPersonal = ['error' => 'Archivo personal no encontrado'];
-    }
-    
-    // Construir la respuesta JSON
-    $jsonResponse = [
-        'status' => 'success',
-        'message' => 'Datos cargados correctamente',
-        'archivos' => $datosTotales,
-        'archivoPersonal' => $archivoPersonal
-    ];
-
-    // Enviar la respuesta JSON
-    header('Content-Type: application/json');
-    echo json_encode($jsonResponse);
-    exit; // Terminar el script después de enviar la respuesta
 }
-
-function leerDatosDesdeArchivo($nombreArchivo) {
-    if (!file_exists($nombreArchivo)) {
-        die(json_encode(['success' => false, 'message' => "El archivo $nombreArchivo no existe."])); // Respuesta JSON en caso de error
-    }
-
-    $file = fopen($nombreArchivo, 'r');
-    $resultados = []; // Array para almacenar todos los registros
-
-    while (($linea = fgets($file)) !== false) {
-        $linea = trim($linea);
-        $pares = explode('|', $linea);
-
-        // Inicializar variables para cada registro
-        $datosDeArchivo = [];
-
-        foreach ($pares as $par) {
-            if (strpos($par, ': ') !== false) { // Verificar que el formato sea correcto
-                list($clave, $valor) = explode(': ', $par, 2);
-                $clave = trim($clave);
-                $valor = trim($valor);
-                $datosDeArchivo[$clave] = $valor; // Almacenar en un array asociativo
-            }
-        }
-
-        // Agregar el registro al array de resultados
-        $resultados[] = $datosDeArchivo;
-    }
-
-    fclose($file);
-    return $resultados; // Retornar todos los registros como un array
-}
-
-function obtenerArchivosDesdeRuta($ruta) {
-    if (!is_dir($ruta)) {
-        die(json_encode(['success' => false, 'message' => "La ruta $ruta no es válida."])); // Respuesta JSON en caso de error
-    }
-
-    $archivos = scandir($ruta);
-    $archivosDat = [];
-
-    foreach ($archivos as $archivo) {
-        if (pathinfo($archivo, PATHINFO_EXTENSION) === 'dat') {
-            $archivosDat[] = $archivo;
-        }
-    }
-
-    return $archivosDat;
-}
-

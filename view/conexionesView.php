@@ -32,7 +32,7 @@ include "../action/sessionUserAction.php";
                 })
                 .catch(error => {
                     console.error('Error de red:', error);
-                    // Redirigir a una vista de error si hay un problema de red
+                    console.log(response.error);
                     alert("Ha ocurrido un error inesperado, será redirigido a la página de inicio");
                     window.location.href = '../view/userNavigateView.php'; // Cambia esta línea según sea necesario
                 });
