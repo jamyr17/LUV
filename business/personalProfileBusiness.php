@@ -26,4 +26,8 @@ class PersonalProfileBusiness{
         return $this->personalProfileData->perfilPersonalByIdUsuario($usuarioId);
     }
 
+    public function puedeBuscarConexiones($usuarioId){
+        return $this->personalProfileData->puedeBuscarConexiones($usuarioId);
+    }
+    
 }

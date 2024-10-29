@@ -121,6 +121,16 @@ if (isset($_POST["registrar"])) {
         // Redirigir si el formulario está incompleto
         echo json_encode(['success' => false, 'error' => 'formIncomplete']);
     }
+} else if (isset($_POST["tieneInfoCompleta"])) { // tiene registros de modelado personal, deseado y afinidades.
+    
+    $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+    if ($personalProfileBusiness->puedeBuscarConexiones($usuarioId)) { // validamos con un método del back si posee los tres requisitos
+        echo json_encode(['success' => true]);
+        exit();
+    }
+    echo json_encode(['success' => false]);
+    exit();
 } else {
     $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
 
