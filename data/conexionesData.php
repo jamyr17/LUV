@@ -35,7 +35,7 @@ public function getAllTbPerfiles() {
     
         $profiles = [];
         while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $profile = [
+            $profile = [    
                 'id' => $row['id'],
                 'criterio' => $row['criterio'],
                 'valor' => $row['valor'],
