@@ -43,7 +43,7 @@
             <p><button type="submit" formaction="userPersonalProfileCarruselView.php">Modelar tu perfil</button></p>
             <p><button type="submit" formaction="userWantedProfileView.php">Modelar tu búsqueda</button></p>
             <p><button type="submit" formaction="activitiesCalendarView.php">Ver actividades</button></p>
-            <p><button type="submit" formaction="userAffinityView.php">Analizar imagen</button></p>
+            <!--<p><button type="submit" formaction="userAffinityView.php">Analizar imagen</button></p>-->
         </form>
     </div>
 

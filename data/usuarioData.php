@@ -1,7 +1,7 @@
 <?php
 
 include_once 'data.php';
-session_start();
+//session_start();
 
 class UsuarioData extends Data{
 
