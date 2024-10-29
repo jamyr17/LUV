@@ -1,8 +1,27 @@
 <?php
-include "../action/sessionUserAction.php";
+include_once "../action/sessionUserAction.php";  // Se incluye sessionUserAction.php que ya contiene session_start()
 include '../action/functions.php';
-?>
+include '../data/userAffinityData.php';
+require_once '../business/usuarioBusiness.php';
 
+$userAffinityData = new UserAffinityData();
+$usuarioBusiness = new UsuarioBusiness();
+
+// Obtener el ID del usuario usando el nombre de usuario en la sesión
+$userId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+
+// Comprobar si el perfil ya ha sido modelado y si no se ha marcado "modificar" en la sesión
+if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) {
+    echo "<script>
+        if (confirm('Tú ya has modelado tu perfil, ¿deseas modificarlo?')) {
+            window.location.href = '../view/userPersonalProfileCarruselView.php?modificar=1';
+        } else {
+            window.location.href = '../view/userNavigateView.php';
+        }
+    </script>";
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -466,15 +485,12 @@ include '../action/functions.php';
             <!-- Botón de siguiente que aparece después de analizar la imagen -->
             <button type="button" id="siguienteBtn" style="display:none;" onclick="nextForm(4)">Siguiente</button>
 
-
             <script>
                 const image = document.getElementById('image');
                 const gridOverlay = document.getElementById('grid-overlay');
                 let zoomScale = 1;
                 let zoomStart = 0;
                 let activeRegion = null;
-
-
 
         // Zoom functionality
         image.addEventListener('wheel', (event) => {

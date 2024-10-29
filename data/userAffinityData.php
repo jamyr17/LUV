@@ -346,7 +346,23 @@ class UserAffinityData extends Data {
         return isset($result) ? $result : false;
     }
     
-
-
+    public function isProfileModeled($userId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Consulta para verificar si hay un registro en tbperfilusuariopersonal para este usuario
+        $query = "SELECT COUNT(*) as count FROM tbperfilusuariopersonal WHERE tbusuarioid = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $userId);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $count);
+        mysqli_stmt_fetch($stmt);
+    
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+    
+        return $count > 0; // Retorna verdadero si ya existe un perfil
+    }
+    
 }
 ?>
