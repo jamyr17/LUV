@@ -117,21 +117,25 @@ include "../action/sessionUserAction.php";
     <div id="posts">
         <?php
 
-        if (isset($_SESSION['perfiles']) && !empty(isset($_SESSION['perfiles']))) {
+        if (isset($_SESSION['perfiles']) && !empty($_SESSION['perfiles'])) {
             $perfiles = $_SESSION['perfiles'];
 
             foreach ($perfiles as $perfil) {
+                // Accedemos a $perfil[0] ya que se encuentra anidado
+                $datosPerfil = $perfil[0]; // Aquí se accede al primer sub-array
+
                 echo '<div class="container">';
                 echo '    <div class="header">';
-                echo '        <img src="' . htmlspecialchars($perfil['UsuarioID']) . '" alt="Foto de usuario" class="profile-picture">';
-                echo '        <span class="username">' . htmlspecialchars($perfil['Genero']) . '</span>';
+                echo '        <img src="' . htmlspecialchars($datosPerfil['pfp']) . '" alt="Foto de usuario" class="profile-picture">'; // Cambia 'img' por 'pfp'
+                echo '        <span class="username">' . htmlspecialchars($datosPerfil['nombreUsuario']) . '</span>';
                 echo '    </div>';
                 echo '    <div class="image-container">';
-                echo '        <img src="' . htmlspecialchars($perfil['OrientacionSexual']) . '" alt="Imagen de publicación" class="post-image">';
+                echo '        <img src="' . htmlspecialchars($datosPerfil['ImagenURL']) . '" alt="Imagen de publicación" class="post-image">'; // Cambia 'img' por 'ImagenURL'
                 echo '    </div>';
                 echo '</div>';
             }
         }
+
         ?>
     </div>
 

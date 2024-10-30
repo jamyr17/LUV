@@ -4,10 +4,18 @@ include_once 'data.php';
 
 class ConexionesData extends Data{
 
-public function getAllTbPerfiles() {
+    public function getAllTbPerfilesPorID($usuariosID) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
+        
+        // Asegúrate de que $usuariosID sea un array y no esté vacío
+        if (!is_array($usuariosID) || empty($usuariosID)) {
+            return [];
+        }
     
+        // Escapar los IDs y unirlos en una cadena
+        $usuariosID = array_map('intval', $usuariosID); // Asegúrate de que sean enteros
+        $usuariosIDList = implode(',', $usuariosID); // Crea la cadena para la consulta
         
         $querySelect = "
             SELECT 
@@ -28,7 +36,7 @@ public function getAllTbPerfiles() {
             JOIN
                 tbperfilusuariodeseado d ON u.tbusuarioid = d.tbusuarioid
             WHERE 
-                p.tbperfilusuariopersonalestado = 1;
+                p.tbusuarioid IN ($usuariosIDList) AND p.tbperfilusuariopersonalestado = 1;
         ";
     
         $result = mysqli_query($conn, $querySelect);
@@ -50,7 +58,6 @@ public function getAllTbPerfiles() {
     
         mysqli_close($conn);
         return $profiles;
-    }   
-}
-
+    }
+}    
 ?>

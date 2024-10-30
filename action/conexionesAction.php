@@ -50,8 +50,21 @@ if (isset($data['cargarPerfiles'])) {
     $orientacionSexual = $archivoPersonal['OrientacionSexual'] ?? null;
 
     $profilingGenders = solicitudProfilingAlgorithm($genero, $orientacionSexual); // aquí obtengo los resultados de la solicitud del método que se encuentra en otro archivo
-    $_SESSION['perfiles'] = filterAffinityProfiles($datosTotales, $criterio, $afinidad, $genero, $orientacionSexual, $profilingGenders, $usuarioId);
-    
+
+    $perfilesFiltrados = filterAffinityProfiles($datosTotales, $criterio, $afinidad, $genero, $orientacionSexual, $profilingGenders, $usuarioId);
+
+    foreach ($perfilesFiltrados as $subArray) {
+        foreach ($subArray as $item) {
+            if (isset($item['UsuarioID'])) {
+                $ids[] = $item['UsuarioID'];
+            }
+        }
+    }
+
+    $perfilesUsuariosComplemento = $conexionesBusiness->getAllTbPerfilesPorID($ids);
+
+    $_SESSION['perfiles'] = unirElementosEnArregloUnico($perfilesUsuariosComplemento, $perfilesFiltrados);
+
     if (empty($_SESSION['perfiles'])) {
         echo json_encode(['success' => false, 'message' => 'No hay perfiles que coincidan con los criterios']);
         exit();
@@ -195,4 +208,25 @@ function solicitudProfilingAlgorithm($genero, $orientacion)
         return $result;
     }
     curl_close($ch);
+}
+
+function unirElementosEnArregloUnico($array1, $array2)
+{
+    // Añadir campos a $array2 donde UsuarioID coincida con usuarioId en $array1
+    foreach ($array1 as $item1) {
+        foreach ($array2 as &$subArray) { // Usar referencia para modificar directamente
+            foreach ($subArray as &$item2) {
+                if ($item1['usuarioId'] == $item2['UsuarioID']) {
+                    // Añadir los nuevos campos
+                    $item2['criterio'] = $item1['criterio'];
+                    $item2['valor'] = $item1['valor'];
+                    $item2['nombreUsuario'] = $item1['nombreUsuario'];
+                    $item2['porcentaje'] = $item1['porcentaje'];
+                    $item2['pfp'] = $item1['pfp'];
+                    $item2['estado'] = $item1['estado'];
+                }
+            }
+        }
+    }
+    return $array2;
 }
