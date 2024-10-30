@@ -148,7 +148,7 @@ if ($requestMethod === 'POST') {
         }
 
         // Especificar la ruta completa del archivo .dat dentro de la carpeta del usuario
-        $rutaArchivoDat = "$directorioUsuario/data_afinidad.dat";
+        $rutaArchivoDat = "$directorioUsuario/dataAfinidad.dat";
 
         // Escribir en el archivo .dat
         file_put_contents($rutaArchivoDat, $lineaDat, FILE_APPEND | LOCK_EX);
