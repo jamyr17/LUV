@@ -102,6 +102,7 @@ if ($requestMethod === 'POST') {
         $dataImagenUrlToDB = $urlImagen;
         $dataAfinidadToDB = '';
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+        $nombreUsuario = $_SESSION['nombreUsuario'];  // Obtener el nombre de usuario de la sesión
 
         foreach ($segmentacionData as $region => $datos) {
             $duracion = $datos['duracion'];
@@ -125,34 +126,126 @@ if ($requestMethod === 'POST') {
             $dataZoomToDB .= "$zoomScale,";     // Concatenar los zoom scales
         }
 
+        // Formatear los datos para el archivo .dat
         $dataCriteriosToDB = rtrim($dataCriteriosToDB, ',');
+        $dataDuracionToDB = rtrim($dataDuracionToDB, ',');
+        $dataZoomToDB = rtrim($dataZoomToDB, ',');
+        $dataAfinidadToDB = rtrim($dataAfinidadToDB, ',');
 
-        file_put_contents($afinidadesFile, $afinidadesData);
+        $genero = "Masculino";
+        $orientacionSexual = "Heterosexual";
+        $estado = 1;
+        $idRegistro = 1; 
 
-        $jsonResponse = ['status' => '', 'message' => '', 'afinidades' => $afinidadesData];
+        $lineaDat = "ID: $idRegistro|UsuarioID: $usuarioId|ImagenURL: $dataImagenUrlToDB|Region: $dataSegmentosToDB|Duracion: $dataDuracionToDB|ZoomScale: $dataZoomToDB|Criterio: $dataCriteriosToDB|Afinidad: $dataAfinidadToDB|Genero: $genero|OrientacionSexual: $orientacionSexual|Estado: $estado" . PHP_EOL;
 
-        if ($userAffinityData->checkIfExists($dataImagenUrlToDB, $usuarioId)) {
-            if ($userAffinityData->updateSegmentacionsingeneroorientacion($dataImagenUrlToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
-                $jsonResponse['status'] = 'success';
-                $jsonResponse['message'] = 'Afinidad actualizada de manera correcta.';
-            } else {
-                $jsonResponse['status'] = 'error';
-                $jsonResponse['message'] = 'Error al actualizar afinidad.';
-            }
-        } else {
-            // Guardar los datos en la base de datos
-            if ($userAffinityData->insertSegmentacionwithoutGeneroOrientacion($dataImagenUrlToDB, $dataSegmentosToDB, $dataDuracionToDB, $dataZoomToDB, $dataCriteriosToDB, $dataAfinidadToDB, $usuarioId)) {
-                $jsonResponse['status'] = 'success';
-                $jsonResponse['message'] = 'Afinidad registrada de manera correcta.';
-            } else {
-                $jsonResponse['status'] = 'error';
-                $jsonResponse['message'] = 'Error al registrar afinidad.';
-            }
+        // Crear la ruta de la carpeta del usuario
+        $directorioUsuario = "../resources/afinidadesUsuarios/$nombreUsuario";
+
+        // Verificar si la carpeta del usuario existe, y si no, crearla
+        if (!is_dir($directorioUsuario)) {
+            mkdir($directorioUsuario, 0777, true);
         }
+
+        // Especificar la ruta completa del archivo .dat dentro de la carpeta del usuario
+        $rutaArchivoDat = "$directorioUsuario/data_afinidad.dat";
+
+        // Escribir en el archivo .dat
+        file_put_contents($rutaArchivoDat, $lineaDat, FILE_APPEND | LOCK_EX);
+
+        $jsonResponse = ['status' => 'success', 'message' => 'Datos de afinidad guardados en archivo .dat.', 'afinidades' => $afinidadesData];
 
         // Enviar una única respuesta JSON
         echo json_encode($jsonResponse);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
+} else if ($_POST['leerDAT']) {
+    /*
+    La ESTRUCTURA del ARCHIVO DAT será la siguiente
+
+    ID: 1|UsuarioID: 12|ImagenURL: https://www.travelexcellence.com/wp-content/upload...|Region: 1,3;1,2;1,1;2,1;2,2;2,3;3,3;3,2;3,1|Duracion: 6368|ZoomScale: 1,1,1,1,1,1,1,1,1,|Criterio: Sin criterio,Sin criterio,Sin criterio,Sin criterio...|Afinidad: 17.41|Genero: Femenino|OrientacionSexual: Heterosexual|Estado: 1    
+    */
+    
+    $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
+    $ruta = '../resources/afinidadesUsuarios';
+    $archivos = obtenerArchivosDesdeRuta($ruta);
+    $datosTotales = []; // Array para almacenar todos los datos leídos
+
+    // Leer todos los archivos .dat
+    foreach ($archivos as $archivo) {
+        $datosTotales['archivo' . count($datosTotales)] = leerDatosDesdeArchivo($ruta . '/' . $archivo);
+    }
+
+    // Verificar si el archivo personal existe
+    $archivoPersonalPath = $ruta . '/' . $usuarioId . '.dat';
+    if (file_exists($archivoPersonalPath)) {
+        $archivoPersonal = leerDatosDesdeArchivo($archivoPersonalPath);
+    } else {
+        // Manejar el caso en que no existe el archivo personal
+        $archivoPersonal = ['error' => 'Archivo personal no encontrado'];
+    }
+    
+    // Construir la respuesta JSON
+    $jsonResponse = [
+        'status' => 'success',
+        'message' => 'Datos cargados correctamente',
+        'archivos' => $datosTotales,
+        'archivoPersonal' => $archivoPersonal
+    ];
+
+    // Enviar la respuesta JSON
+    header('Content-Type: application/json');
+    echo json_encode($jsonResponse);
+    exit; // Terminar el script después de enviar la respuesta
 }
+
+function leerDatosDesdeArchivo($nombreArchivo) {
+    if (!file_exists($nombreArchivo)) {
+        die(json_encode(['success' => false, 'message' => "El archivo $nombreArchivo no existe."])); // Respuesta JSON en caso de error
+    }
+
+    $file = fopen($nombreArchivo, 'r');
+    $resultados = []; // Array para almacenar todos los registros
+
+    while (($linea = fgets($file)) !== false) {
+        $linea = trim($linea);
+        $pares = explode('|', $linea);
+
+        // Inicializar variables para cada registro
+        $datosDeArchivo = [];
+
+        foreach ($pares as $par) {
+            if (strpos($par, ': ') !== false) { // Verificar que el formato sea correcto
+                list($clave, $valor) = explode(': ', $par, 2);
+                $clave = trim($clave);
+                $valor = trim($valor);
+                $datosDeArchivo[$clave] = $valor; // Almacenar en un array asociativo
+            }
+        }
+
+        // Agregar el registro al array de resultados
+        $resultados[] = $datosDeArchivo;
+    }
+
+    fclose($file);
+    return $resultados; // Retornar todos los registros como un array
+}
+
+function obtenerArchivosDesdeRuta($ruta) {
+    if (!is_dir($ruta)) {
+        die(json_encode(['success' => false, 'message' => "La ruta $ruta no es válida."])); // Respuesta JSON en caso de error
+    }
+
+    $archivos = scandir($ruta);
+    $archivosDat = [];
+
+    foreach ($archivos as $archivo) {
+        if (pathinfo($archivo, PATHINFO_EXTENSION) === 'dat') {
+            $archivosDat[] = $archivo;
+        }
+    }
+
+    return $archivosDat;
+}
+
