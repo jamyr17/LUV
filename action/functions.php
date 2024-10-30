@@ -1,5 +1,8 @@
 <?php
 
+include_once "cloudAction.php";
+require_once 'gestionImagenesIAAction.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -51,8 +54,6 @@ function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto
     echo "<textarea name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' rows='$filas' cols='$columnas' $autofocusAttr>$valor</textarea>";
 }
 
-
-
 // generar input de password para poder aplicar logica de si hay data que debe ser cargada o no
 function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '')
 {
@@ -64,50 +65,73 @@ function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPor
 
 function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 {
-    if (isset($_FILES[$nombreVariableForm])) {
+    if (isset($_FILES[$nombreVariableForm]) && $_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
+        $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
+        $nombreOriginal = pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_FILENAME);
 
-        if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
-
-            $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
-            $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
-
-            // Cargar la imagen según su tipo
-            switch ($fileExtension) {
-                case 'jpg':
-                case 'jpeg':
-                    $image = imagecreatefromjpeg($fileTmpPath);
-                    break;
-                case 'png':
-                    $image = imagecreatefrompng($fileTmpPath);
-                    break;
-                case 'gif':
-                    $image = imagecreatefromgif($fileTmpPath);
-                    break;
-                default:
-                    return false; // Tipo de archivo no soportado
-            }
-
-            if (!$image) {
-                return false; // No se pudo crear la imagen
-            }
-
-            $newFileName = $nombreArchivo . '.webp';
-            $destination = $directorio . $newFileName;
-
-            // Convertir la imagen a WebP
-            if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
-                imagedestroy($image); // Liberar la memoria
-                return $destination;
-            } else {
-                imagedestroy($image); // Liberar la memoria
+        // Crear la imagen desde el archivo temporal
+        switch ($fileExtension) {
+            case 'jpg':
+            case 'jpeg':
+                $image = imagecreatefromjpeg($fileTmpPath);
+                break;
+            case 'png':
+                $image = imagecreatefrompng($fileTmpPath);
+                break;
+            case 'gif':
+                $image = imagecreatefromgif($fileTmpPath);
+                break;
+            default:
+                echo "Tipo de archivo no soportado\n";
                 return false;
-            }
-        } else {
+        }
+
+        if (!$image) {
+            echo "No se pudo cargar la imagen\n";
             return false;
         }
-    } else {
-        return false;
+
+        $newFileName = $nombreArchivo . '.webp';
+        $destination = $directorio . $newFileName;
+
+        // Convertir a WebP
+        if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
+
+            // Subir a Cloudinary
+            $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreOriginal);
+            if (!$urlImagenCloudinary) {
+                return false;
+            }
+
+            // Procesar con IA y obtener criterios
+            $criteriosIA = procesarImagenIA($urlImagenCloudinary);
+            if (!$criteriosIA) {
+                return false;
+            }
+
+            // Obtener criterios formateados
+            $criterios = obtenerCriteriosCloud($criteriosIA);
+            if (empty($criterios)) {
+                return false;
+            }
+
+            // Guardar en el archivo de criterios
+            $archivoDatos = "../resources/img/criteriosImagenes.dat";
+            if (!file_exists($archivoDatos)) {
+                touch($archivoDatos); // Crear archivo si no existe
+            }
+            file_put_contents($archivoDatos, $urlImagenCloudinary . " | " . $criterios . PHP_EOL, FILE_APPEND);
+
+            imagedestroy($image);
+            return $destination;
+        } else {
+            imagedestroy($image);
+            return false;
+        }
     }
+    echo "No se encontró archivo en la solicitud\n";
+    return false;
 }
 
 function levenshtein_algoritmo($str1, $str2)

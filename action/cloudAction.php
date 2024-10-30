@@ -3,7 +3,7 @@ require '../vendor/autoload.php';
 
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
-
+// Configuración de Cloudinary
 Configuration::instance([
     'cloud' => [
         'cloud_name' => '',

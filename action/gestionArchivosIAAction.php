@@ -188,9 +188,8 @@ function crearRun($threadId, $assistantId, $token) {
 }
 
 function obtenerDatosIA($nombreCriterio) {
-    $token = 'TOKEN';
-    $assistantId =  'ASSIT';
-    $threadId = 'HILO';
+
+
 
     // 1. Enviar el mensaje al hilo
     $messageId = enviarMensaje($nombreCriterio, $token, $threadId);

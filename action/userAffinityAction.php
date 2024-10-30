@@ -93,7 +93,7 @@ if ($requestMethod === 'POST') {
         $dataSegmentosToDB = rtrim($dataSegmentosToDB, ';'); // Elimina el último ';'
 
         $urlImagen = 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg';
-        $criteriosIA = procesarImagen($urlImagen);
+        $criteriosIA = procesarImagenIA($urlImagen);
 
         $criterios = obtenerCriterios($criteriosIA);
 

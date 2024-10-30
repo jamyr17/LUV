@@ -124,97 +124,107 @@ function obtenerMensajesDelThread($threadId, $token) {
     return json_decode($response, true);
 }
 
-// Función principal que procesa la imagen
-function procesarImagen($urlImagen) {
 
-    $token = ''; // Tu API Key
+function obtenerCriteriosCloud($respuestaIA) {
+    // Limpieza del JSON: elimina cualquier coma final en listas u objetos
+    $respuestaLimpia = preg_replace('/,(\s*[\]}])/m', '$1', $respuestaIA);
+    //file_put_contents('debug.log', "Respuesta IA limpia: " . $respuestaLimpia . "\n", FILE_APPEND);
 
-    $assistantId = '';
+    $regiones = [];
+    $criteriosTextos = [];
+    $decodedRespuesta = json_decode($respuestaLimpia, true);
 
-    $threadId = '';
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decodedRespuesta)) {
+        foreach ($decodedRespuesta as $elemento) {
+            $fila = $elemento['coordenadas'][0];
+            $columna = $elemento['coordenadas'][1];
+            $criterio = isset($elemento['criterio']) ? $elemento['criterio'] : "Sin criterio";
+
+            $region = "$fila,$columna";
+            $regiones[] = $region;
+            $criteriosTextos[] = $criterio;
+        }
+    } else {
+        //file_put_contents('debug.log', "Error al decodificar JSON en obtenerCriteriosCloud: " . json_last_error_msg() . "\n", FILE_APPEND);
+        return "Error: JSON no válido recibido en obtenerCriteriosCloud.";
+    }
+
+    // Formatear la línea final en el formato deseado
+    $lineaArchivo = "Region: " . implode(";", $regiones) . " | Criterio: " . implode(",", $criteriosTextos);
+    return $lineaArchivo;
+}
+
+function procesarImagenIA($urlImagen) {
+
 
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
 
     if (!isset($mensaje['id'])) {
-        file_put_contents('debug.log', "Error: No se pudo enviar el mensaje.\n", FILE_APPEND);
-        return "Error: No se pudo enviar el mensaje.";
+       // file_put_contents('debug.log', "Error: No se pudo enviar el mensaje.\n", FILE_APPEND);
+        return json_encode(["error" => "No se pudo enviar el mensaje"]);
     }
 
-    // Crear un run para la imagen enviada
     $run = crearRun($threadId, $assistantId, $token);
-    
+
     if (!isset($run['id'])) {
-        file_put_contents('debug.log', "Error: No se pudo crear el run.\n", FILE_APPEND);
-        return "Error: No se pudo crear el run.";
+       // file_put_contents('debug.log', "Error: No se pudo crear el run.\n", FILE_APPEND);
+        return json_encode(["error" => "No se pudo crear el run"]);
     }
 
     $runId = $run['id'];
-
-    // Verificar el estado del run hasta que se complete
     $runCompletado = false;
     $maxRetries = 10;
     for ($i = 0; $i < $maxRetries; $i++) {
         $runStatus = verificarEstadoRun($threadId, $runId, $token);
 
-
         if ($runStatus['status'] === 'completed') {
             $runCompletado = true;
             break;
         }
-        sleep(3); // Espera 3 segundos antes de verificar de nuevo
+        sleep(3);
     }
 
     if (!$runCompletado) {
-        file_put_contents('debug.log', "Error: El run no se completó.\n", FILE_APPEND);
-        return "Error: El run no se completó.";
+        //file_put_contents('debug.log', "Error: El run no se completó.\n", FILE_APPEND);
+        return json_encode(["error" => "El run no se completó"]);
     }
 
-    // Obtener los mensajes con los resultados
     $mensajes = obtenerMensajesDelThread($threadId, $token);
-
-
     if (!$mensajes) {
-        file_put_contents('debug.log', "Error: No se encontraron mensajes.\n", FILE_APPEND);
-        return "Error: No se encontraron mensajes.";
+       // file_put_contents('debug.log', "Error: No se encontraron mensajes.\n", FILE_APPEND);
+        return json_encode(["error" => "No se encontraron mensajes"]);
     }
 
-    // Buscar el mensaje que corresponde al run completado
     foreach ($mensajes['data'] as $mensaje) {
         if (isset($mensaje['run_id']) && $mensaje['run_id'] === $runId) {
-
-            return $mensaje['content'][0]['text']['value']; // Retorna los resultados de la IA
+            if (isset($mensaje['content'][0]['text']['value'])) {
+                return $mensaje['content'][0]['text']['value'];
+            } else {
+                file_put_contents('debug.log', "Error: No se encontraron resultados en el contenido.\n", FILE_APPEND);
+                return json_encode(["error" => "No se encontraron resultados para el run"]);
+            }
         }
     }
 
-    file_put_contents('debug.log', "Error: No se encontraron resultados para el run.\n", FILE_APPEND);
-    return "Error: No se encontraron resultados para el run.";
+    //file_put_contents('debug.log', "Error: El contenido del mensaje está vacío o en un formato inesperado.\n", FILE_APPEND);
+    return json_encode(["error" => "Contenido de mensaje vacío o inesperado"]);
 }
 
-// Función para transformar la respuesta de la IA a un array asociativo de criterios
 function obtenerCriterios($respuestaIA) {
     $criterios = [];
-
-    // Decodificar la respuesta de la IA
     $decodedRespuesta = json_decode($respuestaIA, true);
 
-    // Verificar si la respuesta fue decodificada correctamente
-    if (json_last_error() === JSON_ERROR_NONE) {
-
-        // Recorrer los elementos devueltos por la IA
+    if (json_last_error() === JSON_ERROR_NONE && is_array($decodedRespuesta)) {
         foreach ($decodedRespuesta as $elemento) {
             $fila = $elemento['coordenadas'][0];
             $columna = $elemento['coordenadas'][1];
             $criterio = $elemento['criterio'];
 
-            // Formatear la región como "fila,columna"
             $region = "$fila,$columna";
-
-            // Agregar el criterio al array de criterios
             $criterios[$region] = $criterio;
         }
     } else {
-        // Error al decodificar el JSON, agregar al log para depuración
-        file_put_contents('debug.log', "Error al decodificar JSON: " . json_last_error_msg() . "\n", FILE_APPEND);
+        //file_put_contents('debug.log', "Error al decodificar JSON en obtenerCriterios: " . json_last_error_msg() . "\n", FILE_APPEND);
     }
 
     return $criterios;
