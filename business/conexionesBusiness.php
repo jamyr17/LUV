@@ -10,7 +10,7 @@ class ConexionesBusiness{
         $this->conexionesData = new ConexionesData();
     }
 
-    public function getAllTbPerfiles() {
-        return $this->conexionesData->getAllTbPerfiles();
+    public function getAllTbPerfilesPorID($usuariosID) {
+        return $this->conexionesData->getAllTbPerfilesPorID($usuariosID);
     }
 }
