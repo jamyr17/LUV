@@ -17,37 +17,41 @@ if (isset($data['cargarPerfiles'])) {
     $nombreUsuario = $_SESSION['nombreUsuario'];
     $usuarioId = $usuarioBusiness->getIdByName($nombreUsuario);
     $ruta = '../resources/afinidadesUsuarios';
-    $archivos = obtenerArchivosDesdeRuta($ruta);
-
+    $nombreArchivo = 'dataAfinidad.dat';
+    $carpetas = obtenerNombresDeCarpetasDesdeRuta($ruta);
+    $archivoPersonal = [];
     $datosTotales = [];
 
-    foreach ($archivos as $archivo) {
-        $resultadoArchivo = leerDatosDesdeArchivo($ruta . '/' . $archivo);
+    foreach ($carpetas as $carpeta) {
+        $resultadoArchivo = leerDatosDesdeArchivo($ruta . '/' . $carpeta . '/' . $nombreArchivo);
         if (is_array($resultadoArchivo) && !isset($resultadoArchivo['success'])) {
             $datosTotales[count($datosTotales)] = $resultadoArchivo;
         }
     }
 
     // Verificar si el archivo personal existe
-    $archivoPersonalPath = $ruta . '/' . $nombreUsuario . '.dat';
+    $archivoPersonalPath = $ruta . '/' . $nombreUsuario . '/' .  $nombreArchivo;
     if (file_exists($archivoPersonalPath)) {
         $arregloArchivoPersonal = leerDatosDesdeArchivo($archivoPersonalPath);
         if (is_array($arregloArchivoPersonal) && !empty($arregloArchivoPersonal) && isset($arregloArchivoPersonal[0])) {
-            // Asumiendo que quieres obtener el primer registro del archivo
-            $primerRegistro = $arregloArchivoPersonal[0];
-
-            $criterio = $primerRegistro['Criterio'] ?? null;
-            $afinidad = $primerRegistro['Afinidad'] ?? null;
+            $archivoPersonal = $arregloArchivoPersonal[0];
         } else {
             echo "No se encontraron registros o hubo un error al leer el archivo.";
+            exit();
         }
     } else {
-        // Manejar el caso en que no existe el archivo personal
         $arregloArchivoPersonal = ['error' => 'Archivo personal no encontrado'];
+        exit();
     }
 
-    $_SESSION['perfiles'] = filterAffinityProfiles($datosTotales, $criterio, $afinidad, $usuarioId);
+    $criterio = $archivoPersonal['Criterio'] ?? null;
+    $afinidad = $archivoPersonal['Afinidad'] ?? null;
+    $genero = $archivoPersonal['Genero'] ?? null;
+    $orientacionSexual = $archivoPersonal['OrientacionSexual'] ?? null;
 
+    $profilingGenders = solicitudProfilingAlgorithm($genero, $orientacionSexual); // aquí obtengo los resultados de la solicitud del método que se encuentra en otro archivo
+    $_SESSION['perfiles'] = filterAffinityProfiles($datosTotales, $criterio, $afinidad, $genero, $orientacionSexual, $profilingGenders, $usuarioId);
+    
     if (empty($_SESSION['perfiles'])) {
         echo json_encode(['success' => false, 'message' => 'No hay perfiles que coincidan con los criterios']);
         exit();
@@ -62,36 +66,41 @@ if (isset($data['cargarPerfiles'])) {
 }
 
 // Se debe corregir este método
-function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeParam, $usuarioId)
+function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeAfinidadParam, $generoParam, $orientacionSexualParam, $profilingGenders, $usuarioId)
 {
     // Validar que los parámetros no estén vacíos
-    if (empty($criterioParam) || empty($porcentajeParam)) {
+    if (empty($criterioParam) || empty($porcentajeAfinidadParam)) {
         return []; // Retorna un array vacío si no hay criterios
     }
 
     $criterioDividido = explode(',', $criterioParam);
-    $porcentajeDividido = explode(',', $porcentajeParam);
+    $porcentajeDividido = explode(',', $porcentajeAfinidadParam);
 
-    foreach ($allProfiles as $indicePerfil => $perfil) {
-        // Solo procesar perfiles que no sean del mismo usuario
-        if ($perfil['UsuarioID'] !== $usuarioId) {
-            // Inicializar 'ponderado' y 'coincidencias' si no existen
-            if (!isset($allProfiles[$indicePerfil]['ponderado'])) {
-                $allProfiles[$indicePerfil]['ponderado'] = 0;
-            }
-            if (!isset($allProfiles[$indicePerfil]['coincidencias'])) {
-                $allProfiles[$indicePerfil]['coincidencias'] = '';
-            }
+    foreach ($allProfiles as $indicePerfil => $subarreglo) {
+        foreach ($subarreglo as $perfil) {
+            // Solo procesar perfiles que no sean del mismo usuario
+            if ($perfil['UsuarioID'] !== $usuarioId) {
 
-            $criteriosPerfil = explode(',', $perfil['Criterio']); // Usar la clave correcta para criterio
+                if ($perfil['Genero'] === $profilingGenders[0]['Genero'] && $perfil['OrientacionSexual'] === $profilingGenders[0]['Orientacion']) {
+                    // Inicializar 'ponderado' y 'coincidencias' si no existen
+                    if (!isset($allProfiles[$indicePerfil][0]['ponderado'])) {
+                        $allProfiles[$indicePerfil][0]['ponderado'] = 0;
+                    }
+                    if (!isset($allProfiles[$indicePerfil][0]['coincidencias'])) {
+                        $allProfiles[$indicePerfil][0]['coincidencias'] = '';
+                    }
 
-            foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
-                foreach ($criteriosPerfil as $criterioPerfil) {
-                    // Comparar después de limpiar los valores
-                    if (strtolower(trim($criterioDeseado)) === strtolower(trim($criterioPerfil))) {
-                        // Asignar el ponderado
-                        $allProfiles[$indicePerfil]['ponderado'] += (float)$porcentajeDividido[$indiceCriterioDeseado];
-                        $allProfiles[$indicePerfil]['coincidencias'] .= $criterioDeseado . ' [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
+                    $criteriosPerfil = explode(',', $perfil['Criterio']); // Usar la clave correcta para criterio
+
+                    foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
+                        foreach ($criteriosPerfil as $criterioPerfil) {
+                            // Comparar después de limpiar los valores
+                            if (strtolower(trim($criterioDeseado)) === strtolower(trim($criterioPerfil))) {
+                                // Asignar el ponderado
+                                $allProfiles[$indicePerfil][0]['ponderado'] += (float)$porcentajeDividido[$indiceCriterioDeseado];
+                                $allProfiles[$indicePerfil][0]['coincidencias'] .= $criterioDeseado . ' [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
+                            }
+                        }
                     }
                 }
             }
@@ -100,12 +109,12 @@ function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeParam, 
 
     // Filtrar los perfiles con un ponderado mayor al 30%
     $perfilesFiltrados = array_filter($allProfiles, function ($perfil) {
-        return isset($perfil['ponderado']) && $perfil['ponderado'] > 30; // Asegurarse de que 'ponderado' existe
+        return isset($perfil[0]['ponderado']) && $perfil[0]['ponderado'] > 30;
     });
 
     // Ordenar los perfiles filtrados de mayor a menor ponderado
     usort($perfilesFiltrados, function ($a, $b) {
-        return $b['ponderado'] <=> $a['ponderado'];
+        return $b[0]['ponderado'] <=> $a[0]['ponderado'];
     });
 
     // Limitar a los 20 perfiles con mayor ponderado
@@ -142,20 +151,48 @@ function leerDatosDesdeArchivo($nombreArchivo)
     return $resultados; // Retornar todos los registros como un array
 }
 
-function obtenerArchivosDesdeRuta($ruta)
+function obtenerNombresDeCarpetasDesdeRuta($directorio)
 {
-    if (!is_dir($ruta)) {
-        return ['success' => false, 'message' => "La ruta $ruta no es válida."];
-    }
+    $elementos = scandir($directorio);
 
-    $archivos = scandir($ruta);
-    $archivosDat = [];
-
-    foreach ($archivos as $archivo) {
-        if (pathinfo($archivo, PATHINFO_EXTENSION) === 'dat') {
-            $archivosDat[] = $archivo;
+    $carpetas = [];
+    foreach ($elementos as $elemento) {
+        if ($elemento !== '.' && $elemento !== '..') {
+            if (is_dir($directorio . '/' . $elemento)) {
+                $carpetas[] = $elemento;
+            }
         }
     }
+    return $carpetas;
+}
 
-    return $archivosDat;
+function solicitudProfilingAlgorithm($genero, $orientacion)
+{
+    // Preparar los datos en formato JSON
+    $postData = json_encode([
+        'genero' => $genero,
+        'orientacion' => $orientacion,
+    ]);
+
+    $ch = curl_init();
+    $url = 'http://' . $_SERVER['HTTP_HOST'] . '/LUV/algorithm' . '/profilingAlgorithm.php';
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($postData)
+    ]);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        echo 'Error en la solicitud: ' . curl_error($ch);
+    } else {
+        $result = json_decode($response, true);
+        return $result;
+    }
+    curl_close($ch);
 }
