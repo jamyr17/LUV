@@ -1,0 +1,121 @@
+/* Estilos Generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h2, h1 {
+    color: #333;
+    text-align: center;
+}
+
+/* Contenedor Principal */
+.container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Lista de Chats */
+#chatList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#chatList li {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#chatList li a {
+    text-decoration: none;
+    color: #034f84;
+    font-weight: bold;
+}
+
+#chatList li a:hover {
+    color: #023e73;
+}
+
+/* Chat Box */
+#chatBox {
+    height: 400px;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Mensajes */
+.mensaje {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.mensajePropio {
+    background-color: #d1e7ff;
+    align-self: flex-end;
+    text-align: right;
+    color: #034f84;
+}
+
+.mensajeAmigo {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+    text-align: left;
+    color: #333;
+}
+
+/* Campo de Texto y Botón */
+#mensaje {
+    width: calc(100% - 90px);
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+button {
+    width: 80px;
+    height: 40px;
+    background-color: #034f84;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #023e73;
+}
+
+/* Scrollbar Personalizado */
+#chatBox::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chatBox::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
