@@ -30,4 +30,9 @@ class UsuarioBusiness{
         return $this->usuarioData->existUsername($nombreUsuario);
     }
 
+    public function actualizarCondicion($usuarioId, $condicion) {
+        return $this->usuarioData->actualizarCondicion($usuarioId, $condicion);
+    }
+    
+
 }
