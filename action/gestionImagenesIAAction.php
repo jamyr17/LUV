@@ -156,6 +156,9 @@ function obtenerCriteriosCloud($respuestaIA) {
 
 function procesarImagenIA($urlImagen) {
 
+    $token = ''; // Tu API Key
+    $assistantId = '';
+    $threadId = '';
 
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
 

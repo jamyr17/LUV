@@ -116,28 +116,101 @@ include "../action/sessionUserAction.php";
     </section>
     <div id="posts">
         <?php
+            if (isset($_SESSION['perfiles']) && !empty($_SESSION['perfiles'])) {
+                $perfiles = $_SESSION['perfiles'];
 
-        if (isset($_SESSION['perfiles']) && !empty($_SESSION['perfiles'])) {
-            $perfiles = $_SESSION['perfiles'];
+                foreach ($perfiles as $perfil) {
+                    $datosPerfil = $perfil[0];
 
-            foreach ($perfiles as $perfil) {
-                // Accedemos a $perfil[0] ya que se encuentra anidado
-                $datosPerfil = $perfil[0]; // Aquí se accede al primer sub-array
-
-                echo '<div class="container">';
-                echo '    <div class="header">';
-                echo '        <img src="' . htmlspecialchars($datosPerfil['pfp']) . '" alt="Foto de usuario" class="profile-picture">'; // Cambia 'img' por 'pfp'
-                echo '        <span class="username">' . htmlspecialchars($datosPerfil['nombreUsuario']) . '</span>';
-                echo '    </div>';
-                echo '    <div class="image-container">';
-                echo '        <img src="' . htmlspecialchars($datosPerfil['ImagenURL']) . '" alt="Imagen de publicación" class="post-image">'; // Cambia 'img' por 'ImagenURL'
-                echo '    </div>';
-                echo '</div>';
+                    echo '<div class="container">';
+                    echo '    <div class="header">';
+                    echo '        <img src="' . htmlspecialchars($datosPerfil['pfp']) . '" alt="Foto de usuario" class="profile-picture">';
+                    echo '        <span class="username">' . htmlspecialchars($datosPerfil['nombreUsuario']) . '</span>';
+                    echo '    </div>';
+                    echo '    <div class="image-container">';
+                    echo '        <img src="' . htmlspecialchars($datosPerfil['ImagenURL']) . '" ';
+                    echo '             alt="Imagen de publicación" class="post-image" ';
+                    echo '             data-image-url="' . htmlspecialchars($datosPerfil['ImagenURL']) . '">'; // Añadir data-image-url
+                    echo '    </div>';
+                    echo '</div>';
+                }
             }
-        }
-
         ?>
+
     </div>
+
+    <script>
+        $(document).ready(function() {
+            let startTime = null;
+            let activeRegion = null;
+
+            // Evento para detectar el movimiento dentro de la imagen y calcular la región
+            $('.post-image').on('mousemove', function(event) {
+                const imageWidth = $(this).width();
+                const imageHeight = $(this).height();
+                const mouseX = event.offsetX;
+                const mouseY = event.offsetY;
+
+                // División 3x3 lógica de la imagen, con límite entre 1 y 3 para evitar valores fuera de rango
+                const regionX = Math.min(3, Math.max(1, Math.floor(mouseX / (imageWidth / 3)) + 1));
+                const regionY = Math.min(3, Math.max(1, Math.floor(mouseY / (imageHeight / 3)) + 1));
+                const currentRegion = `${regionY},${regionX}`;
+
+                // Detecta si el mouse ha cambiado de región
+                if (activeRegion !== currentRegion) {
+                    if (startTime && activeRegion) {
+                        const duration = Date.now() - startTime; // Tiempo en ms dentro de la región anterior
+                        const imageURL = $(this).data('image-url'); // URL de la imagen
+                        console.log(`Left region ${activeRegion} after ${duration}ms`);
+                        guardarSegmentacion(activeRegion, duration, 1, imageURL); // Envía datos
+                    }
+                    activeRegion = currentRegion;
+                    startTime = Date.now(); // Inicia el tiempo para la nueva región
+                    console.log(`Entering region ${activeRegion}`);
+                }
+            });
+
+            // Evento para registrar la salida de la imagen y enviar los datos
+            $('.post-image').on('mouseleave', function() {
+                if (startTime && activeRegion) {
+                    const duration = Date.now() - startTime;
+                    const imageURL = $(this).data('image-url');
+                    console.log(`Left region ${activeRegion} after ${duration}ms`);
+                    guardarSegmentacion(activeRegion, duration, 1, imageURL);
+                    startTime = null;
+                    activeRegion = null;
+                }
+            });
+        });
+
+        // Función para enviar los datos al backend
+        function guardarSegmentacion(region, duration, zoomScale, imageURL) {
+            console.log("Datos enviados:", { region, duration, zoomScale, imageURL });
+            if (!imageURL) {
+                console.warn("La URL de la imagen está vacía, no se enviarán datos.");
+                return;
+            }
+
+            fetch('../action/userAffinityAction.php', {
+                method: 'POST',
+                body: JSON.stringify({ region, duration, zoomScale, imageURL }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log("Datos guardados con éxito:", data.message);
+                } else {
+                    console.error("Error al guardar los datos:", data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error de red al enviar los datos:', error);
+                alert("Ha ocurrido un error inesperado.");
+            });
+        }
+    </script>
+
 
 </body>
 

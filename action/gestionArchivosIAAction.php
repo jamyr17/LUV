@@ -190,6 +190,13 @@ function crearRun($threadId, $assistantId, $token) {
 function obtenerDatosIA($nombreCriterio) {
 
 
+    $token = ''; // Tu API Key
+
+    $assistantId = '';
+
+    $threadId = '';
+
+
 
     // 1. Enviar el mensaje al hilo
     $messageId = enviarMensaje($nombreCriterio, $token, $threadId);

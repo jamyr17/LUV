@@ -95,33 +95,28 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
         $newFileName = $nombreArchivo . '.webp';
         $destination = $directorio . $newFileName;
 
-        // Convertir a WebP
         if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
 
-            // Subir a Cloudinary
             $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreOriginal);
             if (!$urlImagenCloudinary) {
                 return false;
             }
 
-            // Procesar con IA y obtener criterios
             $criteriosIA = procesarImagenIA($urlImagenCloudinary);
             if (!$criteriosIA) {
                 return false;
             }
 
-            // Obtener criterios formateados
             $criterios = obtenerCriteriosCloud($criteriosIA);
             if (empty($criterios)) {
                 return false;
             }
 
-            // Guardar en el archivo de criterios
             $archivoDatos = "../resources/img/criteriosImagenes.dat";
             if (!file_exists($archivoDatos)) {
-                touch($archivoDatos); // Crear archivo si no existe
+                touch($archivoDatos); 
             }
-            file_put_contents($archivoDatos, $urlImagenCloudinary . " | " . $criterios . PHP_EOL, FILE_APPEND);
+            file_put_contents($archivoDatos,  "ImagenURL:" .$urlImagenCloudinary . "|" . $criterios . PHP_EOL, FILE_APPEND);
 
             imagedestroy($image);
             return $destination;

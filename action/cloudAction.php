@@ -5,7 +5,7 @@ use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
 // Configuración de Cloudinary
 Configuration::instance([
-    'cloud' => [
+    'cloud' => [       
         'cloud_name' => '',
         'api_key'    => '',
         'api_secret' => ''
