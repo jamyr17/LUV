@@ -1,9 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['usuarioId'])) {
-    header("Location: login.php");
-    exit();
-}
+include_once '../action/sessionUserAction.php'; // Verifica la sesión antes de cargar la vista
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +29,7 @@ if (!isset($_SESSION['usuarioId'])) {
                 console.error('Error:', data.error);
                 return;
             }
-            console.log(data); // Verifica el contenido de data
+            console.log(data);
             data.forEach(user => {
                 let li = document.createElement("li");
                 li.innerHTML = `<a href="usuarioMensajeChatView.php?amigoId=${user.id}">${user.nombre}</a>`;
