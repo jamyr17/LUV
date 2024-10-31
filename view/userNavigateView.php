@@ -61,6 +61,7 @@ include "../action/sessionUserAction.php";
             <p id="nuevo-boton">
                 <button type="submit" formaction="conexionesView.php">Buscar conexiones</button>
             </p>
+            <p><button type="submit" formaction="usuarioMensajeBandaView.php">Ver chat</button></p>
         </form>
     </div>
 
