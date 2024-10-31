@@ -19,4 +19,5 @@ class UsuarioMensajeBusiness {
     public function getUsuariosParaChat() {
         return $this->usuarioMensajeData->getUsuariosParaChat();
     }
+
 }

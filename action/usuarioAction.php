@@ -23,6 +23,9 @@ if (isset($_POST['login'])) {
             $_SESSION['nombreUsuario'] = $nombreUsuario;
             $_SESSION['tipoUsuario'] = ($result['tbtipousuarioid'] == 1) ? 'Administrador' : 'Usuario';
 
+            // Actualiza el estado de disponibilidad a "Disponible"
+            $usuarioBusiness->actualizarCondicion($_SESSION['usuarioId'], 'Disponible');
+
             // Redirige según el tipo de usuario
             $redirectUrl = ($result['tbtipousuarioid'] == 1) ? "../index.php" : "../view/userNavigateView.php";
             header("location: $redirectUrl");
