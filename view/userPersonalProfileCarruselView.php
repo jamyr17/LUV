@@ -86,7 +86,6 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                 nextForm(formNumber);
             }
         }
-
         function submitAll() {
             // Convertir el objeto en FormData para enviarlo
             const finalFormData = new FormData();
@@ -98,6 +97,7 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                 }
             }
 
+            // Añadir el campo 'registrar' para indicar que es una solicitud de registro
             finalFormData.append('registrar', 'true');
 
             fetch('../action/personalProfileAction.php', {
@@ -119,16 +119,17 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                         }
                         window.location.href = '../view/userWantedProfileView.php';
                     } else {
-                        window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
+                        console.error('Error de servidor: ', data.error);
+                        window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + encodeURIComponent(data.error);
                     }
                 } catch (error) {
                     console.error('Error al analizar el JSON:', error);
                     console.log('Datos recibidos (no válidos):', textData);
+                    alert('Hubo un error al procesar la respuesta del servidor. Revisa la consola para más detalles.');
                 }
             })
             .catch(error => console.error('Error de red:', error));
         }
-
 
         $(document).ready(function() {
 

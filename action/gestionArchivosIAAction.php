@@ -190,11 +190,11 @@ function crearRun($threadId, $assistantId, $token) {
 function obtenerDatosIA($nombreCriterio) {
 
 
-    $token = ''; // Tu API Key
+    $token = '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'; // Tu API Key
 
-    $assistantId = '';
+    $assistantId = 'asst_F4xkaL8F2T8Ny8fspLzNJJoL';
 
-    $threadId = '';
+    $threadId = 'thread_iIcQ0aBaYhgVMqCr65vkPUif';
 
 
 

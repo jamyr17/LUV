@@ -97,6 +97,18 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 
         if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
 
+            // Mover la creación de la carpeta aquí}
+            $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreArchivo/";
+            
+            // Crear la carpeta si no existe
+            if (!is_dir($rutaDirectorioUsuario)) {
+                if (!mkdir($rutaDirectorioUsuario, 0777, true)) {
+                    echo "No se pudo crear el directorio del usuario\n";
+                    imagedestroy($image);
+                    return false;
+                }
+            }
+
             $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreOriginal);
             if (!$urlImagenCloudinary) {
                 return false;
@@ -112,11 +124,26 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
                 return false;
             }
 
-            $archivoDatos = "../resources/img/criteriosImagenes.dat";
-            if (!file_exists($archivoDatos)) {
-                touch($archivoDatos); 
-            }
-            file_put_contents($archivoDatos,  "ImagenURL:" .$urlImagenCloudinary . "|" . $criterios . PHP_EOL, FILE_APPEND);
+            // Crear archivo con la ruta de la carpeta del usuario
+            $archivoDatos = $rutaDirectorioUsuario . "dataAfinidad.dat";
+
+
+            // Crear una estructura predeterminada para una segmentación 3x3
+            $segmentacionPredeterminada = [
+                'Region' => ['1,1', '1,2', '1,3', '2,1', '2,2', '2,3', '3,1', '3,2', '3,3'],
+                'Duracion' => array_fill(0, 9, 0),  // Duraciones iniciales en 0
+                'ZoomScale' => array_fill(0, 9, 1)  // Escala de zoom inicial en 1
+            ];
+
+            // Crear la línea de datos en el formato solicitado
+            $lineaDatos = "ImagenURL: $destination ";
+            $lineaDatos .= "| Duracion: " . implode(',', $segmentacionPredeterminada['Duracion']);
+            $lineaDatos .= " | ZoomScale: " . implode(',', $segmentacionPredeterminada['ZoomScale']);
+            $lineaDatos .= " | Region: " . implode(';', $segmentacionPredeterminada['Region']);
+            $lineaDatos .= " | Criterio: $criterios\n";  // Añade los criterios obtenidos
+
+            // Agregar los datos actuales al archivo del usuario
+            file_put_contents($archivoDatos, $lineaDatos, FILE_APPEND | LOCK_EX);
 
             imagedestroy($image);
             return $destination;

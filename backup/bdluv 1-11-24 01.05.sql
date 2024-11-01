@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 30, 2024 at 09:28 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 01-11-2024 a las 08:04:26
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bdluv`
+-- Base de datos: `bdluv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbactividad`
+-- Estructura de tabla para la tabla `tbactividad`
 --
 
 CREATE TABLE `tbactividad` (
@@ -42,7 +42,7 @@ CREATE TABLE `tbactividad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbactividad`
+-- Volcado de datos para la tabla `tbactividad`
 --
 
 INSERT INTO `tbactividad` (`tbactividadid`, `tbusuarioid`, `tbactividadtitulo`, `tbactividaddescripcion`, `tbactividadfechainicio`, `tbactividadfechatermina`, `tbactividaddireccion`, `tbactividadlatitud`, `tbactividadlongitud`, `tbactividadestado`, `tbactividadanonimo`) VALUES
@@ -51,7 +51,7 @@ INSERT INTO `tbactividad` (`tbactividadid`, `tbusuarioid`, `tbactividadtitulo`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbactividaduniversidadcampuscolectivo`
+-- Estructura de tabla para la tabla `tbactividaduniversidadcampuscolectivo`
 --
 
 CREATE TABLE `tbactividaduniversidadcampuscolectivo` (
@@ -61,7 +61,7 @@ CREATE TABLE `tbactividaduniversidadcampuscolectivo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbactividaduniversidadcampuscolectivo`
+-- Volcado de datos para la tabla `tbactividaduniversidadcampuscolectivo`
 --
 
 INSERT INTO `tbactividaduniversidadcampuscolectivo` (`tbactividaduniversidadcampuscolectivoid`, `tbactividadid`, `tbcampuscolectivoid`) VALUES
@@ -81,7 +81,7 @@ INSERT INTO `tbactividaduniversidadcampuscolectivo` (`tbactividaduniversidadcamp
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbafinidadusuario`
+-- Estructura de tabla para la tabla `tbafinidadusuario`
 --
 
 CREATE TABLE `tbafinidadusuario` (
@@ -99,16 +99,16 @@ CREATE TABLE `tbafinidadusuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbafinidadusuario`
+-- Volcado de datos para la tabla `tbafinidadusuario`
 --
 
 INSERT INTO `tbafinidadusuario` (`tbafinidadusuarioid`, `tbusuarioid`, `tbafinidadusuarioimagenurl`, `tbafinidadusuarioregion`, `tbafinidadusuarioduracion`, `tbafinidadusuariozoomscale`, `tbafinidadusuariocriterio`, `tbafinidadusuarioafinidad`, `tbafinidadusuariogenero`, `tbafinidadusuarioorientacionsexual`, `tbafinidadusuarioestado`) VALUES
-(1, 12, 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg', '1,3;1,2;1,1;2,1;2,2;2,3;3,3;3,2;3,1', '5018,3605,3373,6657,4974,28666,12571,14577,19020,', '1,1,1,1,1,1,1,1,1,', 'Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio', '17.51,12.58,11.77,23.22,17.35,100,43.85,50.85,66.35,', '', '', 1);
+(1, 12, 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg', '1,3;1,2;1,1;2,1;2,2;2,3;3,3;3,2;3,1', '5018,3605,3373,6657,4974,28666,12571,14577,19020,', '1,1,1,1,1,1,1,1,1,', 'Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio,Sin criterio', '17.51,12.58,11.77,23.22,17.35,100,43.85,50.85,66.35,', 'Femenino', 'Heterosexual', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbareaconocimiento`
+-- Estructura de tabla para la tabla `tbareaconocimiento`
 --
 
 CREATE TABLE `tbareaconocimiento` (
@@ -119,7 +119,7 @@ CREATE TABLE `tbareaconocimiento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbareaconocimiento`
+-- Volcado de datos para la tabla `tbareaconocimiento`
 --
 
 INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonombre`, `tbareaconocimientodescripcion`, `tbareaconocimientoestado`) VALUES
@@ -132,7 +132,7 @@ INSERT INTO `tbareaconocimiento` (`tbareaconocimientoid`, `tbareaconocimientonom
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbgenero`
+-- Estructura de tabla para la tabla `tbgenero`
 --
 
 CREATE TABLE `tbgenero` (
@@ -143,7 +143,7 @@ CREATE TABLE `tbgenero` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbgenero`
+-- Volcado de datos para la tabla `tbgenero`
 --
 
 INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `tbgeneroestado`) VALUES
@@ -161,7 +161,7 @@ INSERT INTO `tbgenero` (`tbgeneroid`, `tbgeneronombre`, `tbgenerodescripcion`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbimagen`
+-- Estructura de tabla para la tabla `tbimagen`
 --
 
 CREATE TABLE `tbimagen` (
@@ -174,7 +174,7 @@ CREATE TABLE `tbimagen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbimagen`
+-- Volcado de datos para la tabla `tbimagen`
 --
 
 INSERT INTO `tbimagen` (`tbimagenid`, `tbimagencrudid`, `tbimagenregistroid`, `tbimagendirectorio`, `tbimagennombre`, `tbimagenestado`) VALUES
@@ -185,7 +185,7 @@ INSERT INTO `tbimagen` (`tbimagenid`, `tbimagencrudid`, `tbimagenregistroid`, `t
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tborientacionsexual`
+-- Estructura de tabla para la tabla `tborientacionsexual`
 --
 
 CREATE TABLE `tborientacionsexual` (
@@ -196,7 +196,7 @@ CREATE TABLE `tborientacionsexual` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tborientacionsexual`
+-- Volcado de datos para la tabla `tborientacionsexual`
 --
 
 INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexualnombre`, `tborientacionsexualdescripcion`, `tborientacionsexualestado`) VALUES
@@ -220,7 +220,7 @@ INSERT INTO `tborientacionsexual` (`tborientacionsexualid`, `tborientacionsexual
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbperfilusuariodeseado`
+-- Estructura de tabla para la tabla `tbperfilusuariodeseado`
 --
 
 CREATE TABLE `tbperfilusuariodeseado` (
@@ -233,21 +233,37 @@ CREATE TABLE `tbperfilusuariodeseado` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbperfilusuariodeseado`
+-- Volcado de datos para la tabla `tbperfilusuariodeseado`
 --
 
-INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbusuarioid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbperfilusuariodeseadoestado`) VALUES
+INSERT INTO tbperfilusuariodeseado (tbperfilusuariodeseadoid, tbusuarioid, tbperfilusuariodeseadocriterio, tbperfilusuariodeseadovalor, tbperfilusuariodeseadoporcentaje, tbperfilusuariodeseadoestado) VALUES
 (1, 1, 'Empleos,Gustos Musicales,Comida rápida', 'médico,jazz,tacos', '30', 1),
 (2, 2, 'Gustos Musicales', 'samba', '50', 1),
+(3, 3, 'Empleos,Gustos Musicales,Comida rápida', 'ingeniero,rock,pastas', '40', 1),
+(4, 4, 'Gustos Musicales,Comida rápida', 'pop,hamburguesas', '60', 1),
+(5, 5, 'Empleos,Gustos Musicales', 'arquitecto,salsa', '70', 1),
+(6, 6, 'Gustos Musicales,Comida rápida', 'electrónica,shawarma', '50', 1),
+(7, 7, 'Gustos Musicales', 'bachata', '80', 1),
 (8, 8, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', '50', 1),
 (9, 9, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', '50', 1),
+(10, 10, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,sushi', '40', 1),
 (11, 11, 'Gustos Musicales,Empleos,Mascotas', 'samba,ingeniero,perros', '50', 1),
-(12, 12, 'Empleos,Gustos Musicales,Empleos,Estilo de Vida,Mascotas', 'médico,jazz,ingeniero,saludable,gatos', '50', 1);
+(12, 12, 'Gustos Musicales,Empleos,Comida rápida,Mascotas,Estilo de Vida', 'samba,médico,papas fritas,gatos,saludable', '33.33,26.67,20,13.33,6.67', 1),
+(13, 13, 'Gustos Musicales,Comida rápida', 'rock,burgers', '50', 1),
+(14, 14, 'Gustos Musicales,Comida rápida', 'pop,hamburguesas', '60', 1),
+(15, 15, 'Empleos,Gustos Musicales', 'arquitecto,salsa', '70', 1),
+(16, 16, 'Gustos Musicales,Comida rápida', 'electrónica,shawarma', '50', 1),
+(17, 17, 'Gustos Musicales', 'bachata', '80', 1),
+(18, 18, 'Empleos,Gustos Musicales,Comida rápida', 'chef,clásica,sushi', '40', 1),
+(19, 19, 'Gustos Musicales,Empleos,Mascotas', 'jazz,ingeniero,gatos', '50', 1),
+(20, 20, 'Gustos Musicales,Comida rápida,Mascotas', 'rock,pizza,perros', '50', 1),
+(21, 21, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,tacos', '45', 1),
+(22, 22, 'Gustos Musicales,Comida rápida', 'samba,hamburguesas', '35', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbperfilusuariopersonal`
+-- Estructura de tabla para la tabla `tbperfilusuariopersonal`
 --
 
 CREATE TABLE `tbperfilusuariopersonal` (
@@ -265,23 +281,37 @@ CREATE TABLE `tbperfilusuariopersonal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbperfilusuariopersonal`
+-- Volcado de datos para la tabla `tbperfilusuariopersonal`
 --
 
-INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbusuarioid`, `tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbareaconocimiento`, `tbgenero`, `tborientacionsexual`, `tbuniversidad`, `tbuniversidadcampus`, `tbuniversidadcampuscolectivo`, `tbperfilusuariopersonalestado`) VALUES
+-- Insertar perfiles personales para todos los usuarios
+INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbusuarioid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor, tbareaconocimiento, tbgenero, tborientacionsexual, tbuniversidad, tbuniversidadcampus, tbuniversidadcampuscolectivo, tbperfilusuariopersonalestado) VALUES
 (1, 1, 'Gustos Musicales', 'samba', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 1', 'Campus 1', 'Colectivo 1', 1),
 (2, 2, 'Empleos,Gustos Musicales,Comida rápida', 'médico,samba,tacos', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 1),
-(3, 3, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1),
+(3, 3, 'Empleos,Gustos Musicales,Comida rápida', 'ingeniero,rock,pastas', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 2', 'Campus Norte', NULL, 1),
 (4, 4, 'Empleos,Gustos Musicales', 'médico,jazz', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 1', 1),
-(5, 5, 'Empleos,Gustos Musicales', 'médico,samba', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 1),
-(12, 12, 'Gustos Musicales,Empleos,Comida rápida,Mascotas,Estilo de Vida', 'samba,médico,papas fritas,gatos,saludable', 'Ingeniería Informática', 'Masculino', 'Gay', 'Universidad Nacional de Costa Rica', 'Campus Nicoya', 'Fútbol', 1),
-(13, 8, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1),
-(14, 9, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1);
-
+(5, 5, 'Empleos,Gustos Musicales', 'arquitecto,salsa', 'Arquitectura', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 1),
+(6, 6, 'Gustos Musicales,Comida rápida', 'electrónica,shawarma', 'Tecnología', 'Masculino', 'Heterosexual', 'Universidad Politécnica', 'Campus Central', 'Club de Robótica', 1),
+(7, 7, 'Empleos,Gustos Musicales', 'abogado,bachata', 'Derecho', 'Masculino', 'Heterosexual', 'Universidad de Derecho', 'Campus Norte', NULL, 1),
+(8, 8, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1),
+(9, 9, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1),
+(10, 10, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,sushi', 'Medicina', 'Masculino', 'Heterosexual', 'Universidad Nacional', 'Campus Ciencias Médicas', 'Club de Debate', 1),
+(11, 11, 'Empleos,Gustos Musicales', 'ingeniero,jazz', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad Técnica', 'Campus Sur', 'Club de Fotografía', 1),
+(12, 12, 'Gustos Musicales,Empleos,Comida rápida,Mascotas,Estilo de Vida', 'samba,médico,papas fritas,gatos,saludable', 'Matemáticas', 'Masculino', 'Heterosexual', 'Universidad Nacional de Costa Rica', 'Campus Sarapiquí', 'Fútbol', 1),
+(13, 13, 'Gustos Musicales,Comida rápida', 'rock,burgers', 'Ciencias Sociales', 'Masculino', 'Heterosexual', 'Universidad del Estado', 'Campus Oeste', NULL, 1),
+(14, 14, 'Gustos Musicales,Comida rápida', 'pop,hamburguesas', 'Derecho', 'Femenino', 'Heterosexual', 'Universidad Nacional', 'Campus Central', NULL, 1),
+(15, 15, 'Empleos,Gustos Musicales', 'arquitecto,salsa', 'Arquitectura', 'Masculino', 'Heterosexual', 'Universidad del Sur', 'Campus Arquitectura', 'Club de Danza', 1),
+(16, 16, 'Gustos Musicales,Comida rápida', 'electrónica,shawarma', 'Ingeniería', 'Femenino', 'Heterosexual', 'Universidad Politécnica', 'Campus Este', 'Club de Electrónica', 1),
+(17, 17, 'Empleos,Gustos Musicales', 'chef,bachata', 'Ciencias Culinarias', 'Masculino', 'Heterosexual', 'Instituto Culinario', 'Campus Gastronómico', NULL, 1),
+(18, 18, 'Empleos,Gustos Musicales', 'chef,clásica,sushi', 'Gastronomía', 'Femenino', 'Heterosexual', 'Universidad Gastronómica', 'Campus Principal', 'Club de Cocina', 1),
+(19, 19, 'Empleos,Gustos Musicales,Mascotas', 'ingeniero,jazz,gatos', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad Técnica', 'Campus Sur', 'Club de Animales', 1),
+(20, 20, 'Gustos Musicales,Comida rápida,Mascotas', 'rock,pizza,perros', 'Ingeniería', 'Femenino', 'Heterosexual', 'Universidad del Este', 'Campus Central', 'Club de Atletismo', 1),
+(21, 21, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,tacos', 'Medicina', 'Masculino', 'Heterosexual', 'Universidad Nacional', 'Campus Medicina', 'Club de Estudios', 1),
+(22, 22, 'Gustos Musicales,Comida rápida', 'samba,hamburguesas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad de las Artes', 'Campus Principal', 'Club de Teatro', 1);
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbpersona`
+-- Estructura de tabla para la tabla `tbpersona`
 --
 
 CREATE TABLE `tbpersona` (
@@ -293,7 +323,7 @@ CREATE TABLE `tbpersona` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbpersona`
+-- Volcado de datos para la tabla `tbpersona`
 --
 
 INSERT INTO `tbpersona` (`tbpersonaid`, `tbpersonacedula`, `tbpersonaprimernombre`, `tbpersonaprimerapellido`, `tbpersonaestado`) VALUES
@@ -309,12 +339,21 @@ INSERT INTO `tbpersona` (`tbpersonaid`, `tbpersonacedula`, `tbpersonaprimernombr
 (10, '141414141', 'Andres', 'Gutierrez', 1),
 (11, '000000001', 'admin', 'admin', 1),
 (12, '000000002', 'client', 'client', 1),
-(13, '000000003', 'user', 'user', 1);
+(13, '000000003', 'user', 'user', 1),
+(14, '123444', 'cavil', 'he', 1),
+(15, '4353245', 'Vasquez', 'Fibronas', 1),
+(16, '3453452', 'Lopez', 'Cascante', 1),
+(17, '12313212', 'Blanca', 'Nieve', 1),
+(18, '3452345', 'Hernandez', 'Bena', 1),
+(19, '214234324', 'Jejon', 'Saron', 1),
+(20, '43214213', 'Mende', 'Badi', 1),
+(21, '234124', 'Neron', 'Baxa', 1),
+(22, '324543532', 'Salazar', 'Mendez', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicitudgenero`
+-- Estructura de tabla para la tabla `tbsolicitudgenero`
 --
 
 CREATE TABLE `tbsolicitudgenero` (
@@ -326,7 +365,7 @@ CREATE TABLE `tbsolicitudgenero` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicitudorientacionsexual`
+-- Estructura de tabla para la tabla `tbsolicitudorientacionsexual`
 --
 
 CREATE TABLE `tbsolicitudorientacionsexual` (
@@ -338,7 +377,7 @@ CREATE TABLE `tbsolicitudorientacionsexual` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicituduniversidad`
+-- Estructura de tabla para la tabla `tbsolicituduniversidad`
 --
 
 CREATE TABLE `tbsolicituduniversidad` (
@@ -348,7 +387,7 @@ CREATE TABLE `tbsolicituduniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbsolicituduniversidad`
+-- Volcado de datos para la tabla `tbsolicituduniversidad`
 --
 
 INSERT INTO `tbsolicituduniversidad` (`tbsolicituduniversidadid`, `tbsolicituduniversidadnombre`, `tbsolicituduniversidadestado`) VALUES
@@ -357,7 +396,7 @@ INSERT INTO `tbsolicituduniversidad` (`tbsolicituduniversidadid`, `tbsolicitudun
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbsolicituduniversidadcampus`
+-- Estructura de tabla para la tabla `tbsolicituduniversidadcampus`
 --
 
 CREATE TABLE `tbsolicituduniversidadcampus` (
@@ -370,7 +409,7 @@ CREATE TABLE `tbsolicituduniversidadcampus` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbtipousuario`
+-- Estructura de tabla para la tabla `tbtipousuario`
 --
 
 CREATE TABLE `tbtipousuario` (
@@ -380,7 +419,7 @@ CREATE TABLE `tbtipousuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbtipousuario`
+-- Volcado de datos para la tabla `tbtipousuario`
 --
 
 INSERT INTO `tbtipousuario` (`tbtipousuarioid`, `tbtipousuarionombre`, `tbtipousuarioestado`) VALUES
@@ -390,7 +429,7 @@ INSERT INTO `tbtipousuario` (`tbtipousuarioid`, `tbtipousuarionombre`, `tbtipous
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidad`
+-- Estructura de tabla para la tabla `tbuniversidad`
 --
 
 CREATE TABLE `tbuniversidad` (
@@ -400,7 +439,7 @@ CREATE TABLE `tbuniversidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbuniversidad`
+-- Volcado de datos para la tabla `tbuniversidad`
 --
 
 INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniversidadestado`) VALUES
@@ -413,7 +452,7 @@ INSERT INTO `tbuniversidad` (`tbuniversidadid`, `tbuniversidadnombre`, `tbuniver
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidadcampus`
+-- Estructura de tabla para la tabla `tbuniversidadcampus`
 --
 
 CREATE TABLE `tbuniversidadcampus` (
@@ -429,7 +468,7 @@ CREATE TABLE `tbuniversidadcampus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbuniversidadcampus`
+-- Volcado de datos para la tabla `tbuniversidadcampus`
 --
 
 INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `tbuniversidadcampusnombre`, `tbuniversidadcampusdireccion`, `tbuniversidadcampusestado`, `tbuniversidadcampuslatitud`, `tbuniversidadcampuslongitud`, `tbuniversidadcampusregionid`, `tbuniversidadcampusespecializacionid`) VALUES
@@ -439,7 +478,7 @@ INSERT INTO `tbuniversidadcampus` (`tbuniversidadcampusid`, `tbuniversidadid`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidadcampuscolectivo`
+-- Estructura de tabla para la tabla `tbuniversidadcampuscolectivo`
 --
 
 CREATE TABLE `tbuniversidadcampuscolectivo` (
@@ -450,7 +489,7 @@ CREATE TABLE `tbuniversidadcampuscolectivo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbuniversidadcampuscolectivo`
+-- Volcado de datos para la tabla `tbuniversidadcampuscolectivo`
 --
 
 INSERT INTO `tbuniversidadcampuscolectivo` (`tbuniversidadcampuscolectivoid`, `tbuniversidadcampuscolectivonombre`, `tbuniversidadcampuscolectivodescripcion`, `tbuniversidadcampuscolectivoestado`) VALUES
@@ -463,7 +502,7 @@ INSERT INTO `tbuniversidadcampuscolectivo` (`tbuniversidadcampuscolectivoid`, `t
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidadcampusespecializacion`
+-- Estructura de tabla para la tabla `tbuniversidadcampusespecializacion`
 --
 
 CREATE TABLE `tbuniversidadcampusespecializacion` (
@@ -474,7 +513,7 @@ CREATE TABLE `tbuniversidadcampusespecializacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbuniversidadcampusespecializacion`
+-- Volcado de datos para la tabla `tbuniversidadcampusespecializacion`
 --
 
 INSERT INTO `tbuniversidadcampusespecializacion` (`tbuniversidadcampusespecializacionid`, `tbuniversidadcampusespecializacionnombre`, `tbuniversidadcampusespecializaciondescripcion`, `tbuniversidadcampusespecializacionestado`) VALUES
@@ -492,7 +531,7 @@ INSERT INTO `tbuniversidadcampusespecializacion` (`tbuniversidadcampusespecializ
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidadcampusregion`
+-- Estructura de tabla para la tabla `tbuniversidadcampusregion`
 --
 
 CREATE TABLE `tbuniversidadcampusregion` (
@@ -503,7 +542,7 @@ CREATE TABLE `tbuniversidadcampusregion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbuniversidadcampusregion`
+-- Volcado de datos para la tabla `tbuniversidadcampusregion`
 --
 
 INSERT INTO `tbuniversidadcampusregion` (`tbuniversidadcampusregionid`, `tbuniversidadcampusregionnombre`, `tbuniversidadcampusregiondescripcion`, `tbuniversidadcampusregionestado`) VALUES
@@ -515,7 +554,7 @@ INSERT INTO `tbuniversidadcampusregion` (`tbuniversidadcampusregionid`, `tbunive
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbuniversidadcampusuniversidadcolectivo`
+-- Estructura de tabla para la tabla `tbuniversidadcampusuniversidadcolectivo`
 --
 
 CREATE TABLE `tbuniversidadcampusuniversidadcolectivo` (
@@ -525,7 +564,7 @@ CREATE TABLE `tbuniversidadcampusuniversidadcolectivo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbuniversidadcampusuniversidadcolectivo`
+-- Volcado de datos para la tabla `tbuniversidadcampusuniversidadcolectivo`
 --
 
 INSERT INTO `tbuniversidadcampusuniversidadcolectivo` (`tbuniversidadcampusuniversidadcolectivoid`, `tbuniversidadcampusid`, `tbuniversidadcolectivoid`) VALUES
@@ -544,7 +583,7 @@ INSERT INTO `tbuniversidadcampusuniversidadcolectivo` (`tbuniversidadcampusunive
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbusuario`
+-- Estructura de tabla para la tabla `tbusuario`
 --
 
 CREATE TABLE `tbusuario` (
@@ -558,7 +597,7 @@ CREATE TABLE `tbusuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbusuario`
+-- Volcado de datos para la tabla `tbusuario`
 --
 
 INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbtipousuarioid`, `tbusuarionombre`, `tbusuariocontrasena`, `tbusuarioestado`, `tbusuarioimagen`) VALUES
@@ -574,14 +613,23 @@ INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbtipousuarioid`, `tbusu
 (10, 10, 2, 'andres', '123', 1, ''),
 (11, 11, 1, 'admin', 'admin', 1, ''),
 (12, 12, 2, 'client', 'client', 1, '../resources/img/profile/client.webp'),
-(13, 13, 2, 'user', 'user', 1, '');
+(13, 13, 2, 'user', 'user', 1, ''),
+(14, 14, 2, 'Henry', '123', 1, '../resources/img/profile/henry.webp'),
+(15, 15, 2, 'Laura', '123', 1, '../resources/img/profile/laura.webp'),
+(16, 16, 2, 'Franco', '123', 1, '../resources/img/profile/franco.webp'),
+(17, 17, 2, 'Zoe', '123', 1, '../resources/img/profile/zoe.webp'),
+(18, 18, 2, 'Julio', '123', 1, '../resources/img/profile/julio.webp'),
+(19, 19, 2, 'Enry', '123', 1, '../resources/img/profile/enry.webp'),
+(20, 20, 2, 'Lenka', '123', 1, '../resources/img/profile/lenka.webp'),
+(21, 21, 2, 'julian', '123', 1, '../resources/img/profile/julian.webp'),
+(22, 22, 2, 'Helen', '123', 1, '../resources/img/profile/helen.webp');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `tbperfilusuariodeseado`
+-- Indices de la tabla `tbperfilusuariodeseado`
 --
 ALTER TABLE `tbperfilusuariodeseado`
   ADD UNIQUE KEY `tbusuarioid` (`tbusuarioid`);

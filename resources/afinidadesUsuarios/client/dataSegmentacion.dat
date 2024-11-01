@@ -1,3 +1,6 @@
-ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730401362/images/zyakkkawjsdxf3jhkjzg.jpg | Region: 2,3;2,2;2,1;3,1;3,2;3,3;1,3;1,2;1,1 | Duracion: 1623,760,673,402,669,1282,1377,1428,1817 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730272443/images/canguro.jpg | Region: 1,1;1,2;1,3;2,1;3,1;3,2;3,3;2,2;2,3 | Duracion: 558,821,796,546,469,736,304,214,70 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730316247/images/7b46974f188b5f98b5f967a1208527ba.jpg | Region: 1,2;1,1;1,3;2,3;2,2;2,1;3,3;3,2;3,1 | Duracion: 1080,509,276,755,792,564,413,572,478 | ZoomScale: 1,1,1,1,1,1,1,1,1
+Genero: Masculino|OrientacionSexual: Heterosexual
+ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730401362/images/zyakkkawjsdxf3jhkjzg.jpg | Region: 2,3;2,2;2,1;3,1;3,2;3,3;1,3;1,2;1,1 | Duracion: 56529,10646,11799,7416,9877,10140,2987,6586,7453 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730272443/images/canguro.jpg | Region: 1,1;1,2;1,3;2,1;3,1;3,2;3,3;2,2;2,3 | Duracion: 2868,2617,3805,2262,1838,2024,3172,1996,7429 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730316247/images/7b46974f188b5f98b5f967a1208527ba.jpg | Region: 1,2;1,1;1,3;2,3;2,2;2,1;3,3;3,2;3,1 | Duracion: 1247,726,750,1075,972,564,642,572,478 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/profile/fernanda.webp | Region: 1,1;1,2;1,3;2,3;2,2;2,1;3,2;3,3;3,1 | Duracion: 1586,1600,3179,1203,1022,800,721,866,576 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/profile/lucia.webp | Region: 1,3;1,2;3,3;2,3;2,2;1,1;2,1;3,2;3,1 | Duracion: 1726,1196,237,722,1311,195,175,406,183 | ZoomScale: 1,1,1,1,1,1,1,1,1
