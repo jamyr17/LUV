@@ -55,7 +55,78 @@ class UsuarioMensajeData extends Data {
       mysqli_close($conn);
       return $usuarios;
   }
+
+  public function getUsuarioDetalles($usuarioId) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        
+        if (!$conn) {
+            return null; 
+        }
+    
+        $conn->set_charset('utf8');
+    
+        $query = "SELECT tbusuarionombre, tbusuarioimagen, tbusuariocondicion FROM tbusuario WHERE tbusuarioid = ?";
+        $stmt = $conn->prepare($query);
+        
+        if (!$stmt) {
+            $conn->close();
+            return null; 
+        }
+    
+        $stmt->bind_param("i", $usuarioId);
+        $stmt->execute();
+        $stmt->bind_result($nombre, $imagen, $condicion);
+    
+        $resultado = null;
+        if ($stmt->fetch()) {
+            $resultado = [
+                'nombre' => $nombre,
+                'imagen' => $imagen,
+                'condicion' => $condicion
+            ];
+        }
+    
+        $stmt->close();
+        $conn->close();
+    
+        return $resultado;
+    }
+
+    public function getUsuarioAmigoDetalles($amigoId) {
+      $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+      
+      if (!$conn) {
+          return null; 
+      }
   
+      $conn->set_charset('utf8');
   
+      $query = "SELECT tbusuarionombre, tbusuarioimagen, tbusuariocondicion FROM tbusuario WHERE tbusuarioid = ?";
+      $stmt = $conn->prepare($query);
+      
+      if (!$stmt) {
+          $conn->close();
+          return null; 
+      }
+  
+      $stmt->bind_param("i", $amigoId);
+      $stmt->execute();
+      $stmt->bind_result($nombre, $imagen, $condicion);
+  
+      $resultado = null;
+      if ($stmt->fetch()) {
+          $resultado = [
+              'nombre' => $nombre,
+              'imagen' => $imagen,
+              'condicion' => $condicion
+          ];
+      }
+  
+      $stmt->close();
+      $conn->close();
+  
+      return $resultado;
+  }
+    
 }
 ?>
