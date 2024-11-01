@@ -61,7 +61,7 @@
         <h3>Agregar una nueva actividad</h3>
         <p class="text-muted">Complete el formulario para añadir una nueva actividad</p>
 
-        <form id="formCrear" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;">
+        <form id="formCrear" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;" enctype="multipart/form-data">
             
             <label for="titulo" class="form-label">Título: </label>
             <?php generarCampoTexto('titulo', 'formCrearData', 'Nombre de la actividad', '') ?><br>
@@ -84,6 +84,9 @@
 
             <input required type="datetime-local" name="fechaTerminaInput" id="fechaTerminaInput" value="<?php echo $fechaTerminaValue; ?>" />
             <br>
+
+            <label>Suba 1 imagen relacionada a la actividad: </label>
+            <input required type='file' name='imagen' id='imagen' />
 
             <label for="direccion" class="form-label">Dirección: </label>
             <?php generarCampoTexto('direccion', 'formCrearData', 'Dirección de la actividad', '') ?><br>
@@ -121,6 +124,8 @@
                 <th>ID</th>
                 <th>Título</th>
                 <th>Descripción</th>
+                <th>Imagen</th>
+                <th>Actualizar imagen</th>
                 <th>Fecha Inicio</th>
                 <th>Fecha Termina</th>
                 <th>Dirección</th>
@@ -143,6 +148,8 @@
                 echo '<td>' . htmlspecialchars($actividad->getTbActividadId()) . '</td>';
                 echo '<td><input type="text" class="form-control" name="titulo" id="titulo" value="' . $actividad->getTbActividadTitulo() . '"></td>';
                 echo '<td><input type="text" class="form-control" name="descripcion" id="descripcion" value="' . $actividad->getTbActividadDescripcion() . '"></td>';
+                echo '<td><img src="' . htmlspecialchars($actividad->getTbActividadImagen()) . '" alt="Imagen de ' . htmlspecialchars($actividad->getTbActividadTitulo()) . '" style="width: 80px; height: auto; object-fit: cover;"></td>';
+                echo '<td><input type="file" class="form-control" name="imagen" id="imagen"></td>';
                 echo '<td><input type="datetime-local" class="form-control" name="fechaInicioInput" id="fechaInicio" value="' . $actividad->getTbActividadFechaInicio() . '"></td>';
                 echo '<td><input type="datetime-local" class="form-control" name="fechaTerminaInput" id="fechaTermina" value="' . $actividad->getTbActividadFechaTermina() . '"></td>';
                 echo '<td><input type="text" class="form-control" name="direccion" id="direccion" value="' . $actividad->getTbActividadDireccion() . '"></td>';

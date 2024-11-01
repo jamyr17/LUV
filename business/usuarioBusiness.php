@@ -30,4 +30,16 @@ class UsuarioBusiness{
         return $this->usuarioData->existUsername($nombreUsuario);
     }
 
+    public function getTbAfinidadUsuarioGenero($usuarioId){
+        return $this->usuarioData->getTbAfinidadUsuarioGenero($usuarioId);
+    }
+
+    public function getTbAfinidadUsuarioOrientacionSexual($usuarioId){
+        return $this->usuarioData->getTbAfinidadUsuarioOrientacionSexual($usuarioId);
+    }
+
+    public function getUsernamesByGenderAndOrientation($generos, $orientacionesSexuales){
+        return $this->usuarioData->getUsernamesByGenderAndOrientation($generos, $orientacionesSexuales);
+    }
+
 }

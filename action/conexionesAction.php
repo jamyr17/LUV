@@ -12,6 +12,32 @@ header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
+// METODO NUEVO!!!!!!
+if (isset($data['cargarPerfiles'])) {
+    //1) Filtrar:
+    //- Leer la afinidad por genero y orientación que tiene el usuario que está en sesión desde la tbafinidad.
+    $nombreUsuario = $_SESSION['nombreUsuario'];
+    $usuarioId = $usuarioBusiness->getIdByName($nombreUsuario);
+
+    $generos = $usuarioBusiness->getTbAfinidadUsuarioGenero($usuarioId);
+    $orientacionesSexuales = $usuarioBusiness->getTbAfinidadUsuarioOrientacionSexual($usuarioId);
+    var_dump($generos);
+    var_dump($orientacionesSexuales); 
+
+    //- Seleccionar todos los nombres de usuario desde la tbusuario que cumplan con las afinidades del punto anterior.
+    $nombresUsuarioFiltrados = $usuarioBusiness->getUsernamesByGenderAndOrientation($generos, $orientacionesSexuales);
+    var_dump($nombresUsuarioFiltrados);
+
+    //2) Leer .dat:
+    //- Leer el .dat del usuario en sesión, recuperar todos los criterios y sus tiempos de duración.
+    //- Darle un porcentaje de afinidad a cada criterio usando el arreglo de duraciones y arreglo de criterios.
+    //- Leer cada .dat de los demás usuarios filtrados, hacer los mismo de recuperar todos los criterios y sus tiempos de duración.
+    //- Darle un porcentaje de afinidad a cada criterio de los demás usuarios.
+    //- Ordenar la lista según las coincidencias de las afinidades.
+
+}
+
+// METODO DE REFERENCIA
 if (isset($data['cargarPerfiles'])) {
 
     $nombreUsuario = $_SESSION['nombreUsuario'];

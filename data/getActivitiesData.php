@@ -23,6 +23,7 @@
             'usuarioId' => $actividad->getTbUsuarioId(),
             'title' => $actividad->getTbActividadTitulo(),
             'description' => $actividad->getTbActividadDescripcion(),
+            'imagen' => $actividad->getTbActividadImagen(),
             'dateStart' => $actividad->getTbActividadFechaInicio(),
             'dateEnd' => $actividad->getTbActividadFechaTermina(),
             'direction' => $actividad->getTbActividadDireccion(),

@@ -69,12 +69,8 @@ if (isset($_POST["registrar"])) {
 
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
 
-
-        // Insertar o actualizar afinidad por género y orientación sexual
-        $urlImagen = 'https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg'; // URL de prueba
-
         $usuarioId = $usuarioBusiness->getIdByName($_SESSION['nombreUsuario']);
-        if ($userAffinityData->insertAfinidadGeneroOrientacion($urlImagen, $generosStr, $orientacionesStr, $usuarioId)) {
+        if ($userAffinityData->insertAfinidadGeneroOrientacion($generosStr, $orientacionesStr, $usuarioId)) {
             $jsonResponse['status'] = 'success';
             $jsonResponse['message'] = 'Afinidad de género y orientación sexual registrada correctamente.';
         } else {
@@ -82,7 +78,7 @@ if (isset($_POST["registrar"])) {
             $jsonResponse['message'] = 'Error al registrar afinidad de género y orientación sexual.';
         }
 
-
+        /*
             // Asegurarse de que los criterios y valores existan
             foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
@@ -95,10 +91,10 @@ if (isset($_POST["registrar"])) {
 
                 }else{
 
-                    $data = obtenerDatosIA($nombre);
+                    $data = obtenerDatosIA($criterioNombre);
  
                     if ($data) {
-                        createDataFile($nombre, $data);  // Guardar los datos en un archivo .dat.
+                        createDataFile($criterioNombre, $data);  // Guardar los datos en un archivo .dat.
                     }
 
                     if(!$valorBusiness->existeValorEnCriterio($criterioNombre, $valor)){
@@ -108,7 +104,7 @@ if (isset($_POST["registrar"])) {
                 }
 
             }
-
+        */
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
             $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);

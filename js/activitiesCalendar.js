@@ -5,16 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Iniciar el objeto calendario
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: {
-            left: 'prev,next',
-            center: 'title',
-            right: 'timeGridWeek,timeGridDay'
+        initialView: 'dayGridMonth',
+        editable: false,
+        dragScroll: true,
+        dayMaxEvents: 10,
+        eventResizableFromStart: true,
+        customButtons: {
+            sidebarToggle: {
+                text: 'Sidebar'
+            }
         },
-      
+        headerToolbar: {
+            start: 'prev,next, title',
+            end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
         locale: 'es',
-        navLinks: true, 
-        editable: true,
-        selectable: true,
 
         events:function(info, successCallback, failureCallback){ // Recuperar las actividades
             fetch(requestActivities)
@@ -28,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         title: event.title,
                         description: event.description,
                         direction: event.direction,
+                        imagen: event.imagen,
                         start: new Date(event.dateStart),
                         end: new Date(event.dateEnd),
                         timeStart: '8:00',
@@ -79,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var inputDireccion = document.getElementById('direccion');
                 var inputAnonimo = document.getElementById('anonimo');
                 var inputColectivos = document.getElementById('colectivos');
+                const divImagen = document.getElementById('imagenActual');
             
                 inputIdActividad.value = event.event.id;
                 inputTitulo.value = event.event.title;
@@ -87,6 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 inputFechaTermina.value = toDateTimeLocalFormat(event.event.end);
                 inputDireccion.value = event.event.extendedProps.direction;
                 inputAnonimo.checked = (parseInt(event.event.extendedProps.anonymn) === 1);
+
+                if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
+                    divImagen.innerHTML = 'Imagen actual <br/> <img src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                }
             
                 // Manejar los colectivos seleccionados
                 var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
@@ -96,13 +107,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             
                 $("#actividadActualizarModalView").modal();
+            } // Si no es el creador del evento, debe ver los detalles y también si quiere apuntarse o no a la asistencia, además de ver los asistentes si no es anónimo el evento
+            else{
+
+                askRegisteredAttendance(event.event.id).then(isRegistered => {
+                    if (isRegistered) {
+                        const detalleTitle = document.getElementById('activityTitleRegistered');
+                        const detalleDireccion = document.getElementById('activityDirectionRegistered');
+                        const detalleFechaInicio = document.getElementById('activityStartDateRegistered');
+                        const inputIdActividad = document.getElementById('idActividadDelAttendance');
+                        const divImagen = document.getElementById('imagenRegistered');
+        
+                        detalleTitle.innerHTML = '<strong>' + event.event.title + '</strong>';
+                        detalleDireccion.innerHTML = event.event.extendedProps.direction;
+                        detalleFechaInicio.innerHTML = event.event.start;
+                        inputIdActividad.value = event.event.id;
+
+                        if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
+                            divImagen.innerHTML = '<img src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                        }
+
+                        if (parseInt(event.event.extendedProps.anonymn) !== 1) {
+                            showAttendanceList(event.event.id, 'listAttendanceDivRegistered');
+                        }
+        
+                        $("#verDetallesActividadRegistered").modal();
+                    } else {
+                        const detalleTitle = document.getElementById('activityTitle');
+                        const detalleDireccion = document.getElementById('activityDirection');
+                        const detalleFechaInicio = document.getElementById('activityStartDate');
+                        const inputIdActividad = document.getElementById('idActividadAttendance');
+                        const divImagen = document.getElementById('imagenDetail');
+        
+                        detalleTitle.innerHTML = '<strong>' + event.event.title + '</strong>';
+                        detalleDireccion.innerHTML = event.event.extendedProps.direction;
+                        detalleFechaInicio.innerHTML = event.event.start;
+                        inputIdActividad.value = event.event.id;
+
+                        if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
+                            divImagen.innerHTML = '<img src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                        }
+
+                        if (parseInt(event.event.extendedProps.anonymn) !== 1) {
+                            showAttendanceList(event.event.id, 'listAttendanceDivDetails');
+                        }
+                        
+                        $("#verDetallesActividad").modal();
+                    }
+                }).catch(error => {
+                    console.error("Error al verificar la asistencia:", error);
+                });
+
             }
 
         }
         
     });
     calendar.render();
-
+    
     // Abrir el modal al hacer clic en el botón "Agregar Evento"
     document.getElementById('add-event-button').addEventListener('click', function () {
         $('#actividadCrearModal').modal();
@@ -131,3 +193,89 @@ function validateLoggedUser(eventUsuarioId){
     }
 
 }
+
+function askRegisteredAttendance(idActividad) {
+    return new Promise((resolve, reject) => {
+        const idUsuario = document.getElementById('idUsuarioLogeado').value; 
+
+        $.ajax({
+            url: '../action/actividadAction.php', 
+            method: 'POST',
+            data: {
+                checkAttendance: true, 
+                idActividad: idActividad,
+                idUsuario: idUsuario
+            },
+            dataType: 'json',
+            success: function(response) {
+                resolve(response); 
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+                reject(error); 
+            }
+        });
+    });
+}
+
+function getListAttendance(idActividad) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '../action/actividadAction.php', 
+            method: 'POST',
+            data: {
+                getListAttendance: true, 
+                idActividad: idActividad
+            },
+            dataType: 'json',
+            success: function(response) {
+                resolve(response); 
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud AJAX:", error);
+                reject(error); 
+            }
+        });
+    });
+}
+
+function showAttendanceList(idActividad, nombreDiv) {
+    getListAttendance(idActividad)
+        .then(response => {
+            const usuarioId = document.getElementById('idUsuarioLogeado').value;
+            let listAttendanceDiv = $(nombreDiv.startsWith('#') ? nombreDiv : '#' + nombreDiv);
+            listAttendanceDiv.empty(); // Limpiar contenido anterior
+
+            if (response.length > 0) {
+                let listHtml = '<h5>Asistentes de la actividad<h5/>'
+                listHtml += '<ul class="list-group">';
+                response.forEach(user => {
+                    if(user.id!=usuarioId){
+                        if(user.imagen==''){
+                            listHtml += `
+                                <li class="list-group-item">
+                                    <img src="../resources/img/profile/no-pfp.png" alt="no imagen" style="width: 30px; height: 30px; border-radius: 50%;">
+                                    ${user.nombreUsuario}
+                                </li>
+                            `;
+                        }else{
+                            listHtml += `
+                                <li class="list-group-item">
+                                    <img src="${user.imagen}" alt="imagen de ${user.nombreUsuario}" style="width: 30px; height: 30px; border-radius: 50%;">
+                                    ${user.nombreUsuario}
+                                </li>
+                            `;
+                        }
+                    }
+                });
+                listHtml += '</ul>';
+                listAttendanceDiv.append(listHtml);
+            } else {
+                listAttendanceDiv.append('<p>Nadie ha registrado su asistencia aún.</p>');
+            }
+        })
+        .catch(error => {
+            console.error("Error al cargar la lista de asistencia:", error);
+        });
+}
+

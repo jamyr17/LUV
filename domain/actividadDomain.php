@@ -10,11 +10,12 @@ class Actividad {
     private $tbActividadDireccion;
     private $tbActividadLatitud;
     private $tbActividadLongitud; 
+    private $tbActividadImagen;
     private $tbActividadEstado;
     private $tbActividadAnonimo;
     private $tbActividadColectivos;
 
-    public function __construct($tbActividadId, $tbUsuarioId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadFechaInicio, $tbActividadFechaTermina, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
+    public function __construct($tbActividadId, $tbUsuarioId, $tbActividadTitulo, $tbActividadDescripcion, $tbActividadImagen, $tbActividadFechaInicio, $tbActividadFechaTermina, $tbActividadDireccion, $tbActividadLatitud, $tbActividadLongitud, $tbActividadEstado, $tbActividadAnonimo, $tbActividadColectivos) {
         $this->tbActividadId = $tbActividadId;
         $this->tbUsuarioId = $tbUsuarioId;
         $this->tbActividadTitulo = $tbActividadTitulo;
@@ -22,6 +23,7 @@ class Actividad {
         $this->tbActividadFechaInicio = $tbActividadFechaInicio;
         $this->tbActividadFechaTermina = $tbActividadFechaTermina;
         $this->tbActividadDireccion = $tbActividadDireccion;
+        $this->tbActividadImagen = $tbActividadImagen;
         $this->tbActividadLatitud = $tbActividadLatitud;
         $this->tbActividadLongitud = $tbActividadLongitud;
         $this->tbActividadEstado = $tbActividadEstado;
@@ -43,6 +45,10 @@ class Actividad {
 
     public function getTbActividadDescripcion() {
         return $this->tbActividadDescripcion;
+    }
+
+    public function getTbActividadImagen() {
+        return $this->tbActividadImagen;
     }
 
     public function getTbActividadFechaInicio() {
@@ -105,6 +111,10 @@ class Actividad {
         $this->tbActividadDireccion = $tbActividadDireccion;
     }
 
+    public function setTbActividadImagen($tbActividadImagen) {
+        $this->tbActividadImagen = $tbActividadImagen;
+    }
+    
     public function setTbActividadLatitud($tbActividadLatitud) {
         $this->tbActividadLatitud = $tbActividadLatitud;
     }

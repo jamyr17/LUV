@@ -120,4 +120,91 @@ class UsuarioData extends Data
         return $count > 0;
     }
 
+    public function getTbAfinidadUsuarioGenero($usuarioId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener los géneros de afinidad según el usuarioId
+        $query = "SELECT tbafinidadusuariogenero FROM tbafinidadusuario WHERE tbusuarioid = ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $usuarioId);
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $generoString);
+        mysqli_stmt_fetch($stmt);
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        // Convertir la cadena en un arreglo de géneros
+        $generos = $generoString ? explode(', ', $generoString) : [];
+
+        return $generos;
+    }
+
+    public function getTbAfinidadUsuarioOrientacionSexual($usuarioId)
+    {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener las orientaciones sexuales de afinidad según el usuarioId
+        $query = "SELECT tbafinidadusuarioorientacionsexual FROM tbafinidadusuario WHERE tbusuarioid = ?";
+        
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'i', $usuarioId);
+
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $orientacionString);
+        mysqli_stmt_fetch($stmt);
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        // Convertir la cadena en un arreglo de orientaciones sexuales
+        $orientaciones = $orientacionString ? explode(', ', $orientacionString) : [];
+
+        return $orientaciones;
+    }
+
+
+    public function getUsernamesByGenderAndOrientation($generos, $orientaciones){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Crear placeholders para los géneros y orientaciones
+        $generoPlaceholders = implode(',', array_fill(0, count($generos), '?'));
+        $orientacionPlaceholders = implode(',', array_fill(0, count($orientaciones), '?'));
+
+        // Consulta SQL para buscar los usuarios que coincidan con el género y la orientación
+        $query = "SELECT usuario.tbusuarionombre
+                FROM tbusuario usuario
+                INNER JOIN tbperfilusuariopersonal perfilpersonal
+                ON usuario.tbusuarioid = perfilpersonal.tbusuarioid 
+                WHERE perfilpersonal.tbgenero IN ($generoPlaceholders) 
+                AND perfilpersonal.tborientacionsexual IN ($orientacionPlaceholders)";
+
+        $stmt = mysqli_prepare($conn, $query);
+
+        // Vincular los valores de los géneros y orientaciones a los placeholders
+        $types = str_repeat('s', count($generos) + count($orientaciones));
+        $params = array_merge($generos, $orientaciones);
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        // Obtener los usuarios encontrados
+        $usuarios = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $usuarios[] = $row;
+        }
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        return $usuarios;
+    }
+
 }

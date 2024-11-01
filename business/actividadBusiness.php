@@ -55,4 +55,20 @@ class ActividadBusiness {
         return $actividadData->restoreTbActividad($actividadId);
     }
 
+    public function insertAttendance($idActividad, $idUsuario) {
+        return $this->actividadData->insertAttendance($idActividad, $idUsuario);
+    }
+
+    public function askAttendance($idActividad, $idUsuario) {
+        return $this->actividadData->askAttendance($idActividad, $idUsuario);
+    }
+
+    public function cancelAttendance($idActividad, $idUsuario) {
+        return $this->actividadData->cancelAttendance($idActividad, $idUsuario);
+    }
+
+    public function getListAttendance($idActividad) {
+        return $this->actividadData->getListAttendance($idActividad);
+    }
+
 }

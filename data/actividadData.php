@@ -22,7 +22,7 @@ class ActividadData extends Data
         }
     
         $queryInsert = "INSERT INTO tbactividad (
-            tbactividadid, tbusuarioid, tbactividadtitulo, tbactividaddescripcion, tbactividadfechainicio,
+            tbactividadid, tbusuarioid, tbactividadtitulo, tbactividaddescripcion, tbactividadimagen, tbactividadfechainicio,
             tbactividadfechatermina, tbactividaddireccion, tbactividadlatitud,
             tbactividadlongitud, tbactividadestado, tbactividadanonimo
         ) VALUES (
@@ -30,6 +30,7 @@ class ActividadData extends Data
             '{$actividad->getTbUsuarioId()}',
             '{$actividad->getTbActividadTitulo()}', 
             '{$actividad->getTbActividadDescripcion()}', 
+            '{$actividad->getTbActividadImagen()}',
             '{$actividad->getTbActividadFechaInicio()}', 
             '{$actividad->getTbActividadFechaTermina()}', 
             '{$actividad->getTbActividadDireccion()}', 
@@ -78,7 +79,7 @@ class ActividadData extends Data
         $actividades = [];
         while ($row = mysqli_fetch_array($result)) {
             $actividadNueva = new Actividad($row['tbactividadid'], $row['tbusuarioid'], $row['tbactividadtitulo'], 
-            $row['tbactividaddescripcion'], $row['tbactividadfechainicio'], $row['tbactividadfechatermina'], 
+            $row['tbactividaddescripcion'], $row['tbactividadimagen'], $row['tbactividadfechainicio'], $row['tbactividadfechatermina'], 
             $row['tbactividaddireccion'], $row['tbactividadlatitud'], $row['tbactividadlongitud'],
             $row['tbactividadestado'], $row['tbactividadanonimo'], 1
         );
@@ -96,8 +97,9 @@ class ActividadData extends Data
         $id = intval($actividad->getTbActividadId()); 
 
         $queryUpdate = "UPDATE tbactividad SET tbactividadtitulo='{$actividad->getTbActividadTitulo()}', tbactividaddescripcion='{$actividad->getTbActividadDescripcion()}', 
-        tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}', 
-        tbactividaddireccion='{$actividad->getTbActividadDireccion()}', tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
+        tbactividadimagen='{$actividad->getTbActividadImagen()}', tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', 
+        tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}', tbactividaddireccion='{$actividad->getTbActividadDireccion()}', 
+        tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
         WHERE tbactividadid=$id;";
 
         // Eliminar los colectivos actuales asociados con la actividad
@@ -275,6 +277,7 @@ while ($row = mysqli_fetch_array($result)) {
         $row['tbusuarioid'],
         $row['tbactividadtitulo'],
         $row['tbactividaddescripcion'],
+        $row['tbactividadimagen'],
         $row['tbactividadfechainicio'],
         $row['tbactividadfechatermina'],
         $row['tbactividaddireccion'],
@@ -304,5 +307,88 @@ while ($row = mysqli_fetch_array($result)) {
         $result = mysqli_query($conn, $query);
         return $result;
     }
+
+    public function insertAttendance($idActividad, $idUsuario){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para obtener el ID máximo
+        $queryGetLastId = "SELECT MAX(tbactividadasistenciaid) AS max_id FROM tbactividadasistencia";
+        $result = mysqli_query($conn, $queryGetLastId);
+
+        if ($row = mysqli_fetch_assoc($result)) {
+            // Obtén el ID máximo o establece 0 si la tabla está vacía
+            $maxId = $row['max_id'];
+            $nextId = ($maxId !== null) ? (int)$maxId + 1 : 1;
+        } else {
+            // Si no se obtiene resultado, asegúrate de manejar el error adecuadamente
+            $nextId = 1;
+        }
+
+        // Consulta para insertar un nuevo registro
+        $queryInsert = "INSERT INTO tbactividadasistencia (tbactividadasistenciaid, tbactividadid, tbusuarioid) 
+                        VALUES ($nextId, $idActividad, $idUsuario)";
+
+        $resultInsert = mysqli_query($conn, $queryInsert);
+        mysqli_close($conn);
+
+        return $resultInsert;
+    }
+
+    public function askAttendance($idActividad, $idUsuario) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Consulta para verificar asistencia
+        $querySelect = "SELECT * FROM tbactividadasistencia WHERE tbactividadid='{$idActividad}' AND tbusuarioid='{$idUsuario}'";
+    
+        $resultSelect = mysqli_query($conn, $querySelect);
+        
+        // Verifica si hay registros
+        $exists = mysqli_num_rows($resultSelect) > 0;
+    
+        mysqli_close($conn);
+        
+        return $exists; 
+    }    
+
+    public function cancelAttendance($idActividad, $idUsuario){
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+
+        // Consulta para eliminar asisttencia
+        $queryDelete = "DELETE FROM tbactividadasistencia WHERE tbactividadid='{$idActividad}' AND tbusuarioid='{$idUsuario}'";
+
+        $resultDelete = mysqli_query($conn, $queryDelete);
+        mysqli_close($conn);
+
+        return $resultDelete;
+    }
+
+    public function getListAttendance($idActividad) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        // Consulta para obtener la lista de usuarios que asistieron a la actividad
+        $query = "
+            SELECT u.tbusuarioid AS usuarioId, u.tbusuarionombre AS nombreUsuario, u.tbusuarioimagen AS imagen
+            FROM tbactividadasistencia a
+            INNER JOIN tbusuario u ON a.tbusuarioid = u.tbusuarioid
+            WHERE a.tbactividadid = '{$idActividad}'
+        ";
+    
+        $result = mysqli_query($conn, $query);
+        
+        $usuarios = [];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $usuarios[] = $row;
+            }
+        }
+    
+        mysqli_close($conn);
+        return $usuarios;
+    }
+    
 
 }

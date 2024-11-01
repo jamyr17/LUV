@@ -300,7 +300,7 @@ class UserAffinityData extends Data {
         return $segmentaciones;
     }
 
-    public function insertAfinidadGeneroOrientacion($imagenUrl, $genero, $orientacionSexual, $idUsuario) {
+    public function insertAfinidadGeneroOrientacion($genero, $orientacionSexual, $idUsuario) {
         // Conectar a la base de datos
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
     
@@ -312,9 +312,9 @@ class UserAffinityData extends Data {
         $conn->set_charset('utf8');
     
         // Verificar si ya existe un registro de afinidad para el usuario e imagen
-        $queryCheck = "SELECT tbafinidadusuarioid FROM tbafinidadusuario WHERE tbafinidadusuarioimagenurl = ? AND tbusuarioid = ?";
+        $queryCheck = "SELECT tbafinidadusuarioid FROM tbafinidadusuario WHERE tbusuarioid = ?";
         $stmtCheck = mysqli_prepare($conn, $queryCheck);
-        mysqli_stmt_bind_param($stmtCheck, 'si', $imagenUrl, $idUsuario);
+        mysqli_stmt_bind_param($stmtCheck, 'i', $idUsuario);
         mysqli_stmt_execute($stmtCheck);
         mysqli_stmt_bind_result($stmtCheck, $existingId);
         mysqli_stmt_fetch($stmtCheck);
@@ -332,10 +332,10 @@ class UserAffinityData extends Data {
         } else {
             // Si no existe, crear un nuevo registro
             // No es necesario obtener el último ID de esta manera, podemos usar auto-incremento
-            $queryInsert = "INSERT INTO tbafinidadusuario (tbafinidadusuarioimagenurl, tbafinidadusuariogenero, tbafinidadusuarioorientacionsexual, tbusuarioid, tbafinidadusuarioestado)
-                            VALUES (?, ?, ?, ?, 1)";
+            $queryInsert = "INSERT INTO tbafinidadusuario (tbafinidadusuariogenero, tbafinidadusuarioorientacionsexual, tbusuarioid, tbafinidadusuarioestado)
+                            VALUES (?, ?, ?, 1)";
             $stmtInsert = mysqli_prepare($conn, $queryInsert);
-            mysqli_stmt_bind_param($stmtInsert, 'sssi', $imagenUrl, $genero, $orientacionSexual, $idUsuario);
+            mysqli_stmt_bind_param($stmtInsert, 'ssi', $genero, $orientacionSexual, $idUsuario);
             $result = mysqli_stmt_execute($stmtInsert);
             mysqli_stmt_close($stmtInsert);
         }
