@@ -20,4 +20,11 @@ class UsuarioMensajeBusiness {
         return $this->usuarioMensajeData->getUsuariosParaChat();
     }
 
+    public function getUsuarioDetalles($usuarioId){
+        return $this->usuarioMensajeData->getUsuarioDetalles($usuarioId);
+    } 
+    
+    public function getUsuarioAmigoDetalles($amigoId){
+        return $this->usuarioMensajeData->getUsuarioAmigoDetalles($amigoId);
+    }   
 }

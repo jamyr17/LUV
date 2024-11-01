@@ -129,6 +129,5 @@ class UsuarioData extends Data
         mysqli_close($conn);
         return $result;
     }
-    
 
 }

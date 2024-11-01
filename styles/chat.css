@@ -9,59 +9,71 @@ body {
     margin: 0;
 }
 
-h2, h1 {
-    color: #333;
-}
-
 /* Contenedor Principal */
 .container {
     width: 100%;
-    max-width: 600px;
+    max-width: 450px;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
-/* Cabecera del Chat */
+/* Encabezado del Chat */
 .chat-header {
     display: flex;
     align-items: center;
-    padding: 15px;
-    background-color: #034f84;
-    color: #ffffff;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.back-button {
+.chat-header button {
     background: none;
     border: none;
-    color: #ffffff;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
-    margin-right: 10px;
+    margin-right: 15px;
+    color: #333;
+    transition: color 0.3s;
 }
 
-.chat-info {
-    flex-grow: 1;
+.chat-header button:hover {
+    color: #555;
 }
 
-.status-indicator {
-    font-size: 12px;
-    background-color: #34c759;
-    padding: 3px 8px;
-    border-radius: 12px;
-    color: white;
-    margin-left: 5px;
+.amigo-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Chat Box */
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.chat-info h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.chat-info .status {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Caja de Chat */
 #chatBox {
-    height: 400px;
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    padding: 10px;
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f4f7f9;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -70,74 +82,77 @@ h2, h1 {
 
 /* Mensajes */
 .mensaje {
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 70%;
+    padding: 12px 15px;
+    border-radius: 15px;
+    max-width: 75%;
     word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.4;
     display: inline-block;
 }
 
 .mensajePropio {
     background-color: #d1e7ff;
     align-self: flex-end;
-    text-align: right;
     color: #034f84;
 }
 
 .mensajeAmigo {
     background-color: #e0e0e0;
     align-self: flex-start;
-    text-align: left;
     color: #333;
 }
 
-.read-receipt {
-    font-size: 10px;
-    color: #666;
+/* Fecha de Mensajes */
+.mensaje small {
     display: block;
-    margin-top: 3px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-align: right;
 }
 
 /* Campo de Texto y Botón */
 .message-input {
     display: flex;
-    gap: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #ffffff;
     border-top: 1px solid #e0e0e0;
 }
 
-#mensaje {
+.message-input textarea {
     flex-grow: 1;
-    height: 40px;
+    height: 45px;
+    resize: none;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 14px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
 }
 
-button {
-    width: 80px;
-    height: 40px;
+.message-input textarea:focus {
+    border-color: #999;
+}
+
+.message-input button {
     background-color: #034f84;
     color: #ffffff;
     border: none;
-    border-radius: 8px;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: background-color 0.3s;
 }
 
-button:hover {
+.message-input button:hover {
     background-color: #023e73;
-}
-
-/* Scrollbar Personalizado */
-#chatBox::-webkit-scrollbar {
-    width: 6px;
-}
-
-#chatBox::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 10px;
 }
