@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-11-2024 a las 08:04:26
+-- Tiempo de generación: 01-11-2024 a las 23:04:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -236,7 +236,7 @@ CREATE TABLE `tbperfilusuariodeseado` (
 -- Volcado de datos para la tabla `tbperfilusuariodeseado`
 --
 
-INSERT INTO tbperfilusuariodeseado (tbperfilusuariodeseadoid, tbusuarioid, tbperfilusuariodeseadocriterio, tbperfilusuariodeseadovalor, tbperfilusuariodeseadoporcentaje, tbperfilusuariodeseadoestado) VALUES
+INSERT INTO `tbperfilusuariodeseado` (`tbperfilusuariodeseadoid`, `tbusuarioid`, `tbperfilusuariodeseadocriterio`, `tbperfilusuariodeseadovalor`, `tbperfilusuariodeseadoporcentaje`, `tbperfilusuariodeseadoestado`) VALUES
 (1, 1, 'Empleos,Gustos Musicales,Comida rápida', 'médico,jazz,tacos', '30', 1),
 (2, 2, 'Gustos Musicales', 'samba', '50', 1),
 (3, 3, 'Empleos,Gustos Musicales,Comida rápida', 'ingeniero,rock,pastas', '40', 1),
@@ -248,7 +248,7 @@ INSERT INTO tbperfilusuariodeseado (tbperfilusuariodeseadoid, tbusuarioid, tbper
 (9, 9, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', '50', 1),
 (10, 10, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,sushi', '40', 1),
 (11, 11, 'Gustos Musicales,Empleos,Mascotas', 'samba,ingeniero,perros', '50', 1),
-(12, 12, 'Gustos Musicales,Empleos,Comida rápida,Mascotas,Estilo de Vida', 'samba,médico,papas fritas,gatos,saludable', '33.33,26.67,20,13.33,6.67', 1),
+(12, 12, 'Empleos,Mascotas,Comida rápida,Empleos,Redes Sociales,Gustos Musicales', 'médico,gatos,hamburguesas,ingeniero,Instagram,pop', '33.33,26.67,20,13.33,6.67', 1),
 (13, 13, 'Gustos Musicales,Comida rápida', 'rock,burgers', '50', 1),
 (14, 14, 'Gustos Musicales,Comida rápida', 'pop,hamburguesas', '60', 1),
 (15, 15, 'Empleos,Gustos Musicales', 'arquitecto,salsa', '70', 1),
@@ -284,8 +284,7 @@ CREATE TABLE `tbperfilusuariopersonal` (
 -- Volcado de datos para la tabla `tbperfilusuariopersonal`
 --
 
--- Insertar perfiles personales para todos los usuarios
-INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbusuarioid, tbperfilusuariopersonalcriterio, tbperfilusuariopersonalvalor, tbareaconocimiento, tbgenero, tborientacionsexual, tbuniversidad, tbuniversidadcampus, tbuniversidadcampuscolectivo, tbperfilusuariopersonalestado) VALUES
+INSERT INTO `tbperfilusuariopersonal` (`tbperfilusuariopersonalid`, `tbusuarioid`, `tbperfilusuariopersonalcriterio`, `tbperfilusuariopersonalvalor`, `tbareaconocimiento`, `tbgenero`, `tborientacionsexual`, `tbuniversidad`, `tbuniversidadcampus`, `tbuniversidadcampuscolectivo`, `tbperfilusuariopersonalestado`) VALUES
 (1, 1, 'Gustos Musicales', 'samba', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 1', 'Campus 1', 'Colectivo 1', 1),
 (2, 2, 'Empleos,Gustos Musicales,Comida rápida', 'médico,samba,tacos', 'Artes', 'No binario', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 2', 1),
 (3, 3, 'Empleos,Gustos Musicales,Comida rápida', 'ingeniero,rock,pastas', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad 2', 'Campus Norte', NULL, 1),
@@ -297,7 +296,7 @@ INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbusuarioid, tbp
 (9, 9, 'Empleos,Gustos Musicales,Comida rápida', 'médico,reggae,pizzas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad 3', 'Campus 3', 'Colectivo 3', 1),
 (10, 10, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,sushi', 'Medicina', 'Masculino', 'Heterosexual', 'Universidad Nacional', 'Campus Ciencias Médicas', 'Club de Debate', 1),
 (11, 11, 'Empleos,Gustos Musicales', 'ingeniero,jazz', 'Ingeniería', 'Masculino', 'Heterosexual', 'Universidad Técnica', 'Campus Sur', 'Club de Fotografía', 1),
-(12, 12, 'Gustos Musicales,Empleos,Comida rápida,Mascotas,Estilo de Vida', 'samba,médico,papas fritas,gatos,saludable', 'Matemáticas', 'Masculino', 'Heterosexual', 'Universidad Nacional de Costa Rica', 'Campus Sarapiquí', 'Fútbol', 1),
+(12, 12, 'Empleos,Mascotas,Comida rápida,Empleos,Redes Sociales', 'médico,gatos,hamburguesas,ingeniero,Instagram', 'Matemáticas', 'Masculino', 'Heterosexual', 'Universidad Nacional de Costa Rica', 'Campus Sarapiquí', 'Volleyball', 1),
 (13, 13, 'Gustos Musicales,Comida rápida', 'rock,burgers', 'Ciencias Sociales', 'Masculino', 'Heterosexual', 'Universidad del Estado', 'Campus Oeste', NULL, 1),
 (14, 14, 'Gustos Musicales,Comida rápida', 'pop,hamburguesas', 'Derecho', 'Femenino', 'Heterosexual', 'Universidad Nacional', 'Campus Central', NULL, 1),
 (15, 15, 'Empleos,Gustos Musicales', 'arquitecto,salsa', 'Arquitectura', 'Masculino', 'Heterosexual', 'Universidad del Sur', 'Campus Arquitectura', 'Club de Danza', 1),
@@ -308,6 +307,7 @@ INSERT INTO tbperfilusuariopersonal (tbperfilusuariopersonalid, tbusuarioid, tbp
 (20, 20, 'Gustos Musicales,Comida rápida,Mascotas', 'rock,pizza,perros', 'Ingeniería', 'Femenino', 'Heterosexual', 'Universidad del Este', 'Campus Central', 'Club de Atletismo', 1),
 (21, 21, 'Empleos,Gustos Musicales,Comida rápida', 'dentista,clásica,tacos', 'Medicina', 'Masculino', 'Heterosexual', 'Universidad Nacional', 'Campus Medicina', 'Club de Estudios', 1),
 (22, 22, 'Gustos Musicales,Comida rápida', 'samba,hamburguesas', 'Artes', 'Femenino', 'Heterosexual', 'Universidad de las Artes', 'Campus Principal', 'Club de Teatro', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -348,7 +348,10 @@ INSERT INTO `tbpersona` (`tbpersonaid`, `tbpersonacedula`, `tbpersonaprimernombr
 (19, '214234324', 'Jejon', 'Saron', 1),
 (20, '43214213', 'Mende', 'Badi', 1),
 (21, '234124', 'Neron', 'Baxa', 1),
-(22, '324543532', 'Salazar', 'Mendez', 1);
+(22, '324543532', 'Salazar', 'Mendez', 1),
+(23, '23453425325', 'sdfasf', 'sadfasf', 1),
+(24, '53145', 'Sandi', 'Brenes', 1),
+(25, '24235', 'Obando', 'Ganboa', 1);
 
 -- --------------------------------------------------------
 
@@ -593,36 +596,66 @@ CREATE TABLE `tbusuario` (
   `tbusuarionombre` varchar(255) NOT NULL,
   `tbusuariocontrasena` varchar(63) NOT NULL,
   `tbusuarioestado` tinyint(1) NOT NULL,
-  `tbusuarioimagen` varchar(200) NOT NULL
+  `tbusuarioimagen` varchar(200) NOT NULL,
+  `tbusuariocondicion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `tbusuario`
 --
 
-INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbtipousuarioid`, `tbusuarionombre`, `tbusuariocontrasena`, `tbusuarioestado`, `tbusuarioimagen`) VALUES
-(1, 1, 1, 'jamyrg', '123', 1, ''),
-(2, 2, 1, 'jeycobbg', '123', 1, ''),
-(3, 3, 1, 'profe', '123', 1, ''),
-(4, 4, 1, 'gerald', '123', 1, ''),
-(5, 5, 1, 'kevin', '123', 1, ''),
-(6, 6, 1, 'jamel', '123', 1, ''),
-(7, 7, 2, 'josue', '123', 1, ''),
-(8, 8, 2, 'lucia', '123', 1, '../resources/img/profile/lucia.webp'),
-(9, 9, 2, 'fernanda', '123', 1, '../resources/img/profile/fernanda.webp'),
-(10, 10, 2, 'andres', '123', 1, ''),
-(11, 11, 1, 'admin', 'admin', 1, ''),
-(12, 12, 2, 'client', 'client', 1, '../resources/img/profile/client.webp'),
-(13, 13, 2, 'user', 'user', 1, ''),
-(14, 14, 2, 'Henry', '123', 1, '../resources/img/profile/henry.webp'),
-(15, 15, 2, 'Laura', '123', 1, '../resources/img/profile/laura.webp'),
-(16, 16, 2, 'Franco', '123', 1, '../resources/img/profile/franco.webp'),
-(17, 17, 2, 'Zoe', '123', 1, '../resources/img/profile/zoe.webp'),
-(18, 18, 2, 'Julio', '123', 1, '../resources/img/profile/julio.webp'),
-(19, 19, 2, 'Enry', '123', 1, '../resources/img/profile/enry.webp'),
-(20, 20, 2, 'Lenka', '123', 1, '../resources/img/profile/lenka.webp'),
-(21, 21, 2, 'julian', '123', 1, '../resources/img/profile/julian.webp'),
-(22, 22, 2, 'Helen', '123', 1, '../resources/img/profile/helen.webp');
+INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbtipousuarioid`, `tbusuarionombre`, `tbusuariocontrasena`, `tbusuarioestado`, `tbusuarioimagen`, `tbusuariocondicion`) VALUES
+(1, 1, 1, 'jamyrg', '123', 1, '', ''),
+(2, 2, 1, 'jeycobbg', '123', 1, '', ''),
+(3, 3, 1, 'profe', '123', 1, '', ''),
+(4, 4, 1, 'gerald', '123', 1, '', ''),
+(5, 5, 1, 'kevin', '123', 1, '', ''),
+(6, 6, 1, 'jamel', '123', 1, '', ''),
+(7, 7, 2, 'josue', '123', 1, '', ''),
+(8, 8, 2, 'lucia', '123', 1, '../resources/img/profile/lucia.webp', ''),
+(9, 9, 2, 'fernanda', '123', 1, '../resources/img/profile/fernanda.webp', ''),
+(10, 10, 2, 'andres', '123', 1, '', ''),
+(11, 11, 1, 'admin', 'admin', 1, '', ''),
+(12, 12, 2, 'client', 'client', 1, '../resources/img/profile/client.webp', 'Disponible'),
+(13, 13, 2, 'user', 'user', 1, '', 'Disponible'),
+(17, 17, 2, 'Zoe', '123', 1, '../resources/img/profile/zoe.webp', 'No disponible'),
+(18, 18, 2, 'Julio', '123', 1, '../resources/img/profile/julio.webp', NULL),
+(19, 19, 2, 'Enry', '123', 1, '../resources/img/profile/enry.webp', NULL),
+(20, 20, 2, 'Lenka', '123', 1, '../resources/img/profile/lenka.webp', NULL),
+(21, 21, 2, 'julian', '123', 1, '../resources/img/profile/julian.webp', NULL),
+(22, 22, 2, 'Helen', '123', 1, '../resources/img/profile/helen.webp', NULL),
+(23, 23, 2, 'Om', '123', 1, '../resources/img/profile/om.webp', NULL),
+(24, 24, 2, 'Felipe', '123', 1, '../resources/img/profile/felipe.webp', NULL),
+(25, 25, 2, 'Keilin', '123', 1, '../resources/img/profile/keilin.webp', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbusuariomensaje`
+--
+
+CREATE TABLE `tbusuariomensaje` (
+  `tbusuariomensajeid` int(11) NOT NULL,
+  `tbusuariomensajeentradaid` int(11) NOT NULL,
+  `tbusuariomensajesalidaid` int(11) NOT NULL,
+  `tbusuariomensajedescripcion` varchar(255) NOT NULL,
+  `tbusuariomensajefecha` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbusuariomensaje`
+--
+
+INSERT INTO `tbusuariomensaje` (`tbusuariomensajeid`, `tbusuariomensajeentradaid`, `tbusuariomensajesalidaid`, `tbusuariomensajedescripcion`, `tbusuariomensajefecha`) VALUES
+(5, 13, 12, 'Hola..', '2024-10-31 21:45:26'),
+(6, 13, 12, 'hi..\n', '2024-10-31 21:58:16'),
+(7, 12, 13, 'que pasa perre?\n', '2024-10-31 22:38:00'),
+(9, 12, 13, 'todo tranqui', '2024-10-31 22:43:24'),
+(11, 12, 13, 'jajaa', '2024-11-01 03:19:52'),
+(12, 12, 13, 'si pa\n', '2024-11-01 05:36:56'),
+(13, 13, 12, 'todo bien?\n', '2024-11-01 05:39:00'),
+(14, 12, 13, 'bien bien', '2024-11-01 05:39:22'),
+(15, 12, 1, 'a', '2024-11-01 21:50:51');
 
 --
 -- Índices para tablas volcadas
@@ -633,6 +666,34 @@ INSERT INTO `tbusuario` (`tbusuarioid`, `tbpersonaid`, `tbtipousuarioid`, `tbusu
 --
 ALTER TABLE `tbperfilusuariodeseado`
   ADD UNIQUE KEY `tbusuarioid` (`tbusuarioid`);
+
+--
+-- Indices de la tabla `tbusuario`
+--
+ALTER TABLE `tbusuario`
+  ADD PRIMARY KEY (`tbusuarioid`);
+
+--
+-- Indices de la tabla `tbusuariomensaje`
+--
+ALTER TABLE `tbusuariomensaje`
+  ADD PRIMARY KEY (`tbusuariomensajeid`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `tbusuario`
+--
+ALTER TABLE `tbusuario`
+  MODIFY `tbusuarioid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT de la tabla `tbusuariomensaje`
+--
+ALTER TABLE `tbusuariomensaje`
+  MODIFY `tbusuariomensajeid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

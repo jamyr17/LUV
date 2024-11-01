@@ -109,7 +109,7 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
                 }
             }
 
-            $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreOriginal);
+            $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreArchivo);
             if (!$urlImagenCloudinary) {
                 return false;
             }
@@ -144,6 +144,14 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 
             // Agregar los datos actuales al archivo del usuario
             file_put_contents($archivoDatos, $lineaDatos, FILE_APPEND | LOCK_EX);
+
+            $archivoDatosImagenes = "../resources/img/criteriosImagenes.dat";
+            if (!file_exists($archivoDatosImagenes)) {
+                touch($archivoDatosImagenes); // Crear archivo si no existe
+            }
+            file_put_contents($archivoDatosImagenes, "ImagenURL: $destination " . " | " . $criterios . PHP_EOL, FILE_APPEND);
+
+                        
 
             imagedestroy($image);
             return $destination;
