@@ -1,5 +1,8 @@
 <?php
 
+include_once "cloudAction.php";
+require_once 'gestionImagenesIAAction.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -51,8 +54,6 @@ function generarTextarea($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto
     echo "<textarea name='$nombreCampo' id='$nombreCampo' class='form-control' placeholder='$placeholder' rows='$filas' cols='$columnas' $autofocusAttr>$valor</textarea>";
 }
 
-
-
 // generar input de password para poder aplicar logica de si hay data que debe ser cargada o no
 function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPorDefecto = '')
 {
@@ -64,50 +65,103 @@ function generarCampoContrasena($nombreCampo, $tipoForm, $placeholder, $valorPor
 
 function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 {
-    if (isset($_FILES[$nombreVariableForm])) {
+    if (isset($_FILES[$nombreVariableForm]) && $_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
+        $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
+        $nombreOriginal = pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_FILENAME);
 
-        if ($_FILES[$nombreVariableForm]['error'] === UPLOAD_ERR_OK) {
-
-            $fileTmpPath = $_FILES[$nombreVariableForm]['tmp_name'];
-            $fileExtension = strtolower(pathinfo($_FILES[$nombreVariableForm]['name'], PATHINFO_EXTENSION));
-
-            // Cargar la imagen según su tipo
-            switch ($fileExtension) {
-                case 'jpg':
-                case 'jpeg':
-                    $image = imagecreatefromjpeg($fileTmpPath);
-                    break;
-                case 'png':
-                    $image = imagecreatefrompng($fileTmpPath);
-                    break;
-                case 'gif':
-                    $image = imagecreatefromgif($fileTmpPath);
-                    break;
-                default:
-                    return false; // Tipo de archivo no soportado
-            }
-
-            if (!$image) {
-                return false; // No se pudo crear la imagen
-            }
-
-            $newFileName = $nombreArchivo . '.webp';
-            $destination = $directorio . $newFileName;
-
-            // Convertir la imagen a WebP
-            if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
-                imagedestroy($image); // Liberar la memoria
-                return $destination;
-            } else {
-                imagedestroy($image); // Liberar la memoria
+        // Crear la imagen desde el archivo temporal
+        switch ($fileExtension) {
+            case 'jpg':
+            case 'jpeg':
+                $image = imagecreatefromjpeg($fileTmpPath);
+                break;
+            case 'png':
+                $image = imagecreatefrompng($fileTmpPath);
+                break;
+            case 'gif':
+                $image = imagecreatefromgif($fileTmpPath);
+                break;
+            default:
+                echo "Tipo de archivo no soportado\n";
                 return false;
-            }
-        } else {
+        }
+
+        if (!$image) {
+            echo "No se pudo cargar la imagen\n";
             return false;
         }
-    } else {
-        return false;
+
+        $newFileName = $nombreArchivo . '.webp';
+        $destination = $directorio . $newFileName;
+
+        if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
+
+            // Mover la creación de la carpeta aquí}
+            $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreArchivo/";
+            
+            // Crear la carpeta si no existe
+            if (!is_dir($rutaDirectorioUsuario)) {
+                if (!mkdir($rutaDirectorioUsuario, 0777, true)) {
+                    echo "No se pudo crear el directorio del usuario\n";
+                    imagedestroy($image);
+                    return false;
+                }
+            }
+
+            $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreArchivo);
+            if (!$urlImagenCloudinary) {
+                return false;
+            }
+
+            $criteriosIA = procesarImagenIA($urlImagenCloudinary);
+            if (!$criteriosIA) {
+                return false;
+            }
+
+            $criterios = obtenerCriteriosCloud($criteriosIA);
+            if (empty($criterios)) {
+                return false;
+            }
+
+            // Crear archivo con la ruta de la carpeta del usuario
+            $archivoDatos = $rutaDirectorioUsuario . "dataAfinidad.dat";
+
+
+            // Crear una estructura predeterminada para una segmentación 3x3
+            $segmentacionPredeterminada = [
+                'Region' => ['1,1', '1,2', '1,3', '2,1', '2,2', '2,3', '3,1', '3,2', '3,3'],
+                'Duracion' => array_fill(0, 9, 0),  // Duraciones iniciales en 0
+                'ZoomScale' => array_fill(0, 9, 1)  // Escala de zoom inicial en 1
+            ];
+
+            // Crear la línea de datos en el formato solicitado
+            $lineaDatos = "ImagenURL: $destination ";
+            $lineaDatos .= "| Duracion: " . implode(',', $segmentacionPredeterminada['Duracion']);
+            $lineaDatos .= " | ZoomScale: " . implode(',', $segmentacionPredeterminada['ZoomScale']);
+            $lineaDatos .= " | Region: " . implode(';', $segmentacionPredeterminada['Region']);
+            $lineaDatos .= " | Criterio: $criterios\n";  // Añade los criterios obtenidos
+
+            // Agregar los datos actuales al archivo del usuario
+            file_put_contents($archivoDatos, $lineaDatos, FILE_APPEND | LOCK_EX);
+
+            $archivoDatosImagenes = "../resources/img/criteriosImagenes.dat";
+            if (!file_exists($archivoDatosImagenes)) {
+                touch($archivoDatosImagenes); // Crear archivo si no existe
+            }
+            file_put_contents($archivoDatosImagenes, "ImagenURL: $destination " . " | " . $criterios . PHP_EOL, FILE_APPEND);
+
+                        
+
+            imagedestroy($image);
+            return $destination;
+        } else {
+            imagedestroy($image);
+            return false;
+        }
     }
+    echo "No se encontró archivo en la solicitud\n";
+    return false;
 }
 
 function levenshtein_algoritmo($str1, $str2)

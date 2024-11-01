@@ -1,0 +1,158 @@
+/* Estilos Generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor Principal */
+.container {
+    width: 100%;
+    max-width: 450px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Encabezado del Chat */
+.chat-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.chat-header button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 15px;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.chat-header button:hover {
+    color: #555;
+}
+
+.amigo-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.chat-info h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.chat-info .status {
+    font-size: 14px;
+    color: #777;
+}
+
+/* Caja de Chat */
+#chatBox {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f4f7f9;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Mensajes */
+.mensaje {
+    padding: 12px 15px;
+    border-radius: 15px;
+    max-width: 75%;
+    word-wrap: break-word;
+    font-size: 15px;
+    line-height: 1.4;
+    display: inline-block;
+}
+
+.mensajePropio {
+    background-color: #d1e7ff;
+    align-self: flex-end;
+    color: #034f84;
+}
+
+.mensajeAmigo {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+    color: #333;
+}
+
+/* Fecha de Mensajes */
+.mensaje small {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* Campo de Texto y Botón */
+.message-input {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+}
+
+.message-input textarea {
+    flex-grow: 1;
+    height: 45px;
+    resize: none;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.message-input textarea:focus {
+    border-color: #999;
+}
+
+.message-input button {
+    background-color: #034f84;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.message-input button:hover {
+    background-color: #023e73;
+}

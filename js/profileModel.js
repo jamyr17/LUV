@@ -166,7 +166,7 @@ function loadValues(select, index) {
         otherField.style.display = 'none';  // Ocultar el campo de texto
     }
 
-
+    
 }
 
 // Función para eliminar criterios
@@ -222,40 +222,6 @@ async function loadInitialCriteriaData() {
         console.error('Error al cargar datos iniciales de criterios:', error);
     }
 }
-
-
-async function loadInitialValuesData() {
-    try {
-        
-        const criterio = document.getElementById('criterion1').value;  // Obtener el valor del criterio
-        if (!criterio) {
-            console.error("Criterio no definido");
-            return;  // Salir si no hay criterio definido
-        }
-
-        // Hacer la solicitud fetch con el criterio seleccionado
-        const response = await fetch(`../action/getCriteriosValoresAction.php?type=valores&criterio=${criterio}`);
-
-        if (!response.ok) {
-            console.error('Error en la respuesta del servidor:', response.statusText);
-            return;
-        }
-
-        // Obtener los datos en formato JSON
-        const valoresData = await response.json();
-
-        // Comprobar si los valores recibidos son válidos
-        if (!valoresData || !Array.isArray(valoresData) || valoresData.length === 0) {
-            console.warn('No se recibieron valores válidos. Datos de la respuesta:', valoresData);
-            return;
-        }
-
-        valores = valoresData;  // Asignar los valores recibidos
-    } catch (error) {
-        console.error('Error al cargar datos iniciales de valores:', error);
-    }
-}
-
 // Función para cargar los criterios en el select
 function populateCriteria(selectId) {
     const select = document.getElementById(selectId);
@@ -407,7 +373,6 @@ function submitForm() {
 document.addEventListener('DOMContentLoaded', async () => {
     const sortableTable = document.querySelector('#sortableTable tbody');
 
-    // Configura SortableJS
     Sortable.create(sortableTable, {
         animation: 150,
         onEnd: function (evt) {
@@ -415,52 +380,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Si es un perfil personal o deseado, cargar el perfil adecuado
-    if (currentView === 'userPersonalProfileCarruselView'){
+    // Asegura que currentView esté definido
+    const currentView = document.body.getAttribute("data-view") || 'PersonalProfile';
+
+    if (currentView === 'PersonalProfile') {
         await cargarPerfilPersonal();
-    }else if (currentView === 'WantedProfile'){
+    } else if (currentView === 'WantedProfile') {
         await cargarPerfilDeseado();
     }
 
-    actualizarTablaConCriterio();  // Inicializa la tabla con los datos iniciales
-    guardarNuevoOrden();  // Guardar el nuevo orden
+    actualizarTablaConCriterio();
 });
+
 
 async function cargarPerfilPersonal() {
     try {
-        // Realiza la solicitud al servidor para obtener el perfil personal
         const response = await fetch('../action/personalProfileAction.php');
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener el perfil personal. Status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         // Verifica si hubo un error en la respuesta del servidor
         if (data.error) {
             console.error('Error al cargar el perfil personal:', data.error);
-            return;
+            return; // Salir si hay error
         }
 
-        // Obtén la referencia del contenedor de criterios en el DOM
         const criteriaSection = document.getElementById('criteriaSection');
 
-        // Verifica si el contenedor existe
         if (!criteriaSection) {
             console.error('El elemento "criteriaSection" no se encuentra en el DOM.');
             return;
         }
 
-        // Limpia el contenido existente antes de agregar nuevos criterios
-        criteriaSection.innerHTML = '';
+        criteriaSection.innerHTML = ''; // Limpiar contenido previo
 
-        // Verifica si los datos son un array y contienen elementos
         if (Array.isArray(data) && data.length > 0) {
             data.forEach((item, index) => {
-                const criterio = item.criterio || 'Criterio no especificado'; // Valor predeterminado
-                const valor = item.valor || 'Valor no especificado'; // Valor predeterminado
+                const criterio = item.criterio || ''; // Sin valor predeterminado
+                const valor = item.valor || ''; // Sin valor predeterminado
 
-                // Crear un nuevo contenedor para cada criterio y valor
+                // Crear contenedor de cada criterio y valor
                 const newCriterion = document.createElement('div');
                 newCriterion.className = 'criterion';
 
-                // Agregar el contenido HTML con los campos de criterio y valor
                 newCriterion.innerHTML = `
                     <label for="criterion${index + 1}">Criterio:</label>
                     <input type="text" name="criterion[]" id="criterion${index + 1}" placeholder="Especifique el criterio" value="${criterio}" oninput="actualizarTablaConCriterio()">
@@ -471,43 +437,74 @@ async function cargarPerfilPersonal() {
                     <button type="button" onclick="removeCriterion(this)">Eliminar</button>
                 `;
 
-                // Añadir el nuevo criterio al contenedor
                 criteriaSection.appendChild(newCriterion);
-                console.log(`Criterio añadido: ${criterio}, Valor añadido: ${valor}`);
-
-                // Asegurarse de que los elementos input se hayan creado correctamente
-                const criterioInput = document.getElementById(`criterion${index + 1}`);
-                const valorInput = document.getElementById(`value${index + 1}`);
-
-                if (!criterioInput) {
-                    console.error(`No se encontró el input con id 'criterion${index + 1}'`);
-                    return;
-                }
-
-                if (!valorInput) {
-                    console.error(`No se encontró el input con id 'value${index + 1}'`);
-                    return;
-                }
             });
 
-            // Actualiza la tabla con los nuevos criterios agregados
             actualizarTablaConCriterio();
-            guardarNuevoOrden();
         } else {
             console.log('No se encontró un perfil personal para el usuario actual.');
         }
     } catch (error) {
-        // Manejo de errores durante la solicitud o el procesamiento
         console.error('Error al cargar el perfil personal:', error);
     }
 }
 
-// Asegurarse de que el DOM esté cargado antes de ejecutar la función
-document.addEventListener("DOMContentLoaded", function() {
-    cargarPerfilPersonal();
-});
+async function cargarPerfilDeseado() {
+    try {
+        const response = await fetch('../action/wantedProfileAction.php');
+        
+        if (!response.ok) {
+            throw new Error(`Error en la red: ${response.status} ${response.statusText}`);
+        }
 
+        const data = await response.json();
 
+        if (data.error) {
+            console.error('Error al cargar el perfil deseado:', data.error);
+            return;
+        }
+
+        const criteriaSection = document.getElementById('criteriaSection');
+        
+        if (!criteriaSection) {
+            console.error('El elemento "criteriaSection" no se encuentra en el DOM.');
+            return;
+        }
+
+        // Limpiar sección para cargar nuevo contenido
+        criteriaSection.innerHTML = ''; 
+
+        if (Array.isArray(data) && data.length > 0) {
+            data.forEach((item, index) => {
+                const criterio = item.criterio || '';
+                const valor = item.valor || '';
+
+                const newCriterion = document.createElement('div');
+                newCriterion.className = 'criterion';
+
+                newCriterion.innerHTML = `
+                    <label for="criterion${index + 1}">Criterio:</label>
+                    <input type="text" name="criterion[]" id="criterion${index + 1}" placeholder="Especifique el criterio" value="${criterio}" oninput="actualizarTablaConCriterio()">
+
+                    <label for="value${index + 1}">Prefiero:</label>
+                    <input type="text" name="value[]" id="value${index + 1}" placeholder="Especifique el valor" value="${valor}" oninput="actualizarTablaConCriterio()">
+                    
+                    <button type="button" onclick="removeCriterion(this)">Eliminar</button>
+                `;
+
+                criteriaSection.appendChild(newCriterion);
+            });
+
+            actualizarTablaConCriterio();
+        } else {
+            console.log("No se encontró un perfil deseado para el usuario actual.");
+        }
+    } catch (error) {
+        console.error("Error al cargar el perfil deseado:", error);
+    }
+}
+
+// Eliminar la llamada a cargarPerfilPersonal() aquí, ya que se hace en el evento DOMContentLoaded
 
 async function cargarCriteriosYValores() {
     try {
@@ -533,70 +530,5 @@ async function cargarCriteriosYValores() {
         return data; // Devolvemos los criterios y sus valores para su uso
     } catch (error) {
         console.error('Error al cargar los criterios y valores:', error);
-    }
-}
-
-async function cargarPerfilDeseado() {
-    try {
-        // Primero, obtener los datos del perfil deseado del usuario
-        const response = await fetch('../action/wantedProfileAction.php');
-
-        // Verificar si la respuesta fue exitosa
-        if (!response.ok) {
-            throw new Error(`Error en la red: ${response.status} ${response.statusText}`);
-        }
-
-        // Depuración: imprimir el objeto Response
-        console.log('Response:', response);
-
-        const data = await response.json();
-
-
-        // Depuración: imprimir los datos recibidos
-        console.log('Data recibida:', data);
-
-
-        // Verificar si hay un error en los datos
-        if (data.error) {
-            console.error('Error al cargar el perfil deseado:', data.error);
-            return;
-        }
-
-        // Si se encuentra el perfil deseado, cargar los criterios y valores en la vista
-        if (Array.isArray(data) && data.length > 0) { // Cambiado aquí
-            const criteriaSection = document.getElementById('criteriaSection');
-            criteriaSection.innerHTML = ''; // Limpiar la sección antes de agregar nuevos criterios
-
-            data.forEach((item, index) => { // Cambiado aquí
-                const criterio = item.criterio;
-                const valor = item.valor;
-
-                // Crear un nuevo conjunto de campos para cada criterio y valor
-                const newCriterion = document.createElement('div');
-                newCriterion.className = 'criterion';
-
-                // Crear campos de texto y asignar valores
-                newCriterion.innerHTML = `
-                    <label for="criterion${index + 1}">Criterio:</label>
-                    <input type="text" name="criterion[]" id="criterion${index + 1}" placeholder="Especifique el criterio" value="${criterio}" oninput="actualizarTablaConCriterio()">
-
-                    <label for="value${index + 1}">Prefiero:</label>
-                    <input type="text" name="value[]" id="value${index + 1}" placeholder="Especifique el valor" value="${valor}" oninput="actualizarTablaConCriterio()">
-                    
-                    <button type="button" onclick="removeCriterion(this)">Eliminar</button>
-                `;
-
-                criteriaSection.appendChild(newCriterion);
-            });
-
-            // Actualizar la tabla con los criterios cargados
-            actualizarTablaConCriterio();
-            guardarNuevoOrden(); // Guardar el nuevo orden si es necesario
-
-        } else {
-            console.log("No se encontró un perfil deseado para el usuario actual.");
-        }
-    } catch (error) {
-        console.error("Error al cargar el perfil deseado:", error);
     }
 }

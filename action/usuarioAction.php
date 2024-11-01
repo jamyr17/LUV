@@ -9,26 +9,33 @@ include_once 'functions.php';
 
 $usuarioBusiness = new UsuarioBusiness();
 
-if (isset($_POST['login'])){
-    if (isset($_POST['nombreUsuario']) && isset($_POST['contrasena'])){
+if (isset($_POST['login'])) {
+    if (isset($_POST['nombreUsuario']) && isset($_POST['contrasena'])) {
         $nombreUsuario = $_POST['nombreUsuario'];
         $contrasena = $_POST['contrasena'];
 
+        // Validación de credenciales
         $result = $usuarioBusiness->loginValidation($nombreUsuario, $contrasena);
-        $_SESSION['nombreUsuario'] = $nombreUsuario;
 
-        if($result['tbtipousuarioid']==1){ //Administrador   
-            $_SESSION['tipoUsuario'] = 'Administrador';
-            header("location: ../index.php");
-        } else if($result['tbtipousuarioid']==2){ //Usuario
-            $_SESSION['tipoUsuario'] = 'Usuario';
-            header("location: ../view/userNavigateView.php");
-        }else{
+        // Verifica si el usuario es válido
+        if ($result) {
+            $_SESSION['usuarioId'] = $result['tbusuarioid'];
+            $_SESSION['nombreUsuario'] = $nombreUsuario;
+            $_SESSION['tipoUsuario'] = ($result['tbtipousuarioid'] == 1) ? 'Administrador' : 'Usuario';
+
+            // Actualiza el estado de disponibilidad a "Disponible"
+            $usuarioBusiness->actualizarCondicion($_SESSION['usuarioId'], 'Disponible');
+
+            // Redirige según el tipo de usuario
+            $redirectUrl = ($result['tbtipousuarioid'] == 1) ? "../index.php" : "../view/userNavigateView.php";
+            header("location: $redirectUrl");
+            exit();
+        } else {
+            // Credenciales incorrectas
             header("location: ../view/login.php?error=noValidated");
+            exit();
         }
-
     }
-
 }
 
 if(isset($_POST['newUser'])){

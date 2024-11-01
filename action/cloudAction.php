@@ -3,12 +3,12 @@ require '../vendor/autoload.php';
 
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
-
+// Configuración de Cloudinary
 Configuration::instance([
-    'cloud' => [
-        'cloud_name' => '',
-        'api_key'    => '',
-        'api_secret' => ''
+    'cloud' => [       
+        'cloud_name' => 'dwhwrxgud',
+        'api_key'    => '226445448864869',
+        'api_secret' => 'uYV2sVktoYKt0_iC7qBVPD6JbCY'
     ],
     'url' => [
         'secure' => true

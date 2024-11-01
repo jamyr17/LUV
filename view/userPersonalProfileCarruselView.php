@@ -86,7 +86,6 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                 nextForm(formNumber);
             }
         }
-
         function submitAll() {
             // Convertir el objeto en FormData para enviarlo
             const finalFormData = new FormData();
@@ -98,6 +97,7 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                 }
             }
 
+            // Añadir el campo 'registrar' para indicar que es una solicitud de registro
             finalFormData.append('registrar', 'true');
 
             fetch('../action/personalProfileAction.php', {
@@ -119,16 +119,17 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
                         }
                         window.location.href = '../view/userWantedProfileView.php';
                     } else {
-                        window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + data.error;
+                        console.error('Error de servidor: ', data.error);
+                        window.location.href = '../view/userPersonalProfileCarruselView.php?error=' + encodeURIComponent(data.error);
                     }
                 } catch (error) {
                     console.error('Error al analizar el JSON:', error);
                     console.log('Datos recibidos (no válidos):', textData);
+                    alert('Hubo un error al procesar la respuesta del servidor. Revisa la consola para más detalles.');
                 }
             })
             .catch(error => console.error('Error de red:', error));
         }
-
 
         $(document).ready(function() {
 
@@ -432,160 +433,105 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
             <button type="button" onclick="if (validateAndProceed('request-areaConocimientoNombre', false, 'request-areaConocimiento')) hideField('request-areaConocimientoNombre', 'request-areaConocimiento', 'request-areaConocimiento-form', 'areaConocimientoForm', 6)">Siguiente</button>
         </form>
     </div>
-
     <div id="form6" class="form-container">
-        <form id="imagenForm">
+    <h2>Analiza esta imagen por unos segundos</h2>
+    <form id="imagenForm">
+        <title>Análisis de Imagen con Zoom y Regiones</title>
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f0f0f0;
+                margin: 0;
+            }
+            .container {
+                position: relative;
+                width: 80%;
+                max-width: 800px;
+                overflow: hidden;
+                border: 1px solid #ddd;
+            }
+            .image {
+                width: 100%;
+                transition: transform 0.3s ease;
+            }
+        </style>
 
-            <title>Análisis de Imagen con Zoom y Regiones</title>
-            <style>
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    background-color: #f0f0f0;
-                    margin: 0;
-                }
-                .container {
-                    position: relative;
-                    width: 80%;
-                    max-width: 800px;
-                    overflow: hidden;
-                    border: 1px solid #ddd;
-                }
-                .image {
-                    width: 100%;
-                    transition: transform 0.3s ease;
-                }
-                .grid-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    display: grid;
-                    grid-template-columns: repeat(3, 1fr);
-                    grid-template-rows: repeat(3, 1fr);
-                    pointer-events: none;
-                }
-                .grid-overlay div {
-                    border: 1px solid rgba(0, 0, 0, 0.1);
-                    pointer-events: auto; /* Permitir interacción en las celdas */
-                }
-                
-            </style>
+        <div class="container">
+            <img src="https://res.cloudinary.com/dwhwrxgud/image/upload/v1730401362/images/zyakkkawjsdxf3jhkjzg.jpg" 
+                alt="Imagen a analizar" class="image" id="image">
+        </div>
 
-            <div class="container">
-                <img src="https://www.travelexcellence.com/wp-content/uploads/2020/09/CANOPY-1.jpg" 
-                    alt="Zoomable Image" class="image" id="image">
-                <div class="grid-overlay" id="grid-overlay"></div>
-            </div>
-            <button type="button" onclick="analizarAfinidades()">Analizar Afinidades</button>
+        <!-- Botón "Siguiente" que aparece después de un tiempo -->
+        <button type="button" id="siguienteBtn" style="display:none;" onclick="nextForm(4)">Siguiente</button>
 
-            <!-- Botón de siguiente que aparece después de analizar la imagen -->
-            <button type="button" id="siguienteBtn" style="display:none;" onclick="nextForm(4)">Siguiente</button>
-
-            <script>
-                const image = document.getElementById('image');
-                const gridOverlay = document.getElementById('grid-overlay');
-                let zoomScale = 1;
-                let zoomStart = 0;
+        <script>
+            $(document).ready(function() {
+                let startTime = null;
                 let activeRegion = null;
+                let zoomScale = 1;
 
-        // Zoom functionality
-        image.addEventListener('wheel', (event) => {
-            event.preventDefault();
-            const zoomFactor = 0.1;
-            if (event.deltaY < 0) {
-                zoomScale += zoomFactor;
-            } else {
-                zoomScale = Math.max(1, zoomScale - zoomFactor);
-            }
-            // Usar plantilla de cadena correcta
-            image.style.transform = `scale(${zoomScale})`;
-        });
+                const image = document.getElementById('image');
 
-        // Initialize the 3x3 grid
-        for (let row = 0; row < 3; row++) {
-            for (let col = 0; col < 3; col++) {
-                const cell = document.createElement('div');
-                // Usar plantilla de cadena correcta
-                cell.dataset.region = `${row + 1},${col + 1}`;
-                cell.addEventListener('mouseenter', (event) => {
-                    activeRegion = event.target.dataset.region;
-                    zoomStart = Date.now();
-                    // Usar plantilla de cadena correcta
-                    console.log(`Entering region: ${activeRegion}`);
+                // Funcionalidad de zoom
+                image.addEventListener('wheel', (event) => {
+                    event.preventDefault();
+                    const zoomFactor = 0.1;
+                    zoomScale += event.deltaY < 0 ? zoomFactor : -zoomFactor;
+                    zoomScale = Math.max(1, zoomScale);
+                    image.style.transform = `scale(${zoomScale})`;
                 });
-                cell.addEventListener('mouseleave', (event) => {
-                    if (activeRegion) {
-                        const zoomDuration = Date.now() - zoomStart;
-                        // Usar plantilla de cadena correcta
-                        console.log(`Left region: ${activeRegion} after ${zoomDuration}ms`);
-                        sendDataToBackend(activeRegion, zoomDuration, zoomScale);
-                        activeRegion = null;
-                        zoomStart = 0;
+
+                // Divide la imagen en una cuadrícula de 3x3 y limita los valores a 1-3
+                image.addEventListener('mousemove', (event) => {
+                    const imageWidth = image.offsetWidth;
+                    const imageHeight = image.offsetHeight;
+                    const mouseX = event.offsetX;
+                    const mouseY = event.offsetY;
+
+                    // Calcular la región y limitarla entre 1 y 3
+                    let regionX = Math.min(3, Math.max(1, Math.floor(mouseX / (imageWidth / 3)) + 1));
+                    let regionY = Math.min(3, Math.max(1, Math.floor(mouseY / (imageHeight / 3)) + 1));
+                    const currentRegion = `${regionY},${regionX}`;
+
+                    // Rastrear cambios de región
+                    if (activeRegion !== currentRegion) {
+                        if (startTime && activeRegion) {
+                            const duration = Date.now() - startTime;
+                            enviarDatosSegmentacion(activeRegion, duration, zoomScale);
+                        }
+                        activeRegion = currentRegion;
+                        startTime = Date.now();
+                        console.log(`Entrando en la región ${activeRegion}`);
                     }
                 });
-                gridOverlay.appendChild(cell);
-            }
-        }
 
-        // Send data to the backend
-        function sendDataToBackend(region, duration, zoomScale) {
-            const data = {
-                region: region,
-                duration: duration,
-                zoomScale: zoomScale
-            };
-
-            fetch('../action/userAffinityAction.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Function to calculate affinities
-        function analizarAfinidades() {
-            fetch('../action/userAffinityAction.php', {
-                method: 'GET'
-            })
-            .then(response => response.text()) 
-            .then(data => {
-                console.log("Respuesta completa:", data); // Ver el contenido exacto
-              //  console.log("Respuesta completa:", data); // Depura la respuesta completa
-                try {
-                    const jsonData = JSON.parse(data); // Intenta analizar el JSON
-                    if (jsonData.status === 'success') {
-                        console.log(jsonData.message);
-                        alert("Afinidad calculada correctamente: " + jsonData.message); // Mostrar mensaje de éxito
-                        document.getElementById('siguienteBtn').style.display = 'block';
-                    } else {
-                        console.error("Error en el servidor:", jsonData.message);
-                        alert("Error al calcular afinidades: " + jsonData.message); // Mostrar mensaje de error
-                    }
-                } catch (error) {
-                    console.error("Error al analizar el JSON:", error);
-                    alert("Error en la respuesta del servidor."); // Mensaje en caso de error de JSON
+                // Envía los datos de segmentación al backend
+                function enviarDatosSegmentacion(region, duration, zoomScale) {
+                    console.log(`Saliendo de la región ${region} después de ${duration}ms`);
+                    fetch('../action/userAffinityAction.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ region, duration, zoomScale, imageURL: image.src })
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log('Datos enviados:', data))
+                    .catch(error => console.error('Error al enviar datos:', error));
                 }
-            })
-            .catch(error => {
-                console.error("Error en la solicitud:", error);
-                alert("Error en la solicitud al servidor."); // Mensaje de error de solicitud
-            });
-        }
 
-            </script>
-        </form>
-    </div>
+                // Muestra el botón "Siguiente" después de cierto tiempo
+                setTimeout(() => {
+                    document.getElementById('siguienteBtn').style.display = 'block';
+                    console.log("Botón 'Siguiente' activado");
+                }, 5000); // Cambia el tiempo según sea necesario (5000ms = 5 segundos)
+            });
+        </script>
+
+    </form>
+</div>
+
 
     
     <div id="form4" class="form-container">

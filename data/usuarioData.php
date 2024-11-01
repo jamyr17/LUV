@@ -120,6 +120,16 @@ class UsuarioData extends Data
         return $count > 0;
     }
 
+    public function actualizarCondicion($usuarioId, $condicion) {
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+        $conn->set_charset('utf8');
+    
+        $query = "UPDATE tbusuario SET tbusuariocondicion = '$condicion' WHERE tbusuarioid = $usuarioId";
+        $result = mysqli_query($conn, $query);
+        mysqli_close($conn);
+        return $result;
+    }
+
     public function getTbAfinidadUsuarioGenero($usuarioId)
     {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
