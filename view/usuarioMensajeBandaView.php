@@ -15,7 +15,7 @@
                     <span class="status" id="usuarioCondicion">Active now</span>
                 </div>
             </div>
-            <button class="back-button" onclick="history.back()">⬅</button>
+            <button class="back-button" onclick="history.back()">Regresar</button>
         </div>
 
         <!-- Buscador de usuarios -->
@@ -62,31 +62,36 @@
 
         // Cargar lista de usuarios para chatear
         fetch('../action/usuarioMensajeAction.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'getUsuariosParaChat=true'
-        })
-        .then(response => response.json())
-        .then(data => {
-            const chatList = document.getElementById("chatList");
-            data.forEach(user => {
-                let div = document.createElement("div");
-                div.className = "chat-item";
-                div.innerHTML = `
-                    <img src="${user.profilePic}" alt="${user.nombre}" class="profile-image">
-                    <div>
-                        <div class="name">${user.nombre}</div>
-                        <div class="status">${user.onlineStatus ? 'Active now' : 'Pulsa para chatear'}</div>
-                    </div>
-                    <span class="status-dot ${user.onlineStatus ? 'online' : 'offline'}"></span>
-                `;
-                div.onclick = () => {
-                    window.location.href = `usuarioMensajeChatView.php?amigoId=${user.id}`;
-                };
-                chatList.appendChild(div);
-            });
-        })
-        .catch(error => console.error('Error fetching chat list:', error));
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'getUsuariosParaChat=true'
+})
+.then(response => response.json())
+.then(data => {
+    console.log("Respuesta de la API:", data); // Agrega esto para ver la respuesta
+    if (Array.isArray(data)) {
+        const chatList = document.getElementById("chatList");
+        data.forEach(user => {
+            let div = document.createElement("div");
+            div.className = "chat-item";
+            div.innerHTML = `
+                <img src="${user.profilePic}" alt="${user.nombre}" class="profile-image">
+                <div>
+                    <div class="name">${user.nombre}</div>
+                    <div class="status">${user.onlineStatus ? 'Active now' : 'Pulsa para chatear'}</div>
+                </div>
+                <span class="status-dot ${user.onlineStatus ? 'online' : 'offline'}"></span>
+            `;
+            div.onclick = () => {
+                window.location.href = `usuarioMensajeChatView.php?amigoId=${user.id}`;
+            };
+            chatList.appendChild(div);
+        });
+    } else {
+        console.error("La respuesta no es un array:", data);
+    }
+})
+.catch(error => console.error('Error fetching chat list:', error));
     </script>
 </body>
 </html>
