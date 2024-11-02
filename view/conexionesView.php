@@ -145,33 +145,30 @@ include "../action/sessionUserAction.php";
             let startTime = null;
             let activeRegion = null;
 
-            // Evento para detectar el movimiento dentro de la imagen y calcular la región
             $('.post-image').on('mousemove', function(event) {
                 const imageWidth = $(this).width();
                 const imageHeight = $(this).height();
                 const mouseX = event.offsetX;
                 const mouseY = event.offsetY;
 
-                // División 3x3 lógica de la imagen, con límite entre 1 y 3 para evitar valores fuera de rango
+                // Limitar el cálculo de las regiones a una cuadrícula de 3x3
                 const regionX = Math.min(3, Math.max(1, Math.floor(mouseX / (imageWidth / 3)) + 1));
                 const regionY = Math.min(3, Math.max(1, Math.floor(mouseY / (imageHeight / 3)) + 1));
                 const currentRegion = `${regionY},${regionX}`;
 
-                // Detecta si el mouse ha cambiado de región
                 if (activeRegion !== currentRegion) {
                     if (startTime && activeRegion) {
-                        const duration = Date.now() - startTime; // Tiempo en ms dentro de la región anterior
-                        const imageURL = $(this).data('image-url'); // URL de la imagen
+                        const duration = Date.now() - startTime;
+                        const imageURL = $(this).data('image-url');
                         console.log(`Left region ${activeRegion} after ${duration}ms`);
-                        guardarSegmentacion(activeRegion, duration, 1, imageURL); // Envía datos
+                        guardarSegmentacion(activeRegion, duration, 1, imageURL);
                     }
                     activeRegion = currentRegion;
-                    startTime = Date.now(); // Inicia el tiempo para la nueva región
+                    startTime = Date.now();
                     console.log(`Entering region ${activeRegion}`);
                 }
             });
 
-            // Evento para registrar la salida de la imagen y enviar los datos
             $('.post-image').on('mouseleave', function() {
                 if (startTime && activeRegion) {
                     const duration = Date.now() - startTime;
@@ -184,7 +181,6 @@ include "../action/sessionUserAction.php";
             });
         });
 
-        // Función para enviar los datos al backend
         function guardarSegmentacion(region, duration, zoomScale, imageURL) {
             console.log("Datos enviados:", { region, duration, zoomScale, imageURL });
             if (!imageURL) {
@@ -210,6 +206,8 @@ include "../action/sessionUserAction.php";
                 alert("Ha ocurrido un error inesperado.");
             });
         }
+
+
     </script>
 
 

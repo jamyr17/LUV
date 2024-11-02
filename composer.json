@@ -1,6 +1,7 @@
 {
     "require": {
         "phpmailer/phpmailer": "^6.9",
-        "cloudinary/cloudinary_php": "^2.14"
+        "cloudinary/cloudinary_php": "^2.14",
+        "ralouphie/getallheaders": "*"
     }
 }

@@ -261,31 +261,55 @@ function obtenerArchivosDesdeRuta($ruta) {
     return $archivosDat;
 }
 
-// Función para consolidar los datos sin duplicar entradas de URL
-function actualizarDatosDeImagen($existingLine, $imageURL, $newRegion, $newDuration, $newZoomScale) {
-    $regions = [];
-    $durations = [];
-    $zoomScales = [];
+function actualizarDatosDeImagen($lineaExistente, $imageURL, $region, $duration, $zoomScale) {
+    // Define el orden de las regiones
+    $regionsOrder = ['1,1', '1,2', '1,3', '2,1', '2,2', '2,3', '3,1', '3,2', '3,3'];
+    $durations = array_fill(0, count($regionsOrder), 0);
+    $zoomScales = array_fill(0, count($regionsOrder), 1);
+    $criterios = ''; // Inicializar los criterios
 
-    if ($existingLine) {
-        preg_match('/Region: (.*?) \| Duracion: (.*?) \| ZoomScale: (.*)/', $existingLine, $matches);
-        if (!empty($matches[1])) $regions = explode(';', trim($matches[1]));
-        if (!empty($matches[2])) $durations = explode(',', trim($matches[2]));
-        if (!empty($matches[3])) $zoomScales = explode(',', trim($matches[3]));
+    // Si la línea ya existe, recuperar datos previos
+    if ($lineaExistente) {
+        preg_match('/Region: (.*?) \| Duracion: (.*?) \| ZoomScale: (.*?)($|\| Criterio: (.*))/', $lineaExistente, $matches);
+        $existingRegions = explode(';', $matches[1]);
+        $existingDurations = explode(',', $matches[2]);
+        $existingZoomScales = explode(',', $matches[3]);
+        $criterios = $matches[5] ?? '';  // Criterios previos si existen
+
+        foreach ($existingRegions as $index => $existingRegion) {
+            $key = array_search($existingRegion, $regionsOrder);
+            if ($key !== false) {
+                $durations[$key] = $existingDurations[$index] ?? 0;
+                $zoomScales[$key] = $existingZoomScales[$index] ?? 1;
+            }
+        }
     }
 
-    $index = array_search($newRegion, $regions);
-    if ($index !== false) {
-        $durations[$index] += $newDuration;
-    } else {
-        $regions[] = $newRegion;
-        $durations[] = $newDuration;
-        $zoomScales[] = $newZoomScale;
+    // Actualizar duración y zoom de la región actual
+    $key = array_search($region, $regionsOrder);
+    if ($key !== false) {
+        $durations[$key] = $duration;
+        $zoomScales[$key] = $zoomScale;
     }
 
-    $updatedRegions = implode(';', $regions);
-    $updatedDurations = implode(',', $durations);
-    $updatedZoomScales = implode(',', $zoomScales);
+    // Verificar si ya hay criterios; si no, búscalos en criteriosImagenes.dat
+    if (empty($criterios)) {
+        $criteriosFile = '../resources/img/criteriosImagenes.dat';
+        if (file_exists($criteriosFile)) {
+            $lineasCriterios = file($criteriosFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lineasCriterios as $linea) {
+                if (strpos($linea, "ImagenURL:$imageURL") === 0) {
+                    preg_match('/Criterio: (.*)/', $linea, $matchesCriterio);
+                    $criterios = $matchesCriterio[1] ?? 'Sin criterio';
+                    break;
+                }
+            }
+        }
+    }
 
-    return "ImagenURL: $imageURL | Region: $updatedRegions | Duracion: $updatedDurations | ZoomScale: $updatedZoomScales";
+    // Formatear y retornar la línea completa con los criterios si están disponibles
+    return "ImagenURL: $imageURL | Region: " . implode(';', $regionsOrder) .
+           " | Duracion: " . implode(',', $durations) .
+           " | ZoomScale: " . implode(',', $zoomScales) .
+           ($criterios ? " | Criterio: $criterios" : "");  // Agregar criterios si existen
 }

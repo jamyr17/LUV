@@ -141,10 +141,5 @@ if (isset($_POST["registrar"])) {
         // Enviar el perfil personal si se encuentra
         header('Content-Type: application/json');
         echo json_encode(["perfil" => $perfilPersonal]);
-    } else {
-        // Enviar error si no se encuentra el perfil
-        header('Content-Type: application/json');
-        echo json_encode(["error" => "Perfil no encontrado"]);
-    }
-    exit();  // Asegura que no se ejecute más código después de enviar la respuesta
+    } 
 }

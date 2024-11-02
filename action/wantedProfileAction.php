@@ -150,11 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["search"])) {
     if ($perfilDeseado) {
         header('Content-Type: application/json');
         echo json_encode(["perfil" => $perfilDeseado]);
-    } else {
-        header('Content-Type: application/json');
-        echo json_encode(["error" => "Perfil no encontrado para el ID de usuario: $usuarioId"]);
     }
-    exit();
 }
 
 // Función para filtrar y ordenar perfiles
