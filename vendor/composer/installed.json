@@ -37,7 +37,7 @@
             },
             "time": "2024-05-07T15:14:12+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "src"
@@ -100,7 +100,7 @@
             },
             "time": "2024-05-27T12:26:00+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "src"
@@ -179,7 +179,7 @@
                     "forward-command": false
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "src/functions_include.php"
@@ -291,7 +291,7 @@
                     "forward-command": false
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\Promise\\": "src/"
@@ -388,7 +388,7 @@
                     "forward-command": false
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\Psr7\\": "src/"
@@ -530,7 +530,7 @@
                     "dev-main": "3.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Monolog\\": "src/Monolog"
@@ -614,7 +614,7 @@
             },
             "time": "2024-10-09T10:07:50+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "PHPMailer\\PHPMailer\\": "src/"
@@ -680,7 +680,7 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Client\\": "src/"
@@ -735,7 +735,7 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Message\\": "src/"
@@ -792,7 +792,7 @@
                     "dev-master": "2.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Message\\": "src/"
@@ -848,7 +848,7 @@
                     "dev-master": "3.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Log\\": "src"
@@ -900,7 +900,7 @@
             },
             "time": "2019-03-08T08:55:37+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "src/getallheaders.php"
@@ -952,7 +952,7 @@
                     "url": "https://github.com/symfony/contracts"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "function.php"
