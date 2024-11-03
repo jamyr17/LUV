@@ -30,9 +30,23 @@ if (isset($_POST['getAmigoDetalles'])) {
 // Obtener la lista de usuarios para el chat
 if (isset($_POST['getUsuariosParaChat'])) {
     $usuarios = $usuarioMensajeBusiness->getUsuariosParaChat($_SESSION['usuarioId']);
+    
+    // Asegúrate de incluir el campo de la imagen en la respuesta
+    foreach ($usuarios as &$usuario) {
+        if (empty($usuario['profilePic']) || !file_exists($_SERVER['DOCUMENT_ROOT'] . $usuario['profilePic'])) {
+            $usuario['profilePic'] = $usuario['profilePic'];
+             // Ruta a tu imagen por defecto
+        } else {
+            $usuario['profilePic'] = '../resources/img/profile/no-pfp.png';
+             // Ajustar la ruta para que sea accesible desde el navegador
+        }
+    }
+
+    header('Content-Type: application/json');
     echo json_encode($usuarios ?: []);
     exit;
 }
+
 
 // Obtener mensajes con long polling
 if (isset($_POST['getMensajes'])) {
@@ -104,3 +118,4 @@ if (isset($_POST['actualizarDisponibilidad'])) {
     echo json_encode(['success' => $resultado ? true : false, 'error' => $resultado ? null : 'No se pudo actualizar la disponibilidad']);
     exit;
 }
+

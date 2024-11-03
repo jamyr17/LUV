@@ -37,24 +37,37 @@ class UsuarioMensajeData extends Data {
       return $result;
   }
 
-    public function getUsuariosParaChat() {
-      $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-      $conn->set_charset('utf8');
-  
-      $sessionUserId = $_SESSION['usuarioId'];
-      $query = "SELECT tbusuarioid AS id, tbusuarionombre AS nombre 
-                FROM tbusuario 
-                WHERE tbusuarioestado = 1 AND tbusuarioid != $sessionUserId";
-      $result = mysqli_query($conn, $query);
-  
-      $usuarios = [];
-      while ($row = mysqli_fetch_assoc($result)) {
-          $usuarios[] = $row;
-      }
-  
-      mysqli_close($conn);
-      return $usuarios;
-  }
+  public function getUsuariosParaChat() {
+    $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+    $conn->set_charset('utf8');
+
+    $sessionUserId = $_SESSION['usuarioId'];
+    $query = "SELECT tbusuarioid AS id, tbusuarionombre AS nombre, tbusuarioimagen AS profilePic 
+              FROM tbusuario 
+              WHERE tbusuarioestado = 1 AND tbusuarioid != $sessionUserId";
+    $result = mysqli_query($conn, $query);
+
+    $usuarios = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        // Ruta completa al archivo en el servidor
+        $rutaImagen = $_SERVER['DOCUMENT_ROOT'] . '/LUV' . $row['profilePic'];
+
+        if (empty($row['profilePic']) || !file_exists($rutaImagen)) {
+            $row['profilePic'] = '/LUV' . $row['profilePic'];
+             // Imagen por defecto
+        } else {
+            $row['profilePic'] = '../resources/img/profile/no-pfp.png';
+             // Ajustar la ruta para mostrarla en el navegador
+        }
+        $usuarios[] = $row;
+    }
+
+    mysqli_close($conn);
+    return $usuarios;
+}
+
+
+
 
   public function getUsuarioDetalles($usuarioId) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
@@ -127,6 +140,8 @@ class UsuarioMensajeData extends Data {
   
       return $resultado;
   }
+
+  
     
 }
 ?>
