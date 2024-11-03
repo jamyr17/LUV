@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             <strong>${info.event.title}</strong>
                         </div>
                         <div>
-                            Dirección: ${info.event.extendedProps.direction}
+                            <strong> Dirección: </strong> ${info.event.extendedProps.direction}
                         </div>
                         <div>
-                            Hora: ${info.event.extendedProps.timeStart}
+                            <strong> Hora: </strong> ${info.event.extendedProps.timeStart}
                         </div>
                     </div> 
                     `
@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     var option = inputColectivos.options[i];
                     option.selected = colectivosSeleccionados.includes(parseInt(option.value));
                 }
+
+                showAttendanceList(event.event.id, 'listAttendanceDivOwner');
             
                 $("#actividadActualizarModalView").modal();
             } // Si no es el creador del evento, debe ver los detalles y también si quiere apuntarse o no a la asistencia, además de ver los asistentes si no es anónimo el evento
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const inputIdActividad = document.getElementById('idActividadDelAttendance');
                         const divImagen = document.getElementById('imagenRegistered');
         
-                        detalleTitle.innerHTML = '<strong>' + event.event.title + '</strong>';
+                        detalleTitle.innerHTML = '<h4><strong>' + event.event.title + '</strong></h4>';
                         detalleDireccion.innerHTML = event.event.extendedProps.direction;
                         detalleFechaInicio.innerHTML = event.event.start;
                         inputIdActividad.value = event.event.id;
@@ -139,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const inputIdActividad = document.getElementById('idActividadAttendance');
                         const divImagen = document.getElementById('imagenDetail');
         
-                        detalleTitle.innerHTML = '<strong>' + event.event.title + '</strong>';
+                        detalleTitle.innerHTML = '<h4><strong>' + event.event.title + '</strong></h4>';
                         detalleDireccion.innerHTML = event.event.extendedProps.direction;
                         detalleFechaInicio.innerHTML = event.event.start;
                         inputIdActividad.value = event.event.id;
@@ -247,7 +249,7 @@ function showAttendanceList(idActividad, nombreDiv) {
             listAttendanceDiv.empty(); // Limpiar contenido anterior
 
             if (response.length > 0) {
-                let listHtml = '<h5>Asistentes de la actividad<h5/>'
+                let listHtml = '<p><strong>Asistentes de la actividad</strong></p>'
                 listHtml += '<ul class="list-group">';
                 response.forEach(user => {
                     if(user.id!=usuarioId){

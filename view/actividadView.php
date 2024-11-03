@@ -86,7 +86,7 @@
             <br>
 
             <label>Suba 1 imagen relacionada a la actividad: </label>
-            <input required type='file' name='imagen' id='imagen' />
+            <input required type='file' name='imagen' id='imagen' /><br/>
 
             <label for="direccion" class="form-label">Dirección: </label>
             <?php generarCampoTexto('direccion', 'formCrearData', 'Dirección de la actividad', '') ?><br>

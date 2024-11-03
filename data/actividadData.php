@@ -96,11 +96,18 @@ class ActividadData extends Data
 
         $id = intval($actividad->getTbActividadId()); 
 
-        $queryUpdate = "UPDATE tbactividad SET tbactividadtitulo='{$actividad->getTbActividadTitulo()}', tbactividaddescripcion='{$actividad->getTbActividadDescripcion()}', 
-        tbactividadimagen='{$actividad->getTbActividadImagen()}', tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', 
-        tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}', tbactividaddireccion='{$actividad->getTbActividadDireccion()}', 
-        tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
-        WHERE tbactividadid=$id;";
+        if($actividad->getTbActividadImagen()==null || $actividad->getTbActividadImagen()==''){
+            $queryUpdate = "UPDATE tbactividad SET tbactividadtitulo='{$actividad->getTbActividadTitulo()}', tbactividaddescripcion='{$actividad->getTbActividadDescripcion()}
+            ', tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}
+            ', tbactividaddireccion='{$actividad->getTbActividadDireccion()}', tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
+            WHERE tbactividadid=$id;";
+        }else{
+            $queryUpdate = "UPDATE tbactividad SET tbactividadtitulo='{$actividad->getTbActividadTitulo()}', tbactividaddescripcion='{$actividad->getTbActividadDescripcion()}', 
+            tbactividadimagen='{$actividad->getTbActividadImagen()}', tbactividadfechainicio='{$actividad->getTbActividadFechaInicio()}', 
+            tbactividadfechatermina='{$actividad->getTbActividadFechaTermina()}', tbactividaddireccion='{$actividad->getTbActividadDireccion()}', 
+            tbactividadanonimo='{$actividad->getTbActividadAnonimo()}'
+            WHERE tbactividadid=$id;";
+        }
 
         // Eliminar los colectivos actuales asociados con la actividad
         $queryDeleteColectivos = "DELETE FROM tbactividaduniversidadcampuscolectivo WHERE tbactividadid=$id;";

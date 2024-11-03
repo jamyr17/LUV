@@ -38,8 +38,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
-                if(isset($_FILES['imagen'])){
-                    echo 'entró';
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
                     $directorioImagenes = '../resources/img/actividad/';
                     $nombreArchivoImagen = strtolower(str_replace(' ', '-', $titulo));
 
@@ -47,7 +46,7 @@ if (isset($_POST['update'])) {
 
                     if (!$resultImagen) {
                         guardarFormData();
-                        header("location: ../view/activitiesCalendarView.php?error=imageUpload");
+                        header("location: ../view/actividadView.php?error=imageUpload");
                         exit();
                     }
 
@@ -119,7 +118,7 @@ if (isset($_POST['update'])) {
 
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
-                if(isset($_FILES['imagen'])){
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
                     echo 'entró';
                     $directorioImagenes = '../resources/img/actividad/';
                     $nombreArchivoImagen = strtolower(str_replace(' ', '-', $titulo));
@@ -212,7 +211,7 @@ else if (isset($_POST['delete'])) {
 
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
-                if(isset($_FILES['imagen'])){
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
                     $directorioImagenes = '../resources/img/actividad/';
                     $nombreArchivoImagen = strtolower(str_replace(' ', '-', $titulo));
 
@@ -304,7 +303,7 @@ else if (isset($_POST['delete'])) {
 
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
-                if(isset($_FILES['imagen'])){
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
                     echo 'entró';
                     $directorioImagenes = '../resources/img/actividad/';
                     $nombreArchivoImagen = strtolower(str_replace(' ', '-', $titulo));

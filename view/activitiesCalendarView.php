@@ -198,6 +198,8 @@
 
                     </form>
 
+                    <div id='listAttendanceDivOwner'> </div>
+
                 </div>
             </div>
         </div>                   
@@ -217,22 +219,28 @@
                     <div>
                         <div id='activityTitle'></div>
                         <div id='imagenDetail'></div>
+                        
+                        <div>
+                            <p><strong> Dirección: </strong></p>
+                            <div id='activityDirection'></div>
+                        </div>
 
-                        Dirección: 
-                        <div id='activityDirection'></div>
-                        Hora:
-                        <div id='activityStartDate'></div>
+                        <div>
+                            <p><strong> Hora: </strong></p>
+                            <div id='activityStartDate'></div>
+                        </div>
 
-                        <br/><br/>
+                        <br/>
                         <div id='listAttendanceDivDetails'></div>
-                        <br/><br/>
+                        <br/>
                         
                     </div>
                     <form id="registerAttendance" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;">
                         <input type="hidden" class="form-control" name="idActividadAttendance" id="idActividadAttendance">      
                         <input type="hidden" id="idUsuarioLogeado" name="idUsuarioLogeado" value="<?php echo $_SESSION['idUsuario']; ?>">
-                        <br/><br/>
-                        <label>¿Asistirá a esta actividad?</label>
+                        <br/>
+                        <h6><strong>Importante</strong></h6>
+                        <label>¿Te gustaría asistir a esta actividad?</label>
                         <input type="radio" name="attendance" value="true"> Sí
 
                         <div class="modal-footer">
@@ -261,16 +269,23 @@
                         <div id='activityTitleRegistered'></div>
                         <div id='imagenRegistered'></div>
 
-                        Dirección: 
-                        <div id='activityDirectionRegistered'></div>
-                        Hora:
-                        <div id='activityStartDateRegistered'></div>
-                        <div id='listAttendanceDivRegistered'></div><br/><br/>
+                        <div> 
+                            <p><strong> Dirección: </strong></p>
+                            <div id='activityDirectionRegistered'></div>
+                        </div>
+
+                        <div>
+                            <p><strong> Hora: </strong></p>
+                            <div id='activityStartDateRegistered'></div><br/>
+                        </div>
+
+                        <div id='listAttendanceDivRegistered'></div><br/>
                     </div>
                     <form id="deleteAttendance" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;">
                         <input type="hidden" class="form-control" name="idActividadDelAttendance" id="idActividadDelAttendance">      
                         <input type="hidden" id="idDelUsuarioLogeado" name="idDelUsuarioLogeado" value="<?php echo $_SESSION['idUsuario']; ?>">
-                        <br/><br/>
+                        <br/>
+                        <h6><strong>Importante</strong></h6>
                         <p>Usted ha indicado que asistirá a esta actividad</p>
                         <label>¿Quiere cancelar su asistencia a esta actividad?</label>
                         <input type="radio" name="cancel" value="true"> Sí

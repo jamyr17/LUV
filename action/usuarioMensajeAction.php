@@ -71,7 +71,7 @@ if (isset($_POST['getMensajes'])) {
         }
 
         // Espera 1 segundo antes de volver a comprobar para reducir la carga del servidor
-        usleep(1000000);
+        //usleep(100);
     }
 
     // Si no hay nuevos mensajes, responde con un array vacío
