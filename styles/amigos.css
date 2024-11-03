@@ -12,7 +12,7 @@ body {
 /* Contenedor Principal */
 .container {
     width: 100%;
-    max-width: 450px; /* Aumentamos el ancho máximo */
+    max-width: 450px;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -26,9 +26,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px; /* Aumentamos el padding */
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 20px;
+    background-color: #ff6b6b; /* Color de fondo del encabezado */
+    color: white; /* Texto blanco para el encabezado */
 }
 
 .user-info {
@@ -37,7 +37,7 @@ body {
 }
 
 .user-info .profile-image {
-    width: 50px; /* Aumentamos el tamaño de la imagen */
+    width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
@@ -45,14 +45,12 @@ body {
 }
 
 .user-info h1 {
-    font-size: 18px; /* Aumentamos el tamaño de la fuente */
+    font-size: 18px;
     margin: 0;
-    color: #333;
 }
 
 .user-info .status {
     font-size: 14px;
-    color: #777;
 }
 
 /* Botón de "Volver" */
@@ -63,7 +61,7 @@ body {
     padding: 5px 15px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px; /* Ajustamos el tamaño de fuente */
+    font-size: 16px;
     transition: background-color 0.3s;
 }
 
@@ -75,26 +73,30 @@ body {
 .search-container {
     display: flex;
     align-items: center;
-    padding: 15px; /* Aumentamos el padding */
-    background-color: #f8f9fa;
+    padding: 15px;
+    background-color: #ff6b6b; /* Color de fondo del buscador */
     border-bottom: 1px solid #e0e0e0;
 }
 
 .search-container input {
     flex-grow: 1;
-    padding: 10px 15px; /* Aumentamos el padding */
-    font-size: 16px; /* Aumentamos el tamaño de la fuente */
+    padding: 10px 15px;
+    font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 8px;
     outline: none;
     transition: border-color 0.3s;
 }
 
+.search-container input:focus {
+    border-color: #ff6b6b; /* Borde rojo al enfocar */
+}
+
 .search-icon {
     background: none;
     border: none;
     font-size: 20px;
-    color: #333;
+    color: white; /* Color del icono de búsqueda */
     cursor: pointer;
     margin-left: 8px;
 }
@@ -103,13 +105,13 @@ body {
 .chat-list {
     padding: 10px;
     overflow-y: auto;
-    max-height: 450px; /* Altura máxima con scroll */
+    max-height: 450px;
 }
 
 .chat-item {
     display: flex;
     align-items: center;
-    padding: 15px; /* Aumentamos el padding */
+    padding: 15px;
     border-radius: 8px;
     transition: background-color 0.3s;
     cursor: pointer;
@@ -117,11 +119,11 @@ body {
 }
 
 .chat-item:hover {
-    background-color: #f0f8ff;
+    background-color: #ffe0e0; /* Fondo claro al pasar el ratón */
 }
 
 .chat-item .profile-image {
-    width: 45px; /* Aumentamos el tamaño de la imagen */
+    width: 45px;
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
@@ -131,12 +133,12 @@ body {
 .chat-item .name {
     font-weight: bold;
     color: #333;
-    font-size: 16px; /* Aumentamos el tamaño de la fuente */
+    font-size: 16px;
 }
 
 .chat-item .status {
     color: #888;
-    font-size: 14px; /* Aumentamos el tamaño de la fuente */
+    font-size: 14px;
 }
 
 .status-dot {

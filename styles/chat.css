@@ -1,7 +1,7 @@
 /* Estilos Generales */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna */
+    background-color: #f9f9f9; /* Color de fondo suave */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,7 @@ body {
     max-width: 450px;
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -25,89 +25,90 @@ body {
 .chat-header {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 15px;
+    background: linear-gradient(90deg, #ff5a5f, #ff3b30); /* Gradiente de colores Tinder */
+    color: #ffffff;
+    position: relative;
 }
 
 .chat-header button {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 20px; /* Tamaño del icono */
+    color: #ffffff;
     cursor: pointer;
-    margin-right: 15px;
-    color: #333;
     transition: color 0.3s;
 }
 
 .chat-header button:hover {
-    color: #555;
+    color: #ffccbc; /* Color claro al pasar el cursor */
 }
 
 .amigo-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    margin-left: 10px; /* Espacio entre icono y nombre */
 }
 
 .profile-image {
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Tamaño de imagen de perfil */
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ddd;
+    border: 2px solid #ffffff; /* Borde blanco alrededor de la imagen */
+    margin-right: 20px;
 }
 
+/* Información del Chat */
 .chat-info h2 {
     margin: 0;
     font-size: 18px;
-    color: #333;
 }
 
 .chat-info .status {
-    font-size: 14px;
-    color: #777;
+    font-size: 12px;
+    color: #e0e0e0; /* Color más suave para el estado */
 }
 
 /* Caja de Chat */
 #chatBox {
     flex-grow: 1;
     padding: 20px;
-    background-color: #f4f7f9;
+    background-color: #fff0f1; /* Color de fondo más claro para los mensajes */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 10px; /* Espacio entre mensajes */
 }
 
 /* Mensajes */
 .mensaje {
     padding: 12px 15px;
-    border-radius: 15px;
+    border-radius: 20px; /* Bordes redondeados */
     max-width: 75%;
     word-wrap: break-word;
-    font-size: 15px;
-    line-height: 1.4;
+    line-height: 1.5;
     display: inline-block;
+    position: relative;
 }
 
 .mensajePropio {
-    background-color: #d1e7ff;
-    align-self: flex-end;
-    color: #034f84;
+    background-color: #ff5a5f; /* Color de fondo para mensajes propios */
+    color: #ffffff; /* Texto blanco */
+    align-self: flex-end; /* Alinear a la derecha */
 }
 
 .mensajeAmigo {
-    background-color: #e0e0e0;
-    align-self: flex-start;
-    color: #333;
+    background-color: #ff3b30; /* Color de fondo para mensajes del amigo */
+    color: #ffffff; /* Texto blanco */
+    align-self: flex-start; /* Alinear a la izquierda */
 }
 
 /* Fecha de Mensajes */
 .mensaje small {
     display: block;
     font-size: 12px;
-    color: #666;
+    color: #ffffff; /* Texto de fecha en blanco */
     margin-top: 5px;
     text-align: right;
 }
@@ -116,16 +117,16 @@ body {
 .message-input {
     display: flex;
     align-items: center;
-    padding: 15px 20px;
-    background-color: #ffffff;
-    border-top: 1px solid #e0e0e0;
+    padding: 15px;
+    background-color: #ffffff; /* Color de fondo blanco */
+    border-top: 1px solid #ffccbc; /* Línea divisoria suave */
 }
 
 .message-input textarea {
     flex-grow: 1;
     height: 45px;
     resize: none;
-    border: 1px solid #ddd;
+    border: 1px solid #ff5a5f;
     border-radius: 20px;
     padding: 10px 15px;
     font-size: 15px;
@@ -134,25 +135,26 @@ body {
 }
 
 .message-input textarea:focus {
-    border-color: #999;
+    border-color: #ff3b30; /* Color de borde al enfocar */
 }
 
 .message-input button {
-    background-color: #034f84;
+    background-color: #ff5a5f; /* Color del botón */
     color: #ffffff;
     border: none;
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 50px; /* Tamaño del botón */
+    height: 50px;
     cursor: pointer;
     font-size: 20px;
     margin-left: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s; /* Transiciones para hover */
 }
 
 .message-input button:hover {
-    background-color: #023e73;
+    background-color: #ff3b30; /* Color más oscuro al pasar el cursor */
+    transform: scale(1.05); /* Efecto de crecimiento */
 }

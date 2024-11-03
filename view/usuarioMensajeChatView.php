@@ -8,23 +8,25 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
     <link rel="stylesheet" href="../styles/chat.css">
 </head>
 <body>
-    <div class="container">
-        <div class="chat-header">
-            <button onclick="volver()">⬅</button>
+<div class="container">
+    <div class="chat-header">
+        <button onclick="volver()">⬅</button>
+        <div class="amigo-info">
+            <img id="amigoImagen" class="profile-image" src="../resources/img/profile/no-pfp.png" alt="Imagen de perfil">
             <div class="chat-info">
-                <img id="amigoImagen" src="../resources/img/profile/no-pfp.png" alt="Imagen de perfil">
                 <h2 id="amigoNombre">Nombre del Amigo</h2>
                 <span class="status" id="estado">Active now</span>
             </div>
         </div>
-        <div id="chatBox"></div>
-        <div class="message-input">
-            <textarea id="mensaje" placeholder="Escribe tu mensaje..."></textarea>
-            <button onclick="enviarMensaje()">➤</button>
-        </div>
     </div>
+    <div id="chatBox"></div>
+    <div class="message-input">
+        <textarea id="mensaje" placeholder="Escribe tu mensaje..."></textarea>
+        <button onclick="enviarMensaje()">➤</button>
+    </div>
+</div>
 
-    <script>
+<script>
         const amigoId = new URLSearchParams(window.location.search).get("amigoId");
         const usuarioId = <?php echo json_encode($_SESSION['usuarioId']); ?>;
         let lastMessageId = 0;
@@ -53,7 +55,7 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
                     chatBox.scrollTop = chatBox.scrollHeight;
                 }
 
-                setTimeout(obtenerMensajes, 1000);
+                setTimeout(obtenerMensajes, 3000);
             } catch (error) {
                 console.error('Error al obtener mensajes:', error);
             }
@@ -88,7 +90,9 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
 
         if (!amigoDetalles.error) {
             document.getElementById("amigoNombre").textContent = amigoDetalles.nombre;
-            document.getElementById("amigoImagen").src = amigoDetalles.imagen || '../resources/img/profile/no-pfp.png';
+            const imagenAmigo = amigoDetalles.imagen && amigoDetalles.imagen.trim() !== '' ? amigoDetalles.imagen : '../resources/img/profile/no-pfp.png';
+                document.getElementById("amigoImagen").src = imagenAmigo;
+
         } else {
             console.error(amigoDetalles.error);
         }

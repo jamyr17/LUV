@@ -3,6 +3,7 @@
 <head>
     <title>Lista de Chats</title>
     <link rel="stylesheet" href="../styles/amigos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -21,7 +22,8 @@
         <!-- Buscador de usuarios -->
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Buscar" oninput="filtrarUsuarios()">
-            <button class="search-icon">🔍</button>
+            <button class="search-icon"><i class="fas fa-search"></i></button>
+
         </div>
 
         <div class="chat-list" id="chatList"></div>

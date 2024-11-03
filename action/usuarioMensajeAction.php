@@ -12,7 +12,6 @@ if (!isset($_SESSION['usuarioId'])) {
 }
 
 include_once '../business/usuarioMensajeBusiness.php';
-
 $usuarioMensajeBusiness = new UsuarioMensajeBusiness();
 
 if (isset($_POST['getAmigoDetalles'])) {
@@ -27,7 +26,6 @@ if (isset($_POST['getAmigoDetalles'])) {
     exit;
 }
 
-// Obtener la lista de usuarios para el chat
 if (isset($_POST['getUsuariosParaChat'])) {
     $usuarios = $usuarioMensajeBusiness->getUsuariosParaChat($_SESSION['usuarioId']);
     
@@ -47,8 +45,6 @@ if (isset($_POST['getUsuariosParaChat'])) {
     exit;
 }
 
-
-// Obtener mensajes con long polling
 if (isset($_POST['getMensajes'])) {
     $amigoId = $_POST['amigoId'] ?? null;
     $lastMessageId = $_POST['lastMessageId'] ?? 0;
@@ -58,28 +54,12 @@ if (isset($_POST['getMensajes'])) {
         exit;
     }
 
-    // Long polling para esperar nuevos mensajes hasta un tiempo máximo de 20 segundos
-    $start = time();
-    $timeout = 20;
+    $mensajes = $usuarioMensajeBusiness->getMensajes($_SESSION['usuarioId'], $amigoId, $lastMessageId);
 
-    while (time() - $start < $timeout) {
-        $mensajes = $usuarioMensajeBusiness->getMensajes($_SESSION['usuarioId'], $amigoId, $lastMessageId);
-
-        if (count($mensajes) > 0) {
-            echo json_encode($mensajes);
-            exit;
-        }
-
-        // Espera 1 segundo antes de volver a comprobar para reducir la carga del servidor
-        //usleep(100);
-    }
-
-    // Si no hay nuevos mensajes, responde con un array vacío
-    echo json_encode([]);
+    echo json_encode($mensajes ?: []);
     exit;
 }
 
-// Enviar mensaje
 if (isset($_POST['enviarMensaje'])) {
     $amigoId = $_POST['amigoId'] ?? null;
     $mensaje = $_POST['mensaje'] ?? '';
@@ -95,7 +75,6 @@ if (isset($_POST['enviarMensaje'])) {
     exit;
 }
 
-// Obtener detalles del usuario actual
 if (isset($_POST['getUsuarioDetalles'])) {
     $usuarioId = $_SESSION['usuarioId'];
     $usuarioDetalles = $usuarioMensajeBusiness->getUsuarioDetalles($usuarioId);
@@ -104,7 +83,6 @@ if (isset($_POST['getUsuarioDetalles'])) {
     exit;
 }
 
-// Cambiar la disponibilidad del usuario
 if (isset($_POST['actualizarDisponibilidad'])) {
     $estado = $_POST['estado'] ?? '';
 
@@ -118,4 +96,3 @@ if (isset($_POST['actualizarDisponibilidad'])) {
     echo json_encode(['success' => $resultado ? true : false, 'error' => $resultado ? null : 'No se pudo actualizar la disponibilidad']);
     exit;
 }
-
