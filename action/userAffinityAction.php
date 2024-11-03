@@ -17,6 +17,12 @@ if ($requestMethod === 'POST') {
 
     if (!empty($input['imageURL']) && isset($input['region'], $input['duration'], $input['zoomScale'])) {
         $imageURL = $input['imageURL'];
+
+        if (strpos($imageURL, 'http://localhost/LUV') !== false) {
+            $imageURL = str_replace('http://localhost/LUV', '', $imageURL);
+            $imageURL = '..' . $imageURL;
+        }
+
         $region = $input['region'];
         $duration = $input['duration'];
         $zoomScale = $input['zoomScale'];
@@ -102,7 +108,7 @@ if ($requestMethod === 'POST') {
         $criterios = [];
         $lineas = file($criteriosFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lineas as $linea) {
-            if (strpos($linea, "ImagenURL:$urlImagen") === 0) {
+            if (strpos($linea, "ImagenURL: $urlImagen") === 0) {
                 preg_match('/Region: (.*?) \| Criterio: (.*)/', $linea, $matches);
                 $regionesCriterios = explode(';', $matches[1]);
                 $criteriosLista = explode(',', $matches[2]);
@@ -298,7 +304,7 @@ function actualizarDatosDeImagen($lineaExistente, $imageURL, $region, $duration,
         if (file_exists($criteriosFile)) {
             $lineasCriterios = file($criteriosFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             foreach ($lineasCriterios as $linea) {
-                if (strpos($linea, "ImagenURL:$imageURL") === 0) {
+                if (strpos($linea, "ImagenURL: $imageURL") === 0) {
                     preg_match('/Criterio: (.*)/', $linea, $matchesCriterio);
                     $criterios = $matchesCriterio[1] ?? 'Sin criterio';
                     break;

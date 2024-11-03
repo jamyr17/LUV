@@ -319,10 +319,12 @@
         // Aplicar el evento 'submit' para validar el formulario de Actualizar
         if (formActualizar) {
             formActualizar.onsubmit = function() {
+                console.log('Formulario de actualizar enviado'); // Comprobar si se activa
                 return validateForm('formActualizar');
             };
         }
     })
+
 </script>
 
 </html>
