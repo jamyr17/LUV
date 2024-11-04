@@ -25,7 +25,7 @@ function registrarMensajeEnArchivo($usuarioId, $archivo, $mensaje, $usuarioMensa
     // Abre el archivo en modo de adición
     $file = fopen($rutaArchivo, "a");
     if ($file) {
-        fwrite($file, $mensaje . PHP_EOL); // Escribe el mensaje y agrega una nueva línea
+        fwrite($file, $mensaje . PHP_EOL); // Escribe el mensaje
         fclose($file);
         error_log("Escritura exitosa en: " . $rutaArchivo); // Agrega esta línea para confirmar
     } else {
@@ -43,7 +43,6 @@ if (isset($_POST['getAmigoDetalles'])) {
     $amigoDetalles = $usuarioMensajeBusiness->getUsuarioDetalles($amigoId);
     
     if ($amigoDetalles) {
-        // No necesitas modificar el valor; simplemente lo envías tal cual
         echo json_encode($amigoDetalles);
     } else {
         echo json_encode(['error' => 'Amigo no encontrado']);
@@ -54,14 +53,11 @@ if (isset($_POST['getAmigoDetalles'])) {
 if (isset($_POST['getUsuariosParaChat'])) {
     $usuarios = $usuarioMensajeBusiness->getUsuariosParaChat($_SESSION['usuarioId']);
     
-    // Asegúrate de incluir el campo de la imagen en la respuesta
     foreach ($usuarios as &$usuario) {
         if (empty($usuario['profilePic']) || !file_exists($_SERVER['DOCUMENT_ROOT'] . $usuario['profilePic'])) {
             $usuario['profilePic'] = $usuario['profilePic'];
-             // Ruta a tu imagen por defecto
         } else {
             $usuario['profilePic'] = '../resources/img/profile/no-pfp.png';
-             // Ajustar la ruta para que sea accesible desde el navegador
         }
     }
 
@@ -99,9 +95,14 @@ if (isset($_POST['enviarMensaje'])) {
     $resultado = $usuarioMensajeBusiness->enviarMensaje($_SESSION['usuarioId'], $amigoId, $mensaje, date("Y-m-d H:i:s"));
 
     if ($resultado) {
-        // Mensaje de registro para el archivo .dat del usuario que envía y el usuario que recibe
-        $mensajeEnviado = "Para {$amigoId}: {$mensaje}";
-        $mensajeRecibido = "De {$_SESSION['usuarioId']}: {$mensaje}";
+        // Obtener los nombres de usuario de la base de datos
+        $nombreUsuarioEmisor = $usuarioMensajeBusiness->getNombreUsuarioPorId($_SESSION['usuarioId']);
+        $nombreUsuarioReceptor = $usuarioMensajeBusiness->getNombreUsuarioPorId($amigoId);
+
+        // Formatear los mensajes con ID, nombre de usuario, fecha y hora
+        $horaActual = date("d/m/y, g:i A");
+        $mensajeEnviado = "1 - [{$horaActual}] Para (Usuario: {$nombreUsuarioReceptor}, ID: {$amigoId}): {$mensaje}";
+        $mensajeRecibido = "1 - [{$horaActual}] De (Usuario: {$nombreUsuarioEmisor}, ID: {$_SESSION['usuarioId']}): {$mensaje}";
 
         // Registrar el mensaje en el archivo de enviados del usuario que envía
         registrarMensajeEnArchivo($_SESSION['usuarioId'], "enviados", $mensajeEnviado, $usuarioMensajeBusiness);
@@ -123,16 +124,13 @@ if (isset($_POST['getUsuarioDetalles'])) {
 }
 
 function asegurarCarpetaUsuario($usuarioId, $usuarioMensajeBusiness) {
-    // Obtener el nombre de usuario de la base de datos
     $nombreUsuario = $usuarioMensajeBusiness->getNombreUsuarioPorId($usuarioId);
 
     if ($nombreUsuario) {
         $carpetaUsuario = "../resources/mensajes/" . strtolower(str_replace(' ', '-', $nombreUsuario));
 
         if (!file_exists($carpetaUsuario)) {
-            mkdir($carpetaUsuario, 0777, true); // Crea la carpeta si no existe
+            mkdir($carpetaUsuario, 0777, true);
         }
     }
 }
-
-
