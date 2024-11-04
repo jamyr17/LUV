@@ -22,7 +22,13 @@ if (isset($_POST['getAmigoDetalles'])) {
     }
     
     $amigoDetalles = $usuarioMensajeBusiness->getUsuarioDetalles($amigoId);
-    echo json_encode($amigoDetalles ?: ['error' => 'Amigo no encontrado']);
+    
+    if ($amigoDetalles) {
+        // No necesitas modificar el valor; simplemente lo envías tal cual
+        echo json_encode($amigoDetalles);
+    } else {
+        echo json_encode(['error' => 'Amigo no encontrado']);
+    }
     exit;
 }
 

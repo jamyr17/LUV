@@ -14,8 +14,8 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
         <div class="amigo-info">
             <img id="amigoImagen" class="profile-image" src="../resources/img/profile/no-pfp.png" alt="Imagen de perfil">
             <div class="chat-info">
-                <h2 id="amigoNombre">Nombre del Amigo</h2>
-                <span class="status" id="estado">Active now</span>
+                <h2 id="amigoNombre">.</h2>
+                <span class="status" id="estado">.</span>
             </div>
         </div>
     </div>
@@ -31,35 +31,51 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
         const usuarioId = <?php echo json_encode($_SESSION['usuarioId']); ?>;
         let lastMessageId = 0;
 
-        async function obtenerMensajes() {
-            try {
-                const response = await fetch('../action/usuarioMensajeAction.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `getMensajes=true&amigoId=${amigoId}&lastMessageId=${lastMessageId}`
-                });
+            function formatearFecha(fechaString) {
+        const fecha = new Date(fechaString);
+        const dia = fecha.getDate().toString().padStart(2, '0');
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const mes = meses[fecha.getMonth()];
 
-                const mensajes = await response.json();
-                if (mensajes.length > 0) {
-                    const chatBox = document.getElementById("chatBox");
-                    mensajes.forEach(mensaje => {
-                        const mensajeDiv = document.createElement("div");
-                        mensajeDiv.className = mensaje.tbusuariomensajeentradaid == usuarioId ? "mensaje mensajePropio" : "mensaje mensajeAmigo";
-                        mensajeDiv.innerHTML = `
-                            <span>${mensaje.tbusuariomensajedescripcion}</span>
-                            <small>${mensaje.tbusuariomensajefecha}</small>
-                        `;
-                        chatBox.appendChild(mensajeDiv);
-                    });
-                    lastMessageId = mensajes[mensajes.length - 1].tbusuariomensajeid;
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }
+        let horas = fecha.getHours();
+        const minutos = fecha.getMinutes().toString().padStart(2, '0');
+        const amPm = horas >= 12 ? 'PM' : 'AM';
+        horas = horas % 12 || 12; // Convierte la hora al formato 12 horas y muestra 12 en lugar de 0
 
-                setTimeout(obtenerMensajes, 3000);
-            } catch (error) {
-                console.error('Error al obtener mensajes:', error);
-            }
+        return `${dia} de ${mes}, ${horas}:${minutos} ${amPm}`;
+    }
+
+
+    async function obtenerMensajes() {
+    try {
+        const response = await fetch('../action/usuarioMensajeAction.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `getMensajes=true&amigoId=${amigoId}&lastMessageId=${lastMessageId}`
+        });
+
+        const mensajes = await response.json();
+        const chatBox = document.getElementById("chatBox");
+
+        if (mensajes.length > 0) {
+            mensajes.forEach(mensaje => {
+                const mensajeDiv = document.createElement("div");
+                mensajeDiv.className = mensaje.tbusuariomensajeentradaid == usuarioId ? "mensaje mensajePropio" : "mensaje mensajeAmigo";
+                const fechaFormateada = formatearFecha(mensaje.tbusuariomensajefecha);
+                mensajeDiv.innerHTML = `
+                    <span>${mensaje.tbusuariomensajedescripcion}</span>
+                    <small>${fechaFormateada}</small>
+                `;
+                chatBox.appendChild(mensajeDiv);
+            });
+            lastMessageId = mensajes[mensajes.length - 1].tbusuariomensajeid;
         }
+
+        setTimeout(obtenerMensajes, 3000);
+    } catch (error) {
+        console.error('Error al obtener mensajes:', error);
+    }
+}
 
         async function enviarMensaje() {
             const mensaje = document.getElementById("mensaje").value;
@@ -87,20 +103,22 @@ include_once '../action/sessionUserAction.php'; // Asegura que el usuario esté 
         });
 
         const amigoDetalles = await response.json();
+        console.log(amigoDetalles); // Para verificar la respuesta en la consola
 
         if (!amigoDetalles.error) {
             document.getElementById("amigoNombre").textContent = amigoDetalles.nombre;
             const imagenAmigo = amigoDetalles.imagen && amigoDetalles.imagen.trim() !== '' ? amigoDetalles.imagen : '../resources/img/profile/no-pfp.png';
-                document.getElementById("amigoImagen").src = imagenAmigo;
+            document.getElementById("amigoImagen").src = imagenAmigo;
 
+            // Usa el valor literal de la condición directamente
+            document.getElementById("estado").textContent = amigoDetalles.condicion;
         } else {
             console.error(amigoDetalles.error);
         }
-        } catch (error) {
-            console.error('Error al obtener detalles del amigo:', error);
-        }
-        }
-
+    } catch (error) {
+        console.error('Error al obtener detalles del amigo:', error);
+    }
+}
 
         function volver() {
             window.history.back();

@@ -24,7 +24,6 @@ class UsuarioMensajeData extends Data {
     return $mensajes;
 }
 
-
     public function enviarMensaje($usuarioId, $amigoId, $mensaje) {
       $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
       $conn->set_charset('utf8');
@@ -65,9 +64,6 @@ class UsuarioMensajeData extends Data {
     mysqli_close($conn);
     return $usuarios;
 }
-
-
-
 
   public function getUsuarioDetalles($usuarioId) {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);

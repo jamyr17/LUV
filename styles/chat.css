@@ -75,10 +75,11 @@ body {
     flex-grow: 1;
     padding: 20px;
     background-color: #fff0f1; /* Color de fondo más claro para los mensajes */
-    overflow-y: auto;
+    overflow-y: auto; /* Permitir desplazamiento vertical */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Mantener el orden normal */
     gap: 10px; /* Espacio entre mensajes */
+    height: 600px; /* Altura fija */
 }
 
 /* Mensajes */
@@ -93,16 +94,17 @@ body {
 }
 
 .mensajePropio {
-    background-color: #ff5a5f; /* Color de fondo para mensajes propios */
-    color: #ffffff; /* Texto blanco */
-    align-self: flex-end; /* Alinear a la derecha */
+    background-color: #ff5a5f; 
+    color: #ffffff; 
+    align-self: flex-end; 
 }
 
 .mensajeAmigo {
-    background-color: #ff3b30; /* Color de fondo para mensajes del amigo */
-    color: #ffffff; /* Texto blanco */
-    align-self: flex-start; /* Alinear a la izquierda */
+    background-color: #d79d9a; 
+    color: #ffffff; 
+    align-self: flex-start; 
 }
+
 
 /* Fecha de Mensajes */
 .mensaje small {
