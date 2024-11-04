@@ -27,4 +27,8 @@ class UsuarioMensajeBusiness {
     public function getUsuarioAmigoDetalles($amigoId){
         return $this->usuarioMensajeData->getUsuarioAmigoDetalles($amigoId);
     }   
+
+    public function getNombreUsuarioPorId($usuarioId){
+        return $this->usuarioMensajeData->getNombreUsuarioPorId($usuarioId);
+    }
 }

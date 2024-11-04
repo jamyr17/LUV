@@ -137,7 +137,27 @@ class UsuarioMensajeData extends Data {
       return $resultado;
   }
 
-  
+  public function getNombreUsuarioPorId($usuarioId) {
+    $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+    $conn->set_charset('utf8');
+
+    $query = "SELECT tbusuarionombre FROM tbusuario WHERE tbusuarioid = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $usuarioId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $nombreUsuario = null;
+
+    if ($row = $result->fetch_assoc()) {
+        $nombreUsuario = $row['tbusuarionombre'];
+    }
+
+    $stmt->close();
+    mysqli_close($conn);
+
+    return $nombreUsuario;
+}
+
     
 }
 ?>

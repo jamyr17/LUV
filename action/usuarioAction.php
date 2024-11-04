@@ -78,6 +78,7 @@ if(isset($_POST['newUser'])){
                         $result = $usuarioBusiness->insertTbUsuario($cedula, $primerNombre, $primerApellido, $nombreUsuario, $contrasena, $resultImagen);
 
                         if ($result == 1) {
+                            crearCarpetaMensajesUsuario($nombreUsuario); // Crea la carpeta de mensajes para el nuevo usuario
                             header("location: ../view/login.php?success=inserted");
                         } else {
                             guardarFormData();
@@ -98,4 +99,12 @@ if(isset($_POST['newUser'])){
 
     }
 
+}
+
+function crearCarpetaMensajesUsuario($nombreUsuario) {
+    $carpetaUsuario = "../resources/mensajes/" . strtolower(str_replace(' ', '-', $nombreUsuario));
+
+    if (!file_exists($carpetaUsuario)) {
+        mkdir($carpetaUsuario, 0777, true); // Crea la carpeta con permisos de lectura y escritura
+    }
 }

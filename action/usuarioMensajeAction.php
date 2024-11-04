@@ -12,7 +12,26 @@ if (!isset($_SESSION['usuarioId'])) {
 }
 
 include_once '../business/usuarioMensajeBusiness.php';
+
 $usuarioMensajeBusiness = new UsuarioMensajeBusiness();
+
+function registrarMensajeEnArchivo($usuarioId, $archivo, $mensaje, $usuarioMensajeBusiness) {
+    asegurarCarpetaUsuario($usuarioId, $usuarioMensajeBusiness);
+    $nombreUsuario = $usuarioMensajeBusiness->getNombreUsuarioPorId($usuarioId);
+    $rutaArchivo = "../resources/mensajes/" . strtolower(str_replace(' ', '-', $nombreUsuario)) . "/{$archivo}.dat";
+
+    error_log("Intentando escribir en: " . $rutaArchivo); // Agrega esta línea para depuración
+
+    // Abre el archivo en modo de adición
+    $file = fopen($rutaArchivo, "a");
+    if ($file) {
+        fwrite($file, $mensaje . PHP_EOL); // Escribe el mensaje y agrega una nueva línea
+        fclose($file);
+        error_log("Escritura exitosa en: " . $rutaArchivo); // Agrega esta línea para confirmar
+    } else {
+        error_log("Error al abrir el archivo: " . $rutaArchivo); // Agrega esta línea para depurar error
+    }
+}
 
 if (isset($_POST['getAmigoDetalles'])) {
     $amigoId = $_POST['amigoId'] ?? null;
@@ -66,6 +85,7 @@ if (isset($_POST['getMensajes'])) {
     exit;
 }
 
+// Modificación en la sección de enviarMensaje para guardar en .dat
 if (isset($_POST['enviarMensaje'])) {
     $amigoId = $_POST['amigoId'] ?? null;
     $mensaje = $_POST['mensaje'] ?? '';
@@ -75,7 +95,20 @@ if (isset($_POST['enviarMensaje'])) {
         exit;
     }
 
+    // Guardar el mensaje en la base de datos
     $resultado = $usuarioMensajeBusiness->enviarMensaje($_SESSION['usuarioId'], $amigoId, $mensaje, date("Y-m-d H:i:s"));
+
+    if ($resultado) {
+        // Mensaje de registro para el archivo .dat del usuario que envía y el usuario que recibe
+        $mensajeEnviado = "Para {$amigoId}: {$mensaje}";
+        $mensajeRecibido = "De {$_SESSION['usuarioId']}: {$mensaje}";
+
+        // Registrar el mensaje en el archivo de enviados del usuario que envía
+        registrarMensajeEnArchivo($_SESSION['usuarioId'], "enviados", $mensajeEnviado, $usuarioMensajeBusiness);
+
+        // Registrar el mensaje en el archivo de recibidos del usuario que recibe
+        registrarMensajeEnArchivo($amigoId, "recibidos", $mensajeRecibido, $usuarioMensajeBusiness);
+    }
 
     echo json_encode(['success' => $resultado ? true : false, 'error' => $resultado ? null : 'No se pudo enviar el mensaje']);
     exit;
@@ -89,16 +122,17 @@ if (isset($_POST['getUsuarioDetalles'])) {
     exit;
 }
 
-if (isset($_POST['actualizarDisponibilidad'])) {
-    $estado = $_POST['estado'] ?? '';
+function asegurarCarpetaUsuario($usuarioId, $usuarioMensajeBusiness) {
+    // Obtener el nombre de usuario de la base de datos
+    $nombreUsuario = $usuarioMensajeBusiness->getNombreUsuarioPorId($usuarioId);
 
-    if (empty($estado)) {
-        echo json_encode(['error' => 'Estado no proporcionado']);
-        exit;
+    if ($nombreUsuario) {
+        $carpetaUsuario = "../resources/mensajes/" . strtolower(str_replace(' ', '-', $nombreUsuario));
+
+        if (!file_exists($carpetaUsuario)) {
+            mkdir($carpetaUsuario, 0777, true); // Crea la carpeta si no existe
+        }
     }
-
-    $resultado = $usuarioMensajeBusiness->actualizarDisponibilidadUsuario($_SESSION['usuarioId'], $estado);
-
-    echo json_encode(['success' => $resultado ? true : false, 'error' => $resultado ? null : 'No se pudo actualizar la disponibilidad']);
-    exit;
 }
+
+
