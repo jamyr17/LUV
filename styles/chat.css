@@ -1,21 +1,22 @@
-/* Estilos Generales */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía moderna */
-    background-color: #f9f9f9; /* Color de fondo suave */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden; /* Evita el scroll innecesario */
 }
 
 /* Contenedor Principal */
 .container {
     width: 100%;
     max-width: 450px;
+    height: 70vh; /* Ajuste para el tamaño fijo del contenedor */
     background-color: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -73,13 +74,12 @@ body {
 /* Caja de Chat */
 #chatBox {
     flex-grow: 1;
-    padding: 20px;
-    background-color: #fff0f1; /* Color de fondo más claro para los mensajes */
-    overflow-y: auto; /* Permitir desplazamiento vertical */
+    padding: 15px;
+    background-color: #fff0f1;
+    overflow-y: auto;
     display: flex;
-    flex-direction: column; /* Mantener el orden normal */
-    gap: 10px; /* Espacio entre mensajes */
-    height: 600px; /* Altura fija */
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* Mensajes */
@@ -119,9 +119,9 @@ body {
 .message-input {
     display: flex;
     align-items: center;
-    padding: 15px;
-    background-color: #ffffff; /* Color de fondo blanco */
-    border-top: 1px solid #ffccbc; /* Línea divisoria suave */
+    padding: 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #ffccbc;
 }
 
 .message-input textarea {
