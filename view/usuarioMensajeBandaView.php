@@ -10,7 +10,7 @@
         <div class="chat-header">
             <div class="user-info">
                 <!-- Detalles del usuario en sesión -->
-                <img src="" alt="Imagen de perfil" class="profile-image" id="usuarioImagen">
+                <img id="usuarioImagen" class="profile-image" src="../resources/img/profile/no-pfp.png" alt="Imagen de perfil" >
                 <div>
                     <h1 id="usuarioNombre">Nombre del Usuario</h1>
                     <span class="status" id="usuarioCondicion">Active now</span>
@@ -41,24 +41,30 @@
         }
 
         // Obtener detalles del usuario en sesión
-        function cargarUsuarioDetalles() {
-            fetch('../action/usuarioMensajeAction.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'getUsuarioDetalles=true'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.error('Error:', data.error);
-                } else {
-                    document.getElementById("usuarioNombre").textContent = data.nombre;
-                    document.getElementById("usuarioImagen").src = data.imagen;
-                    document.getElementById("usuarioCondicion").textContent = data.condicion;
-                }
-            })
-            .catch(error => console.error('Error fetching user details:', error));
+        async function cargarUsuarioDetalles() {
+    try {
+        const response = await fetch('../action/usuarioMensajeAction.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'getUsuarioDetalles=true'
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (!data.error) {
+            document.getElementById("usuarioNombre").textContent = data.nombre;
+            const imagenUsuario = data.imagen && data.imagen.trim() !== '' ? data.imagen : '../resources/img/profile/no-pfp.png';
+            document.getElementById("usuarioImagen").src = imagenUsuario;
+            document.getElementById("usuarioCondicion").textContent = data.condicion;
+        } else {
+            console.error(data.error);
         }
+    } catch (error) {
+        console.error('Error al obtener detalles del usuario:', error);
+    }
+}
+
 
         cargarUsuarioDetalles();
 

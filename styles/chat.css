@@ -13,7 +13,7 @@ body {
 .container {
     width: 100%;
     max-width: 450px;
-    height: 70vh; /* Ajuste para el tamaño fijo del contenedor */
+    height: 100vh; /* Ajuste para el tamaño fijo del contenedor */
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -106,7 +106,6 @@ body {
 }
 
 
-/* Fecha de Mensajes */
 .mensaje small {
     display: block;
     font-size: 12px;
@@ -115,7 +114,42 @@ body {
     text-align: right;
 }
 
-/* Campo de Texto y Botón */
+
+.message-input button {
+    background-color: #ff5a5f;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.message-input button:hover {
+    background-color: #ff3b30;
+    transform: scale(1.05);
+}
+
+#contador {
+    font-size: 12px;
+    color: #999999;
+    padding: 5px 15px;
+    text-align: right;
+}
+
+#contador.low {
+    color: #ff7a7a; /* Rojo suave */
+}
+
+#contador.warning {
+    color: #ff5a5f; /* Rojo principal */
+}
+
 .message-input {
     display: flex;
     align-items: center;
@@ -123,6 +157,7 @@ body {
     background-color: #ffffff;
     border-top: 1px solid #ffccbc;
 }
+
 
 .message-input textarea {
     flex-grow: 1;
@@ -135,28 +170,6 @@ body {
     outline: none;
     transition: border-color 0.3s;
 }
-
 .message-input textarea:focus {
-    border-color: #ff3b30; /* Color de borde al enfocar */
-}
-
-.message-input button {
-    background-color: #ff5a5f; /* Color del botón */
-    color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    width: 50px; /* Tamaño del botón */
-    height: 50px;
-    cursor: pointer;
-    font-size: 20px;
-    margin-left: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s, transform 0.2s; /* Transiciones para hover */
-}
-
-.message-input button:hover {
-    background-color: #ff3b30; /* Color más oscuro al pasar el cursor */
-    transform: scale(1.05); /* Efecto de crecimiento */
+    border-color: #ff3b30;
 }

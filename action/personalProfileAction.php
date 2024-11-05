@@ -78,7 +78,7 @@ if (isset($_POST["registrar"])) {
 
         
             // Asegurarse de que los criterios y valores existan
-            foreach ($criteriosArray as $index => $criterioNombre) {
+         /*   foreach ($criteriosArray as $index => $criterioNombre) {
                 $valor = trim($valoresArray[$index]);
 
                 if($criterioBusiness->existeCriterio($criterioNombre)){
@@ -102,7 +102,7 @@ if (isset($_POST["registrar"])) {
                 }
 
             }
-        
+        */
         // Actualizar o insertar el perfil personal
         if ($personalProfileBusiness->profileExists($usuarioId)) {
             $personalProfileBusiness->updateTbPerfilPersonal($criterioParam, $valorParam, $areaConocimiento, $genero, $orientacionSexual, $universidad, $campus, $colectivosString, $usuarioId);

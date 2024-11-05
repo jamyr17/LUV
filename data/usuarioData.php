@@ -182,11 +182,13 @@ class UsuarioData extends Data
     public function getUsernamesByGenderAndOrientation($generos, $orientaciones){
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-
+        var_dump($generos);
+        var_dump($orientaciones);
+        
         // Crear placeholders para los géneros y orientaciones
         $generoPlaceholders = implode(',', array_fill(0, count($generos), '?'));
         $orientacionPlaceholders = implode(',', array_fill(0, count($orientaciones), '?'));
-
+         
         // Consulta SQL para buscar los usuarios que coincidan con el género y la orientación
         $query = "SELECT usuario.tbusuarionombre
                 FROM tbusuario usuario
