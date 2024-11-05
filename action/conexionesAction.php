@@ -3,6 +3,11 @@ include_once "../business/conexionesBusiness.php";
 $conexionesBusiness = new ConexionesBusiness();
 require_once '../business/usuarioBusiness.php';
 $usuarioBusiness = new UsuarioBusiness();
+require_once '../business/wantedProfileBusiness.php';
+$wantedProfileBusiness = new WantedProfileBusiness();
+require_once '../business/personalProfileBusiness.php';
+$personalProfileBusiness = new PersonalProfileBusiness();
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -21,64 +26,116 @@ if (isset($data['cargarPerfiles'])) {
 
     $generos = $usuarioBusiness->getTbAfinidadUsuarioGenero($usuarioId);
     $orientacionesSexuales = $usuarioBusiness->getTbAfinidadUsuarioOrientacionSexual($usuarioId);
-    var_dump($generos);
-    var_dump($orientacionesSexuales); 
 
-    //- Seleccionar todos los nombres de usuario desde la tbusuario que cumplan con las afinidades del punto anterior.
+    // Seleccionar todos los nombres de usuario con las afinidades de género y orientación
     $nombresUsuarioFiltrados = $usuarioBusiness->getUsernamesByGenderAndOrientation($generos, $orientacionesSexuales);
-    var_dump($nombresUsuarioFiltrados);
+
+    // Obtener los perfiles personales de los usuarios por nombre
+    $perfilesDeseadosPorNombreUsuario = $personalProfileBusiness->getPerfilesPersonalesPorNombres($nombresUsuarioFiltrados);
+
+    // Obtener los datos del perfil deseado del usuario
+    $perfilPersonal = $wantedProfileBusiness->perfilDeseadoByIdUsuario($usuarioId);
+
+    // Proceder a filtrar de las tablas personal y deseado para obtener únicamente los que cumplen con almenos un 30%
+    $criterios = $perfilPersonal[0]['criterio'];
+    $porcentajes = $perfilPersonal[0]['porcentaje'];
+
+    $perfilesFiltradosBD = filterAffinityProfilesFromDB($perfilesDeseadosPorNombreUsuario, $criterios, $porcentajes, $usuarioId);
+
+
 
     //2) Leer .dat:
-    //- Leer el .dat del usuario en sesión, recuperar todos los criterios y sus tiempos de duración.
-    //- Darle un porcentaje de afinidad a cada criterio usando el arreglo de duraciones y arreglo de criterios.
-    //- Leer cada .dat de los demás usuarios filtrados, hacer los mismo de recuperar todos los criterios y sus tiempos de duración.
-    //- Darle un porcentaje de afinidad a cada criterio de los demás usuarios.
-    //- Ordenar la lista según las coincidencias de las afinidades.
-
-}
-
-// METODO DE REFERENCIA
-if (isset($data['cargarPerfiles'])) {
-
-    $nombreUsuario = $_SESSION['nombreUsuario'];
-    $usuarioId = $usuarioBusiness->getIdByName($nombreUsuario);
     $ruta = '../resources/afinidadesUsuarios';
     $nombreArchivo = 'dataAfinidad.dat';
-    $carpetas = obtenerNombresDeCarpetasDesdeRuta($ruta);
-    $archivoPersonal = [];
-    $datosTotales = [];
+    $carpetasTotal = obtenerNombresDeCarpetasDesdeRuta($ruta);
+    $carpetas = [];
 
-    foreach ($carpetas as $carpeta) {
-        $resultadoArchivo = leerDatosDesdeArchivo($ruta . '/' . $carpeta . '/' . $nombreArchivo);
-        if (is_array($resultadoArchivo) && !isset($resultadoArchivo['success'])) {
-            $datosTotales[count($datosTotales)] = $resultadoArchivo;
+    $setCarpetas = array_flip($carpetasTotal); // Esto convierte $carpetasTotal en un array asociativo donde las claves son los nombres de las carpetas
+
+    foreach ($perfilesFiltradosBD as $perfil) {
+        if (isset($setCarpetas[$perfil['tbusuarionombre']])) {
+            $carpetas[] = $perfil['tbusuarionombre'];
         }
     }
 
+    $archivoPersonal = [];
+    $datosTotales = [];
+
+    //- Leer cada .dat de los demás usuarios filtrados, hacer los mismo de recuperar todos los criterios y sus tiempos de duración.
+    // Iterar a través de las carpetas y procesar los archivos
+    foreach ($carpetas as $carpeta) {
+        $resultadoArchivo = leerDatosDesdeArchivo($ruta . '/' . $carpeta . '/' . $nombreArchivo);
+        if (is_array($resultadoArchivo) && !isset($resultadoArchivo['success'])) {
+            // Procesar cada registro para calcular los porcentajes de duración
+            foreach ($resultadoArchivo as $indice => $registro) {
+                if (isset($registro['Duracion'])) {
+                    // Obtener el campo de Duracion (cadena separada por comas)
+                    $duraciones = $registro['Duracion'];
+                    //- Darle un porcentaje de afinidad a cada criterio de los demás usuarios.
+                    // Calcular los porcentajes de duración
+                    $porcentajesDuracion = calcularPorcentajesDeDuracion($duraciones);
+
+                    // Almacenar los porcentajes calculados en el registro
+                    $resultadoArchivo[$indice]['PorcentajesDuracion'] = $porcentajesDuracion;
+                }
+            }
+
+            // Agregar el resultado procesado a los datos totales
+            $datosTotales[] = $resultadoArchivo;  // Se utiliza [] en lugar de count() para agregar
+        }
+    }
+    //- Leer el .dat del usuario en sesión, recuperar todos los criterios y sus tiempos de duración.
     // Verificar si el archivo personal existe
-    $archivoPersonalPath = $ruta . '/' . $nombreUsuario . '/' .  $nombreArchivo;
+    $archivoPersonalPath = $ruta . '/' . $nombreUsuario . '/' . $nombreArchivo;
     if (file_exists($archivoPersonalPath)) {
+        // Leer los datos desde el archivo
         $arregloArchivoPersonal = leerDatosDesdeArchivo($archivoPersonalPath);
-        if (is_array($arregloArchivoPersonal) && !empty($arregloArchivoPersonal) && isset($arregloArchivoPersonal[0])) {
-            $archivoPersonal = $arregloArchivoPersonal[0];
+
+        // Verificar si los datos se han leído correctamente
+        if (is_array($arregloArchivoPersonal) && !empty($arregloArchivoPersonal)) {
+
+            // Iterar a través de todas las líneas del archivo personal
+            foreach ($arregloArchivoPersonal as $index => $archivoPersonal) {
+                // Verificar si el campo 'Duracion' existe en cada registro
+                if (isset($archivoPersonal['Duracion'])) {
+                    // Calcular los porcentajes de duración para cada registro
+                    //- Darle un porcentaje de afinidad a cada criterio usando el arreglo de duraciones y arreglo de criterios.
+                    $porcentajesDuracion = calcularPorcentajesDeDuracion($archivoPersonal['Duracion']);
+                    // Agregar los porcentajes calculados al registro
+                    $arregloArchivoPersonal[$index]['PorcentajesDuracion'] = $porcentajesDuracion;
+                } else {
+                    echo "No se encontró el campo 'Duracion' en el registro $index.";
+                    exit();
+                }
+            }
         } else {
             echo "No se encontraron registros o hubo un error al leer el archivo.";
             exit();
         }
     } else {
-        $arregloArchivoPersonal = ['error' => 'Archivo personal no encontrado'];
+        // Si el archivo no existe, mostrar un mensaje de error
+        echo "Archivo personal no encontrado.";
         exit();
     }
 
-    $criterio = $archivoPersonal['Criterio'] ?? null;
-    $afinidad = $archivoPersonal['Afinidad'] ?? null;
-    $genero = $archivoPersonal['Genero'] ?? null;
-    $orientacionSexual = $archivoPersonal['OrientacionSexual'] ?? null;
+    // Ahora vamos a iterar sobre todos los registros de $arregloArchivoPersonal
+    $perfilesFiltrados = [];
 
-    $profilingGenders = solicitudProfilingAlgorithm($genero, $orientacionSexual); // aquí obtengo los resultados de la solicitud del método que se encuentra en otro archivo
+    // Para cada fila en $arregloArchivoPersonal, se debe realizar un filtrado
+    foreach ($arregloArchivoPersonal as $archivoPersonal) {
+        // Obtener el criterio y los porcentajes de duración del archivo personal
+        $criterio = explode(',', $archivoPersonal['Criterio']) ?? null;
+        $porcentajesDuracion = $archivoPersonal['PorcentajesDuracion'] ?? null;
 
-    $perfilesFiltrados = filterAffinityProfiles($datosTotales, $criterio, $afinidad, $genero, $orientacionSexual, $profilingGenders, $usuarioId);
+        // Iterar sobre todas las filas de $datosTotales y comparar
+        foreach ($datosTotales as $resultadoArchivo) {
+            //- Ordenar la lista según las coincidencias de las afinidades.
+            $perfilesFiltrados[] = filterAffinityProfiles($resultadoArchivo, $criterio, $porcentajesDuracion, $usuarioId);
+        }
+    }
 
+    // Extraer los IDs de los perfiles filtrados
+    $ids = [];
     foreach ($perfilesFiltrados as $subArray) {
         foreach ($subArray as $item) {
             if (isset($item['UsuarioID'])) {
@@ -87,16 +144,20 @@ if (isset($data['cargarPerfiles'])) {
         }
     }
 
+    // Obtener los perfiles completos de la base de datos
     $perfilesUsuariosComplemento = $conexionesBusiness->getAllTbPerfilesPorID($ids);
 
+    // Unir los perfiles complementarios con los filtrados
     $_SESSION['perfiles'] = unirElementosEnArregloUnico($perfilesUsuariosComplemento, $perfilesFiltrados);
-
+    var_dump($_SESSION['perfiles']);
+    exit;
+    // Verificar si hay perfiles en la sesión
     if (empty($_SESSION['perfiles'])) {
         echo json_encode(['success' => false, 'message' => 'No hay perfiles que coincidan con los criterios']);
         exit();
     }
 
-    // Combinar los datos de perfiles
+    // Respuesta final
     echo json_encode([
         'success' => true
     ]);
@@ -104,42 +165,135 @@ if (isset($data['cargarPerfiles'])) {
     echo json_encode(['success' => false, 'message' => 'Parámetro no válido']);
 }
 
-// Se debe corregir este método
-function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeAfinidadParam, $generoParam, $orientacionSexualParam, $profilingGenders, $usuarioId)
+function calcularPorcentajesDeDuracion($duraciones)
+{
+    // Convertir las duraciones en un array de números
+    $duracionesArray = explode(',', $duraciones);
+    $duracionesArray = array_map('floatval', $duracionesArray); // Asegurarse de que todos los valores sean números
+
+    // Calcular el total de las duraciones
+    $totalDuracion = array_sum($duracionesArray);
+
+    // Si el total es 0, no se puede dividir, retornar un array vacío
+    if ($totalDuracion == 0) {
+        return [];
+    }
+
+    // Calcular el porcentaje de cada duración
+    $porcentajes = [];
+    foreach ($duracionesArray as $duracion) {
+        $porcentaje = ($duracion / $totalDuracion) * 100;
+        $porcentajes[] = round($porcentaje, 2); // Redondear a dos decimales
+    }
+
+    return $porcentajes;
+}
+
+
+function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeDuracionParam, $usuarioId)
 {
     // Validar que los parámetros no estén vacíos
-    if (empty($criterioParam) || empty($porcentajeAfinidadParam)) {
+    if (empty($criterioParam) || empty($porcentajeDuracionParam)) {
+        return []; // Retorna un array vacío si no hay criterios o afinidades
+    }
+
+    // Separar los criterios y porcentajes
+    $criterioDividido = $criterioParam;  // Separar los criterios
+    $porcentajeDividido = $porcentajeDuracionParam;  // Los porcentajes ya vienen como un array de floats
+
+    // Array para los perfiles filtrados
+    $perfilesFiltrados = [];
+
+    // Recorrer todos los perfiles
+    foreach ($allProfiles as $indicePerfil => $perfil) {
+        // Solo procesar perfiles que no sean del mismo usuario
+        if ($perfil['UsuarioID'] !== $usuarioId) {
+            // Inicializar 'ponderado' y 'coincidencias' si no existen
+            if (!isset($perfil['ponderado'])) {
+                $perfil['ponderado'] = 0;
+            }
+            if (!isset($perfil['coincidencias'])) {
+                $perfil['coincidencias'] = '';
+            }
+
+            // Obtener los criterios del perfil y dividirlos
+            $criteriosPerfil = explode(',', $perfil['Criterio']);  // 'Criterio' contiene los criterios del perfil
+
+            // Recorrer los criterios deseados
+            foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
+                foreach ($criteriosPerfil as $criterioPerfil) {
+                    // Comparar los criterios
+                    if (strtolower(trim($criterioDeseado)) === strtolower(trim($criterioPerfil))) {
+                        // Sumar el ponderado basado en el porcentaje
+                        $perfil['ponderado'] += (float)$porcentajeDividido[$indiceCriterioDeseado];
+
+                        // Registrar la coincidencia
+                        $perfil['coincidencias'] .= $criterioDeseado . ' [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
+                    }
+                }
+            }
+
+            // Almacenar el perfil procesado en el array de perfiles filtrados
+            $perfilesFiltrados[] = $perfil;
+        }
+    }
+
+    // Filtrar perfiles con un ponderado mayor al 30%
+    $perfilesFiltrados = array_filter($perfilesFiltrados, function ($perfil) {
+        return isset($perfil['ponderado']) && $perfil['ponderado'] > 30;
+    });
+
+    // Ordenar los perfiles por ponderado de mayor a menor
+    usort($perfilesFiltrados, function ($a, $b) {
+        return $b['ponderado'] <=> $a['ponderado'];
+    });
+
+    // Limitar los resultados a los primeros 20 perfiles con mayor ponderado
+    return array_slice($perfilesFiltrados, 0, 20);
+}
+
+
+function filterAffinityProfilesFromDB($allProfiles, $criterioParam, $porcentajeParam, $usuarioId)
+{
+    // Validar que los parámetros no estén vacíos
+    if (empty($criterioParam) || empty($porcentajeParam)) {
         return []; // Retorna un array vacío si no hay criterios
     }
 
-    $criterioDividido = explode(',', $criterioParam);
-    $porcentajeDividido = explode(',', $porcentajeAfinidadParam);
+    $criterioDividido = $criterioParam;
+    $porcentajeDividido = $porcentajeParam;
 
-    foreach ($allProfiles as $indicePerfil => $subarreglo) {
-        foreach ($subarreglo as $perfil) {
-            // Solo procesar perfiles que no sean del mismo usuario
-            if ($perfil['UsuarioID'] !== $usuarioId) {
+    // Encontramos el tamaño mínimo entre ambos arrays para evitar desbordamientos
+    $longitudMinima = min(count($criterioDividido), count($porcentajeDividido));
 
-                if ($perfil['Genero'] === $profilingGenders[0]['Genero'] && $perfil['OrientacionSexual'] === $profilingGenders[0]['Orientacion']) {
-                    // Inicializar 'ponderado' y 'coincidencias' si no existen
-                    if (!isset($allProfiles[$indicePerfil][0]['ponderado'])) {
-                        $allProfiles[$indicePerfil][0]['ponderado'] = 0;
-                    }
-                    if (!isset($allProfiles[$indicePerfil][0]['coincidencias'])) {
-                        $allProfiles[$indicePerfil][0]['coincidencias'] = '';
-                    }
+    foreach ($allProfiles as $indicePerfil => $perfil) {
+        // Solo procesar perfiles que no sean del mismo usuario
+        if ($perfil['tbusuarioid'] !== $usuarioId) {
+            // Inicializar 'ponderado' y 'coincidencias' si no existen
+            if (!isset($allProfiles[$indicePerfil]['ponderado'])) {
+                $allProfiles[$indicePerfil]['ponderado'] = 0;
+            }
+            if (!isset($allProfiles[$indicePerfil]['coincidencias'])) {
+                $allProfiles[$indicePerfil]['coincidencias'] = '';
+            }
 
-                    $criteriosPerfil = explode(',', $perfil['Criterio']); // Usar la clave correcta para criterio
+            // Accedemos al array 'criterio' dentro de la variable perfil y también al array 'valor'
+            $criteriosPerfil = $perfil['criterio'];  // 'criterio' es un array
 
-                    foreach ($criterioDividido as $indiceCriterioDeseado => $criterioDeseado) {
-                        foreach ($criteriosPerfil as $criterioPerfil) {
-                            // Comparar después de limpiar los valores
-                            if (strtolower(trim($criterioDeseado)) === strtolower(trim($criterioPerfil))) {
-                                // Asignar el ponderado
-                                $allProfiles[$indicePerfil][0]['ponderado'] += (float)$porcentajeDividido[$indiceCriterioDeseado];
-                                $allProfiles[$indicePerfil][0]['coincidencias'] .= $criterioDeseado . ' [' . $porcentajeDividido[$indiceCriterioDeseado] . '%], ';
-                            }
-                        }
+
+            for ($indiceCriterioDeseado = 0; $indiceCriterioDeseado < $longitudMinima; $indiceCriterioDeseado++) {
+                $criterioDeseado = $criterioDividido[$indiceCriterioDeseado];
+                $porcentaje = $porcentajeDividido[$indiceCriterioDeseado];
+
+                // Recorrer los criterios del perfil
+                foreach ($criteriosPerfil as $indiceCriterioPerfil => $criterioPerfil) {
+                    // Comparar después de limpiar los valores
+                    if (strtolower(trim($criterioDeseado)) === strtolower(trim($criterioPerfil))) {
+                        // Asignar el ponderado
+                        $allProfiles[$indicePerfil]['ponderado'] += (float)$porcentaje;
+
+                        // Agregar la coincidencia al campo 'coincidencias'
+                        $allProfiles[$indicePerfil]['coincidencias'] .= $criterioDeseado . ' [' . $porcentaje . '%], ';
                     }
                 }
             }
@@ -148,18 +302,17 @@ function filterAffinityProfiles($allProfiles, $criterioParam, $porcentajeAfinida
 
     // Filtrar los perfiles con un ponderado mayor al 30%
     $perfilesFiltrados = array_filter($allProfiles, function ($perfil) {
-        return isset($perfil[0]['ponderado']) && $perfil[0]['ponderado'] > 30;
+        return isset($perfil['ponderado']) && $perfil['ponderado'] > 30; // Asegurarse de que 'ponderado' existe
     });
 
     // Ordenar los perfiles filtrados de mayor a menor ponderado
     usort($perfilesFiltrados, function ($a, $b) {
-        return $b[0]['ponderado'] <=> $a[0]['ponderado'];
+        return $b['ponderado'] <=> $a['ponderado'];
     });
 
     // Limitar a los 20 perfiles con mayor ponderado
     return array_slice($perfilesFiltrados, 0, 20);
 }
-
 
 function leerDatosDesdeArchivo($nombreArchivo)
 {
@@ -171,13 +324,17 @@ function leerDatosDesdeArchivo($nombreArchivo)
     $resultados = []; // Array para almacenar todos los registros
 
     while (($linea = fgets($file)) !== false) {
-        $linea = trim($linea);
+        $linea = trim($linea); // Eliminar posibles saltos de línea y espacios
+
+        // Dividir la línea por el delimitador '|'
         $pares = explode('|', $linea);
         $datosDeArchivo = []; // Inicializar array para cada registro
 
+        // Procesar cada par clave: valor
         foreach ($pares as $par) {
+            // Si el par contiene ': ' (indicando un campo clave:valor)
             if (strpos($par, ': ') !== false) {
-                list($clave, $valor) = explode(': ', $par, 2);
+                list($clave, $valor) = explode(': ', $par, 2); // Dividir en clave y valor
                 $datosDeArchivo[trim($clave)] = trim($valor); // Almacenar en un array asociativo
             }
         }

@@ -2,7 +2,8 @@
 
 include_once 'data.php';
 
-class WantedProfileData extends Data{
+class WantedProfileData extends Data
+{
 
     public function insertTbPerfilDeseado($criterio, $valor, $porcentaje, $usuarioId)
     {
@@ -28,10 +29,11 @@ class WantedProfileData extends Data{
         return $resultInsert;
     }
 
-    public function getAllTbPerfiles() {
+    public function getAllTbPerfiles()
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
-    
+
         // Modifica la consulta para hacer un JOIN con las tablas necesarias
         $querySelect = "
             SELECT 
@@ -53,9 +55,9 @@ class WantedProfileData extends Data{
             WHERE 
                 p.tbperfilusuariopersonalestado = 1;
         ";
-    
+
         $result = mysqli_query($conn, $querySelect);
-    
+
         $profiles = [];
         while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             $profile = [
@@ -71,12 +73,13 @@ class WantedProfileData extends Data{
             ];
             array_push($profiles, $profile);
         }
-    
+
         mysqli_close($conn);
         return $profiles;
-    }    
+    }
 
-    public function profileExists($usuarioId) {
+    public function profileExists($usuarioId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -89,7 +92,8 @@ class WantedProfileData extends Data{
         return $exists;
     }
 
-    public function updateTbPerfilDeseado($criterio, $valor, $porcentaje, $usuarioId) {
+    public function updateTbPerfilDeseado($criterio, $valor, $porcentaje, $usuarioId)
+    {
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
         $conn->set_charset('utf8');
 
@@ -102,59 +106,55 @@ class WantedProfileData extends Data{
 
         return $resultUpdate;
     }
-    
-    public function perfilDeseadoByIdUsuario($usuarioId) {
+
+    public function perfilDeseadoByIdUsuario($usuarioId)
+    {
+
         $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
-    
+
         if (!$conn) {
             // Error de conexión a la base de datos
             header('HTTP/1.1 500 Internal Server Error');
             echo json_encode(['error' => 'Error de conexión a la base de datos']);
             exit();
         }
-    
+
         $conn->set_charset('utf8');
-    
+
         // Consulta parametrizada para evitar inyección SQL
-        $query = "SELECT tbperfilusuariodeseadocriterio, tbperfilusuariodeseadovalor 
+        $query = "SELECT tbperfilusuariodeseadocriterio, tbperfilusuariodeseadovalor, tbperfilusuariodeseadoporcentaje 
                   FROM tbperfilusuariodeseado 
                   WHERE tbusuarioid = ? AND tbperfilusuariodeseadoestado = 1";
-    
+
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, 'i', $usuarioId);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
-    
+
         $data = [];
-    
+
         while ($row = mysqli_fetch_assoc($result)) {
             $criterios = explode(',', $row['tbperfilusuariodeseadocriterio']);
             $valores = explode(',', $row['tbperfilusuariodeseadovalor']);
-    
-            for ($i = 0; $i < count($criterios); $i++) {
-                $data[] = [
-                    'criterio' => $criterios[$i],
-                    'valor' => $valores[$i] ?? null  // Manejar valores faltantes
-                ];
-            }
+            $porcentajes = explode(',', $row['tbperfilusuariodeseadoporcentaje']);
+
+            $data[] = [
+                'criterio' => $criterios,
+                'valor' => $valores ?? null,  // Manejar valores faltantes
+                'porcentaje' => $porcentajes
+            ];
         }
-    
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
-    
+
         // Verificar si hay datos
         if (empty($data)) {
             header('HTTP/1.1 404 Not Found');
             echo json_encode(['error' => 'No se encontraron datos para el usuario']);
             exit();
         }
-    
-        // Enviar los datos en formato JSON
-        header('Content-Type: application/json');
-        echo json_encode($data);
-        exit();
+
+        return $data;
     }
-    
-    
-    
 }

@@ -30,5 +30,8 @@ class WantedProfileBusiness{
         return $this->wantedProfileData->perfilDeseadoByIdUsuario($usuarioId);
     }
 
+    public function getPerfilesDeseadosPorNombres($nombresUsuario) {
+        return $this->wantedProfileData->getPerfilesDeseadosPorNombres($nombresUsuario);
+    }
 
 }

@@ -29,5 +29,9 @@ class PersonalProfileBusiness{
     public function puedeBuscarConexiones($usuarioId){
         return $this->personalProfileData->puedeBuscarConexiones($usuarioId);
     }
+
+    public function getPerfilesPersonalesPorNombres($nombresUsuario){
+        return $this->personalProfileData->getPerfilesPersonalesPorNombres($nombresUsuario);
+    }
     
 }

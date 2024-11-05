@@ -177,4 +177,97 @@ class PersonalProfileData extends Data
         echo json_encode($puedeBuscarConexiones);
         exit();
     }
+
+
+    public function getPerfilesPersonalesPorNombres($nombresUsuario)
+    {
+        // Validación de la entrada: si el array de nombres está vacío, devuelve un error.
+        if (empty($nombresUsuario)) {
+            header('HTTP/1.1 400 Bad Request');
+            echo json_encode(['error' => 'No se proporcionaron nombres de usuario']);
+            exit();
+        }
+
+        // Extraemos solo los nombres de usuario del array anidado
+        $nombresUsuario = array_column($nombresUsuario, 'tbusuarionombre');
+
+        $conn = mysqli_connect($this->server, $this->user, $this->password, $this->db);
+
+        if (!$conn) {
+            // Error de conexión a la base de datos
+            header('HTTP/1.1 500 Internal Server Error');
+            echo json_encode(['error' => 'Error de conexión a la base de datos']);
+            exit();  // Asegura que el script se detiene después de enviar la respuesta
+        }
+
+        $conn->set_charset('utf8');
+
+        // Crear placeholders para los nombres de usuario
+        $nombresStr = implode(',', array_fill(0, count($nombresUsuario), '?'));
+
+        // Consulta parametrizada para evitar inyección SQL
+        $query = "
+        SELECT 
+            p.tbperfilusuariopersonalid,
+            p.tbusuarioid, 
+            p.tbperfilusuariopersonalcriterio, 
+            p.tbperfilusuariopersonalvalor, 
+            p.tbareaconocimiento,
+            u.tbusuarionombre
+        FROM 
+            tbperfilusuariopersonal p
+        INNER JOIN
+            tbusuario u ON p.tbusuarioid = u.tbusuarioid
+        WHERE 
+            u.tbusuarionombre IN ($nombresStr) 
+        AND p.tbperfilusuariopersonalestado = 1
+    ";
+
+        // Preparar la consulta
+        $stmt = mysqli_prepare($conn, $query);
+        if (!$stmt) {
+            header('HTTP/1.1 500 Internal Server Error');
+            echo json_encode(['error' => 'Error en la preparación de la consulta']);
+            exit();
+        }
+
+        // Vincular los parámetros (todos son cadenas de texto)
+        $types = str_repeat('s', count($nombresUsuario)); // 's' para cada nombre
+        mysqli_stmt_bind_param($stmt, $types, ...$nombresUsuario);  // Usamos los valores del array como parámetros
+
+        // Ejecutar la consulta
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $data = [];
+
+        // Procesar los resultados
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Separar los criterios y valores
+            $criterios = explode(',', $row['tbperfilusuariopersonalcriterio']);
+            $valores = explode(',', $row['tbperfilusuariopersonalvalor']);
+
+            $data[] = [
+                'tbperfilusuariopersonalid'      => $row['tbperfilusuariopersonalid'],   // Nuevo campo
+                'tbusuarioid'                    => $row['tbusuarioid'],                 // Nuevo campo
+                'tbusuarionombre'                => $row['tbusuarionombre'],
+                'criterio'                       => $criterios,
+                'valor'                          => $valores ?? null,               // Manejar valores faltantes
+                'tbareaconocimiento'             => $row['tbareaconocimiento'],          // Nuevo campo
+            ];
+        }
+
+        // Cerrar la consulta y la conexión
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        // Verificar si hay datos
+        if (empty($data)) {
+            header('HTTP/1.1 404 Not Found');
+            echo json_encode(['error' => 'No se encontraron datos para los usuarios proporcionados']);
+            exit();
+        }
+
+        return $data;
+    }
 }
