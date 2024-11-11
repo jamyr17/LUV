@@ -97,11 +97,12 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 
         if (function_exists('imagewebp') && imagewebp($image, $destination, 100)) {
 
-            if($_SESSION['nombreUsuario'] != null){
+            if ($_SESSION['nombreUsuario'] != null) {
                 $nombreUsuario = $_SESSION['nombreUsuario'];
+            }else{
+                $nombreUsuario = $nombreArchivo;
             }
             
-            // Mover la creación de la carpeta aquí}
             $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreUsuario/";
             
             // Crear la carpeta si no existe

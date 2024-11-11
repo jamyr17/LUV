@@ -1,12 +1,4 @@
-ImagenURL: https://res.cloudinary.com/dwhwrxgud/image/upload/v1730401362/images/zyakkkawjsdxf3jhkjzg.jpg | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 132,101,120,101,70,8,46,70,132 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: http://localhost/LUV/resources/img/actividad/usuario.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 204,46,55,126,75,45,44,37,8 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: http://localhost/LUV/resources/img/actividad/foro-de-emprendedores.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 88,82,11,164,229,55,32,59,49 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: http://localhost/LUV/resources/img/actividad/escalada-de-muro.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 220,138,14,85,361,10,45,54,9 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: LUV/resources/img/actividad/usuario.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 48,33,12,28,80,0,21,27,36 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: LUV/resources/img/actividad/foro-de-emprendedores.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 145,0,0,64,172,0,11,147,51 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: LUV/resources/img/actividad/escalada-de-muro.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 0,88,0,0,53,47,0,0,22 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: ../resources/img/actividad/foro-de-emprendedores.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 56,71,26,82,27,30,146,154,34 | ZoomScale: 1,1,1,1,1,1,1,1,1 | Criterio: mesa de trabajo colaborativo,personas interactuando,iluminación creativa,materiales de oficina,notas y documentos,bebidas y café,elementos gráficos,interacción social,atmosfera dinámica
-ImagenURL: ../resources/img/actividad/usuario.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 17,94,64,122,26,103,142,33,197 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: ../resources/img/actividad/escalada-de-muro.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 37,13,38,17,155,357,8,95,128 | ZoomScale: 1,1,1,1,1,1,1,1,1              | Criterio: escaladores en muro de escalada,practicando deporte extremo,variación de colores en los bloques,posturas dinámicas,foco en la acción,iluminación adecuada para escalada,textura de la pared,elementos de seguridad,entorno de gimnasio
-ImagenURL: ../resources/img/actividad/kevin.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 0,137,16,145,40,93,40,18,164 | ZoomScale: 1,1,1,1,1,1,1,1,1
-ImagenURL: ../view/activitiesCalendarView.php? | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 0,0,0,36,42,25,35,26,2 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/actividad/kevin.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 556,116,0,0,129,78,0,49,129 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/actividad/act-hallowen.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 57,188,0,29,1,97,0,40,0 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/actividad/usuario.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 219,90,0,332,8,44,31,19,2 | ZoomScale: 1,1,1,1,1,1,1,1,1
+ImagenURL: ../resources/img/actividad/ba23.webp | Region: 1,1;1,2;1,3;2,1;2,2;2,3;3,1;3,2;3,3 | Duracion: 220,90,0,333,9,45,31,19,2 | ZoomScale: 1,1,1,1,1,1,1,1,1           | Criterio: Sin criterio
