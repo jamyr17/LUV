@@ -266,21 +266,18 @@ function obtenerArchivosDesdeRuta($ruta) {
 
     return $archivosDat;
 }
-
 function actualizarDatosDeImagen($lineaExistente, $imageURL, $region, $duration, $zoomScale) {
-    // Define el orden de las regiones
     $regionsOrder = ['1,1', '1,2', '1,3', '2,1', '2,2', '2,3', '3,1', '3,2', '3,3'];
-    $durations = array_fill(0, count($regionsOrder), 0);
-    $zoomScales = array_fill(0, count($regionsOrder), 1);
-    $criterios = ''; // Inicializar los criterios
+    $durations = array_fill(0, count($regionsOrder), 0); 
+    $zoomScales = array_fill(0, count($regionsOrder), 1); 
+    $criterios = '';
 
-    // Si la línea ya existe, recuperar datos previos
     if ($lineaExistente) {
         preg_match('/Region: (.*?) \| Duracion: (.*?) \| ZoomScale: (.*?)($|\| Criterio: (.*))/', $lineaExistente, $matches);
         $existingRegions = explode(';', $matches[1]);
         $existingDurations = explode(',', $matches[2]);
         $existingZoomScales = explode(',', $matches[3]);
-        $criterios = $matches[5] ?? '';  // Criterios previos si existen
+        $criterios = $matches[5] ?? ''; 
 
         foreach ($existingRegions as $index => $existingRegion) {
             $key = array_search($existingRegion, $regionsOrder);
@@ -291,14 +288,12 @@ function actualizarDatosDeImagen($lineaExistente, $imageURL, $region, $duration,
         }
     }
 
-    // Actualizar duración y zoom de la región actual
     $key = array_search($region, $regionsOrder);
     if ($key !== false) {
         $durations[$key] = $duration;
         $zoomScales[$key] = $zoomScale;
     }
 
-    // Verificar si ya hay criterios; si no, búscalos en criteriosImagenes.dat
     if (empty($criterios)) {
         $criteriosFile = '../resources/img/criteriosImagenes.dat';
         if (file_exists($criteriosFile)) {
@@ -313,9 +308,9 @@ function actualizarDatosDeImagen($lineaExistente, $imageURL, $region, $duration,
         }
     }
 
-    // Formatear y retornar la línea completa con los criterios si están disponibles
     return "ImagenURL: $imageURL | Region: " . implode(';', $regionsOrder) .
            " | Duracion: " . implode(',', $durations) .
            " | ZoomScale: " . implode(',', $zoomScales) .
-           ($criterios ? " | Criterio: $criterios" : "");  // Agregar criterios si existen
+           ($criterios ? " | Criterio: $criterios" : "");
 }
+
