@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (event.event.extendedProps.imagen) {
                     divImagen.innerHTML = 'Imagen actual <br/> <img id="imagenActual" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
-                    applyZoomAndSegmentation('imagenActual', event.event.extendedProps.imagen, divImagen);
+                    applyZoomAndSegmentation(divImagen, event.event.extendedProps.imagen);
                 }
             
                 var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         if (event.event.extendedProps.imagen) {
                             divImagen.innerHTML = '<img id="imagenRegistered" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
-                            applyZoomAndSegmentation('imagenRegistered', event.event.extendedProps.imagen);
+                            applyZoomAndSegmentation(divImagen, event.event.extendedProps.imagen);
                         }
 
                         if (parseInt(event.event.extendedProps.anonymn) !== 1) {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         if (event.event.extendedProps.imagen) {
                             divImagen.innerHTML = '<img id="imagenDetail" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
-                            applyZoomAndSegmentation('imagenDetail', event.event.extendedProps.imagen);
+                            applyZoomAndSegmentation(divImagen, event.event.extendedProps.imagen);
                         }
 
                         if (parseInt(event.event.extendedProps.anonymn) !== 1) {
@@ -173,11 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#actividadCrearModal').modal();
     });
 });
-function applyZoomAndSegmentation(imageId, imageURL) {
-    const image = document.getElementById(imageId);
+function applyZoomAndSegmentation(div, imageURL) {
     let activeRegion = null;
     let zoomScale = 1;
     let startTime = null;
+
+    // Verificamos que el div contenga una imagen
+    const image = div.querySelector('img');
 
     if (image) {
         image.addEventListener('wheel', (event) => {
@@ -190,13 +192,14 @@ function applyZoomAndSegmentation(imageId, imageURL) {
         });
 
         image.addEventListener('mousemove', (event) => {
-            const imageWidth = image.offsetWidth;
-            const imageHeight = image.offsetHeight;
-            const mouseX = event.offsetX;
-            const mouseY = event.offsetY;
+            const rect = image.getBoundingClientRect();  // Obtenemos el tamaño transformado
+            const imageWidth = rect.width;
+            const imageHeight = rect.height;
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
 
-            let regionX = Math.floor((mouseX / imageWidth) * 3) + 1;
-            let regionY = Math.floor((mouseY / imageHeight) * 3) + 1;
+            const regionX = Math.min(3, Math.max(1, Math.floor(mouseX / (imageWidth / 3)) + 1));
+            const regionY = Math.min(3, Math.max(1, Math.floor(mouseY / (imageHeight / 3)) + 1));
             const currentRegion = `${regionY},${regionX}`;
 
             if (currentRegion !== activeRegion) {
