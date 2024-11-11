@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
         eventClick: function(event) {
             console.log(event);
 
-            // Se debe validar que esto solo sea posible si el usuario que está logeado es el creador del evento, si no lo es, validar si es evento anonimo no y si no lo es se puede apuntar a la asistencia
-            if(validateLoggedUser(event.event.extendedProps.usuarioId)){
+            // Se debe validar que esto solo sea posible si el usuario que está logeado es el creador del evento, si no lo es, validar si es evento anonimo y si no lo es, puede apuntarse a la asistencia.
+            if (validateLoggedUser(event.event.extendedProps.usuarioId)) {
                 var inputIdActividad = document.getElementById('idActividad');
                 var inputTitulo = document.getElementById('titulo');
                 var inputDescripcion = document.getElementById('descripcion');
@@ -95,12 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 inputDireccion.value = event.event.extendedProps.direction;
                 inputAnonimo.checked = (parseInt(event.event.extendedProps.anonymn) === 1);
 
-                if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
-                    divImagen.innerHTML = 'Imagen actual <br/> <img id="imagenActual" src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
-                    applyZoomAndSegmentation('imagenActual',event.event.extendedProps.imagen);
+                if (event.event.extendedProps.imagen) {
+                    divImagen.innerHTML = 'Imagen actual <br/> <img id="imagenActual" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                    applyZoomAndSegmentation('imagenActual', event.event.extendedProps.imagen, divImagen);
                 }
             
-                // Manejar los colectivos seleccionados
                 var colectivosSeleccionados = event.event.extendedProps.colectivos || [];
                 for (var i = 0; i < inputColectivos.options.length; i++) {
                     var option = inputColectivos.options[i];
@@ -110,9 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showAttendanceList(event.event.id, 'listAttendanceDivOwner');
             
                 $("#actividadActualizarModalView").modal();
-            } // Si no es el creador del evento, debe ver los detalles y también si quiere apuntarse o no a la asistencia, además de ver los asistentes si no es anónimo el evento
-            else{
-
+            } else {
+                // Si no es el creador del evento, permitir ver detalles o apuntarse a la asistencia
                 askRegisteredAttendance(event.event.id).then(isRegistered => {
                     if (isRegistered) {
                         const detalleTitle = document.getElementById('activityTitleRegistered');
@@ -120,21 +118,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         const detalleFechaInicio = document.getElementById('activityStartDateRegistered');
                         const inputIdActividad = document.getElementById('idActividadDelAttendance');
                         const divImagen = document.getElementById('imagenRegistered');
-        
+
                         detalleTitle.innerHTML = '<h4><strong>' + event.event.title + '</strong></h4>';
                         detalleDireccion.innerHTML = event.event.extendedProps.direction;
                         detalleFechaInicio.innerHTML = event.event.start;
                         inputIdActividad.value = event.event.id;
 
-                        if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
-                            divImagen.innerHTML = '<img di="imagenRegistered" src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                        if (event.event.extendedProps.imagen) {
+                            divImagen.innerHTML = '<img id="imagenRegistered" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
                             applyZoomAndSegmentation('imagenRegistered', event.event.extendedProps.imagen);
                         }
 
                         if (parseInt(event.event.extendedProps.anonymn) !== 1) {
                             showAttendanceList(event.event.id, 'listAttendanceDivRegistered');
                         }
-        
+
                         $("#verDetallesActividadRegistered").modal();
                     } else {
                         const detalleTitle = document.getElementById('activityTitle');
@@ -142,21 +140,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         const detalleFechaInicio = document.getElementById('activityStartDate');
                         const inputIdActividad = document.getElementById('idActividadAttendance');
                         const divImagen = document.getElementById('imagenDetail');
-        
+
                         detalleTitle.innerHTML = '<h4><strong>' + event.event.title + '</strong></h4>';
                         detalleDireccion.innerHTML = event.event.extendedProps.direction;
                         detalleFechaInicio.innerHTML = event.event.start;
                         inputIdActividad.value = event.event.id;
 
-                        if(event.event.extendedProps.imagen!='' || event.event.extendedProps.imagen!=null){
-                            divImagen.innerHTML = '<img id="imagenDetail" src="' + event.event.extendedProps.imagen + '" alt="Imagen de "' +  event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
-                            applyZoomAndSegmentation('imagenDetail',event.event.extendedProps.imagen);
+                        if (event.event.extendedProps.imagen) {
+                            divImagen.innerHTML = '<img id="imagenDetail" src="' + event.event.extendedProps.imagen + '" alt="Imagen de ' + event.event.title + '" style="width: 100%; max-width: 200px; height: auto; object-fit: cover; display: block; margin: 10px auto; border-radius: 5px;"/>';
+                            applyZoomAndSegmentation('imagenDetail', event.event.extendedProps.imagen);
                         }
 
                         if (parseInt(event.event.extendedProps.anonymn) !== 1) {
                             showAttendanceList(event.event.id, 'listAttendanceDivDetails');
                         }
-                        
+
                         $("#verDetallesActividad").modal();
                     }
                 }).catch(error => {
@@ -175,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#actividadCrearModal').modal();
     });
 });
-// Función para aplicar zoom y segmentación en una imagen específica
 function applyZoomAndSegmentation(imageId, imageURL) {
     const image = document.getElementById(imageId);
     let activeRegion = null;
@@ -183,60 +180,64 @@ function applyZoomAndSegmentation(imageId, imageURL) {
     let startTime = null;
 
     if (image) {
-        // Funcionalidad de zoom
         image.addEventListener('wheel', (event) => {
             event.preventDefault();
             const zoomFactor = 0.1;
             zoomScale += event.deltaY < 0 ? zoomFactor : -zoomFactor;
-            zoomScale = Math.max(1, zoomScale); // No permitir menos de 1x zoom
+            zoomScale = Math.max(1, zoomScale);
             image.style.transform = `scale(${zoomScale})`;
+            console.log(`Zoom actualizado: ${zoomScale}x`);
         });
 
-        // Divide la imagen en una cuadrícula de 3x3 y rastrea las regiones
         image.addEventListener('mousemove', (event) => {
             const imageWidth = image.offsetWidth;
             const imageHeight = image.offsetHeight;
             const mouseX = event.offsetX;
             const mouseY = event.offsetY;
 
-            let regionX = Math.floor(mouseX / (imageWidth / 3));
-            let regionY = Math.floor(mouseY / (imageHeight / 3));
-            let currentRegion = `${regionX}-${regionY}`;
+            let regionX = Math.floor((mouseX / imageWidth) * 3) + 1;
+            let regionY = Math.floor((mouseY / imageHeight) * 3) + 1;
+            const currentRegion = `${regionY},${regionX}`;
 
             if (currentRegion !== activeRegion) {
-                // Si ya estaba en una región, calcular el tiempo de permanencia
-                if (activeRegion && startTime) {
+                if (activeRegion !== null && startTime) {
                     const duration = Date.now() - startTime;
                     enviarDatosSegmentacion(activeRegion, duration, zoomScale, imageURL);
+                    console.log(`Saliendo de la región ${activeRegion} después de ${duration}ms`);
                 }
-                // Cambiar a la nueva región y reiniciar el tiempo
                 activeRegion = currentRegion;
                 startTime = Date.now();
-                console.log(`Se movió a la región: ${activeRegion}`);
+                console.log(`Entrando en la región ${activeRegion}`);
             }
+        });
+
+        image.addEventListener('mouseleave', () => {
+            if (activeRegion !== null && startTime) {
+                const duration = Date.now() - startTime;
+                enviarDatosSegmentacion(activeRegion, duration, zoomScale, imageURL);
+                console.log(`Saliendo de la imagen. Última región: ${activeRegion}, Duración: ${duration}ms`);
+            }
+            activeRegion = null;
+            startTime = null;
         });
     }
 }
 
-// Función para enviar datos de segmentación al backend
 function enviarDatosSegmentacion(region, duration, zoomScale, imageURL) {
-    console.log(`Saliendo de la región ${region} después de ${duration}ms con zoom de ${zoomScale}x`);
-    
     fetch('../action/userAffinityAction.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             region: region,
-            duration: duration,
-            zoomScale: zoomScale,
-            imageURL: imageURL // Enviando la URL de la imagen
+            duration: duration.toString(),
+            zoomScale: zoomScale.toString(),
+            imageURL: imageURL
         })
     })
     .then(response => response.json())
-    .then(data => console.log('Datos de segmentación enviados:', data))
+    .then(data => console.log('Datos enviados:', data))
     .catch(error => console.error('Error al enviar datos de segmentación:', error));
 }
-
 
 
 // El formato de las fechas en el objeto se guardan de una forma que es necesaria reformatear
