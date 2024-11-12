@@ -36,9 +36,10 @@
               $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
               $_GET['error'] == "exist" => "que dicha actividad ya existe.",
               $_GET['error'] == "alike" => "que el título es muy similar a uno ya existente.",
-              $_GET['error'] == "nameTooLong" => "que el título es demasiado largo, el límite es de 63 caracteres.",
+              $_GET['error'] == "titleTooLong" => "que el título es demasiado largo, el límite es de 63 caracteres.",
               $_GET['error'] == "descriptionTooLong" => "que la descripción es demasiado larga, el límite es de 255 caracteres.",
               $_GET['error'] == "directionTooLong" => "que la dirección es demasiado larga, el límite es de 255 caracteres.",
+              $_GET['error'] == "invalidDates" => "la fecha y hora de inicio debe ser antes que la fecha y hora de fin.",
               default => "un problema inesperado.",
             };
           } else if (isset($_GET['success'])) {
@@ -61,7 +62,7 @@
         <h3>Agregar una nueva actividad</h3>
         <p class="text-muted">Complete el formulario para añadir una nueva actividad</p>
 
-        <form id="formCrear" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;" enctype="multipart/form-data">
+        <form id="formCrear" method="post" action="../action/actividadAction.php" style="width: 50vw; min-width:300px;" enctype="multipart/form-data" onsubmit="validateForm(event)">
             
             <label for="titulo" class="form-label">Título: </label>
             <?php generarCampoTexto('titulo', 'formCrearData', 'Nombre de la actividad', '') ?><br>
@@ -111,7 +112,7 @@
                 ?>
             </select><br>
 
-        <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
+            <button type="submit" class="btn btn-success" name="create" id="create">Crear</button>
         </form>
     </div>
 
@@ -143,7 +144,7 @@
             if ($actividades != null) {
                 foreach ($actividades as $actividad) {
                 echo '<tr>';
-                echo '<form id="formActualizar" method="post" enctype="multipart/form-data" action="../action/actividadAction.php" onsubmit="return validateForm()">';
+                echo '<form id="formActualizar" method="post" enctype="multipart/form-data" action="../action/actividadAction.php" onsubmit="validateForm(event)">';
                 echo '<input type="hidden" name="idActividad" value="' . htmlspecialchars($actividad->getTbActividadId()) . '">';
                 echo '<td>' . htmlspecialchars($actividad->getTbActividadId()) . '</td>';
                 echo '<td><input type="text" class="form-control" name="titulo" id="titulo" value="' . $actividad->getTbActividadTitulo() . '"></td>';

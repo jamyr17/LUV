@@ -43,9 +43,10 @@
               $_GET['error'] == "dbError" => "un problema al procesar la transacción.",
               $_GET['error'] == "exist" => "que dicha actividad ya existe.",
               $_GET['error'] == "alike" => "que el título es muy similar a uno ya existente.",
-              $_GET['error'] == "nameTooLong" => "que el título es demasiado largo, el límite es de 63 caracteres.",
+              $_GET['error'] == "titleTooLong" => "que el título es demasiado largo, el límite es de 63 caracteres.",
               $_GET['error'] == "descriptionTooLong" => "que la descripción es demasiado larga, el límite es de 255 caracteres.",
               $_GET['error'] == "directionTooLong" => "que la dirección es demasiado larga, el límite es de 255 caracteres.",
+              $_GET['error'] == "invalidDates" => "la fecha y hora de inicio debe ser antes que la fecha y hora de fin.",
               default => "un problema inesperado.",
             };
           } else if (isset($_GET['success'])) {
