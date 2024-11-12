@@ -130,10 +130,7 @@ function obtenerCriteriosCloud($respuestaIA) {
     
     $decodedRespuesta = json_decode($jsonLimpio, true);
     
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log("Error de JSON en obtenerCriteriosCloud: " . json_last_error_msg() . " | Respuesta IA: " . $respuestaIA . "\n", 3, 'debug.log');
-        return "Error: JSON no válido recibido en obtenerCriteriosCloud";
-    }
+    //error_log("Error de JSON en obtenerCriteriosCloud: " . json_last_error_msg() . " | Respuesta IA: " . $respuestaIA . "\n", 3, 'debug.log');
 
     $regiones = [];
     $criteriosTextos = [];
@@ -146,9 +143,7 @@ function obtenerCriteriosCloud($respuestaIA) {
             $region = "$fila,$columna";
             $regiones[] = $region;
             $criteriosTextos[] = $criterio;
-        } else {
-            error_log("Error: formato de coordenadas incorrecto en JSON: " . print_r($elemento, true) . "\n", 3, 'debug.log');
-            return "Error: formato de coordenadas incorrecto en JSON";
+            //error_log("Error: formato de coordenadas incorrecto en JSON: " . print_r($elemento, true) . "\n", 3, 'debug.log');
         }
     }
     
@@ -161,7 +156,7 @@ function procesarImagenIA($urlImagen) {
 
     $token = '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'; // Tu API Key
     $assistantId = 'asst_rOXHd5T7DSbsnK0Nj4BEDF3Y';
-    $threadId = 'thread_gtVSrGwYdsv4A2xdBVCEvxsH';
+    $threadId = 'thread_qG3SdUtAMy3Ovzcbj1gN9o5Q';
 
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
 
@@ -177,7 +172,7 @@ function procesarImagenIA($urlImagen) {
 
     $runId = $run['id'];
     $runCompletado = false;
-    $maxRetries = 10;
+    $maxRetries = 20;
     for ($i = 0; $i < $maxRetries; $i++) {
         $runStatus = verificarEstadoRun($threadId, $runId, $token);
 

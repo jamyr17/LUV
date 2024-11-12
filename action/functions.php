@@ -99,11 +99,11 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 
             if ($_SESSION['nombreUsuario'] != null) {
                 $nombreUsuario = $_SESSION['nombreUsuario'];
+                $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreUsuario/";
             }else{
-                $nombreUsuario = $nombreArchivo;
+                $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreArchivo/";
             }
             
-            $rutaDirectorioUsuario = "../resources/afinidadesUsuarios/$nombreUsuario/";
             
             // Crear la carpeta si no existe
             if (!is_dir($rutaDirectorioUsuario)) {
@@ -116,16 +116,19 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
 
             $urlImagenCloudinary = subirImagenACloudinary($fileTmpPath, $nombreArchivo);
             if (!$urlImagenCloudinary) {
+                echo "Cloudinary problem\n";
                 return false;
             }
 
             $criteriosIA = procesarImagenIA($urlImagenCloudinary);
             if (!$criteriosIA) {
+                echo "Ia problem\n";
                 return false;
             }
 
             $criterios = obtenerCriteriosCloud($criteriosIA);
             if (empty($criterios)) {
+                echo "vacio problem\n";
                 return false;
             }
 
@@ -144,8 +147,7 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
             $lineaDatos = "ImagenURL: $destination ";
             $lineaDatos .= "| Duracion: " . implode(',', $segmentacionPredeterminada['Duracion']);
             $lineaDatos .= " | ZoomScale: " . implode(',', $segmentacionPredeterminada['ZoomScale']);
-            $lineaDatos .= " | Region: " . implode(';', $segmentacionPredeterminada['Region']);
-            $lineaDatos .= " | Criterio: $criterios\n";  // Añade los criterios obtenidos
+            $lineaDatos .= " | $criterios\n";  // Añade los criterios obtenidos
 
             // Agregar los datos actuales al archivo del usuario
             file_put_contents($archivoDatos, $lineaDatos, FILE_APPEND | LOCK_EX);
