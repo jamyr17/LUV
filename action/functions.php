@@ -121,44 +121,42 @@ function procesarImagen($nombreVariableForm, $directorio, $nombreArchivo)
             }
 
             $criteriosIA = procesarImagenIA($urlImagenCloudinary);
+            file_put_contents('debug.log', "Criterios IA respuesta: " . print_r($criteriosIA, true) . "\n", FILE_APPEND);
+            
             if (!$criteriosIA) {
-                echo "Ia problem\n";
+                file_put_contents('debug.log', "Error: Criterios IA no generados correctamente.\n", FILE_APPEND);
                 return false;
             }
-
+            
             $criterios = obtenerCriteriosCloud($criteriosIA);
+            file_put_contents('debug.log', "Criterios obtenidos tras procesamiento: " . print_r($criterios, true) . "\n", FILE_APPEND);
+            
             if (empty($criterios)) {
-                echo "vacio problem\n";
+                file_put_contents('debug.log', "Error: Criterios vacíos después de obtenerCriteriosCloud.\n", FILE_APPEND);
                 return false;
             }
+            
 
-            // Crear archivo con la ruta de la carpeta del usuario
             $archivoDatos = $rutaDirectorioUsuario . "dataAfinidad.dat";
 
-
-            // Crear una estructura predeterminada para una segmentación 3x3
             $segmentacionPredeterminada = [
                 'Region' => ['1,1', '1,2', '1,3', '2,1', '2,2', '2,3', '3,1', '3,2', '3,3'],
-                'Duracion' => array_fill(0, 9, 0),  // Duraciones iniciales en 0
-                'ZoomScale' => array_fill(0, 9, 1)  // Escala de zoom inicial en 1
+                'Duracion' => array_fill(0, 9, 0),
+                'ZoomScale' => array_fill(0, 9, 1)
             ];
 
-            // Crear la línea de datos en el formato solicitado
             $lineaDatos = "ImagenURL: $destination ";
             $lineaDatos .= "| Duracion: " . implode(',', $segmentacionPredeterminada['Duracion']);
             $lineaDatos .= " | ZoomScale: " . implode(',', $segmentacionPredeterminada['ZoomScale']);
-            $lineaDatos .= " | $criterios\n";  // Añade los criterios obtenidos
+            $lineaDatos .= " | $criterios\n";
 
-            // Agregar los datos actuales al archivo del usuario
             file_put_contents($archivoDatos, $lineaDatos, FILE_APPEND | LOCK_EX);
 
             $archivoDatosImagenes = "../resources/img/criteriosImagenes.dat";
             if (!file_exists($archivoDatosImagenes)) {
-                touch($archivoDatosImagenes); // Crear archivo si no existe
+                touch($archivoDatosImagenes);
             }
-            file_put_contents($archivoDatosImagenes, "ImagenURL: $destination " . " | " . $criterios . PHP_EOL, FILE_APPEND);
-
-                        
+            file_put_contents($archivoDatosImagenes, "ImagenURL: $destination | $criterios\n", FILE_APPEND);
 
             imagedestroy($image);
             return $destination;

@@ -93,6 +93,7 @@ function verificarEstadoRun($threadId, $runId, $token) {
     }
     curl_close($ch);
 
+    // Decodificar la respuesta
     return json_decode($response, true);
 }
 
@@ -105,10 +106,12 @@ function obtenerMensajesDelThread($threadId, $token) {
         'OpenAI-Beta: assistants=v2'
     ];
 
+    // Inicializar cURL para obtener los mensajes del thread
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+    // Ejecutar la solicitud
     $response = curl_exec($ch);
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
@@ -117,62 +120,74 @@ function obtenerMensajesDelThread($threadId, $token) {
     }
     curl_close($ch);
 
+    // Decodificar la respuesta
     return json_decode($response, true);
 }
 
 function obtenerCriteriosCloud($respuestaIA) {
-    // Extrae el bloque JSON delimitado dentro de ```json ... ```
-    preg_match('/```json(.*?)```/s', $respuestaIA, $matches);
-    $jsonLimpio = isset($matches[1]) ? trim($matches[1]) : $respuestaIA;
-    
-    // Quita cualquier carácter extraño fuera del JSON
-    $jsonLimpio = preg_replace('/[^[:print:]]/', '', $jsonLimpio);
-    
-    $decodedRespuesta = json_decode($jsonLimpio, true);
-    
-    //error_log("Error de JSON en obtenerCriteriosCloud: " . json_last_error_msg() . " | Respuesta IA: " . $respuestaIA . "\n", 3, 'debug.log');
+    // Convert single quotes to double quotes for JSON decoding
+    $respuestaLimpia = str_replace("'", '"', $respuestaIA);
+    file_put_contents('debug.log', "Respuesta IA corregida: " . $respuestaLimpia . "\n", FILE_APPEND);
 
+    // Decode the modified JSON
+    $decodedRespuesta = json_decode($respuestaLimpia, true);
+
+    // Check for JSON errors and ensure the decoded response is an array
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decodedRespuesta)) {
+        file_put_contents('debug.log', "Error al decodificar JSON en obtenerCriteriosCloud: " . json_last_error_msg() . "\n", FILE_APPEND);
+        return "Error: JSON no válido recibido en obtenerCriteriosCloud.";
+    }
+
+    // Process the JSON response to extract criteria
     $regiones = [];
     $criteriosTextos = [];
 
-    foreach ($decodedRespuesta['segments'] as $elemento) {
-        if (isset($elemento['coordinates']) && is_array($elemento['coordinates']) && count($elemento['coordinates']) >= 2) {
+    foreach ($decodedRespuesta as $elemento) {
+        // Ensure coordinates and criterion are correctly formatted
+        if (isset($elemento['coordinates']) && is_array($elemento['coordinates']) && count($elemento['coordinates']) === 2) {
             $fila = $elemento['coordinates'][0];
             $columna = $elemento['coordinates'][1];
-            $criterio = $elemento['criterion'] ?? "Sin criterio";
+            $criterio = isset($elemento['criterion']) ? $elemento['criterion'] : "Sin criterio";
+
+            // Create the region from coordinates
             $region = "$fila,$columna";
             $regiones[] = $region;
             $criteriosTextos[] = $criterio;
-            //error_log("Error: formato de coordenadas incorrecto en JSON: " . print_r($elemento, true) . "\n", 3, 'debug.log');
+        } else {
+            file_put_contents('debug.log', "Formato de coordenadas incorrecto en JSON.\n", FILE_APPEND);
+            return "Error: formato de coordenadas incorrecto en JSON.";
         }
     }
-    
-    return "Region: " . implode(";", $regiones) . " | Criterio: " . implode(",", $criteriosTextos);
-}
 
+    // Format the final line
+    $lineaArchivo = "Region: " . implode(";", $regiones) . " | Criterio: " . implode(", ", $criteriosTextos);
+    return $lineaArchivo;
+}
 
 
 function procesarImagenIA($urlImagen) {
 
     $token = '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'; // Tu API Key
     $assistantId = 'asst_rOXHd5T7DSbsnK0Nj4BEDF3Y';
-    $threadId = 'thread_qG3SdUtAMy3Ovzcbj1gN9o5Q';
+    $threadId = 'thread_DaKAQ0wT2sRa4efH8yXM1rW6';
 
     $mensaje = enviarMensaje($urlImagen, $token, $threadId);
 
     if (!isset($mensaje['id'])) {
+       // file_put_contents('debug.log', "Error: No se pudo enviar el mensaje.\n", FILE_APPEND);
         return json_encode(["error" => "No se pudo enviar el mensaje"]);
     }
 
     $run = crearRun($threadId, $assistantId, $token);
 
     if (!isset($run['id'])) {
+       // file_put_contents('debug.log', "Error: No se pudo crear el run.\n", FILE_APPEND);
         return json_encode(["error" => "No se pudo crear el run"]);
     }
 
     $runId = $run['id'];
     $runCompletado = false;
-    $maxRetries = 20;
+    $maxRetries = 10;
     for ($i = 0; $i < $maxRetries; $i++) {
         $runStatus = verificarEstadoRun($threadId, $runId, $token);
 
@@ -184,11 +199,13 @@ function procesarImagenIA($urlImagen) {
     }
 
     if (!$runCompletado) {
+        //file_put_contents('debug.log', "Error: El run no se completó.\n", FILE_APPEND);
         return json_encode(["error" => "El run no se completó"]);
     }
 
     $mensajes = obtenerMensajesDelThread($threadId, $token);
     if (!$mensajes) {
+       // file_put_contents('debug.log', "Error: No se encontraron mensajes.\n", FILE_APPEND);
         return json_encode(["error" => "No se encontraron mensajes"]);
     }
 
@@ -203,6 +220,7 @@ function procesarImagenIA($urlImagen) {
         }
     }
 
+    //file_put_contents('debug.log', "Error: El contenido del mensaje está vacío o en un formato inesperado.\n", FILE_APPEND);
     return json_encode(["error" => "Contenido de mensaje vacío o inesperado"]);
 }
 

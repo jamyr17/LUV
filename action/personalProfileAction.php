@@ -7,6 +7,7 @@ include_once '../business/valorBusiness.php';
 include_once '../util/postRequest.php';
 
 require_once '../data/userAffinityData.php';
+require_once 'gestionArchivosIAAction.php';
 $userAffinityData = new UserAffinityData();
 
 
@@ -89,7 +90,7 @@ if (isset($_POST["registrar"])) {
 
                 }else{
 
-                    $data = obtenerDatosIA($criterioNombre);
+                    $data = obtenerDatosIAArchivo($criterioNombre);
  
                     if ($data) {
                         createDataFile($criterioNombre, $data);  // Guardar los datos en un archivo .dat.
