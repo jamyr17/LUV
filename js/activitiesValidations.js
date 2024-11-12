@@ -89,15 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fechaInicioInput.value = valueFechaInicio;
     }
 
-    function updateDisplayedFechaInicio() {
-        const selectedDate = new Date(fechaInicioInput.value);
-        const day = String(selectedDate.getDate()).padStart(2, '0');
-        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-        const year = selectedDate.getFullYear();
-        document.getElementById('fechaInicioMostrar').textContent = `${day}/${month}/${year}`;
-    }
-
-    updateDisplayedFechaInicio();
     fechaInicioInput.addEventListener('input', updateDisplayedFechaInicio);
 
     // Manejo de fecha de final
@@ -110,16 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (valueFechaTermina !== null && valueFechaTermina !== "") {
         fechaTerminaInput.value = valueFechaTermina;
     }
-
-    function updateDisplayedFechaTermina() {
-        const selectedDate = new Date(fechaTerminaInput.value);
-        const day = String(selectedDate.getDate()).padStart(2, '0');
-        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-        const year = selectedDate.getFullYear();
-        document.getElementById('fechaTerminaMostrar').textContent = `${day}/${month}/${year}`;
-    }
-
-    updateDisplayedFechaTermina();
+    
     fechaTerminaInput.addEventListener('input', updateDisplayedFechaTermina);
 
 });

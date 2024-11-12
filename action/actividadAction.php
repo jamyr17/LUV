@@ -36,6 +36,15 @@ if (isset($_POST['update'])) {
             exit();
         }
 
+        $fechaInicioObj = new DateTime($fechaInicio);
+        $fechaTerminaObj = new DateTime($fechaTermina);
+
+        if ($fechaInicioObj >= $fechaTerminaObj) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=invalidDates");
+            exit();
+        }
+
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
@@ -113,6 +122,15 @@ if (isset($_POST['update'])) {
         if (strlen($direccion) > 255) {
             guardarFormData();
             header("Location: ../view/activitiesCalendarView.php?error=directionTooLong");
+            exit();
+        }
+
+        $fechaInicioObj = new DateTime($fechaInicio);
+        $fechaTerminaObj = new DateTime($fechaTermina);
+
+        if ($fechaInicioObj >= $fechaTerminaObj) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=invalidDates");
             exit();
         }
 
@@ -209,6 +227,15 @@ else if (isset($_POST['delete'])) {
             exit();
         }
 
+        $fechaInicioObj = new DateTime($fechaInicio);
+        $fechaTerminaObj = new DateTime($fechaTermina);
+
+        if ($fechaInicioObj >= $fechaTerminaObj) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=invalidDates");
+            exit();
+        }
+
         if (strlen($titulo) > 0 && strlen($descripcion) > 0 && strlen($direccion) > 0) {
             if (!is_numeric($titulo) && !is_numeric($descripcion) && !is_numeric($direccion)) {
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] != UPLOAD_ERR_NO_FILE) {
@@ -298,6 +325,15 @@ else if (isset($_POST['delete'])) {
         if (strlen($direccion) > 255) {
             guardarFormData();
             header("Location: ../view/activitiesCalendarView.php?error=directionTooLong");
+            exit();
+        }
+
+        $fechaInicioObj = new DateTime($fechaInicio);
+        $fechaTerminaObj = new DateTime($fechaTermina);
+
+        if ($fechaInicioObj >= $fechaTerminaObj) {
+            guardarFormData();
+            header("Location: ../view/activitiesCalendarView.php?error=invalidDates");
             exit();
         }
 
