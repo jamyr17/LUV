@@ -460,7 +460,7 @@ if ($userAffinityData->isProfileModeled($userId) && !isset($_GET['modificar'])) 
         </style>
 
         <div class="container">
-            <img src="https://res.cloudinary.com/dwhwrxgud/image/upload/v1730401362/images/zyakkkawjsdxf3jhkjzg.jpg" 
+            <img src="https://res.cloudinary.com/dwhwrxgud/image/upload/v1731381317/images/r9loiygghsxdcihqaisv.jpg" 
                 alt="Imagen a analizar" class="image" id="image">
         </div>
 
