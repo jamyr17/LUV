@@ -32,7 +32,7 @@ function agregarValorSiNoExiste($nombreArchivo, $valor) {
         $contenidoActual = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     } else {
         // Si el archivo no existe, obtener valores iniciales de la IA y crearlo
-        $valoresIA = obtenerDatosIA($nombreArchivo);
+        $valoresIA = obtenerDatosIAArchivo($nombreArchivo);
         $valoresArray = explode(", ", $valoresIA);
         createDataFile($nombreArchivo, $valoresArray);
         $contenidoActual = $valoresArray;
@@ -52,7 +52,7 @@ function agregarValorSiNoExiste($nombreArchivo, $valor) {
             fclose($file);
 
             // Obtener valores relacionados del asistente
-            $valoresRelacionados = obtenerDatosIA($valor);
+            $valoresRelacionados = obtenerDatosIAArchivo($valor);
             $valoresRelacionadosArray = explode(", ", $valoresRelacionados);
 
             // Escribir los valores relacionados
@@ -74,7 +74,7 @@ function agregarValorSiNoExiste($nombreArchivo, $valor) {
 }
 
 
-function enviarMensaje($nombreCriterio, $token, $threadId) {
+function enviarMensajeArchivo($nombreCriterio, $token, $threadId) {
     // URL para enviar el mensaje al hilo
     $url = 'https://api.openai.com/v1/threads/' . $threadId . '/messages';
 
@@ -106,7 +106,6 @@ function enviarMensaje($nombreCriterio, $token, $threadId) {
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
         curl_close($ch);
-        file_put_contents('../resource/log.dat', "Error de cURL: " . $error_msg . "\n", FILE_APPEND);
         return null;
     }
 
@@ -118,21 +117,19 @@ function enviarMensaje($nombreCriterio, $token, $threadId) {
 
     // Verificar si hubo un error en la respuesta
     if (isset($result['error'])) {
-        file_put_contents('../resource/log.dat', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
         return null;
     }
 
     // Verificar si se ha creado un mensaje exitosamente
     if (isset($result['id'])) {
         $messageId = $result['id'];
-        file_put_contents('../resource/log.dat', "ID del mensaje creado: " . $messageId . "\n", FILE_APPEND);
         return $messageId;
     }
 
     return null;
 }
 
-function crearRun($threadId, $assistantId, $token) {
+function crearRunArchivo($threadId, $assistantId, $token) {
     // URL para crear el run en el hilo
     $url = 'https://api.openai.com/v1/threads/' . $threadId . '/runs';
 
@@ -163,7 +160,6 @@ function crearRun($threadId, $assistantId, $token) {
     if (curl_errno($ch)) {
         $error_msg = curl_error($ch);
         curl_close($ch);
-        file_put_contents('../resource/log.dat', "Error de cURL al crear el run: " . $error_msg . "\n", FILE_APPEND);
         return null;
     }
 
@@ -173,7 +169,6 @@ function crearRun($threadId, $assistantId, $token) {
     $result = json_decode($response, true);
 
     // Guardar la respuesta completa en el log para depuración
-    file_put_contents('../resource/log.dat', "Respuesta de la API al crear el run: " . json_encode($result) . "\n", FILE_APPEND);
 
     // Verificar si se creó el run exitosamente
     if (isset($result['id'])) {
@@ -181,13 +176,12 @@ function crearRun($threadId, $assistantId, $token) {
     } else {
         // Si hay un error, escribir el error en el log
         if (isset($result['error'])) {
-            file_put_contents('../resource/log.dat', "Error al crear el run: " . $result['error']['message'] . "\n", FILE_APPEND);
         }
         return null;
     }
 }
 
-function obtenerDatosIA($nombreCriterio) {
+function obtenerDatosIAArchivo($nombreCriterio) {
 
 
     $token = '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'; // Tu API Key
@@ -199,13 +193,13 @@ function obtenerDatosIA($nombreCriterio) {
 
 
     // 1. Enviar el mensaje al hilo
-    $messageId = enviarMensaje($nombreCriterio, $token, $threadId);
+    $messageId = enviarMensajeArchivo($nombreCriterio, $token, $threadId);
     if (!$messageId) {
         return 'Error: No se pudo enviar el mensaje.';
     }
 
     // 2. Crear el run para procesar el mensaje
-    $runId = crearRun($threadId, $assistantId, $token);
+    $runId = crearRunArchivo($threadId, $assistantId, $token);
     if (!$runId) {
         return 'Error: No se pudo crear el run.';
     }
@@ -216,7 +210,7 @@ function obtenerDatosIA($nombreCriterio) {
     $retryDelay = 2;
 
     for ($i = 0; $i < $maxRetries; $i++) {
-        $runStatus = verificarEstadoRun($threadId, $runId, $token);
+        $runStatus = verificarEstadoRunArchivo($threadId, $runId, $token);
         if ($runStatus === 'completed') {
             $runCompletado = true;
             break;
@@ -229,7 +223,7 @@ function obtenerDatosIA($nombreCriterio) {
     }
 
     // 4. Obtener los mensajes del hilo
-    $mensajes = obtenerMensajesDelThread($threadId, $token);
+    $mensajes = obtenerMensajesDelThreadArchivo($threadId, $token);
 
     // Verificar que haya mensajes
     if ($mensajes) {
@@ -250,7 +244,7 @@ function obtenerDatosIA($nombreCriterio) {
 
 
 
-function obtenerMensajesDelThread($threadId, $token) {
+function obtenerMensajesDelThreadArchivo($threadId, $token) {
     // URL para obtener los mensajes del thread
     $url = 'https://api.openai.com/v1/threads/' . $threadId . '/messages';
 
@@ -276,7 +270,6 @@ function obtenerMensajesDelThread($threadId, $token) {
 
     // Verificar si hubo un error en la respuesta
     if (isset($result['error'])) {
-        file_put_contents('../resource/log.dat', "Error en la respuesta de la API: " . $result['error']['message'] . "\n", FILE_APPEND);
         return null;
     }
 
@@ -285,7 +278,7 @@ function obtenerMensajesDelThread($threadId, $token) {
 }
 
 
-function verificarEstadoRun($threadId, $runId, $token) {
+function verificarEstadoRunArchivo($threadId, $runId, $token) {
     // URL para verificar el estado del run
     $url = 'https://api.openai.com/v1/threads/' . $threadId . '/runs/' . $runId;
 

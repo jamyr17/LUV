@@ -120,7 +120,7 @@ else if (isset($_POST['action']) && $_POST['action'] === 'deleteConfirmed') {
                      createFolderIfNotExists('../resources/criterios'); // Crear carpeta si no existe.
  
                      // Obtener datos relacionados al criterio desde la IA.
-                     $data = obtenerDatosIA($nombre);
+                     $data = obtenerDatosIAArchivo($nombre);
  
                      if ($data) {
                          createDataFile($nombre, $data);  // Guardar los datos en un archivo .dat.
