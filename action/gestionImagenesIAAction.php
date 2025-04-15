@@ -167,7 +167,7 @@ function obtenerCriteriosCloud($respuestaIA) {
 
 function procesarImagenIA($urlImagen) {
 
-    $token = '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'; // Tu API Key
+    $token = ''; // Tu API Key
     $assistantId = 'asst_rOXHd5T7DSbsnK0Nj4BEDF3Y';
     $threadId = 'thread_DaKAQ0wT2sRa4efH8yXM1rW6';
 
